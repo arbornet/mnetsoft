@@ -1,0 +1,225 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+quit=0
+cont="Press <ENTER> to continue"
+while [ $quit -eq 0 ]
+do
+	clear
+	invalid=0
+	echo -n "
+                         Upload/Download Files
+                         +++++++++++++++++++++
+
+
+
+   	Your current directory is (`pwd`)
+
+Options-
+*******
+
+C) Change current directory
+F) File Transfer Protocol
+G) Get file from Grex (download to your computer) - dial-in users only
+S) Send file to Grex (upload from your computer) - dial-in users only
+E) Exit this program
+
+
+Command: "
+	read command
+	case $command in
+		"C"|"c")
+echo -n "
+UNIX: cd <path>
+
+Your current directory is: (`pwd`)
+
+Immediate sub-directories are (ignore the '/'):
+`ls -p | grep \/$ | menumore`
+
+.. (type two periods for the directory above the current one)
+
+What directory would you like to change to? "
+read dir1
+cd $dir1
+echo "
+You are now in: (`pwd`)"
+echo ""
+echo -n "$cont "
+read junk
+		         ;;
+		"G"|"g")
+echo -n "
+Use X) Xmodem  Y) Ymodem  Z) Zmodem  K) Kermit transfer protocol? "
+read protocol
+echo -n "
+Directory listing is:
+--------------------
+"
+sleep 1
+ls -skx | menumore
+echo -n "
+Which file do you wish to get from Grex? "
+read filename
+if [ ! -f $filename ]
+then
+	invalid=1
+fi
+echo -n "
+Is this an A) ASCII (normal text) file   or   B) Binary file? "
+read type
+case $protocol in
+	"X"|"x") 
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="sx -b $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="sx -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	"Y"|"y")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="sb -b $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="sb -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	"Z"|"z")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="nice lsz -b $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="nice lsz -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	"K"|"k")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="kermit -i -s $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="kermit -s $filename"	
+else
+	invalid=1	
+fi
+	         ;;
+	*) invalid=1
+	   ;;
+esac
+if [ $invalid -ne 1 ]
+then
+	echo "UNIX: $prog"
+	echo ""
+	eval $prog
+else
+	echo ""
+	echo "Something was invalid there, sorry..."
+fi
+echo ""
+echo ""
+echo -n "$cont "
+read junk
+		         ;;
+		"S"|"s")
+echo -n "
+Use X) Xmodem  Y) Ymodem  Z) Zmodem  K) Kermit transfer protocol? "
+read protocol
+echo -n "
+Which file do you wish to send to Grex? "
+read filename
+echo -n "
+Is this an A) ASCII (normal text) file   or   B) Binary file? "
+read type
+case $protocol in
+	"X"|"x")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="rx -b $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="rx -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	"Y"|"y")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="rb -b $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="rb -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	"Z"|"z")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="rz -b $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="rz -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	"K"|"k")
+if [ $type = "B" -o $type = "b" ]
+then
+	prog="kermit -i -e 1000 -r -a $filename"	
+elif [ $type = "A" -o $type = "a" ]
+then
+	prog="kermit -e 1000 -r -a $filename"	
+else
+	invalid=1
+fi
+	         ;;
+	*) invalid=1
+	   ;;
+esac
+if [ $invalid -ne 1 ]
+then
+	echo "UNIX: $prog"
+	echo ""
+	eval $prog
+else
+	echo ""
+	echo "Something was invalid there, sorry..."
+fi
+echo ""
+echo ""
+echo -n "$cont "
+read junk
+		         ;;
+		"F"|"f")
+/cyberspace/lib/menu/scripts/d69
+echo ""
+echo -n "$cont "
+read junk
+		         ;;   		
+		"E"|"e") quit=1
+		         ;;
+		!*) prog=`echo $command | sed 's/^!//'`
+		    echo ""
+		    eval $prog
+		    echo ""
+		    echo -n "$cont "
+		    read junk
+		    ;;
+		*) echo ""
+		   echo -n "Invalid option... "
+		   sleep 2
+		   ;;
+	esac
+done

@@ -1,0 +1,289 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(gate.h)
+AC_CONFIG_HEADER(config.h)
+
+
+dnl Checks for options.
+
+dnl -- Check for picospan or yapp compatibility flags
+
+compatible=
+picospan=no
+yapp=no
+AC_ARG_WITH(picospan,[  --with-picospan         operate in picospan compatible mode],[
+  picospan=$withval
+  if test $withval = yes; then
+    AC_DEFINE(PICOSPAN)
+    compatible=picospan
+  fi
+])
+
+AC_ARG_WITH(yapp,[  --with-yapp             operate in yapp compatible mode],[
+  yapp=$withval
+  if test $withval = yes; then
+    if test $compatible; then
+      AC_MSG_ERROR([Sorry, can't work with both picospan and yapp])
+    fi
+    AC_DEFINE(YAPP)
+    compatible=yapp
+  fi
+])
+
+if test "X$compatible" = 'X'; then
+  AC_DEFINE(PICOSPAN)
+fi
+
+dnl -- Check for with-editor flag
+  
+AC_ARG_WITH(editor,[  --with-editor=<path>    path of default editor],
+    [editor=$withval], [editor=no])
+if test $editor = 'yes'; then
+  AC_MSG_ERROR([Need path name on --with-editor option])
+elif test $editor = 'no'; then
+  editor=vi
+fi  
+if test `echo $editor | sed 's/^\(.\).*$/\1/'` = '/'; then
+  AC_DEFINE_UNQUOTED(DEFAULT_EDITOR,"$editor")
+else
+  AC_PATH_PROG(editor_path,$editor,no)
+  if test "$editor_path" = 'no'; then
+    AC_MSG_ERROR([default editor $editor not found])
+  fi
+  AC_DEFINE_UNQUOTED(DEFAULT_EDITOR,"$editor_path")
+fi
+if test `echo $editor | sed 's/^.*pico$/pico/'` = 'pico'; then
+  AC_DEFINE(PICO_BUG)
+fi
+
+dnl -- Check for with-aspell flag
+  
+spell=
+AC_ARG_WITH(aspell,[  --with-aspell           use Gnu aspell checker 0.50 or later],
+    [aspell=$withval], [aspell=no])
+if test $aspell = 'yes'; then
+  spell=aspell
+  AC_PATH_PROG(spell_path,aspell,no)
+  if test $spell_path = 'no'; then
+    AC_MSG_ERROR([got --with-aspell flag, but cannot find 'aspell' program.
+If aspell is installed do --with-aspell=/full/path/name/aspell])
+  fi
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$spell_path")
+elif test "X$aspell" != 'Xno'; then
+  spell=aspell
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$aspell")
+fi  
+if test "X$spell" = "Xaspell"; then
+  AC_DEFINE_UNQUOTED(ASPELL)
+  AC_DEFINE_UNQUOTED(LANG_DEFAULT,"en")
+fi
+
+dnl -- Check for with-oldaspell flag
+
+AC_ARG_WITH(oldaspell,[  --with-oldaspell        use older aspell version],
+    [oldaspell=$withval], [oldaspell=no])
+if test $oldaspell = 'yes'; then
+  if test "X$spell" != 'X'; then
+    AC_MSG_ERROR([cannot use both --with-oldaspell flag and --with-$spell flag])
+  fi
+  spell=oldaspell
+  AC_PATH_PROG(spell_path,aspell,no)
+  if test $spell_path = 'no'; then
+    AC_MSG_ERROR([got --with-oldaspell flag, but can't find 'aspell' program.
+If ispell is installed do --with-oldaspell=/full/path/name/aspell])
+  fi
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$spell_path")
+elif test "X$oldaspell" != 'Xno'; then
+  spell=oldaspell
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$oldaspell")
+fi
+if test "X$spell" = "Xoldaspell"; then
+  AC_DEFINE_UNQUOTED(OLDASPELL)
+  AC_DEFINE_UNQUOTED(LANG_DEFAULT,"english")
+  if test -f /usr/share/aspell/english.dat; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/share/aspell")
+  elif test -f /usr/local/share/aspell/english.dat; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/local/share/aspell")
+  elif test -f /usr/lib/aspell/english.dat; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/lib/aspell")
+  elif test -f /usr/local/lib/aspell/english.dat; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/local/lib/aspell")
+  elif test -f /usr/lib/english.dat; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/lib")
+  elif test -f /usr/local/lib/english.dat; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/local/lib")
+  else
+    AC_MSG_ERROR([Could not find dictionary directory for aspell program])
+  fi
+fi
+
+dnl -- Check for with-ispell flag
+
+AC_ARG_WITH(ispell,[  --with-ispell           use Gnu international ispell],
+    [ispell=$withval], [ispell=no])
+if test $ispell = 'yes'; then
+  if test "X$spell" != 'X'; then
+    AC_MSG_ERROR([cannot use both --with-ispell flag and --with-$spell flag])
+  fi
+  spell=ispell
+  AC_PATH_PROG(spell_path,ispell,no)
+  if test $spell_path = 'no'; then
+    AC_MSG_ERROR([got --with-ispell flag, but cannot find 'ispell' program.
+If ispell is installed do --with-ispell=/full/path/name/ispell])
+  fi
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$spell_path")
+elif test "X$ispell" != 'Xno'; then
+  spell=ispell
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$ispell")
+fi
+if test "X$spell" = "Xispell"; then
+  AC_DEFINE_UNQUOTED(IISPELL)
+  AC_DEFINE_UNQUOTED(LANG_DEFAULT,"english")
+  if test -f /usr/share/ispell/english.hash; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/share/ispell")
+  elif test -f /usr/local/share/ispell/english.hash; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/local/share/ispell")
+  elif test -f /usr/lib/ispell/english.hash; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/lib/ispell")
+  elif test -f /usr/local/lib/ispell/english.hash; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/local/lib/ispell")
+  elif test -f /usr/lib/english.hash; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/lib")
+  elif test -f /usr/local/lib/english.hash; then
+      AC_DEFINE_UNQUOTED(DICT_DIR,"/usr/local/lib")
+  else
+    AC_MSG_ERROR([Could not find dictionary directory for ispell program])
+  fi
+fi
+
+gispell=no
+AC_ARG_WITH(gispell, [  --with-gispell          use old Gnu ispell 4.0 checker],[
+    gispell=$withval],[gispell=no])
+if test "$gispell" = 'yes'; then
+  if test "X$spell" != 'X'; then
+    AC_MSG_ERROR([cannot use both --with-gispell flag and --with-$spell flag])
+  fi
+  spell=gispell
+  AC_PATH_PROG(spell_path,ispell,no)
+  if test $spell_path = 'no'; then
+    AC_MSG_ERROR([got --with-gispell flag, but cannot find 'ispell' program.
+If spell is installed do --with-gispell=/full/path/name/spell])
+  fi
+  AC_DEFINE_UNQUOTED(GISPELL)
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$spell_path")
+elif test "X$gispell" != 'Xno'; then
+  spell=gispell
+  AC_DEFINE_UNQUOTED(GISPELL)
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$gispell")
+fi
+
+oldspell=no
+AC_ARG_WITH(oldspell, [  --with-oldspell         use old spell checker],[
+    oldspell=$withval],[oldspell=no])
+if test $oldspell = 'yes'; then
+  if test "X$spell" != 'X'; then
+    AC_MSG_ERROR([cannot use both --with-oldspell flag and --with-$spell flag])
+  fi
+  spell=oldspell
+  AC_PATH_PROG(spell_path,spell,no)
+  if test $spell_path = 'no'; then
+    AC_MSG_ERROR([got --with-oldspell flag, but cannot find 'spell' program.
+If spell is installed do --with-oldspell=/full/path/name/spell])
+  fi
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$spell_path")
+elif test "X$oldspell" != 'Xno'; then
+  spell=oldspell
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$oldspell")
+fi
+if test "X$spell" = "Xoldspell"; then
+  AC_DEFINE_UNQUOTED(PLUS_SPELL)
+  AC_PATH_PROG(sort_path,sort,no)
+  if test $sort_path = 'no'; then
+    AC_MSG_ERROR([got --with-oldspell flag, but cannot find 'sort' program.])
+  fi
+  AC_DEFINE_UNQUOTED(SORT_PATH,"$sort_path")
+fi
+
+olderspell=no
+AC_ARG_WITH(olderspell, [  --with-olderspell       use very old spell checker],[
+    olderspell=$withval],[olderspell=no])
+if test $olderspell = 'yes'; then
+  if test "X$spell" != 'X'; then
+    AC_MSG_ERROR([cannot use both --with-olderspell flag and --with-$spell flag])
+  fi
+  spell=olderspell
+  AC_PATH_PROG(spell_path,spell,no)
+  if test $spell_path = 'no'; then
+    AC_MSG_ERROR([got --with-olderspell flag, but cannot find 'spell' program.
+If spell is installed do --with-olderspell=/full/path/name/spell])
+  fi
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$spell_path")
+elif test "X$olderspell" != 'Xno'; then
+  spell=olderspell
+  AC_DEFINE_UNQUOTED(SPELL_PATH,"$olderspell")
+fi
+if test "X$spell" = "Xolderspell"; then
+  AC_DEFINE_UNQUOTED(SIMPLE_SPELL)
+  AC_PATH_PROG(spellin_path,spellin,no)
+  if test $spellin_path = 'no'; then
+    AC_MSG_ERROR([got --with-olderspell flag, but cannot find 'spellin' program.])
+  fi
+  AC_DEFINE_UNQUOTED(SPELLIN_PATH,"$spellin_path")
+  if test -f /usr/dict/hlista; then
+    AC_DEFINE_UNQUOTED(SYSDICT_PATH,"/usr/dict/hlist")
+  elif test -f /usr/share/dict/hlista; then
+    AC_DEFINE_UNQUOTED(SYSDICT_PATH,"/usr/share/dict/hlist")
+  elif test -f /usr/lib/dict/hlista; then
+    AC_DEFINE_UNQUOTED(SYSDICT_PATH,"/usr/lib/dict/hlist")
+  elif test -f /usr/lib/spell/hlista; then
+    AC_DEFINE_UNQUOTED(SYSDICT_PATH,"/usr/lib/spell/hlist")
+  else
+    AC_MSG_ERROR([Could not find dictionary file for spell program])
+  fi
+fi
+
+if test "X$spell" = 'X'; then
+  AC_DEFINE_UNQUOTED(NO_SPELL)
+fi
+
+dnl -- check for enable-novice flag
+AC_ARG_ENABLE(novice,[  --enable-novice         look for NOVICE env variable],[
+  if test $enableval = yes; then
+    AC_DEFINE(NOVICE)
+  fi
+])
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_GCC_TRADITIONAL
+
+dnl Checks for libraries.
+AC_SEARCH_LIBS(tgetent, termcap curses)
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_HEADER_DIRENT
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS(sgtty.h sys/file.h sys/ioctl.h termios.h termio.h unistd.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+dnl Paths
+
+gate_prefix=$prefix
+if test "x$prefix" = xNONE; then
+  prefix=$ac_default_prefix
+fi
+res_datadir=`eval "echo $datadir"`
+prefix=$gate_prefix
+
+AC_DEFINE_UNQUOTED(HELP_FILE,"${res_datadir}/gate.help")
+
+dnl Checks for library functions.
+AC_TYPE_OFF_T
+AC_TYPE_PID_T
+AC_TYPE_SIGNAL
+AC_FUNC_WAIT3
+AC_CHECK_FUNCS(strerror dup2 strchr sigaction sigmask strspn mkstemp)
+
+AC_OUTPUT(Makefile)

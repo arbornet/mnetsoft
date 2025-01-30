@@ -1,0 +1,242 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% bio script
+%
+% The bio script displays information about any user in the system and
+% allows users to edit their own personal information.  It also allows
+% administrators to edit other users personal information.
+%
+% Query Parameters:
+%    login=	Login name of user who's bio we want to look at.
+%    doedit=	If defined, show edit form for bio, if it is mine.
+%    errormsg=  If defined, an error message to display at top of page.
+
+% Decline to run for obvious email address collectors
+browser 0 lt {(Not a browser)} if
+
+/login defined ! {/login id def} if
+
+/twitlist () def
+/abalone.menujump 0 def
+
+flavor(config)+ include
+
+(lib/userinfo) include
+
+`(User )login( Profile)' (U)
+[/login /doedit /errormsg]
+[/twitlist /abalone.menujump] []
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+% find fullname, status, and home directory from the password info
+login userinfo 
+   /status xdef
+   /laston xdef
+   /biodir xdef
+   % from unix passwd files, delete text after "," in fullname field
+   nopwedit {(,) clip exch pop} if /fullname xdef
+   pop	% discard group id number
+   pop	% discard user id number
+
+% Is he in my twitlist?
+/twit 0 def
+twitlist {login twitlist (,) inlist {/twit 1 def} if } if
+
+% "me" is true if the user is viewing his own bio
+/me login id eq def
+
+% set "edit_mode" if we are going to offer the user the chance to change things
+/edit_mode /doedit defined me amadm or and def
+
+% output page header
+(
+<TR><TD CLASS=mast VALIGN=bottom>)
+edit_mode biodir and {
+  (<SPAN CLASS=big><A HREF="bio?login=)login
+  (">View profile as others would see it</A></SPAN>)
+} {
+  biodir me amadm or and
+  {
+    (<SPAN CLASS=big><A HREF="bio?login=)login(&doedit=1">Edit )
+    me {(your)}{login('s)} ifelse
+    ( profile</A></SPAN>)
+  } {
+    (&nbsp;)
+  } ifelse
+} ifelse
+(</TD>
+<TD CLASS=mast VALIGN=bottom ALIGN=right>
+<FORM NAME=nav METHOD=POST ACTION=go  onSubmit="return gopop('nav');">
+<INPUT TYPE=hidden NAME=login VALUE=")login quote(">
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto Conference...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {
+  (<OPTION VALUE=edithot>Edit Your )Conference cap( Hotlist</OPTION>
+  <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  me ! {
+    twit
+      {(<OPTION VALUE=deltwit>Stop ignoring )Responses( by )login}
+      {(<OPTION VALUE=addtwit>Ignore all )Responses( by )login} ifelse
+    (</OPTION>\n)
+  } if
+  sessions {(<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(<OPTION VALUE=@0help:profile>Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>
+<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+)
+
+% display errmsg if it is defined and non-null
+/errmsg defined { errmsg {
+  (<TR><TD CLASS=alert COLSPAN=2><SPAN CLASS=bigbold>
+  Please fix the following errors:</SPAN>
+  <PRE>)errmsg(</PRE></TD></TR>\n)
+} if } if
+
+(<TR>
+<TD CLASS=colhead COLSPAN=2>)
+
+% userinfo returns () if there is no such user
+status 0 lt {
+  (No account currently exists for )login
+  (.</TD></TR></TABLE></BODY></HTML>)
+  stop
+} if
+
+(Profile for user ")login("</TD></TR>
+)
+
+/odd 1 def
+/tablerow {
+  /class odd {(even)}{(odd)} ifelse def
+  (<TR>)
+  /odd 1 odd - store
+} def
+
+/errmsg defined {
+  /privacy defined ! {/privacy 0 def} if
+} {
+  /useplan constant {
+    % load the user's .plan file.
+    (*.plan) login pathname  /bio_fn xdef
+
+    bio_fn readable {
+      % plan is readable -- load it.
+      /plan bio_fn read def
+      plan ! { /plan ( ) def } if
+      0 /privacy xdef
+    }{
+      % plan is not readable -- user wants privacy.
+      () /plan xdef
+      1 /privacy xdef
+    } ifelse
+  }{
+    % load settings from the user's .backtalk file
+    login getinfo
+  }ifelse
+} ifelse
+
+% If anonymity is set, all user info is private
+mayseefname ! {/privacy 1 def} if
+
+edit_mode {
+
+  % bio is for me - create a form and fill in current values
+
+  (<FORM METHOD=POST ACTION=changebio>\n)
+  status {
+    tablerow(<TD CLASS=)class
+     (><STRONG>Account Status</STRONG>:</TD><TD CLASS=)class(>)
+    status 1 eq {(U)}{(I)}ifelse(nvalidated</TD></TR>\n)
+  } if
+  (<INPUT TYPE=hidden NAME=login VALUE=)login(>\n)
+
+  /useplan constant {
+
+     % version for systems using .plan files
+
+     tablerow(<TD CLASS=)class(><STRONG>Full Name</STRONG>:</TD>
+     <TD CLASS=)class(><INPUT NAME=fullname VALUE=")fullname
+     nopwedit {(" TYPE=hidden>)fullname} {(" SIZE=35>)} ifelse
+     (</TD></TR>)
+     tablerow(<TD CLASS=)class(><STRONG>Plan</STRONG>:</TD><TD CLASS=)class(>
+     <TEXTAREA NAME="plan" ROWS=20 COLS=72 WRAP=HARD>)plan
+     (</TEXTAREA></TD></TR>\n)
+
+  } {
+
+     % version for systems using .backtalk files
+
+     tablerow(<TD CLASS=)class( VALIGN=TOP><STRONG>Privacy</STRONG>:</TD>
+     <TD CLASS=)class(><INPUT NAME=privacy TYPE=radio VALUE=0)
+     privacy ! {( CHECKED)} if
+     (> Allow other users to see this profile<BR>
+     <INPUT NAME=privacy TYPE=radio VALUE=1) privacy {( CHECKED)} if
+     (> Do not allow other users to see this profile</TD></TR>\n)
+
+     tablerow(<TD CLASS=)class(><STRONG>Full Name</STRONG>:</TD>
+     <TD CLASS=)class(><INPUT NAME=fullname VALUE=")fullname
+     nopwedit {(" TYPE=hidden>)fullname} {(" SIZE=35>)} ifelse
+     (</TD></TR>\n)
+
+     tablerow(<TD CLASS=)class(>)
+     {(</TD></TR>\n)
+     tablerow(<TD CLASS=)class(>)} {(</TD><TD CLASS=)class(>)++} () promptinfo
+     (</TD></TR>\n)
+  } ifelse
+
+  tablerow(<TD CLASS=)class(>&nbsp;</TD><TD CLASS=)class
+  (><INPUT TYPE=submit VALUE="Submit changes"> </TD></TR></FORM></TABLE>)
+
+}{
+
+  % bio is not for me, don't use a form to display the info
+
+  tablerow
+  privacy mayseefname ! or {
+    (<TD CLASS=)class( COLSPAN=2>No information available.</TD></TR>)
+  } {
+    (<TD CLASS=)class(><STRONG>Full Name</STRONG>:</TD><TD CLASS=)class(>)
+      fullname (</TD></TR>\n)
+    laston
+      {tablerow(<TD CLASS=)class(><STRONG>Last On</STRONG>:</TD><TD CLASS=)
+       class(>)
+       laston ztime (</TD></TR>\n)} if
+    /useplan constant
+    {
+      tablerow(<TD CLASS=)class(><STRONG>Plan</STRONG>:</TD><TD CLASS=)class
+      (><PRE>)
+      plan expand (</PRE></TD></TR>\n)
+    } {
+      regdate
+        {tablerow(<TD CLASS=)class
+         (><STRONG>Registered</STRONG>:</TD><TD CLASS=)class(>)
+	 regdate cvt ztime(</TD></TR>\n)} if
+
+      `tablerow(<TD CLASS=)class(>)'
+      `{(</TD></TR>\n)tablerow(<TD CLASS=)class(>)}
+        {(</TD><TD CLASS=)class(>)++} showinfo'
+      dup {(</TD></TR>\n)} {pop pop} ifelse
+
+    } ifelse  % end test for plan
+  } ifelse  % end test for privacy
+  status
+    {tablerow(<TD CLASS=)class(>Account Status:</TD><TD>)
+     status 1 eq {(U)}{(I)}ifelse(nvalidated</TD></TR>)} if
+} ifelse    % end test edit_mode
+
+(</TABLE>
+)
+
+% print page footer
+
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,40 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+echo "
+UNIX: chmod <new-permission-mask> <filename>"
+sleep 2
+echo "
+Directory (`pwd`) file listing"
+sleep 1
+ls -l | menumore
+echo -n "
+File name to chmod? "
+read file1
+echo -n "Explanation of UNIX file permission masks:
+-----------------------------------------
+
+UNIX file permission masks consist of access priviledge rights for three
+user categories, in this order:
+
+USER(YOU)     GROUP      OTHERS(WORLD)     
+
+
+The file access priviledge rights are:
+read     +4
+write    +2
+execute  +1
+
+Instructions:
+------------
+Add the permissions to be set up for each individual user category, and
+then combine the three categories in the above order
+
+eg. mask 750 grants the file owner read, write, and execute priviledges;
+    read, and execute priviledges for the group; and no privileges to others.
+
+New permissions? "
+read file2
+chmod $file2 $file1
+echo "
+Done..."

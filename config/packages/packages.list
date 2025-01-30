@@ -1,0 +1,1748 @@
+9libs-1.0p7         Plan 9 compatibility libraries
+AcePerl-1.92p2      perl interface to the ACEDB database
+EMBOSS-6.0.1p4      European Molecular Biology Open Software Suite
+GeoIP-1.6.5p5       find the country where IP address/hostname originates from
+GraphicsMagick-1.3.25p0 image processing tools with stable ABI
+ImageMagick-6.9.8.3 image processing tools
+ORBit2-2.14.19p8    high-performance CORBA Object Request Broker
+OpenEXR-2.2.0p0     high dynamic range image format
+R-3.3.3             powerful math/statistics/graphics language
+WordGenerator-1.9p1 generates lists of words given certain information
+Xaw3d-1.6.2         3D Athena Widget set that looks like Motif
+aalib-1.4p6         ascii art library
+acpica-20170303     reference implementation of ACPI tools
+adns-1.5.1          asynchronous dns resolver client library and utilities
+adwaita-icon-theme-3.22.0 base icon theme for GNOME
+aide-0.16p0         Advanced Intrusion Detection Environment
+ajaxterm-0.10p8     web-based SSH client
+ald-0.1.7           assembly language debugger
+alex-3.1.4          lexical analyser generator for Haskell
+algotutor-0.8.6p1   interactive tutorial for algorithms and data structures
+allegro-4.2.3p3     game programming library for C/C++ developers
+alpine-2.20p0       UW e-mail client
+analog-6.0p4        extremely fast program for analysing WWW logfiles
+angband-3.3.2p1     rogue-like game with X11 support
+animorph-0.3p1      morphing engine
+antiword-0.37p0     converts MSWord Documents to ASCII Text and PostScript
+ap2-mod_perl-2.0.9p2 module that embeds a Perl interpreter into Apache2
+ap2-subversion-1.9.5 apache2 subversion modules
+apache-ant-1.9.7    build tool for java applications
+apache-httpd-2.4.25 apache HTTP server
+apache-httpd-common-2.4.25 /var/www files for Apache HTTPd
+apg-2.2.3p0         automated password generator
+apr-1.5.2           Apache Portable Runtime
+apr-util-1.5.4p1    companion library to APR
+arc-5.21p           create & extract files from DOS .ARC files
+arm-elf-binutils-2.20p1 binutils for arm-elf cross-development
+arpack-96p4         solve large scale eigenvalue problems
+asciidoc-8.6.9p1    text document format for writing documents and man pages
+aspell-0.60.6.1p3   spell checker designed to eventually replace Ispell
+aspell-af-0.50.0v1  aspell dictionary for Afrikaans
+aspell-br-0.50.2v1  aspell dictionary for Breton
+aspell-cy-0.50.3v1  aspell dictionary for Welsh
+aspell-da-1.4.42.1v1 aspell dictionary for Danish
+aspell-el-0.50.3v1  aspell dictionary for Greek
+aspell-fo-0.2.16.1v1 aspell dictionary for Faroese
+aspell-fr-0.50.3v1  aspell dictionary for French
+aspell-ga-4.5.0v1   aspell dictionary for Irish
+aspell-ia-0.50.1v1  aspell dictionary for Interlingua
+aspell-id-1.2.0v1   aspell dictionary for Indonesian
+aspell-is-0.51.1.0v1 aspell dictionary for Icelandic
+aspell-mi-0.50.0v1  aspell dictionary for Maori
+aspell-ms-0.50.0v1  aspell dictionary for Malay
+aspell-mt-0.50.0v1  aspell dictionary for Maltese
+aspell-nb-0.50.1.0v1 aspell dictionary for Norwegian Bokmal
+aspell-nl-0.50.2v1  aspell dictionary for Dutch
+aspell-nn-0.50.1.1v1 aspell dictionary for Norwegian Nynorsk
+aspell-pt-0.50.2v1  aspell dictionary for Portuguese
+aspell-ro-3.3.2v1   aspell dictionary for Romanian
+aspell-sl-0.50.0v1  aspell dictionary for Slovenian
+aspell-sv-0.51.0v1  aspell dictionary for Swedish
+aspell-sw-0.50.0v1  aspell dictionary for Swahili
+aspell-tn-1.0.1.0v1 aspell dictionary for Setswana
+aspell-tr-0.50.0v1  aspell dictionary for Turkish
+aspell-wa-0.50.0v1  aspell dictionary for Walloon
+aspell-zu-0.50.0v1  aspell dictionary for Zulu
+at-spi2-atk-2.22.0  atk-bridge for at-spi2
+at-spi2-core-2.22.1 service interface for assistive technologies
+atk-2.22.0          accessibility toolkit used by gtk+
+atk2mm-2.24.2       C++ binding for the ATK library
+atlas-0.4.3.1p5     C++ reference implementation of the Atlas protocol
+autobook-1.5v0      documentation for autoconf, automake, libtool
+autoconf-2.13p4     automatically configure source code on many Un*x platforms
+autoconf-2.52p6     automatically configure source code on many Un*x platforms
+autoconf-2.54p5     automatically configure source code on many Un*x platforms
+autoconf-2.59p5     automatically configure source code on many Un*x platforms
+autoconf-2.60p5     automatically configure source code on many Un*x platforms
+autoconf-2.61p5     automatically configure source code on many Un*x platforms
+autoconf-2.62p2     automatically configure source code on many Un*x platforms
+autoconf-2.63p1     automatically configure source code on many Un*x platforms
+autoconf-2.64p1     automatically configure source code on many Un*x platforms
+autoconf-2.65p1     automatically configure source code on many Un*x platforms
+autoconf-2.67p1     automatically configure source code on many Un*x platforms
+autoconf-2.68p1     automatically configure source code on many Un*x platforms
+automake-1.10.3p8   GNU Standards-compliant Makefile generator
+automake-1.4.6p5    GNU Standards-compliant Makefile generator
+automake-1.9.6p12   GNU Standards-compliant Makefile generator
+avahi-0.6.32        framework for Multicast DNS Service Discovery
+avahi-ui-0.6.32     common avahi-ui header for gtk+2 and gtk+3
+avr-binutils-2.20p2 Atmel AVR 8-bit RISC microcontrollers' GNU binutils
+avr-gcc-4.3.4p1     Atmel AVR 8-bit RISC microcontrollers' XGCC
+axe-6.1.2p4         simple to use text editor for X11
+barcode-0.99        convert text strings to printed bars
+base64-1.5          converter to/from base64 encoding
+bash-4.4.12         GNU Bourne Again Shell
+beav-1.40.18p0      binary editor and viewer
+bioperl-1.6.924p0   perl tools for bioinformatics
+biopython-1.66p1    Python tools for computational molecular biology
+bison-3.0.4p0       GNU parser generator
+bitlbee-3.4p0       IRC proxy to connect to AIM, ICQ, Jabber and Yahoo
+blackbox-0.70.1p5   small & pretty window manager for 8 and more bits displays
+blame-1.3.1         RCS equivalent of CVS's annotate command
+blas-1.0p7          Basic Linear Algebra Subprograms
+blogsum-1.1p6       simple weblog
+boehm-gc-7.6.0      garbage collection and memory leak detection for C and C++
+boost-1.58.0p3      free peer-reviewed portable C++ source libraries
+bozohttpd-20170201  bozotic HTTP server
+btoa-5.2.1          encode/decode binary to printable ASCII
+bvi-1.4.0           binary visual display editor, based on vi
+bzip2-1.0.6p8       block-sorting file compressor, unencumbered
+c-client-2.20p0v0   UW c-client mail access routines
+c2html-0.9.6        C-language sources to HTML converter
+c3270-3.3.11.6      curses-based 3270 terminal editor
+cabal-install-1.22.6.0 command-line interface for Cabal and Hackage
+cairo-1.14.8        vector graphics library
+cairomm-1.12.2      C++ interface for cairo
+calamaris-2.59      proxy-cache-servers logfiles analizer
+calc-2.12.5.4       C-style arbitrary precision calculator
+cdparanoia-3.a9.8p3 CDDA reading utility with extra data verification features
+cdrtools-3.00p1     ISO 9660 filesystem and CD/DVD/BD creation tools
+celt-0.11.1p0v1     experimental ultra-low delay audio codec
+cflow-1.5           analyze C source files and print a call graph
+cgicc-3.2.1p5       c++ compliant CGI applications libraries
+cgiparse-0.9bp1     C library to parse CGI Forms
+check-0.10.0        unit test framework for C programs
+check_bioctl-1.23   Nagios plugin to check RAID status with bioctl
+check_email_delivery-0.7.1bp3 Nagios plugin to check full email delivery loop (SMTP/IMAP)
+check_hw_sensors-1.42p3 Nagios plugin to monitor sysctl hw.sensors
+check_mssql_health-1.5.19 Nagios plugin to check Microsoft SQL Server
+check_openbgpd-1.5p3 Nagios plugin to monitor OpenBGPd peers
+check_sip-20060929p3 Nagios plugin to check SIP
+chicken-2.6p3       practical and portable Scheme system
+chmlib-0.40p2       handling CHM files
+clines-1.0.4p1      curses-based Lines game
+clisp-2.49          ANSI Common Lisp implementation
+clisp-hyperspec-7.0 Common Lisp reference
+clojure-1.8.0p0     Lisp-1 dialect for the Java Virtual Machine
+cmake-3.7.2         portable build system
+cogl-1.22.2p0       modern 3D graphics API
+colorls-6.0         ls(1) that can use color to display file attributes
+coreutils-8.25p1    file, shell and text manipulation utilities
+cowsay-3.03         speaking ascii cow
+cppunit-1.12.1p0    c++ unit testing framework
+cracklib-2.9.5      sensible unix password cracker
+cscope-15.8bp1      code browsing program
+ctl-1.5.2           Color Transformation Language interpreter
+cunit-2.1.2p0       c unit testing framework
+cups-2.2.3          Common Unix Printing System
+cups-filters-1.13.4p0 OpenPrinting CUPS filters
+cups-libs-2.2.3     CUPS libraries and headers
+curl-7.53.1         get files from FTP, Gopher, HTTP or HTTPS servers
+cutils-1.6p2        collection of utilities for C programmers
+cvs-guide-1.21      the definitive guide to CVS
+cvsps-2.1p0         generate patchsets from CVS repositories
+cvsync-0.25.0pre0p2 CVS repository synchronization utility
+cyrus-sasl-2.1.26p21 RFC 2222 SASL (Simple Authentication and Security Layer)
+dante-1.4.1p0       SOCKS client and server
+db-4.6.21p3v0       Berkeley DB package, revision 4
+dblatex-0.3p8       convert DocBook to LaTeX, DVI, PostScript, and PDF
+dbus-1.10.16v0      message bus system
+dbus-daemon-launch-helper-1.10.16 DBus setuid helper for starting system services
+dbus-glib-0.108v0   glib bindings for dbus message system
+dconf-0.26.0        configuration backend system
+deco-3.8.3p1        Demos Commander, a free Norton Commander clone
+dejagnu-1.5.3       framework to test programs
+delay-1.6p0         delay program with feedback to the user
+desktop-file-utils-0.23 utilities for dot.desktop entries
+detex-2.8.1         strip TeX/LaTeX codes from a file
+devtodo-0.1.20p1    reminder/task program aimed at developers
+dialog-1.2.20150920p0 curses widgets (menus, lists, etc) for shell scripts
+dictd-client-1.9.15p2 Dictionary Server Protocol client
+diveintopython-5.4p1 book about Python for experienced programmers
+djvulibre-3.5.27p0  view, decode and encode DjVu files
+dmenu-4.6           dynamic menu for X11
+doc++-3.4.10p6      documentation system for C, C++, IDL and Java
+docbook-4.5p1       technical documentation XML/SGML definitions
+docbook-dsssl-1.79  modular DSSSL stylesheets for the DocBook DTD
+docbook-guide-2.0.8 the definite guide to DocBook
+docbook-xsl-1.68.1p5 docbook XSL modular stylesheet
+docbook2x-0.8.8p1   convert DocBook to man pages and Texinfo
+dopewars-1.5.12p12  game where you deal drugs on the streets of NY
+dovecot-2.2.28p0    compact IMAP/POP3 server
+dovecot-pigeonhole-0.4.17v0 Sieve mail filtering for Dovecot
+doxygen-1.8.12p1    source code documentation generator tool
+dungeon-crawl-4.0.0b26p0 dungeon crawl
+dvi2tty-5.3.1p0     converts .dvi files to plain text
+dvorak7min-1.6.1p0  typing tutor for dvorak keyboards
+dvtm-0.15           tiling window management for the console
+e2fsprogs-1.42.12p4 utilities to manipulate ext2 filesystems
+ecl-16.1.3p0        embeddable common-lisp
+ectags-5.8p3        multilanguage implementation of ctags
+ee-1.5.2p2v0        easy to use text editor
+eet-1.7.10v2        library to write an arbitary set of chunks of data to a file
+eigen-1.0.5         lightweight C++ template library for linear algebra
+eina-1.7.10v1       EFL API for data types
+ekg-1.7p1           Gadu-Gadu IM protocol client
+electricfence-2.0.5 library providing malloc debugging via VM protection
+elm-2.4ME+66p2      once-popular mail user agent
+elvis-2.2.0p2-no_x11 clone of the ex/vi text editor
+emacs-25.1p3-no_x11 GNU editor: extensible, customizable, self-documenting
+embryo-1.7.10v2     C like scripting language used in E17
+enca-1.19           detect character set and encoding of text files
+enchant-1.6.0p3     generic spell checking library/wrapper
+enscript-1.6.6p0    convert ASCII files to PostScript
+ent-1.0p0           pseudo random number sequence test program
+epic4-2.10.5p0      (E)nhanced (P)rogrammable (I)RC-II (C)lient
+erlang-16b.03p10v0  real-time, concurrent and distributed functional language
+es-0.9beta1v0       extensible shell, derived from plan9's rc
+espeak-1.48.04      compact speech synthesizer
+evas-1.7.10p3v2     canvas API for X
+exiv2-0.25p0        manipulate image meta-data such as exif and ipct
+exo-0.10.7p0        Xfce4 extension library
+expect-5.45p5       sophisticated scripter based on Tcl/Tk
+faad-2.7p2          MPEG-2 and MPEG-4 AAC decoder
+fcgi-2.4.0p12       FastCGI Development Kit
+femail-1.0p1        simple SMTP client
+femail-chroot-1.0p2 simple SMTP client for chrooted web servers
+fetchmail-6.3.26p0  mail retrieval utility for POP2, POP3, KPOP, IMAP and more
+ffcall-1.10p3       foreign function call libraries
+ffmpeg-20170208     audio/video converter and streamer
+ffmpegthumbnailer-2.0.8p4 lightweight video thumbnailer for file managers
+fftw3-3.3.4p0       C routines for computing the Discrete Fourier Transform
+fftw3-common-3.3.4p0 common files for the fftw3 packages
+fftw3-float-3.3.4p0 C routines for computing the Discrete Fourier Transform
+figlet-2.2.5        generates ASCII banner art
+flac-1.3.2          free lossless audio codec
+flatzebra-0.1.6p0   generic game engine library
+flawfinder-1.31     C/C++ source code auditing tool
+flite-1.2p6         text to speech utility
+flow-tools-0.68.5.1p4 cisco NetFlow utilities
+flowd-0.9.1.20140828 NetFlow collector
+fltk-1.3.3p0        Fast-Light Tool Kit
+foomatic-db-4.0.20161003 Foomatic PPD data
+foomatic-db-engine-4.0.12p1 Foomatic PPD generator
+fox-1.6.50          C++ toolkit for GUI
+fping-3.16          quickly ping N hosts w/o flooding the network
+freeglut-2.8.0p4    open source alternative to glut
+freemat-4.0p2       environment for rapid engineering and scientific processing
+freerdp-1.2.0beta1p1 open source client for Windows Terminal Server
+freetds-0.95.95p2   database drivers for Sybase/Microsoft SQL Server
+freetype-1.3.1p4    free and portable TrueType font rendering engine
+fribidi-0.19.7      library implementing the Unicode Bidirectional Algorithm
+frotz-2.44p0        curses-based interpreter for Infocom-compatible games
+g++-4.9.4p4         GNU compiler collection: C++ compiler
+g77-3.3.6p12v1      GNU fortran 77 compiler
+g95-4.9.4p4         GNU compiler collection: f95 compiler
+gamgi-0.15.5        General Atomistic Modelling Graphic Interface
+gamin-0.1.10p21     file and directory monitoring system
+garcon-0.4.0p0      Xfce4 freedesktop.org compliant menu implementation
+gawk-4.1.3p1        GNU awk
+gcc-4.9.4p4         GNU compiler collection: core C compiler
+gcc-libs-4.9.4p4    GNU compiler collection: support libs
+gcj-4.2.4p5v0       GNU compiler collection: java compiler
+gconf2-3.2.6p8      configuration database system for GNOME
+gcr-3.20.0          library for bits of crypto UI and parsing
+gd-2.1.1p3          library for dynamic creation of images
+gdbm-1.12           GNU dbm
+gdiff-3.5           GNU versions of the diff utilities
+gdk-pixbuf-2.36.6   graphic library for gtk+2
+geekcode-1.7.3p1    geek code generator
+geoclue2-2.4.6      modular geoinformation service on top of D-Bus
+geocode-glib-3.20.1 convenience library for the geocoding
+geolite-country-20170208 GeoIP GeoLite database: IPv4/v6 address to country
+geos-3.6.1          2d geometry and topology engine
+gettext-0.19.8.1    GNU gettext runtime libraries and programs
+gettext-tools-0.19.8.1 GNU gettext development and translation tools
+gforth-0.7.3p2      ANSI/200x Forth interpreter and compiler
+ggrep-3.0           GNU versions of grep pattern matching utilities
+ghc-7.10.3p7        compiler for the functional language Haskell
+ghostscript-9.07p3-no_x11 GNU PostScript interpreter
+ghostscript-fonts-8.11p3 35 standard PostScript fonts with Adobe name aliases
+gif2png-2.5.11      converts GIF images to the PNG format
+giflib-5.1.4        tools and library routines for working with GIF images
+gindent-2.2.10p2    GNU utility to indent C source files
+git-2.12.2          GIT - Tree History Storage Tool
+gl2ps-1.3.9         OpenGL to PostScript printing library
+glib2-2.50.3        general-purpose utility library
+glib2-networking-2.50.0p0 network-related gio modules for glib2
+glib2mm-2.50.0      C++ interface for glib2
+glpk-4.55           GNU Linear Programming Kit
+gmake-4.2.1         GNU make
+gmime-2.6.23        MIME messages creation and parsing library
+gmp-6.1.2           library for arbitrary precision arithmetic
+gnat-4.9.4p4        GNU compiler collection: Ada compiler
+gnome-doc-utils-0.20.10p5 collection of documentation utilities for the GNOME project
+gnome-icon-theme-3.12.0p3 base icon theme for GNOME
+gnome-icon-theme-symbolic-3.12.0p2 base icon theme extension for special UI contexts
+gnome-mime-data-2.18.0p8 MIME and application database for GNOME
+gnome-vfs2-2.24.4p14 GNOME Virtual File System
+gnucap-0.35p1       Gnu Circuit Analysis Package
+gnuchess-6.2.4      chess program
+gnugetopt-1.1.6p0   GNU getopt(1) utility
+gnugo-3.8p0         GNU version of Go
+gnupg-1.4.21p1      GNU privacy guard - a free PGP replacement
+gnupg-2.1.15p2      GNU privacy guard - a free PGP replacement
+gnuplot-4.6.6p0     command-driven interactive function plotting program
+gnushogi-1.4.2      GNU version of Shogi
+gnustep-base-1.24.9p1 GNUstep base library
+gnustep-gui-0.25.0  GNUstep gui library
+gnustep-libobjc2-1.8p0 GNUstep libobjc2 objective-c runtime
+gnustep-make-2.6.8p0 GNUstep makefile package
+gnutls-3.5.10       GNU Transport Layer Security library
+gnuwatch-3.2.8      GNU watch command
+go-1.8              Go programming language
+gob2-2.0.20p1       GTK+ Object Builder
+gobjc-4.9.4p4       GNU compiler collection: obj C compiler
+gobject-introspection-1.50.0 GObject Introspection
+gone-1.3.5p0        terminal locking utility
+goocanvas-1.0.0p4   canvas widget for GTK+ based on Cairo
+gopher-3.0.11p2     distributed document delivery client
+gperf-3.0.4p0       perfect hash functions, to help write parsers
+gpgme-1.6.0p0       GnuPG Made Easy
+gprolog-1.3.1p0     Prolog compiler
+gpsd-2.95p7         service daemon that monitors one or more GPSes
+gputils-1.5.0       GNU PIC assembler and utilities
+grap-1.45           language for typesetting graphs
+graphite2-1.3.9     rendering for complex writing systems
+graphviz-2.36.0p7   graph drawing software
+groff-1.22.3p3      GNU troff typesetter
+gsed-4.2.2p0        GNU stream editor
+gsettings-desktop-schemas-3.22.0 collection of shared GSettings schemas
+gsl-1.15p2          GNU Scientific Library
+gsm-1.0.16          GSM audio codec library and converter
+gstreamer-0.10.36p10 framework for streaming media
+gstreamer-plugins-base-0.10.36p15 base elements for GStreamer
+gstreamer1-1.10.4   framework for streaming media
+gtar-1.29           GNU version of the traditional tape archiver
+gtest-1.4.0p3       C++ unit test framework
+gtk+2-2.24.31p0     multi-platform graphical toolkit
+gtk+3-3.22.11       multi-platform graphical toolkit
+gtk-update-icon-cache-3.22.11 gtk+ icon theme caching utility
+gtkglext-1.2.0p12   OpenGL extension to GTK+ 2.0 and later
+gtksourceview-2.10.5p3 text widget that extends GTK2's GtkTextView widget
+gtypist-2.9.5p0     interactive typing tutor
+guile-1.8.8p4       GNU's Ubiquitous Intelligent Language for Extension
+gupnp-av-0.12.10    helpers for building A/V applications using GUPnP
+gv-3.7.4            PostScript and PDF previewer
+gvfs-1.30.4         GNOME Virtual File System
+hackdata-3.4.3p0    common data for the nethack/slash ports
+hamlib-1.2.15.3p3   radio/rotator control library
+happy-1.19.5        parser generator for Haskell
+harfbuzz-1.4.5      text shaping library
+harfbuzz-icu-1.4.5  ICU support for libharfbuzz
+haskell-report-2010 language and library specification for Haskell
+hdf5-1.8.18         Hierarchical Data Format 5 Technology suite
+help2man-1.47.4     generates simple manual pages from program output
+hexcurse-1.55       user-friendly ncurses-based hexeditor with many features
+hexedit-1.2.12      view and edit files in hexadecimal or ASCII
+hicolor-icon-theme-0.15 fallback theme of the icon theme specification
+hoc-1.1p0           from Kernighan & Pike: High Order Calculator
+hs-GLURaw-1.5.0.2p1 raw Haskell binding for the OpenGL utility library
+hs-GLUT-2.7.0.3p1   Haskell binding for the OpenGL Utility Toolkit
+hs-HTTP-4000.2.20p1 library for client-side HTTP
+hs-HUnit-1.3.0.0p0  unit testing framework for Haskell
+hs-ObjectName-1.1.0.0p1 explicitly handled object names
+hs-OpenGL-2.13.1.0p1 Haskell binding for the OpenGL graphics system
+hs-OpenGLRaw-2.6.0.0p1 raw Haskell binding for OpenGL
+hs-QuickCheck-2.8.1p1 automatic testing of Haskell programs
+hs-StateVar-1.1.0.1p0 State variables
+hs-async-2.1.0      asynchronous IO operations
+hs-attoparsec-0.13.0.1p1 fast combinator parsing for bytestrings
+hs-case-insensitive-1.2.0.5p0 case insensitive string comparison
+hs-cgi-3001.2.2.2p1 CGI library for Haskell
+hs-exceptions-0.8.0.2p1 extensible optionally-pure exceptions
+hs-half-0.2.2.1p0   half precision floating point
+hs-hashable-1.2.3.3p1 class for hashable data types
+hs-haskell-src-1.0.2.0p1 manipulating Haskell source code
+hs-html-1.0.1.2p13  HTML combinator library
+hs-mtl-2.2.1p1      monad classes using functional dependencies
+hs-multipart-0.1.2p1 HTTP multipart library
+hs-network-2.6.2.1p1 Haskell networking library
+hs-network-uri-2.6.0.3p1 URI manipulation
+hs-old-locale-1.0.0.7p1 old locale library
+hs-old-time-1.1.0.3p1 old time library
+hs-parallel-3.2.0.6p1 parallel programming library
+hs-parsec-3.1.9p2   Monadic parser combinators
+hs-primitive-0.6.1.0p1 primitive memory-related operations
+hs-random-1.1p1     random number library
+hs-regex-base-0.93.2p10 interface API for regex-posix,pcre,parsec,tdfa,dfa
+hs-regex-compat-0.95.1p5 module layer over regex-posix to replace Text.Regex
+hs-regex-posix-0.95.2p4 posix regex backend for regex-base
+hs-scientific-0.3.3.8p1 scientific number type
+hs-split-0.2.2p3    library for splitting lists
+hs-stm-2.4.4p1      Software Transactional Memory
+hs-syb-0.6p0        Scrap Your Boilerplate library for generic programming
+hs-text-1.2.1.3p1   efficient packed Unicode text type
+hs-tf-random-0.5p1  high-quality splittable PRNG
+hs-transformers-compat-0.4.0.4p1 compat lib exposing transformers 0.3 and 0.4 types
+hs-unordered-containers-0.2.5.1p1 efficient hashing-based container types
+hs-vector-0.11.0.0p1 Int-indexed arrays
+hs-zlib-0.5.4.2p1   zlib bindings for Haskell
+hscolour-1.23p1     Haskell code colourizer
+ht-2.1.0            file editor/viewer/analyzer for executables
+html2text-1.3.2ap1  advanced HTML-to-text converter
+html2wml-0.4.11p0   on-the-fly HTML to WML conversion
+htmldoc-1.8.29      convert HTML pages to PDF/PS format
+hubbub-0.3.3        HTML parser
+hyperestraier-1.4.13p6 high performance full-text search system
+hyphen-2.8.8        text hyphenation library
+i3-4.13             improved dynamic tiling window manager
+i3status-2.11p2     generate a statusbar for use with i3/xmobar/dzen2
+icbirc-2.1p0        proxy IRC client with ICB server
+icon-book-9.3       Icon programming language reference book
+icon-interp-9.5.1p0 programming language with generators, X11 and more
+icon-lib-9.4.3      useful and interesting programs for Icon
+icon-naming-utils-0.8.90p1 compatibility tools from the Tango project
+icu4c-58.2p0        International Components for Unicode
+id-utils-3.2dp2     gid/lid tools for looking up variables in code
+ijs-0.35p2          raster image transmission library
+iksemel-1.4p9       XML parser designed for Jabber applications
+ilmbase-2.2.0       ILM base libraries
+imlib2-1.4.9p0      image manipulation library
+intltool-0.51.0p1   internationalization tools
+iodbc-3.52.10       ODBC 3.x driver manager
+ipcalc-1.4p0        small network calculator
+ipython-5.1.0p0     enhanced interactive Python shell
+ircII-20151120      Internet Relay Chat client
+ircd-ratbox-3.0.10p1 advanced, stable and fast irc server
+irssi-0.8.21        modular IRC client with many features (ipv6,socks,proxy)
+irssi-icb-0.17      ICB plugin for irssi
+irssi-silc-1.1.8p9  SILC plugin for irssi
+iso-codes-3.74      lists of the country, language and currency iso names
+iso8879-1986p0      character entity sets from ISO 8879:1986 (SGML)
+itcl-3.4.1p1v0      object-oriented extensions to Tcl
+itk-3.3p4           build mega-widgets using the Itcl object system
+iwidgets-4.0.1p5    Iwidgets Mega Widget Set
+ja-groff-1.10_0.99p0 japanese groff
+jack-0.125.0        low latency sound server
+jasper-1.900.1p5    reference implementation of JPEG-2000
+javaPathHelper-1.0  helper script for launching java applications
+jbig2dec-0.11       decoder for JBIG2 monochrome hi-res image compression format
+jbigkit-2.1         lossless image compression library, with lightweight version
+jdk-1.7.0.80p2v0    Java2(TM) SE Dev Kit v1.7.0.80
+jed-0.99.19p1       text editor
+jikes-1.22p5        compile Java source into .class files (quickly!)
+joe-4.3             Joe's Own Editor
+jove-4.16.0.73p0    Jonathan's Own Version of Emacs
+jpeg-1.5.1p0v0      SIMD-accelerated JPEG codec replacement of libjpeg
+json-c-0.12p1       JSON implementation in C
+json-glib-1.2.8     JSON parser for GLib-based libraries and applications
+jsoncpp-1.8.0       JSON parsing C++ API
+kermit-9.0.302      serial and network communications package
+lablgtk2-2.18.5     OCaml interface to GTK+2
+ladspa-1.13p0       linux audio developer simple plugin API
+lame-3.99.5p0       lame ain't an MP3 encoder
+lapack-3.1.1p5      library of Fortran 77 linear algebra subroutines
+latex-mk-1.9.1p1    set of Makefile fragments to manage LaTeX documents
+latex2html-2015     LaTeX to HTML converter
+lcms-1.19           color management library
+lcms2-2.7           color management library
+ldb-1.1.27          LDAP-like embedded database
+lftp-4.7.7          shell-like command line ftp and sftp client
+libIDL-0.8.14p4     IDL parsing library
+liba52-0.7.5p2      free library for decoding ATSC A/52 streams, aka AC-3
+libao-1.2.0p1       portable audio output library
+libarchive-3.3.1    multi-format archive and compression library
+libart-2.3.21p0     high-performance 2D graphics library
+libass-0.13.6       portable ASS/SSA subtitle renderer
+libassuan-2.4.3p0   IPC library used by GnuPG and gpgme
+libatomic_ops-7.4.4 access to hardware provided atomic memory operations
+libaudiofile-0.3.6p1 SGI audiofile library clone
+libbind-6.0p4v0     BIND stub resolver library for special use cases
+libbio-2.0          Simple buffered I/O library from Plan 9
+libbluray-0.9.3     library supporting Blu-ray playback
+libbonobo-2.32.1p10 GNOME component and compound document system
+libcaca-0.99.19p1   color ascii art library
+libcanberra-0.30p2  implementation of the Freedesktop sound theme spec.
+libcanberra-gtk-0.30p3 gtk+2 helper for libcanberra
+libcares-1.12.0     asynchronous resolver library
+libcdaudio-0.99.12p2 multi-platform cd player development library
+libcddb-1.3.2p0     library to access data on a CDDB server
+libcdio-0.80p7      compact disk input and control library
+libconfuse-3.0      configuration file parser library
+libcroco-0.6.11     generic CSS parsing library for GNOME project
+libcss-0.6.1        CSS parser and selection engine
+libcue-1.4.0p0      cue sheet parser library
+libdaemon-0.14p1    lightweight C library that eases the writing of daemons
+libdbi-0.8.4p0      database-independent abstraction layer
+libdca-0.0.5p4      free DTS Coherent Acoustics decoder
+libdnet-1.12p13     portable low-level networking library
+libdockapp-0.4.0p4  dockapp-making standard library for Window Maker
+libdv-1.0.0p2       Quasar DV codec
+libdvdcss-1.4.0     descramble scrambled DVDs
+libdvdnav-5.0.3v0   DVD navigation library
+libdvdread-5.0.3p0  accessing DVD files
+libebml-1.3.4       Extensible Binary Meta Language library
+libelf-0.8.13p3     read, modify, create ELF files on any arch
+libev-4.24p0        high-performance event loop library
+libevent-2.0.22p0   event notification library
+libexecinfo-0.3v0   clone of backtrace facility found in the GNU libc
+libexif-0.6.21p0    extract digital camera info tags from JPEG images
+libf2c-3.3.6p10     GNU fortran 77 libraries
+libffi-3.2.1p2      Foreign Function Interface
+libfmt-2.0          Extensible formatted print C library
+libgadu-1.12.1p0v0  implementation of Gadu-Gadu IM protocol
+libgcrypt-1.7.6     crypto library based on code used in GnuPG
+libgdiplus-4.2p0    GDI+ comptible API
+libgee-0.18.1       GObject based collection library
+libgeotiff-1.4.2    GIS TIFF interchange library
+libglade2-2.6.4p13v0 library for loading GLADE interface files at runtime
+libgnome-2.32.1p12  libraries for the GNOME project
+libgnome-keyring-3.12.0p4 library for gnome keyring integration
+libgnomecanvas-2.30.3p6 graphics library for GNOME
+libgpg-error-1.27   error codes for GnuPG related software
+libgphoto-2.5.12    digital camera library
+libgsf-1.14.41      GNOME Structured File library
+libgtop2-2.34.1p0   portable library for obtaining system information
+libguess-1.2p0      high-speed character set detection library
+libical-2.0.0       implementation of the iCalendar protocols and data units
+libiconv-1.14p3     character set conversion library
+libid3tag-0.15.1bp4 library for reading ID3 tags
+libidn-1.33         internationalized string handling
+libidn2-0.16        implementation of IDNA2008 internationalized domain names
+libksba-1.3.5p0     X.509 library
+libldns-1.6.17p1    DNS library modelled after Net::DNS
+libltdl-2.4.2p1     GNU libtool system independent dlopen wrapper
+libmad-0.15.1bp4    high-quality MPEG audio decoder
+libmagic-5.28       library to determine file type
+libmcrypt-2.5.8p2   interface to access block/stream encryption algorithms
+libmikmod-3.3.10    mikmod sound library
+libmms-0.6.2p3      library for parsing mms:// and mmsh:// type network streams
+libmng-1.0.10p3     Multiple-image Network Graphics (MNG) reference library
+libmodplug-0.8.8.5p0 library for decoding mod-like music formats
+libmp4v2-1.9.1p1    read and manipulate the MP4 container format
+libmpc-0.9p1        complex numbers math library
+libmpd-11.8.17p3    mpd client library
+libmpeg2-0.5.1p2    free MPEG-2 video stream decoder
+libmspack-0.5alphav0 library for handling microsoft compression formats
+libnet-1.0.2ap3v0   raw IP packet construction library
+libnet-1.1.2.1p3v0  raw IP packet construction library
+libnettle-3.3p0     cryptographic library
+libnotify-0.7.7     send desktop notifications to a notification daemon
+libnsbmp-0.1.4      BMP/ICO decoding library
+libnsgif-0.1.4      GIF decoding library
+liboauth-1.0.3      library implementing the OAuth Core RFC 5849 standard
+libofx-0.9.11       opensource implementation of the OFX specification
+libogg-1.3.2p0      Ogg bitstream library
+liboil-0.3.17p2     library of optimized inner loops
+libotr-4.1.1p0      portable OTR messaging library and toolkit
+libpaper-1.1.24.5   library for handling paper characteristics
+libparserutils-0.2.3 utility library for parser building
+libpcapnav-0.8p2    library for navigating to arbitrary packets in a trace file
+libproxy-0.4.14p0   library handling all the details of proxy configuration
+libpsl-0.17.0       public suffix list library
+libpst-0.6.70       read and convert Microsoft Outlook mail files
+libpurple-2.11.0    multi-protocol instant messaging library
+libregexp9-2.0      Simple regular expression library from Plan 9
+librep-0.92.3       Emacs Lisp-like runtime library
+librest-0.8.0       access web services that claim to be RESTful
+librsvg-2.40.16     SAX-based render library for SVG files
+librsync-1.0.0      library for delta compression of streams
+libsamplerate-0.1.9 audio sample rate conversion library
+libsecret-0.18.5    library for storing and retrieving passwords and secrets
+libshout-2.3.1      library for communicating with an icecast server
+libsidplay-1.36.57p4 C64 music player and SID chip emulator library
+libsigc++-2.10.0    callback framework for C++
+libsigsegv-2.10p2   library for handling page faults in user mode
+libslang-2.2.4p2    stack-based interpreter for terminal applications
+libsndfile-1.0.27   library to handle various audio file formats
+libsodium-1.0.12p0  library for network communications and cryptography
+libsoup-2.56.0      HTTP client/server library for GNOME
+libssh-0.7.3        C library implementing server and client side
+libssh2-1.8.0       library implementing the SSH2 protocol
+libstatgrab-0.91p1  system statistics gathering library
+libtalloc-2.1.8     hierarchical memory pool system with destructors
+libtasn1-4.10       Abstract Syntax Notation One structure parser library
+libtheora-1.1.1p3   open video codec
+libtool-2.4.2p0     generic shared library support script
+libunique-1.1.6p9   library for writing single instance GTK+2 applications
+libunistring-0.9.7  manipulate Unicode strings
+libusb-compat-0.1.5p0 libusb-0.1 compatibility layer for libusb1
+libusb1-1.0.20p0    library for USB device access from userspace
+libutf-2.0          UTF8 support library from Plan 9
+libv4l-1.12.3       libv4l userspace library
+libvncserver-0.9.10p2 library for easy implementation of a VNC server
+libvorbis-1.3.5     audio compression codec library
+libvpx-1.6.1        Google VP8/VP9 video codec
+libwapcaplet-0.4.0  string internment library
+libwebp-0.5.2       Google WebP image format conversion tool
+libwmf-0.2.8.4p4    WMF handling and conversion library
+libwnck-2.30.7p6    window navigator construction kit
+libxdg-basedir-1.2.0p0 implementation of the XDG Base Directory specification
+libxfce4ui-4.12.1p3 Xfce4 widget library
+libxfce4util-4.12.1p0 Xfce4 basic utility library
+libxkbcommon-0.7.1  library to handle keyboard descriptions
+libxklavier-5.3p3   utility library for XKB
+libxml-2.9.4p0      XML parsing library
+libxslt-1.1.29      XSLT C Library for GNOME
+libyajl-2.1.0       small JSON library written in ANSI C
+libyaml-0.1.7       YAML 1.1 parser and emitter written in C
+linkchecker-9.3p1   checks HTML documents for broken links, CLI
+links+-2.14-no_x11  graphics and text browser
+liveMedia-20120204p0 LIVE555 streaming media library
+llvm-4.0.0p2        modular, fast C/C++/ObjC compiler, static analyzer and tools
+lockfile-3.22       semaphore-file tool for shell scripting
+logtail-1.3.17      mail anomalies in the system logfiles to the administrator
+loudmouth-1.4.3p6   lightweight Jabber client library
+lout-3.40           object oriented type setting language
+lrzsz-0.12.20p0     receive/send files via X/Y/ZMODEM protocol
+lua-5.1.5p6         powerful, light-weight programming language (version 5.1.5)
+lua-5.3.4           powerful, light-weight programming language (version 5.3.4)
+lua-bit32-0.3       bit32 compatibility module for Lua 5.1
+lua-coxpcall-1.13.0p4 encapsulate protected Lua calls with a coroutine based loop
+luaalarm-20061011p3 alarm library for the lua language
+luabitop-1.0.2p0    library for bitwise operations in lua
+luacopas-1.1.6p3    coroutine oriented portable asynchronous services for lua
+luacrypto-0.2.0p3   Lua binding for the OpenSSL crypto libraries
+luaevent-0.2.1p2    lua binding of libevent
+luaexpat-1.3.0p0    lua library for the expat XML parser
+luafs-1.6.3p0       file system library for the lua language
+luagd-2.0.33r2p9    gd binding for the lua language
+luapack-20061124p4  library for packing and unpacking binary data
+luaposix-33.4.0p0v0 posix library for the lua language
+luaprofiler-2.0.2p2 time profiler for Lua
+luarexlib-2.4.0p5   lua binding of posix and pcre regex libraries
+luarings-1.3.0      multiple states library for the lua language
+luasec-0.6p0        lua binding to OpenSSL to provide TLS/SSL communication
+luasocket-3.0rc1p1  network support for the lua language
+luasqlite3-0.4.1p7  binding of sqlite3 for lua
+luastdlib-20p1      lua library of common programming tasks
+lynx-2.8.9pl11      text web browser
+lz4-1.7.4.2         fast BSD-licensed data compression
+lzo-1.08p3          portable speedy lossless data compression library
+lzo2-2.10           portable speedy lossless data compression library
+lzop-1.03           fast file compressor similar to gzip
+m4-1.4.18           GNU m4
+mariadb-client-10.0.30v1 multithreaded SQL database (client)
+mariadb-server-10.0.30v1 multithreaded SQL database (server)
+mason-book-1.0p0    book on embedding Perl in HTML with Mason
+matio-1.5.9         library for reading and writing Matlab MAT files
+maxima-5.39.0       GPL computer algebra system based on DOE Macsyma
+mc-4.8.19           free Norton Commander clone with many useful features
+mcs-0.7.2p2         abstract the storage of configuration settings
+meanwhile-1.0.2p5   implementation of Lotus Sametime Community Client protocol
+memcached-1.4.33    distributed memory object caching system
+mercurial-3.8.3p0   fast, lightweight source control management
+metaauto-1.0p1      wrapper for gnu auto*
+mhash-0.9.9.9p0     strong hash library
+minicom-2.7p0       MS-DOS Telix-like serial communication program
+minisat-2.2.0p0     minimalistic Boolean satisfiability solver
+mjpegtools-2.0.0p2  tools to edit/modify/encode video streams
+mk-2.0p1            Streamlined replacement for make
+mm-common-0.9.10    common build utilities for GNOME C++ binding libraries
+monit-5.21.0        monitoring and managing daemons utility
+monitoring-plugins-2.2p1 monitoring plugins (for Nagios, Icinga, etc)
+moon-buggy-1.0.51   drive some car across the moon
+moria-5.5.2p3       The Dungeons of Moria
+most-5.0.0ap0       browse or page through a text file
+motif-2.3.6p0       Motif toolkit
+mowgli-1.0.0p2      performance and usability oriented extensions to C
+mozjs17-17.0p3      Mozilla C implementation of JavaScript
+mpack-1.6p1         external MIME packer/unpacker
+mpfr-3.1.5.2        library for multiple-precision floating-point computations
+mrtg-2.17.4p3       multi-router traffic grapher
+msp430-binutils-2.21.1ap1 binutils for msp430
+mtr-0.87            Matt's traceroute - network diagnostic tool
+munin-node-2.0.33   flexible network host monitoring, client
+munin-server-2.0.33 flexible network host monitoring, server
+mupdf-1.10ap0       graphic library, pdf parser, viewer and utilities
+musepack-475p2      decoder, encoder and replaygain for musepack files
+mutt-1.8.0v3        tty-based e-mail client
+nano-2.7.5          Pico editor clone with enhancements
+nasm-2.11.08        general-purpose multi-platform x86 assembler
+ncftp-3.2.5         ftp replacement with advanced user interface
+neXtaw-0.15.1p1     libXaw widget set replacement
+necpp-1.2.3p3       NEC2++ antenna simulator
+nedit-5.5p22v0      X11/Motif GUI text editor
+neon-0.30.1         HTTP and WebDAV client library, with C interface
+net-snmp-5.7.3p11   extendable SNMP implementation
+nethack-3.4.3p8     dungeon explorin', hackin', game.  Piece of cake
+netpbm-10.76.00     toolkit for manipulation and conversion of graphic images
+netris-0.52p1       network head-to-head version of T*tris
+nfdump-1.6.13p0     tools to collect and process netflow data
+nfprofile-1.6.13p0  filters data from nfdump according to profiles
+nghttp2-1.21.0      library for HTTP/2
+nginx-1.10.2p2      robust and small HTTP server and mail proxy server
+ngircd-24           lightweight irc server
+nmap-7.40           scan ports and fingerprint stack of network hosts
+nmh-1.6p0           new MH mail handling program
+nn-6.7.3p2          No News is Good News (Fast CLI Point & Read Newsreader)
+npth-1.2            new GNU Portable Threads Library
+nspr-4.13.1         Netscape Portable Runtime
+nss-3.29.3          libraries to support development of security-enabled apps
+ntp-4.2.8pl10       Network Time Protocol reference implementation
+nutdb-20.1p0        record and analyze your meals for nutrient composition
+ocaml-4.03.0p0      ML language with complete class-based objective system
+octave-4.0.2p2      high-level language for numerical computations
+odt2txt-0.5         convert OpenDocument Text to plain text
+ogle-0.9.2p18       DVD player
+omega-0.90.4p2      complex rogue-style game of dungeon exploration
+oniguruma-5.9.6     regular expressions library
+open-cobol-1.1p0    open source COBOL compiler
+openafs-1.4.7p31    OpenAFS distributed filesystem
+openal-1.16.0v0     cross-platform 3D audio API
+openjp2-2.1.2       open-source JPEG 2000 codec library
+openjpeg-1.5.2      open-source JPEG 2000 codec library
+openldap-client-2.4.44p3 open-source LDAP software (client)
+openmpi-1.4.1p4     open source MPI-2 implementation
+openpam-20141014    Pluggable Authentication Module
+opensp-1.5.2p0      object-oriented SGML parser
+opus-1.1.4          IETF audio codec
+orc-0.4.24          library and toolset to operate arrays of data
+ossp-uuid-1.6.2p3   ISO-C API and CLI for generating UUIDs
+otcl-1.14p0         MIT Object Tcl
+p11-kit-0.23.2p0    library for loading and enumurating of PKCS#11 modules
+p5-Algorithm-C3-0.10 module for merging hierarchies using the C3 algorithm
+p5-Algorithm-Dependency-1.110p0 base class for implementing various dependency trees
+p5-Algorithm-Diff-1.1903p0 interface to compute differences between two objects
+p5-Algorithm-Munkres-0.08 implementation of Munkres' solution to Assignment problem
+p5-Alien-Tidyp-1.4.7 building, finding and using tidyp library
+p5-Any-Moose-0.18   use Moose or Mouse modules
+p5-AnyEvent-7.13v0  provide framework for multiple event loops
+p5-AnyEvent-I3-0.16p0 communicate with the i3 window manager
+p5-Apache-DBI-1.12  DBI persistent connection, authentication and authorization
+p5-Apache-LogFormat-Compiler-0.32 compile a log format string to perl-code
+p5-Apache-Session-1.83p2 persistence framework for Apache session data
+p5-AppConfig-1.71   bundle for reading and parsing config files
+p5-Archive-Zip-1.59 perl interface to ZIP files
+p5-Array-Compare-2.12 Perl module for comparing arrays
+p5-Authen-NTLM-1.09 perl interface to the NTLM authentication mechanism
+p5-Authen-SASL-2.16 perl interface to the SASL auth framework
+p5-AutoXS-Header-1.02p1 simple container for the AutoXS header file
+p5-B-Hooks-EndOfScope-0.15 execute code after a scope finished compilation
+p5-B-Hooks-OP-Check-0.19p2 wrap OP check callbacks
+p5-BSD-Resource-1.2910 BSD process resource limit and priority functions
+p5-Benchmark-Timer-0.7107 benchmarking with statistical confidence
+p5-BerkeleyDB-0.55  Berkeley DB module
+p5-Best-0.15        fallbackable module loader
+p5-Bio-ASN1-EntrezGene-1.10p2v0 regular expression-based parser for NCBI Entrez Gene
+p5-Bit-Vector-7.4p0 library of advanced math functions
+p5-CGI-4.35         handle Common Gateway Interface requests and responses
+p5-CGI-Compile-0.21 compile .cgi scripts to a code reference
+p5-CGI-Emulate-PSGI-0.22 PSGI adapter for CGI
+p5-CGI-PSGI-0.15p0  CGI.pm adaption to the PSGI protocol
+p5-CGI-Simple-1.115 drop-in object-oriented CGI.pm replacement
+p5-CGI-Untaint-1.26p1 taint checking and input validation from web forms
+p5-CSS-Squish-0.10  compress CSS info for transmission
+p5-Cache-Cache-1.08 perl cache interface
+p5-Cache-Memcached-1.30 pure perl client interface to memcached
+p5-Cache-Mmap-0.11p2v0 shared data cache using memory mapped files
+p5-Cache-Simple-TimedExpiry-0.27p3 lightweight cache with timed expiration
+p5-Calendar-Simple-1.21p0 simple calendar month
+p5-Canary-Stability-2011 canary to check perl compatibility for schmorp's modules
+p5-Capture-Tiny-0.30 capture STDOUT and STDERR
+p5-Carp-Assert-0.21 Perl module implementing assertions
+p5-Carp-Assert-More-1.14 convenience wrappers around Carp::Assert
+p5-Carp-Clan-6.04p1 Carp for clan of modules
+p5-Catalyst-Action-RenderView-0.16p0 sensible default end action for catalyst
+p5-Catalyst-Devel-1.36p0 Catalyst development tools
+p5-Catalyst-Plugin-Authentication-0.10018p0 Catalyst authentication framework
+p5-Catalyst-Plugin-Charsets-Japanese-0.06p1 jcode interface for catalyst
+p5-Catalyst-Plugin-ConfigLoader-0.30p0 catalyst plugin to Config::Any
+p5-Catalyst-Plugin-Session-0.32p0 session framework for catalyst
+p5-Catalyst-Plugin-Static-Simple-0.29p1 serving static pages with catalyst
+p5-Catalyst-Runtime-5.90006p2 MVC Web Application Framework
+p5-Catalyst-View-JSON-0.36 JSON view for your data
+p5-Class-Accessor-0.34p0 automated accessor generation
+p5-Class-Accessor-Chained-0.01p1 make chained accessors
+p5-Class-Accessor-Grouped-0.10012 lets you build groups of accessors
+p5-Class-Accessor-Lite-0.08 minimalistic variant of Class::Accessor
+p5-Class-AutoClass-1.56 get and set methods and simplify object initialization
+p5-Class-Autouse-2.01p0 run-time class loading on first method call
+p5-Class-C3-0.30    pragma to use the C3 method resolution order algorithm
+p5-Class-C3-Adopt-NEXT-0.14 make NEXT suck less
+p5-Class-C3-Componentised-1.001000p0 load mix-ins or components to your C3-based class
+p5-Class-Container-0.12p1 validate method/function parameters
+p5-Class-Data-Accessor-0.04004 class and instance data accessor creation
+p5-Class-Data-Inheritable-0.08p0 inheritable, overridable class data
+p5-Class-ErrorHandler-0.04 base class for error handling
+p5-Class-Gomor-1.03 class and object builder
+p5-Class-ISA-0.36p0 report the search path for a class's ISA tree
+p5-Class-Inspector-1.28p0 get information about a class and its structure
+p5-Class-Load-0.23  working 'require Class::Name' and more
+p5-Class-Load-XS-0.09p0 XS implementation of parts of Class::Load
+p5-Class-Loader-2.03p1 load modules and create objects on demand
+p5-Class-Method-Modifiers-2.12 provides Moose-like method modifiers
+p5-Class-MethodMaker-2.24 module for creating generic methods
+p5-Class-Mix-0.005  dynamic class mixing
+p5-Class-ReturnValue-0.55p1 smart return-value object
+p5-Class-Singleton-1.5 perl singleton pattern
+p5-Class-Std-0.013  inside-out object scaffolding
+p5-Class-Std-Utils-0.0.2p2 utilities functions to build inside-out objects
+p5-Class-Trigger-0.14 add / call inheritable triggers
+p5-Class-Unload-0.09 unload a class
+p5-Class-Virtual-0.08 base class for virtual base classes
+p5-Class-XSAccessor-1.19 generate fast XS accessors without runtime compilation
+p5-Clone-0.38       recursively copy Perl datatypes
+p5-Config-Any-0.30  load various configuration file formats
+p5-Config-General-2.60 generic configuration parser, inspired by apache
+p5-Config-Tiny-2.14 simple methods to Read/Write .ini style files
+p5-Context-Preserve-0.01p0 run code after a subroutine call
+p5-Convert-ASCII-Armour-1.4p3 convert binary octets into ASCII armoured messages
+p5-Convert-ASN1-0.27 module to encode and decode ASN.1 data structures
+p5-Convert-BER-1.32p0v0 module to encode and decode objects
+p5-Convert-BinHex-1.125 module to extract data from Macintosh BinHex files
+p5-Convert-Binary-C-0.78 binary data conversion using C types
+p5-Convert-Color-0.11 color space conversions and named lookups
+p5-Convert-PEM-0.08 read/write access to ASN.1-encoded PEM files
+p5-Convert-TNEF-0.18 module to read TNEF files
+p5-Convert-UU-0.5201p0 Perl5 module for uuencode and uudecode
+p5-Convert-UUlib-1.4p1v1 interface to the uulib library
+p5-Cookie-Baker-0.06 cookie string generator / parser
+p5-Cpanel-JSON-XS-3.0230 cPanel fork of JSON::XS, fast and correct serializing
+p5-Crypt-Blowfish-2.14p2 interface to the Blowfish encryption algorithm
+p5-Crypt-CBC-2.33   cryptographic cipher block chaining mode
+p5-Crypt-DES-2.07p1 interface to the DES encryption algorithm
+p5-Crypt-DES-EDE3-0.01p1 Triple-DES EDE encryption/decryption
+p5-Crypt-DH-0.07p0  Diffie-Hellman key exchange system
+p5-Crypt-DSA-1.17   DSA Signatures and Key Generation
+p5-Crypt-Eksblowfish-0.009 the Eksblowfish block cipher
+p5-Crypt-OpenSSL-Bignum-0.06 OpenSSL's multiprecision integer arithmetic
+p5-Crypt-OpenSSL-RSA-0.28p1 RSA encoding and decoding using OpenSSL
+p5-Crypt-OpenSSL-Random-0.11 routines for accessing the OpenSSL prng
+p5-Crypt-Primes-0.50p1 provable prime number generator
+p5-Crypt-RC4-2.02p2 implementation of the RC4 encryption algorithm
+p5-Crypt-RSA-1.99p0 RSA public-key cryptosystem
+p5-Crypt-Random-1.25p2 cryptographically secure random number generator
+p5-Crypt-Rijndael-1.13 interface to the rijndael encryption algorithm aka AES
+p5-Crypt-SSLeay-0.72p2 library to provide LWP https support via OpenSSL
+p5-Crypt-X509-0.51p0 parse a X.509 certificate
+p5-Curses-1.32      terminal screen handling and optimisation
+p5-DBD-Pg-3.5.3     access to PostgreSQL databases through the DBI
+p5-DBD-SQLite-1.50p0v0 SQLite drivers for the Perl DBI
+p5-DBD-SQLite2-0.37 SQLite2 drivers for the Perl DBI
+p5-DBD-Sybase-1.15  Sybase database driver for the DBI module
+p5-DBD-mysql-4.042  MySQL drivers for the Perl DBI
+p5-DBI-1.633        unified perl interface for database access
+p5-DBIx-Class-0.082820p0 extensible and flexible object relational mapper
+p5-DBIx-Class-IntrospectableM2M-0.001002 introspect many-to-many shortcuts
+p5-DBIx-Class-Schema-Loader-0.07015p1 dynamic definition of a DBIx::Class::Schema
+p5-DBIx-ContextualFetch-1.03p1 add contextual fetches to DBI
+p5-DBIx-DBSchema-0.32p1 database-independent schema objects
+p5-DBIx-SearchBuilder-1.66 encapsulate SQL queries and rows in simple perl objects
+p5-Data-Alias-1.20  comprehensive set of aliasing operations
+p5-Data-Buffer-0.04p1 Perl module for creating read/write buffers
+p5-Data-Dump-1.23   pretty printing of data structures
+p5-Data-Dumper-Concise-2.022 less indentation and newlines plus sub deparsing
+p5-Data-GUID-0.048  extension for generating GUIDs
+p5-Data-ICal-0.22   generates iCalendar (RFC 2445) calendar files
+p5-Data-OptList-0.110 parse and validate simple name/value option pairs
+p5-Data-Page-2.02p0 pager utility
+p5-Data-Stag-0.14   structured tags datastructures
+p5-Data-Types-0.09  validate and convert data types
+p5-Data-UUID-1.221  extension for generating GUIDs/UUIDs
+p5-Data-Visitor-0.27p0 visitor-style traversal of Perl data structures
+p5-Date-Calc-6.4    date calculations for the Gregorian calendar
+p5-Date-Extract-0.05 extract probable dates from strings
+p5-Date-ICal-2.678  Perl Extensions for ICal objects
+p5-Date-Leapyear-1.72p0 is a particular year a leap year
+p5-Date-Tolkien-Shire-1.21 convert dates into the Shire Calendar
+p5-DateManip-6.39   manipulate dates in perl
+p5-DateTime-1.07p2v0 perl objected oriented Date Time
+p5-DateTime-Format-Mail-0.403v0 convert between DateTime and email (RFC2822/822) formats
+p5-DateTime-Format-Natural-0.76p1 create machine readable date/time with natural parsing logic
+p5-DateTime-Format-Strptime-1.54p0v0 parse and format strp and strf time patterns
+p5-DateTime-Format-W3CDTF-0.06 parse and format W3CDTF datetime strings
+p5-DateTime-Locale-0.46 localization data for perl DateTime.pm
+p5-DateTime-TimeZone-1.64p1 DateTime submodule for TZ
+p5-Devel-Caller-2.06p1 meatier versions of caller
+p5-Devel-GlobalDestruction-0.13 expose the flag which marks global destruction
+p5-Devel-PartialDump-0.13p0 partial dumping of data structures
+p5-Devel-StackTrace-2.00 an object representing a stack trace
+p5-Devel-StackTrace-AsHTML-0.14 displays stack trace in HTML
+p5-Devel-Symdump-2.15v0 module for inspecting Perl's symbol table
+p5-Device-SerialPort-1.04p2v0 talk to modem devices connected via serial port
+p5-Digest-BubbleBabble-0.02p0 module to bubble-babble fingerprints
+p5-Digest-HMAC-1.03p0 interface to HMAC Message-Digest Algorithms
+p5-Digest-MD2-2.04p0 perl interface to the MD2 Algorithm
+p5-Digest-MD5-M4p-0.01p5 perl interface to a variant of the MD5 algorithm
+p5-Digest-Perl-MD5-1.9 perl implementation of Ron Rivests MD5 Algorithm
+p5-Digest-SHA1-2.13p4 module to calculate SHA1 digests
+p5-Directory-Scratch-0.18 easy-to-use self-cleaning scratch space
+p5-Dist-CheckConflicts-0.11 declare version conflicts for your dist
+p5-EV-4.22p0        perl interface to libev
+p5-Email-Address-1.908 RFC 2822 address parsing and creation
+p5-Email-Address-List-0.05 RFC close address list parsing
+p5-Email-Date-Format-1.005 produce RFC 2822 date strings
+p5-Email-Simple-2.213 simple module for handling email messages
+p5-Email-Valid-1.200 check validity of Internet email addresses
+p5-Email-Valid-Loose-0.05p0 allows non RFC822 addresses common in japan
+p5-Encode-Detect-1.01p4 Encode::Encoding subclass that detects the encoding of data
+p5-Encode-IMAPUTF7-1.05 modification of UTF-7 encoding for IMAP
+p5-Encode-Locale-1.05 determine the locale encoding
+p5-Error-0.17024    error/exception handling in an OO-ish way
+p5-Eval-Closure-0.14 safely and cleanly create closures via string eval 
+p5-Event-1.26       event loop processing
+p5-Exception-Class-1.39 module to declare real exception classes in perl
+p5-Expect-1.33      talk to other applications
+p5-Exporter-Lite-0.08 lightweight exporting of functions and variables
+p5-Exporter-Tiny-0.044 exporter with the features of Sub::Exporter
+p5-ExtUtils-Depends-0.306 easily build XS extensions that depend on XS extensions
+p5-ExtUtils-PkgConfig-1.15 simplistic perl interface to pkg-config
+p5-FCGI-ProcManager-0.19p0 functions for managing FastCGI applications
+p5-File-ChangeNotify-0.26 watch for changes to files, cross-platform style
+p5-File-Copy-Recursive-0.38p1 recursive copy of files and directories
+p5-File-Find-Rule-0.34 alternative interface to File::Find
+p5-File-Flat-1.04   implements a flat filesystem
+p5-File-HomeDir-1.00 retrieve home directory location
+p5-File-Listing-6.04 parse directory listing
+p5-File-MMagic-1.30 perl module to guess file type from contents
+p5-File-NCopy-0.32p1 copy files and directories with perl
+p5-File-Remove-1.57 remove files and directories with perl
+p5-File-ShareDir-1.102 locate install data per-module
+p5-File-ShareDir-Install-0.11 install shared files, to use with File::ShareDir
+p5-File-Slurp-9999.19 efficient reading/writing of complete files
+p5-File-Sync-0.09p5 perl interface to the sync() system functions
+p5-File-Tail-1.3    library for reading from continuously updated files
+p5-File-Which-1.21  portable implementation of 'which' in Perl
+p5-File-chdir-0.1010 more sensible way to change directories
+p5-File-chmod-0.42  implements symbolic and ls chmod modes
+p5-File-pushd-1.009 change directory temporarily for a limited scope
+p5-FileHandle-Unget-0.1628 filehandle which supports ungetting of multiple bytes
+p5-Filesys-Df-0.92p5 filesystem disk space information
+p5-Filesys-DiskSpace-0.05p2 filesystem information display
+p5-Filesys-Notify-Simple-0.12 simple and dumb file system watcher
+p5-Filesys-Virtual-0.06p0 perl module to provide a framework for a virtual filesystem
+p5-Filesys-Virtual-Plain-0.10p0 perl module for a plain virtual filesystem
+p5-Finance-Currency-Convert-XE-0.25 currency conversion
+p5-Font-AFM-1.20p0  perl interface to Adobe Font Metrics files
+p5-FreezeThaw-0.5001 module for converting structures to strings and back
+p5-GD-2.56          module to interface with the GD graphics library
+p5-GD-Graph-1.54    module for graph plotting
+p5-GD-SVG-0.33      allow GD perl scripts to output SVG
+p5-GD-TextUtil-0.86p2 text utilities for use with GD drawing package
+p5-Geo-IP-1.50      look up country by IP address/hostname
+p5-Getopt-Long-Descriptive-0.100 Getopt::Long, but simpler and more powerful
+p5-GnuPG-Interface-0.44 perl5 interface to GnuPG
+p5-Graph-0.9704     graph data structures in perl
+p5-GraphViz-2.02p2  perl interface to the graphviz graphing tool
+p5-HTML-Form-6.03   Class that represents an HTML form element
+p5-HTML-Format-2.11 HTML text formating class
+p5-HTML-FormatText-WithLinks-0.15 HTML to text conversion with links as footnotes
+p5-HTML-FormatText-WithLinks-AndTables-0.06 converts HTML to Text with tables intact
+p5-HTML-Lint-2.22p0 check for HTML errors in a string or file
+p5-HTML-Mason-1.45p1 high-performance dynamic web authoring system
+p5-HTML-Mason-PSGIHandler-0.53 PSGI handler for HTML::Mason
+p5-HTML-Parser-3.72 modules to parse and extract information from HTML
+p5-HTML-Quoted-0.04 extract structure of quoted HTML mail message
+p5-HTML-RewriteAttributes-0.05p0 concise attribute rewriting
+p5-HTML-Scrubber-0.09 HTML cleaning module
+p5-HTML-Tagset-3.20p1 data tables useful for parsing HTML
+p5-HTML-Template-2.9 use HTML Templates from CGI scripts
+p5-HTML-Template-Expr-0.07 use HTML Templates which allows expressions
+p5-HTML-Tidy-1.56p0 (X)HTML validation in a Perl object
+p5-HTML-Tree-5.03   perl parser that builds an HTML tree
+p5-HTTP-Body-1.22   HTTP Body Parser
+p5-HTTP-Cookies-6.01 HTTP Cookie jars
+p5-HTTP-Daemon-6.01 a simple http server class
+p5-HTTP-Date-6.02   date conversion routines
+p5-HTTP-Headers-Fast-0.20 faster implementation of HTTP::Headers
+p5-HTTP-Lite-2.1.6p0 pure Perl HTTP client
+p5-HTTP-Message-6.11 HTTP Style Messages
+p5-HTTP-Negotiate-6.01 choose a variant to serve
+p5-HTTP-Parser-XS-0.17 fast, primitive HTTP request parser
+p5-HTTP-Request-AsCGI-1.2p1 setup CGI environment from HTTP::Request
+p5-HTTP-Server-Simple-0.51 simple standalone HTTP server
+p5-HTTP-Server-Simple-Mason-0.14 abstract baseclass for a standalone mason server
+p5-Hash-AutoHash-1.17 object-oriented access to real and tied hashes
+p5-Hash-AutoHash-Args-1.18 OO processing of keyword-based argument lists
+p5-Hash-Merge-0.200 merges arbitrarily deep hashes into a single hash
+p5-Hash-MultiValue-0.16 store multiples values per key
+p5-Hash-NoRef-0.03p5 HASH that stores values without a reference count increase
+p5-Heap-0.80p1      heap data structure in perl
+p5-Hook-LexWrap-0.25 lexically scoped subroutine wrappers
+p5-IO-CaptureOutput-1.1104p0 capture STDOUT and STDERR from Perl code, subprocesses or XS
+p5-IO-HTML-1.001    open an HTML file with automatic charset detection
+p5-IO-Interface-1.09p0 module for access to network card configuration information
+p5-IO-Multiplex-1.16 handle multiple file handles
+p5-IO-SessionData-1.03 supporting module for SOAP::Lite
+p5-IO-Socket-INET6-2.72 object interface for AF_INET and AF_INET6 domain sockets
+p5-IO-Socket-SSL-2.047 perl interface to SSL sockets
+p5-IO-String-1.08p2 emulate IO::File interface for in-core strings
+p5-IO-Tty-1.12p0    provide an interface to create pseudo ttys
+p5-IO-stringy-2.111 in-core objects like strings and arrays for I/O
+p5-IPC-Run-0.94     run a subprocess
+p5-IPC-Run-SafeHandles-0.04p0 safe guarding for IPC::Run
+p5-IPC-Run3-0.048   run a subprocess in batch mode
+p5-IPC-ShareLite-0.17p4 simple interface to access shared memory
+p5-IPC-Signal-1.00  utility functions dealing with signals
+p5-Image-Info-1.40  perl module for getting image information
+p5-Image-Size-3.300 module to determine the size of images in several formats
+p5-Inline-0.52p0    write Perl subroutines in other programming languages
+p5-Internals-1.1p4  Write-protect variables, manipulate refcounts
+p5-JSON-2.90        parse and convert to JSON (JavaScript Object Notation)
+p5-JSON-Any-1.39    wrapper class for the various JSON classes
+p5-JSON-DWIW-0.47   JSON converter that Does What I Want
+p5-JSON-MaybeXS-1.003009 use Cpanel::JSON::XS or JSON::XS or JSON::PP
+p5-JSON-XS-3.03v1   JSON serialising/deserialising, done correctly and fast
+p5-JSON-XS-VersionOneAndTwo-0.31p1 shim to support either v1 or v2 APIs of JSON::XS
+p5-JavaScript-Minifier-1.05p0 Perl extension for minifying JavaScript code
+p5-Jcode-2.07       handles various Japanese charsets
+p5-LWP-Authen-Wsse-0.05p1 library for enabling X-WSSE authentication in LWP
+p5-LWP-MediaTypes-6.02 Guess url media type
+p5-LWP-Protocol-https-6.06p0 adds support for https to p5-libwww
+p5-Lchown-1.01p4    perl interface to the lchown(2) system call
+p5-Libxml-0.08p2    perl module collection for working with XML
+p5-Lingua-EN-FindNumber-1.31 locate (written) numbers in English text 
+p5-Lingua-EN-Inflect-1.899 convert singular to plural, select a or an
+p5-Lingua-EN-Inflect-Number-1.12 force number of words to singular or plural
+p5-Lingua-EN-Inflect-Phrase-0.18p0 inflect short English Phrases
+p5-Lingua-EN-Number-IsOrdinal-0.05 detect if English number is ordinal or cardinal
+p5-Lingua-EN-Tagger-0.25 part-of-speech tagger for EN natural language processing
+p5-Lingua-EN-Words2Nums-0.18p0 convert English text to numbers
+p5-Lingua-PT-Stemmer-0.02 Portuguese language stemming
+p5-Lingua-Stem-0.84 stemming of words
+p5-Lingua-Stem-Fr-0.02p1 French language stemming
+p5-Lingua-Stem-It-0.02 Italian language stemming
+p5-Lingua-Stem-Ru-0.04 Russian language stemming
+p5-Lingua-Stem-Snowball-Da-1.01p1 Porters stemming algorithm for Denmark
+p5-Lingua-Stem-Snowball-No-1.2 Porters stemming algorithm for Denmark
+p5-Lingua-Stem-Snowball-Se-1.2 Porters stemming algorithm for Sweden
+p5-List-Cycle-1.02p0 objects for cycling through a list of values
+p5-List-MoreUtils-0.416 provide the stuff missing in List::Util
+p5-List-UtilsBy-0.10 higher-order list utility functions
+p5-Locale-Maketext-Fuzzy-0.11 Maketext from already interpolated strings
+p5-Locale-Maketext-Lexicon-0.93 use other catalog formats in Locale::Maketext
+p5-Locale-gettext-1.07p0 interface to gettext() internationalization function
+p5-Log-Agent-1.001  abstraction layer for logging and tracing
+p5-Log-Any-1.042    bringing loggers and listeners together
+p5-Log-Dispatch-2.51 dispatches messages to one or more outputs
+p5-Log-Log4perl-1.40p0 Log4j implementation for Perl
+p5-MARC-Record-2.0.6 MARC (machine readable cataloging format)
+p5-MIME-Lite-3.030  low-calorie MIME generator
+p5-MIME-Types-2.13  perl module to manage MIME types
+p5-MIME-tools-5.508 modules for parsing (and creating) MIME entities
+p5-MLDBM-2.05       store multi-level hash structure in single-level tied hash
+p5-MLDBM-Sync-0.30p2 safe concurrent access to MLDBM databases
+p5-MP3-Info-1.24p1  read MPEG1-Layer3 tags
+p5-MRO-Compat-0.12  mro::* interface compatibility for Perl < 5.9.5
+p5-Mail-Alias-1.12p1 manipulates e-mail alias files of various formats
+p5-Mail-DKIM-0.40p0 DKIM and DomainKeys message-signing implementation
+p5-Mail-IMAPClient-3.38 perl module for an IMAP Client API
+p5-Mail-SPF-Query-1.999.1p5 perl module to query Sender Policy Framework
+p5-Mail-SpamAssassin-3.4.1p4 mailfilter to identify and mark spam
+p5-Mail-Tools-2.14  modules for handling mail with perl
+p5-Math-Base-Convert-0.08 very fast base to base conversion
+p5-Math-Base85-0.2  module handles numbers in base 85
+p5-Math-Bezier-0.01p1 perl module for solving bezier curves
+p5-Math-BigInt-GMP-1.38 use the GMP library for Math::BigInt routines
+p5-Math-Derivative-0.01p0 numeric 1st and 2nd order differentiation
+p5-Math-Fibonacci-1.5p1 Fibonacci numbers
+p5-Math-Fibonacci-Phi-0.02p1 calculates Phi and phi for Fibonacci numbers
+p5-Math-GMP-2.11    high speed arbitrary-size integer math
+p5-Math-Pari-2.01080605p1 Perl interface to libPARI and GP
+p5-Math-Spline-0.02 cubic spline interpolation of data
+p5-Memoize-ExpireLRU-0.55p0 expiry plug-in for Memoize that adds LRU cache expiration
+p5-Module-Build-0.4208 build and install Perl modules
+p5-Module-Find-0.13 find and use installed modules in a (sub)category
+p5-Module-Implementation-0.09 loads one of several alternate module implementations
+p5-Module-Install-1.08p3 standalone extensible Perl module installer
+p5-Module-Pluggable-5.2 automatically give your module the ability to have plugins
+p5-Module-Refresh-0.17 refresh perl %INC files when updated on disk
+p5-Module-Runtime-0.014 runtime module handling
+p5-Module-ScanDeps-1.18p0 recursively scan Perl code for dependencies
+p5-Module-Versions-Report-1.06p0 report versions of all perl modules in memory
+p5-Moo-2.000001     Minimalist Object Orientation (with Moose compatibility)
+p5-Moose-2.1204p1   complete modern object system for perl 5
+p5-MooseX-AttributeHelpers-0.24 extend your attribute interfaces
+p5-MooseX-Daemonize-0.13p0 role for daemonizing your Moose based application
+p5-MooseX-Emulate-Class-Accessor-Fast-0.00903p0 emulate Class::Accessor::Fast behavior using Moose
+p5-MooseX-Getopt-0.62 Moose role for processing command line options
+p5-MooseX-MethodAttributes-0.25 code attribute introspection
+p5-MooseX-MultiInitArg-0.02 attributes with aliases for constructor arguments for MooseX
+p5-MooseX-Params-Validate-0.19 extension of Params::Validate for using Moose types
+p5-MooseX-Role-Parameterized-1.02p1 roles with composition parameters
+p5-MooseX-Role-WithOverloading-0.09p2 roles which support overloading
+p5-MooseX-SemiAffordanceAccessor-0.10 name your accessors foo() and set_foo()
+p5-MooseX-Traits-0.12 automatically apply roles at object creation time
+p5-MooseX-Types-0.45 organise your Moose types in libraries
+p5-MooseX-Types-Common-0.001002p0 library of commonly used type constraints
+p5-MooseX-Types-DateTime-0.10p1 DateTime related constraints and coercions for Moose
+p5-MooseX-Types-LoadableClass-0.014 ClassName type constraint with coercion to load the class
+p5-MooseX-Types-Path-Class-0.07 Path::Class type library for Moose
+p5-MooseX-Types-Structured-0.33 structured Type Constraints for Moose
+p5-Mouse-2.4.2p0    Moose minus the antlers
+p5-Mozilla-CA-Fake-20140330 access system SSL certificate bundle from Perl
+p5-Net-CIDR-0.17    manipulate IPv4/IPv6 netblocks in CIDR notation
+p5-Net-CIDR-Lite-0.21 Perl extension for merging IPv4 or IPv6 CIDR addresses
+p5-Net-DAAP-DMAP-1.27 perl module for reading and writing DAAP structures
+p5-Net-DNS-1.09     perl interface to the domain name system
+p5-Net-Daemon-0.48p0 extension for portable daemons
+p5-Net-Domain-TLD-1.75 module to work with TLD names
+p5-Net-Frame-1.12   base framework for frame crafting
+p5-Net-HTTP-6.09    Perl HTTP connection client
+p5-Net-IDN-Nameprep-1.102 stringprep profile for Internationalized Domain Names
+p5-Net-IP-1.26      perl module for IPv4/IPv6 address parsing
+p5-Net-IPv4Addr-0.10p1 perl module for IPv4 address parsing
+p5-Net-IPv6Addr-0.2 check validity of IPv6 addresses
+p5-Net-Jabber-2.0p1 perl interface to jabber
+p5-Net-OAuth-0.28   implementation of the OAuth protocol
+p5-Net-Patricia-1.22p0 Patricia Trie perl module for fast IP address lookups
+p5-Net-Pcap-0.17p0  module for pcap access
+p5-Net-SFTP-0.10p1  client for the Secure File Transfer Protocol
+p5-Net-SMTP-SSL-1.03 SSL support for Net::SMTP
+p5-Net-SMTP-TLS-ButMaintained-0.24 Perl module for SMTP with TLS/AUTH support
+p5-Net-SMTP_auth-0.08p0 Perl module to use authenticated SMTP
+p5-Net-SNMP-6.0.1p0 Perl modules to access SNMP
+p5-Net-SSH-Perl-1.42 perl implementation of the SSH1 and SSH2 protocols
+p5-Net-SSLeay-1.81  perl module for using OpenSSL
+p5-Net-Server-2.008p0 extensible framework for Perl server engines
+p5-Net-Server-SS-PreFork-0.05p1 hot-deployable variant of Net::Server::PreFork
+p5-Net-Twitter-4.01030 perl interface to the Twitter API
+p5-Net-XMPP-1.05    XMPP perl library
+p5-NetAddr-IP-4.079 manages IPv4 and IPv6 addresses and subnets
+p5-NetPacket-0.04p3 Perl module for encoding/decoding network traffic
+p5-News-Article-1.27p1 perl module for accessing NNTP articles
+p5-Number-Compare-0.03 compare numbers
+p5-OLE-Storage_Lite-0.19p0 simple class for OLE document interface
+p5-Object-Signature-1.07 cryptographic signatures for objects
+p5-PAR-Dist-0.49    create and manipulate PAR distributions
+p5-PGP-Sign-0.20p2  perl module to create/verify PGP signatures
+p5-POE-1.294p1      portable multitasking and networking framework for perl
+p5-POE-Filter-IRCD-2.44p0 POE-based parser for the IRC protocol
+p5-POE-Test-Loops-1.050 reusable tests for POE::Loop authors
+p5-POSIX-strftime-Compiler-0.41 gnu C library compatible strftime for loggers and servers
+p5-PPI-1.220        parse, analyze and manipulate Perl
+p5-Package-DeprecationManager-0.17 manage deprecation warnings for your distribution
+p5-Package-Stash-0.37 routines for manipulating stashes
+p5-Package-Stash-XS-0.28 faster and more correct implementation of Package::Stash
+p5-PadWalker-2.2    peek at lexical variables
+p5-Parallel-Prefork-0.18 simple prefork server framework
+p5-Params-Classify-0.013p2 argument type classification
+p5-Params-Util-1.07p1 utility to make parameter checking easier
+p5-Params-Validate-1.26 perl module to validate function/method parameters
+p5-Parse-RecDescent-1.967009 perl module to generate recursive descent parsers
+p5-Path-Class-0.35  cross-platform path manipulation
+p5-Path-Tiny-0.072  file path utility
+p5-PerlIO-eol-0.14p6 PerlIO layer for normalizing line endings
+p5-PerlIO-via-dynamic-0.14 create dynamic PerlIO layers
+p5-PlRPC-0.2020     module for writing rpc servers and clients
+p5-Plack-1.0039     interface between perl web frameworks and web servers
+p5-Plack-Middleware-ReverseProxy-0.15 supports app to run as a reverse proxy backend
+p5-Plack-Test-ExternalServer-0.02 run HTTP tests on external live servers
+p5-Pod-Coverage-0.23 check if the documentation of a module is comprehensive
+p5-Pod-Tests-1.19   extracts embedded tests and code examples from pod
+p5-PodToHTML-0.08p1 generate HTML from files containing POD documentation
+p5-Probe-Perl-0.03  information about the currently running perl
+p5-Proc-Wait3-0.04p1 perl extension for wait3 system call
+p5-Quota-1.7.2      quota manipulation module
+p5-Readonly-2.00    facility for creating read-only scalars, arrays, hashes
+p5-Regexp-Common-2016060801 provide commonly requested regular expressions
+p5-Regexp-Common-net-CIDR-0.03 provide patterns for CIDR blocks
+p5-Regexp-IPv6-0.03 regular expression for IPv6 addresses
+p5-Regexp-Shellish-0.93p2 module for shell-like regular expressions
+p5-Role-Basic-0.13  a simple class to create simple roles
+p5-Role-Tiny-2.000005 minimalist role composition tool
+p5-SNMP_Session-1.13p6 provides rudimentary access to remote SNMP agents
+p5-SOAP-Lite-1.19   client and server-side SOAP implementation
+p5-SQL-Abstract-1.81 generate SQL from Perl data structures
+p5-SQL-Abstract-Limit-0.141 portability layer for LIMIT emulation
+p5-SQL-Statement-1.407 SQL parsing and processing engine
+p5-SUPER-1.17p1     module for controlling superclass method dispatch
+p5-SVG-2.64         Scalable Vector Graphics (SVG) in perl
+p5-SVG-Graph-0.02p1 visualize your data in SVG format
+p5-SVN-1.9.5        perl interface to subversion
+p5-SVN-Simple-0.28  simple interface to subversion's editor interface
+p5-Scope-Guard-0.21 lexically scoped resource management
+p5-Server-Starter-0.32 superdaemon for hot-deploying server programs
+p5-Set-Object-1.26p6 set of objects and strings
+p5-Set-Scalar-1.29  module for containing a set of scalars
+p5-Signal-Mask-0.008 utility functions dealing with signals
+p5-Socket6-0.28     Perl defines relating to AF_INET6 sockets
+p5-Sort-Versions-1.62 sorting of revision-like numbers
+p5-Spreadsheet-ParseExcel-0.65v0 get information from Excel spreadsheets
+p5-Spreadsheet-WriteExcel-2.40 write a cross-platform Excel binary file
+p5-Starlet-0.13p0   simple, high-performance PSGI/Plack HTTP server
+p5-Starman-0.4014   high-performance preforking PSGI/Plack web server
+p5-Statistics-Descriptive-3.0612 basic descriptive statistical functions
+p5-Stream-Buffered-0.03 temporary buffer to save bytes
+p5-String-CRC32-1.5p0 interface for cyclic redundancy check generation
+p5-String-CamelCase-0.02p0 camelcase, de-camelcase
+p5-String-Random-0.29 perl module for generating randoms strings
+p5-String-RewritePrefix-0.007 rewrite strings based on a set of known prefixes
+p5-String-ShellQuote-1.04p0 Quote strings for passing through the shell
+p5-String-ToIdentifier-EN-0.11p0 convert strings to english program identifiers
+p5-Sub-Exporter-0.987 exporter on steroids
+p5-Sub-Exporter-Progressive-0.001011 only use Sub::Exporter if you need it  
+p5-Sub-Identify-0.12 retrieve names of code references
+p5-Sub-Install-0.928 helper for installing code into packages
+p5-Sub-Name-0.21    (re)name a sub
+p5-Sub-Uplevel-0.25v0 Perl library for manipulating frame stack
+p5-Symbol-Global-Name-0.05 finds name and type of a global variable
+p5-Sys-Hostname-Long-1.5 perl module to get FQDN
+p5-Task-Weaken-1.04 ensure that a platform has weaken support
+p5-Tcl-1.02         Tcl extension module for Perl
+p5-Template-2.26    template processing system
+p5-Template-Timer-1.00 rudimentary profiling module for Template Toolkit
+p5-Term-ReadLine-Gnu-1.28 GNU Readline Library Wrapper Module
+p5-Term-ReadLine-Perl-1.0303p0 minimal interface to Readline
+p5-Term-ReadPassword-0.11p1 ask passwords from perl
+p5-Test-Class-0.50  easily create test classes in an xUnit style
+p5-Test-ClassAPI-1.06p0 basic first-pass API testing for large class trees
+p5-Test-Deep-1.120  extremely flexible deep comparison
+p5-Test-Differences-0.64 test and show differences in strings and data structures
+p5-Test-Exception-0.43 test functions for exception based code
+p5-Test-File-Contents-0.23 perl test framework for file contents
+p5-Test-Inline-2.213 inlining your tests next to the code being tested
+p5-Test-Inter-1.06  framework for more readable interactive test scripts
+p5-Test-LongString-0.17 tests strings for equality
+p5-Test-Manifest-2.02 interact with a t/test_manifest file
+p5-Test-MockModule-0.11 override subroutines in a module for unit testing
+p5-Test-MockObject-1.20150527 perl extension for emulating troublesome interfaces
+p5-Test-NoWarnings-1.04p0 forbids warnings while testing
+p5-Test-Pod-1.51    check for POD errors in files
+p5-Test-Pod-Coverage-1.10 check for pod coverage in your distribution
+p5-Test-Requires-0.10 checks to see if the module can be loaded
+p5-Test-Script-1.16 cross-platform basic tests for scripts
+p5-Test-SharedFork-0.34 fork test
+p5-Test-TCP-2.14    testing TCP program
+p5-Test-Tester-0.109 ease testing test modules built with Test::Builder
+p5-Test-WWW-Mechanize-1.44 test suite using WWW::Mechanize
+p5-Test-Warn-0.30   Perl extension to test methods for warnings
+p5-Test-use-ok-0.11 alternative to Test::More
+p5-Text-ASCIIMathML-0.81 perl extension for parsing ASCIIMathML text into MathML
+p5-Text-Autoformat-1.669002 perl module for formatting plaintext
+p5-Text-CSV_XS-1.19 comma-separated values manipulation routines
+p5-Text-Diff-1.44   perform diffs on files and record sets
+p5-Text-Diff-HTML-0.07 XHTML format for Text::Diff::Unified
+p5-Text-German-0.06p0 German grundform reduction
+p5-Text-Glob-0.09   match globbing patterns against text
+p5-Text-Iconv-1.7p5 interface to iconv() codeset conversion function
+p5-Text-LevenshteinXS-0.03p6 perl implementation of Levenshtein edit distance
+p5-Text-Password-Pronounceable-0.30 generate pronounceable passwords
+p5-Text-Quoted-2.09 extract the structure of a quoted mail message
+p5-Text-Reform-1.20 perl module to formating plaintext
+p5-Text-SimpleTable-2.03p1 simple eyecandy ASCII Tables
+p5-Text-Template-1.46 expand template text with embedded perl
+p5-Text-Unidecode-1.30 US-ASCII transliterations of Unicode text
+p5-Text-WikiFormat-0.81 translate Wiki formatted text into other formats
+p5-Text-WordDiff-0.08 module to diff based on word, not lines
+p5-Text-Wrapper-1.05 simple word wrapping routine
+p5-Text-vFile-asData-0.08 parse vFile formatted files into data structures
+p5-Tie-Cache-0.21   LRU cache in memory
+p5-Tie-EncryptedHash-1.24p0 hashes with encrypting fields
+p5-Tie-Hash-MultiValue-1.02p0 store multiple values per key
+p5-Tie-IxHash-1.23  ordered associative arrays for Perl
+p5-Tie-ToObject-0.03p2 tie to an existing object
+p5-Time-Format-1.12 easy-to-use date/time formatting
+p5-Time-TimeDate-2.30 library for parsing and formatting dates and times
+p5-Time-modules-2006.0814p0 object oriented time interface
+p5-Tk-804.033p0     Tk 8.4 bindings for Perl
+p5-Tree-DAG_Node-1.06 superclass for representing nodes in a tree
+p5-Tree-Simple-1.18p1 simple tree object
+p5-Tree-Simple-VisitorFactory-0.10p3 factory for Tree::Simple visitor objects
+p5-Try-Tiny-0.22    minimal try/catch with proper preservation of $@
+p5-Type-Tiny-1.000005 tiny, yet Moo(se)-compatible type constraint
+p5-Types-Serialiser-1.0 simple data types for common serialisation formats
+p5-URI-1.71         library to parse Uniform Resource Identifiers
+p5-Unicode-Map-0.112p5 conversions to and from arbitrary character sets
+p5-Unicode-Map8-0.13p0 module to implement efficient mapping tables
+p5-Unicode-MapUTF8-1.11p2 conversions to and from arbitrary character sets and UTF8
+p5-Unicode-String-2.10 modules to handle various Unicode issues
+p5-Unicode-Stringprep-1.105 preparation of internationalized strings
+p5-Universal-can-1.16p0 calling UNIVERSAL::can as a function
+p5-Universal-isa-1.03p1 calling UNIVERSAL::isa as a function
+p5-Universal-moniker-0.08p1 Perl module for aliasing class names
+p5-Universal-require-0.18 extends require to work on variables
+p5-Unix-Syslog-1.1p4 interface to the UNIX system logger
+p5-VCP-autrijus-0.9p2 tool for copying resources between repositories
+p5-Variable-Magic-0.61 associate user-defined magic to variables from Perl
+p5-WWW-Mechanize-1.84 handy web browsing in a Perl object
+p5-WWW-RobotRules-6.02 database of robots.txt-derived permissions
+p5-Want-0.29        generalisation of wantarray
+p5-WeakRef-0.01p5   API to the Perl weak references
+p5-X11-Protocol-0.56p1 provides an interface roughly equivalent to Xlib
+p5-XML-AutoWriter-0.39p1 module for DOCTYPE based XML output
+p5-XML-Checker-0.13p1 perl module for validating XML
+p5-XML-DOM-1.46     perl module to build DOM Level 1 structures
+p5-XML-DOM-XPath-0.14 extension to add XPath support to XML::DOM
+p5-XML-Filter-BufferText-1.01p0 collate XML character events in one chunk
+p5-XML-LibXML-2.0129v0 perl binding for libxml2
+p5-XML-LibXSLT-1.95p1 interface to the GNOME libxslt library
+p5-XML-NamespaceSupport-1.11p0 perl module to the SAX2 NamespaceSupport class
+p5-XML-Parser-2.44  perl module for parsing XML documents
+p5-XML-RSS-1.57     perl module to manage XML RSS files
+p5-XML-RegExp-0.04  Provide regular expressions for some XML tokens
+p5-XML-SAX-0.99     framework for the Perl SAX2 XML parsers, filters and drivers
+p5-XML-SAX-Base-1.08 base class for SAX drivers and filters
+p5-XML-SAX-Expat-0.51 SAX2 driver based on expat
+p5-XML-SAX-Writer-0.56 SAX2 writer
+p5-XML-Simple-2.22  trivial perl API for reading/writing XML
+p5-XML-Stream-1.24  creates and XML Stream connection and parses return data
+p5-XML-Twig-3.52    perl module for parsing huge XML documents
+p5-XML-Writer-0.625 perl extension for writing XML documents
+p5-XML-XPath-1.29   modules for parsing and evaluating XPath statements
+p5-XML-XPathEngine-0.14 re-usable XPath engine for DOM-like trees
+p5-YAML-1.19        YAML Ain't Markup Language
+p5-YAML-Syck-1.29   YAML and JSON for perl, optimized C
+p5-YAML-Tiny-1.69   read/write YAML files with as little code as possible
+p5-YAML-XS-0.63     YAML implementation using XS and libyaml
+p5-aliased-0.34p0   use shorter versions of class names
+p5-boolean-0.46     boolean support for Perl
+p5-capitalization-0.03p1 use familiar style on method naming
+p5-common-sense-3.74 perl common defaults with lower memory usage
+p5-enum-1.11v0      C style enumerated types and bitmask flags
+p5-indirect-0.37    lexically warn about using the indirect method call syntax
+p5-libapreq2-2.08p6 apache HTTP server request library
+p5-libintl-1.26p0   internationalization library written in Perl
+p5-libwww-6.15      library for WWW access in Perl
+p5-namespace-autoclean-0.28 keep imports out of your namespace
+p5-namespace-clean-0.27 keep imports and functions out of your namespace
+p5-ossp-UUID-1.6.2p5 UUID modules for Perl
+p5-prefork-1.04p0   optimized module loading
+p5-strictures-2.000003 turn on strict and make most warnings fatal
+p7zip-16.02p1       file archiver with high compression ratio
+pango-1.40.4        library for layout and rendering of text
+pangomm-2.40.1      C++ interface for pango
+pangox-compat-0.0.2p1 pangox compatibility library
+par-1.52p1          paragraph reflow for email
+pcre-8.38p0         perl-compatible regular expression library
+pcre2-10.22p1       perl-compatible regular expression library, version 2
+pdmenu-1.3.4        simple slang-based menu program
+pear-1.10.1         base classes for common PHP tasks
+pear-Auth-SASL-1.0.6 abstraction of various SASL mechanism responses
+pear-Cache-1.5.6    Framework for caching of arbitrary data for PHP
+pear-Date-1.4.7     date and timezone classes for PHP
+pear-Date-Holidays-0.21.8 holiday classes for PHP
+pear-HTTP-Request-1.4.4p1 provide an easy way to perform HTTP requests
+pear-MDB2-2.4.1p1   database abstraction layer for PHP
+pear-Mail-Mime-1.10.0 classes to create and decode MIME messages in PHP
+pear-Net-Socket-1.0.14 network socket interface support for PHP
+pear-Net-URL-1.0.15p0 easy parsing of URLs for PHP
+pear-Net-URL2-0.3.0p0 class for parsing and handling URL
+pear-System-Command-1.0.8 commandline execution interface
+pear-Validate-0.8.5 validation class
+pear-XML-Parser-1.3.6p0 XML parsing class based on PHP's bundled expat
+pear-XML-Serializer-0.20.2p0 Swiss-army knife for reading and writing XML files
+pear-XML-Tree-1.1p3 classes to represent XML data in PHP
+pear-utils-1.10.1   utilities for managing pear extensions
+perlsh-1.8.1p0      Perl shell
+perltidy-20160302   tool to indent and reformat perl scripts
+pflogx-0.86p3       convert pf(4) logs to XML
+pftop-0.7p15        curses-based real time state and rule display for pf
+pgp-5.0ip0          Pretty Good Privacy 5.0i (world wide use)
+php-5.6.30          server-side HTML-embedded scripting language
+php-fastcgi-5.2.17p6 stand-alone FastCGI version of PHP
+php5-fastcgi-5.2.17 stand-alone FastCGI version of PHP
+physfs-2.0.3p0      library to provide abstract access to various archives
+pico-5.07p4         UW text editor
+pidgin-2.11.0       multi-protocol instant messaging client
+pilot-link-0.12.5p9 tools to connect your PalmOS(R) compatible handheld
+pinentry-0.9.7      PIN or passphrase entry dialog (ncurses interface)
+plan9port-20161102p0 Plan 9 from user space
+png-1.6.28          library for manipulating PNG images
+polkit-0.113p3      framework for granting privileged operations to users
+poppler-0.52.0      PDF rendering library
+poppler-data-0.4.7  encoding files for poppler
+poppler-utils-0.52.0 PDF conversion tools and utilities
+popt-1.16p1         getopt(3)-like library with a number of enhancements
+portaudio-svn-1919  portable cross-platform audio API
+postfix-3.2.0-sasl2 fast, secure sendmail replacement
+postgresql-client-9.6.2 PostgreSQL RDBMS (client)
+postgresql-server-9.6.2 PostgreSQL RDBMS (server)
+postgrey-1.35p0     postfix greylist daemon
+potrace-1.13        transforming bitmaps into vector graphics
+ppmtoTbmp-1.1p2     PPM to Pilot bitmap converter
+procmail-3.22p6     filtering local mail delivery agent
+proj-4.9.3p0        cartographic projection utilities
+protobuf-2.4.1p3    c++ protocol buffers
+ps2eps-1.68p0       convert Postscript to Encapsulated Postscript
+pstree-2.39p0       list processes as a tree
+psutils-1.23        utilities for manipulating PostScript documents
+pth-2.0.7p1         GNU portable threads
+ptlib-2.12.9p10     portable tools library
+pure-ftpd-1.0.43    small, easy to set up, fast and very secure FTP server
+py-MarkupSafe-0.23p2 implements an XML/HTML/XHTML markup safe string
+py-Numeric-23.1p9   fast array facility to the Python language
+py-Pillow-3.4.2p0   Python Imaging Library (maintained fork of PIL)
+py-SOAPpy-0.12.22p1 Python API for SOAP HTTP/RPC
+py-addons-0.7p2     extend python objects with addons
+py-alabaster-0.7.9p0 configurable sidebar-enabled Sphinx theme
+py-asn1-0.1.9p1v0   ASN.1 library for Python
+py-astroid-1.4.9p0  common base representation of Python source code
+py-babel-2.3.4p0    I18N/L10N tools for Python
+py-backports-1.0p0  namespace for backported Python features
+py-backports-functools-lru-cache-1.3 backport of the lru_cache from functools
+py-backports-shutil-get-terminal-size-1.0.0 backport of the get_terminal_size function from shutil
+py-beaker-1.6.2p5   session and caching library with wsgi middleware
+py-bytecodeassembler-0.6p1 python bytecode assembler
+py-cairo-1.10.0p1   cairo bindings for Python
+py-cffi-1.8.3p0     Foreign Function Interface for Python calling C code
+py-chardet-2.3.0p0  character encoding auto-detection in Python
+py-cheetah-2.4.4p5  Python-powered template engine and code generator
+py-cjkcodecs-1.1.1p10 Python unicode codecs for Chinese, Japanese and Korean
+py-configparser-3.5.0v0 Python 3.5 configparser for Python 2.6 - 3.5
+py-cparser-2.17p0   C parser in pure Python
+py-crypto-2.6.1p4   cryptographic tools for Python
+py-cryptography-1.7.1 cryptographic recipes and primitives for Python
+py-cssutils-1.0.1p0 python package to parse and build CSS
+py-curl-7.43.0p1    Python interface to cURL library
+py-dateutil-2.6.0p0 Python API for advanced date calculations
+py-dbus-1.2.4p0     dbus bindings for Python
+py-dbus-common-1.2.4 common files for py-dbus
+py-decorator-4.0.11 simplify usage of decorators
+py-decoratortools-1.8p0 class and function decorators
+py-defusedxml-0.4.1p0 XML bomb protection for Python stdlib modules
+py-django-1.10.5    high-level Python web framework
+py-dns-2.3.6        Python DNS library
+py-dnspython-1.12.0p0 DNS toolkit for Python
+py-docutils-0.12p1  process plaintext documentation into other formats
+py-enum34-1.1.6     Python 3.4 Enum backported to previous versions
+py-epsilon-0.6.0p3  small utility package for Divmod projects
+py-extremes-1.1.1p5 mix and max objects
+py-feedparser-5.2.1 RSS and Atom feeds parser written in Python
+py-flup-1.0.2p5     random assortment of WSGI servers, middleware
+py-fpconst-0.7.2p7  Python functions and constants for IEEE754 floating point
+py-genshi-0.7p0     toolkit for generation of output for the web
+py-gobject-2.28.6p6v0 Python bindings for glib2 gobject (deprecated)
+py-gobject3-3.22.0p1 Python bindings for GLib and GObject
+py-gobject3-common-3.22.0 common files for py-gobject3
+py-gtk2-2.24.0p4    GTK+2 Python bindings
+py-html5lib-0.9999999p1 HTML parser/tokeniser based for HTML5
+py-iconvcodec-1.1.2p9 universal unicode codec using iconv for Python
+py-idna-2.4         Python library to support the IDNA protocol
+py-imagesize-0.7.1p0 getting image size from png/jpeg/jpeg2000/gif file
+py-ipaddress-1.0.18 Python 3.3's ipaddress for Python 2.6 and 2.7
+py-ipython_genutils-0.1.0p1 IPython vestigial utilities
+py-irclib-0.4.6p4   Internet Relay Chat (IRC) protocol client library for Python
+py-isort-4.2.5p0    Python utility / library to sort Python imports
+py-jinja2-2.8.1     fast, optionally sandboxed, Python template engine
+py-lazy-object-proxy-1.2.2p0 fast and thorough lazy object proxy
+py-libpst-0.6.70    python interface to libpst
+py-libxml-2.9.4     Python bindings for libxml
+py-libxslt-1.1.29   Python bindings for libxslt
+py-logilab-common-1.4.0 common low-level libraries for logilab projects
+py-lxml-3.7.0p0     Python binding for the libxml2 and libxslt libraries
+py-mako-0.9.1p3     super-fast templating language
+py-markdown-2.6.8   text-to-HTML conversion tool
+py-mccabe-0.6.1     McCabe complexity checker for Python
+py-mutagen-1.34.1p0 Python module to handle audio metadata
+py-mxDateTime-3.2.9 date and time types for Python
+py-mysql-1.2.5p4    Python interface to MySQL
+py-nose-1.3.7p4     discovery-based unittest extension
+py-numpy-1.9.2p0    fast array and numeric programming library for Python
+py-openssl-16.2.0   Python interface to the OpenSSL library
+py-paramiko-2.1.2   Python module that implements the SSH2 protocol
+py-paste-1.7.5.1p1  tools for using web server gateway interface stack
+py-paste-deploy-1.5.0p0 load, configure, compose WSGI applications and servers
+py-pathlib-1.0.1p4  object-oriented filesystem paths
+py-peak-rules-0.5r2582p2v0 generic functions support systems
+py-pexpect-4.2.1p0  pure Python Expect-like module
+py-pickleshare-0.7.4p0 tiny 'shelve'-like database with concurrency support
+py-polib-1.0.6p1    Python library to manipulate gettext files
+py-prompt_toolkit-1.0.7p0 python library for building powerful interactive CLI
+py-psycopg2-2.7.1   PostgreSQL database adapter for Python
+py-ptyprocess-0.5.1p0 run a subprocess in a pseudo terminal
+py-pygments-2.1.3p0 Python syntax highlighter
+py-relatorio-0.5.5p1 templating library able to output odt and pdf files
+py-reportlab-3.2.0p2v0 PDF-generating toolkit for Python
+py-requests-2.13.0  elegant and simple HTTP library for Python
+py-rrd-1.6.0        python interface to librrd
+py-scipy-0.16.1p0   maths, science and engineering modules for Python
+py-setuptools-28.6.1p0v0 simplified packaging system for Python modules
+py-simplegeneric-0.8.1p2 simple generic functions
+py-simplejson-3.10.0p0 JSON encoder/decoder
+py-six-1.10.0p0     Python 2 and 3 compatibility library
+py-snowballstemmer-1.2.1p0 snowball stemming library collection for Python
+py-sphinx-1.4.8p0   python documentation generator
+py-sphinx_rtd_theme-0.1.9p0 readthedocs.org theme for Sphinx
+py-sql-0.8p1        library to write SQL queries
+py-sqlite2-2.8.3    SQLite3 adapter for Python
+py-stemmer-1.3.0p1  snowball stemming algorithms, for information retrieval
+py-subversion-1.9.5 python interface to subversion
+py-suds-0.4p1       lightweight python SOAP client
+py-symboltype-1.0p4 symbol type for python
+py-traitlets-4.3.2  configuration system for Python applications
+py-twisted-core-11.1.0p0 event-based Python framework (core module)
+py-twisted-lore-11.1.0 documentation generator
+py-twisted-web-11.1.0 HTTP protocol implementation
+py-twisted-words-11.1.0 chat and instant messaging module for Twisted
+py-tz-2016.10p0     Python API for dealing with timezones
+py-vatnumber-1.1p0  Python module to validate VAT numbers
+py-virtualenv-15.1.0p0 virtual Python environment builder
+py-wcwidth-0.1.7p0  measures number of terminal column cells of wide-char code
+py-webdav-0.9.8p1   standards compliant Python WebDAV server and library
+py-wrapt-1.10.10    Python module for decorators, wrappers and monkey patching
+py-wsgiutils-0.7p6  libraries for WSGI development
+py-wstools-0.4.4p0  WSDL parsing services package for Python
+py-xdg-0.25p3       python library to access freedesktop.org standards
+py-xml-0.8.4p13     Python module for writing basic XML applications
+py-xmpp-1.1.2p1     Python XMPP and Jabber implementation
+py-yaml-3.12p0      YAML parser and emitter in Python
+py-zopeinterface-4.3.1p0 object interface infrastructure from Zope
+pycha-0.3.0p5       Python charting module
+pylint-1.6.5        lint-like code checker for Python code
+pyrex-0.9.9p1       Python-alike language for writing Python extension modules
+python-2.7.13p0     interpreted object-oriented programming language
+python-3.6.0p0      interpreted object-oriented programming language
+python-gdbm-2.7.13p0 GNU dbm module for Python
+python-tkinter-2.7.13p0 tk GUI module for Python
+qdbm-1.8.78p0       high performance embedded database library
+qhull-2012.1        computing the convex hull
+qpage-3.3p1         SNPP client/server (alphanum pager software)
+qpdf-6.0.0          PDF transformation and inspection utility
+qprint-1.1          converter to/from quoted-printable encoding
+qrupdate-1.1.2p0    library for fast updates of QR and Cholesky decompositions
+qscintilla-2.9.3    Qt4 port of the Scintilla source code editor
+qstat-2.11p0        displays the status of multi-player Internet Game servers
+qt3-mt-3.8p12       C++ X11 GUI toolkit
+qt4-4.8.7p11        C++ X11 GUI toolkit
+qt4-html-4.8.7      off-line html documentation for qt4
+qt4-mysql-4.8.7p0   MySQL plugin for qt4
+qt4-postgresql-4.8.7p0 PostgresSQL plugin for qt4
+qt4-sqlite2-4.8.7p0 sqlite2 plugin for qt4
+qt4-tds-4.8.7p0     tds plugin for qt4
+quirks-2.304        exceptions to pkg_add rules
+r5rs-19980421       revised^5 report on scheme
+rarian-0.8.1p14     documentation metadata library
+rats-2.3p0          source code auditing tool
+rc-1.7.4p0-readline shell (clone of plan9 shell)
+re2c-0.15.3         C-based regular expression scanner generator
+readline-6.3        library to edit command lines as they are typed in
+recode-3.6p9        convert files between character sets and usages
+rlwrap-0.42         generic readline wrapper for various programs
+rpm2cpio-1.3p2      rpm2cpio converter in Perl
+rrdtool-1.6.0p2     system to store and display time-series data
+rrdupdate-1.6.0     lightweight update-only tool for rrdtool
+rsskit-0.4p7        framework for reading different types of RSS formats
+rsync-3.1.2p0       mirroring/synchronization over low bandwidth links
+rt-4.2.12p0         industrial-grade ticketing system
+rtunes-0.8p1        Streams audio to Apple AirPort Express device
+ruby-1.8.7.374p8    object oriented script language with threads
+ruby-1.9.2.290      object oriented script language with threads
+ruby-2.3.3          object oriented script language with threads
+ruby-bdb-0.6.5p8    ruby interface to Berkeley DB
+ruby-gdbm-1.8.7.374 gdbm interface for ruby
+ruby-gems-1.8.24    package management framework for the Ruby language
+ruby-iconv-1.8.7.374 libiconv interface for ruby
+ruby-rack-1.6.2     modular Ruby webserver interface
+ruby-rake-0.9.2.2p0 ruby make
+ruby-rrd-1.6.0p0    ruby interface to librrd
+ruby-subversion-1.9.5 ruby interface to subversion
+ruby-tk-1.8.7.374   tk interface for ruby
+ruby23-passenger-5.0.30 ruby web application server/nginx module
+ruby23-rack-1.6.2   modular Ruby webserver interface
+rust-1.16.0         compiler for Rust Language
+sam-4.3.19980506p2  X11 version of Rob Pike's editor, sam
+samba-4.5.8         SMB and CIFS client and server for UNIX
+samba-util-4.5.8    common libraries for Samba suite
+sane-backends-1.0.25p4 API for accessing scanners, backends
+sash-3.8p0          stand-alone shell with built-in commands
+sbcl-1.3.10p1       compiler and runtime system for ANSI Common Lisp
+sc-7.16p3           curses spreadsheet-calculator program
+scim-1.4.9p15       smart common input method platform
+scm-5f1p1           scheme r5 interpreter
+scons-2.4.1         Python-based build system
+screen-4.0.3p6      multi-screen window manager
+sdcc-2.8.0p2        Small Device C Compiler
+sdl-1.2.15p7        cross-platform multimedia library
+sdl-gfx-2.0.25p1    primitives drawing/other support functions for SDL
+sdl-image-1.2.12p3  SDL image library
+sdl-mixer-1.2.12p4  SDL multi-channel audio mixer library
+sdl-net-1.2.8p3     SDL cross-platform networking library
+sdl-pango-0.1.2p9   SDL wrapper around the Pango library
+sdl-ttf-2.0.11p2    SDL TrueType fonts library
+serf-1.3.8p0        high performance HTTP client library
+setquota-0.1p1      command line quota tools
+sfio-2002p1         Safe/Fast I/O Library
+shared-mime-info-1.8 shared mime database for desktops
+silc-client-1.1.11  Secure Internet Live Conferencing (SILC) client
+silc-toolkit-1.1.12p0 toolkit for the development of SILC applications
+simh-3.9.0p1        PDP, IBM 1401, Nova and other CPUs simulator
+sipsak-0.9.6        SIP swiss army knife
+sirc-2.211p0        programmable small perl irc client
+skill-4.1p5         signal or reprioritize specified processes
+sl-3.03p0           Steam Locomotive
+slib-3b4p0          scheme r5 library
+slideml-1.1.0p1     HTML slide generator based on SlideML
+slrn-1.0.2p1        SLang-based newsreader
+smlnj-110.76p0      New Jersey Standard ML
+smpeg-0.4.4p14      MPEG video player library with sound support
+snownews-1.5.12p2   text mode rss newsreader
+sound-theme-freedesktop-0.8p0 XDG sound theme
+soundtouch-1.9.2p0  tempo/pitch audio processing library
+spawn-fcgi-1.6.3p0  spawn FastCGI processes
+speex-1.2rc1p1      patent-free speech codec
+sphinx-2.2.9-pgsql  free open-source SQL full-text search engine
+spidermonkey-1.9.2.28p3v0 Mozilla C implementation of JavaScript
+spim-8.0p1          MIPS R2000/R3000 simulator
+splint-3.1.2p0      advanced lint: statically check C programs
+sqlite-2.8.17p4     Embedded SQL implementation
+sqlite3-3.17.0      embedded SQL implementation
+squeak-funsqueak-3.10alpha7 smalltalk system, exploration image
+squeak-image-3.10.2.7179p0 smalltalk system, basic runtime image
+squeak-sources-3.9  smalltalk system, smalltalk sources
+squeak-vm-3.10.1p7  smalltalk system, vm
+starlanes-1.2.2     classic space-age stock trading game
+startup-notification-0.12p4 library for tracking application startup
+stow-2.2.2          manages software package installations with symlinks
+subversion-1.9.5    subversion revision control system
+sudoku-1.0.1p1      console based sudoku
+suitesparse-4.4.6   suite of sparse matrix algorithms
+supercat-0.5.5p0    colorize specific patterns in input
+surfraw-2.2.9       command line interface to popular WWW search engines
+svnbook-1.7p0       Version Control with Subversion
+swatch-3.2.3p1      simple log monitoring program
+swi-prolog-6.6.4p10 Prolog for the real world
+swig-2.0.11p2       simplified wrapper and interface generator
+t1lib-5.1.2p0       Type 1 rasterizer library for UNIX/X11
+t1utils-1.39        utilities for PostScript Type 1 fonts
+taglib-1.9.1p1      managing meta-data of audio formats
+tcl-8.5.18p1        Tool Command Language
+tcllib-1.17pl0      Tcl Standard Library
+tcs-19950325        translate character sets
+tcsh-6.19.00p0      extended C-shell with many useful features
+tdb-1.3.12          trivial database library
+telepathy-glib-0.24.1p1 flexible communications framework, glib bindings
+terminus-font-4.40p0 fixed width fonts especially for long hacking sessions
+tevent-0.9.29       event system based on talloc
+texi2html-5.0       texinfo to HTML converter
+texinfo-6.3p0       official documentation format of the GNU project
+texlive_base-2015p0 base binaries for TeXLive typesetting distribution
+texlive_texmf-buildset-2015 smallest texlive texmf for building ports
+texlive_texmf-full-2015 texlive texmf for extra macros
+texlive_texmf-minimal-2015 texlive texmf for basic functionality
+the_silver_searcher-1.0.2p0 code searching tool, with a focus on speed (ag)
+thinking-forth-1.0  philosophy of problem solving, applied to Forth
+tidyp-1.04p1v0      validate, correct and pretty-print HTML
+tiff-4.0.7p0        tools and library routines for working with TIFF images
+tin-2.4.1           threaded NNTP- and spool-based UseNet newsreader
+tintin-2.01.2       client program for playing muds with advanced features
+tinyfugue-4.0s1p4   programmable MUD client, with macro support and more
+tk-8.5.18p1         graphical toolkit for Tcl
+tkdiff-4.2p0        graphical front-end to the diff program
+tmake-1.10p3        cross-platform makefile tool from TrollTech
+tomoe-0.6.0p2       japanese handwriting recognition library
+tor-0.2.9.10        anonymity service using onion routing
+tornado-1.4p0       Ouranos (Weather War) clone; multiplayer
+trac-1.2            wiki and bug tracking system for software projects
+trans-1.20p1        character encoding converter generator package
+transfig-3.2.5ap1   tools to convert Xfig's .fig files
+tree-0.62           print ascii formatted tree of a directory structure
+tremor-20120410p1   integer-only, fully Ogg Vorbis compliant decoder library
+trn-4.0.77p2        threaded newsreader
+trytond-3.2.18      server of the Tryton application platform
+trytond-module-company-3.2.2p0 trytond company module
+trytond-module-country-3.2.2 trytond country module
+trytond-module-currency-3.2.2p0 trytond currency module
+trytond-module-party-3.2.2p0 trytond party module
+trytond-module-product-3.2.2p0 trytond product module
+trytond-module-stock-3.2.10 trytond stock module
+ucblogo-5.5p3       Berkeley's implementation of the logo programming language
+uemacs-4.0          full screen simple editor
+uniutils-2.27p0     Unicode utilities
+unrar-5.40v1        extract, list, and test RAR archives
+unzip-6.0p10        extract, list & test files in a ZIP archive
+vala-0.34.7         compiler for the GObject type system
+vanessa_logger-0.0.10p0 provides a generic logging layer
+vcdimager-0.7.24    (S)VCD authoring software
+vim-8.0.0388-no_x11 vi clone, many additional features
+vim-lang-7.3.154-no_x11 vi clone, NLS subpackage
+vim-spell-af-8.0    Afrikaans spell-check files for Vim
+vim-spell-am-8.0    Amharic spell-check files for Vim
+vim-spell-bg-8.0    Bulgarian spell-check files for Vim
+vim-spell-ca-8.0    Catalan spell-check files for Vim
+vim-spell-cs-8.0    Czech spell-check files for Vim
+vim-spell-cy-8.0    Welsh spell-check files for Vim
+vim-spell-da-8.0    Danish spell-check files for Vim
+vim-spell-de-8.0    German spell-check files for Vim
+vim-spell-el-8.0    Greek spell-check files for Vim
+vim-spell-eo-8.0    Esperanto spell-check files for Vim
+vim-spell-es-8.0    Spanish spell-check files for Vim
+vim-spell-fo-8.0    Faroese spell-check files for Vim
+vim-spell-fr-8.0    French spell-check files for Vim
+vim-spell-ga-8.0    Irish spell-check files for Vim
+vim-spell-gd-8.0    Scottish Gaelic spell-check files for Vim
+vim-spell-gl-8.0    Galician spell-check files for Vim
+vim-spell-he-8.0    Hebrew spell-check files for Vim
+vim-spell-hr-8.0    Croation spell-check files for Vim
+vim-spell-hu-8.0    Hungarian spell-check files for Vim
+vim-spell-id-8.0    Indonesian spell-check files for Vim
+vim-spell-it-8.0    Italian spell-check files for Vim
+vim-spell-ku-8.0    Kurdish spell-check files for Vim
+vim-spell-la-8.0    Latin spell-check files for Vim
+vim-spell-lt-8.0    Lithuanian spell-check files for Vim
+vim-spell-lv-8.0    Latvian spell-check files for Vim
+vim-spell-mg-8.0    Malagasy spell-check files for Vim
+vim-spell-mi-8.0    Maori spell-check files for Vim
+vim-spell-ms-8.0    Malay spell-check files for Vim
+vim-spell-nb-8.0    Norwegian (Bokmal) spell-check files for Vim
+vim-spell-nl-8.0    Dutch spell-check files for Vim
+vim-spell-nn-8.0    Norwegian (Nynorsk) spell-check files for Vim
+vim-spell-ny-8.0    Chichewa spell-check files for Vim
+vim-spell-pl-8.0    Polish spell-check files for Vim
+vim-spell-pt-8.0    Portuguese spell-check files for Vim
+vim-spell-ro-8.0    Romanian spell-check files for Vim
+vim-spell-ru-8.0    Russian spell-check files for Vim
+vim-spell-rw-8.0    Kinyarwanda spell-check files for Vim
+vim-spell-sk-8.0    Slovak spell-check files for Vim
+vim-spell-sl-8.0    Slovenian spell-check files for Vim
+vim-spell-sv-8.0    Swedish spell-check files for Vim
+vim-spell-sw-8.0    Kiswahili spell-check files for Vim
+vim-spell-tet-8.0   Tetum spell-check files for Vim
+vim-spell-tl-8.0    Tagalog spell-check files for Vim
+vim-spell-tn-8.0    Setswana spell-check files for Vim
+vim-spell-uk-8.0    Ukrainian spell-check files for Vim
+vim-spell-yi-8.0    Yiddish spell-check files for Vim
+vim-spell-zu-8.0    Zulu spell-check files for Vim
+vim-taglist-4.6p0   source code browser plugin for the Vim text editor
+vitetris-0.57p0     terminal-based tetris clone in vein of nintendo tetris
+viz-1.1.1p0         Convert invisible (binary) characters to a visible form
+vrfy-99.05.22p0     verify email addresses and mailing lists
+vte-0.28.2p17       terminal emulation library
+vttest-20140305     test VT100-type terminal
+w3m-0.5.3p5         pager/text-based web browser
+wanderer-3.2p2      Rogue like adventure game
+wavpack-5.1.0       audio codec for lossless, lossy and hybrid compression
+webalizer-2.23.08.30p5 web server log file analysis program
+wget-1.19.1         retrieve files from the web via HTTP, HTTPS and FTP
+wily_9libs-0.13.41v1 clone of the Plan9 editor 'acme'
+windowmaker-0.95.8  window manager that emulates NEXTSTEP(tm)
+wndw-3.0            Wireless Networking in the Developing World, English edition
+wordnet-3.0p6       browser for a large lexical database of English
+wtf-20170131        translate common internet acronyms
+wv-1.2.9            convert various Microsoft formats into HTML/PNG
+wv2-0.4.2p1         library functions to access Microsoft Word/Excel files
+wxWidgets-gtk2-2.8.12p13 C++ cross-platform GUI toolkit
+x264-20170125p0     free H.264/MPEG-4 AVC encoder
+x265-2.3p0          free H.265/HEVC encoder
+xapian-core-1.2.15p1 search engine library
+xbae-4.60.4p15      Motif-based table widget
+xd-8087p1           yet another dump utility
+xdg-utils-1.1.1     utilities to assist desktop integration tasks
+xfconf-4.12.1p0     Xfce4 settings daemon
+xine-lib-1.2.8p0    multimedia decoding library
+xless-1.7p4         X11 viewer for text files
+xlhtml-0.2.9.8p3    convert Excel and PowerPoint to HTML
+xmlto-0.0.28        front-end for converting XML files to various formats
+xmltoman-0.4        xml to manpage converter
+xmlwf-2.1.0         verifies XML documents
+xosd-2.2.14p0       displays text on your screen
+xpdf-3.04p1         PDF viewer for X11
+xspread-3.1.1cp2    spreadsheet program under X11
+xvidcore-1.3.4      ISO MPEG-4 compliant video codec
+xwpe-1.5.30ap1      powerful programming editor
+xz-5.2.3            LZMA compression and decompression tools
+yafc-1.1p4          powerful console ftp client with many features
+yasm-1.3.0p1        complete rewrite of the NASM assembler
+yaz-3.0.49p4        Z39.50/SR client and API library
+yelp-xsl-3.20.1     XSLT stylesheets for yelp
+yorick-2.1.06p1     interpreted language for scientific computing
+ysmv7-2.9.9.1p0     ICQ console client with encryption support
+ytalk-3.1.1p2       enhanced talk that allows for multiple parties
+zip-3.0p0           create/update ZIP files compatible with PKZip(tm)
+znc-1.6.3           advanced IRC bouncer
+zsh-5.3.1           Z shell, Bourne shell-compatible
+ztrack-1.0          ncurses based pseudo-3D driving game
+zziplib-0.13.62p0   lightweight library for extracting data from zip files
+zzuf-0.14p0         transparent application input fuzzer

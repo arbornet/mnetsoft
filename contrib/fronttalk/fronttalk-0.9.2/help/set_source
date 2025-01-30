@@ -1,0 +1,15 @@
+                       Fronttalk Setting:  SOURCE
+
+Usage:  SET SOURCE
+        SET NOSOURCE
+
+If the SOURCE flag is set, then when you join a conference the conference rc
+file, and your local and remote .cfrc files will be executed.  This is the
+default.
+
+If NOSOURCE is set, then none of these will be executed.
+
+This does not effect the execution of the server RC file, and your local and
+remote .cfonce files.
+
+See also "HELP SET REMOTE".

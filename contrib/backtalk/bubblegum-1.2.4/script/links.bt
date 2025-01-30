@@ -1,0 +1,14 @@
+% Backtalk Bubblegum Interface -- (c) 2004, Jan Wolter, Steve Weiss
+%
+% Macros for constructing URLs linking to confernences, items, or responses.
+
+/format_conf { pop pop
+  `(confhome?conf=)3 2 roll' } def
+
+/format_item { pop
+  `(read?conf=) 4 2 roll (&item=) exch (&rsel=all)'
+} def
+
+/format_resp {
+  `(read?conf=) 5 2 roll (&item=) 3 1 roll (&rsel=) exch'
+} def

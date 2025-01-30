@@ -1,0 +1,61 @@
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+VPATH= @srcdir@
+
+CC= @CC@
+INSTALL= @INSTALL@
+LN= @LN_S@
+
+prefix= @prefix@
+exec_prefix= @exec_prefix@
+bindir= @bindir@
+mandir= @mandir@
+datadir= @datadir@
+
+CPPFLAGS= @CPPFLAGS@
+CFLAGS= @CFLAGS@
+LDFLAGS= @LDFLAGS@
+LIBS= @LIBS@
+
+OBJS=main.o line.o syst.o util.o cmd.o file.o opt.o subs.o term.o proc.o spel.o
+SRCS=main.c line.c syst.c util.c cmd.c file.c opt.c subs.c term.c proc.c spel.c
+
+DIST= README $(SRCS) gate.h config.h.in configure configure.in install-sh \
+    Makefile.in gate.1.C gate.help CHANGES
+
+gate: $(OBJS)
+	$(CC) -o gate $(CFLAGS) $(OBJS) $(LIBS)
+
+main.o: main.c gate.h config.h
+util.o: util.c gate.h config.h
+syst.o: syst.c gate.h config.h
+line.o: line.c gate.h config.h
+file.o: file.c gate.h config.h
+subs.o: subs.c gate.h config.h
+opt.o:  opt.c  gate.h config.h
+cmd.o:  cmd.c  gate.h config.h
+term.o: term.c gate.h config.h
+proc.o: proc.c gate.h config.h
+spel.o: spel.c gate.h config.h
+
+gate.1: gate.1.C
+	$(CC) -Uunix -E $(CFLAGS) gate.1.C | sed -e '/^$$/d' | sed -e '/^#/d' > gate.1
+
+
+install: gate gate.1
+	./install-sh -d $(bindir)
+	./install-sh -d $(datadir)
+	./install-sh -d $(mandir)/man1
+	$(INSTALL) -m 755 gate $(bindir)
+	$(INSTALL) -m 644 gate.help $(datadir)
+	$(INSTALL) -m 644 gate.1 $(mandir)/man1
+
+gate.tar: $(DIST)
+	tar cvf gate.tar $(DIST)
+
+clean:
+	rm -f $(OBJS) gate
+
+distclean:	clean
+	-rm -f Makefile config.h config.log config.status config.cache

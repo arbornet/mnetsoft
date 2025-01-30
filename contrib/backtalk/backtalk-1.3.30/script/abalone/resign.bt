@@ -1,0 +1,70 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% resign script
+%
+% Resign a person from a conference.
+%
+% Query Parameters:
+%    conf=	name of conference
+%    csel=	current conference selector
+
+flavor(config.bt)+ include
+
+/abalone.menujump 0 def
+
+flavor(openconf)+ stopped {
+  (Backtalk internal error: )exch(\n) halt} if
+
+`bbsname( )conf( )Conference cap' (C)
+[/conf /csel]
+[/abalone.menujump] []
+flavor(header.bt)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop.bt)+ include
+
+resign_conf
+
+(<TR><TD CLASS=mast><SPAN CLASS=big>You have resigned from )conftitle
+(.</SPAN>\n)
+
+% delete the conference from the user's hotlist, if it is there.
+% we check the directory names, not the conference names, in case it is
+% listed by an alias.
+/cftext () def
+/deleted 0 def
+1 cflist_array {
+  /conf xdef
+  conf conf_dir confdir eq {
+    /deleted 1 def
+  } {
+    /cftext cftext conf (\n)++ def
+  } ifelse
+} forall
+
+deleted {
+  cftext (*.cflist) write
+  (<BR>The )conftitle( conference has been removed from your hot list.\n)
+} if
+
+(</TD><TD CLASS=mast VALIGN=TOP ALIGN=RIGHT>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+(<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>\n)
+/csel defined {csel {(<OPTION VALUE=nextconf>Visit Next )Conference cap(</OPTION>\n)} if } if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=confhome>Rejoin this )Conference cap(</OPTION>\n)
+sessions { id { (<OPTION VALUE=logout>Logout</OPTION>\n)} if } if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR>
+</FORM>
+</TABLE>
+)
+
+global_footer
+(</BODY></HTML>
+)

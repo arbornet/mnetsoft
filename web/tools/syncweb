@@ -1,0 +1,6 @@
+#!/bin/sh
+HTDOCS=$HOME/test2/grex/web/htdocs
+cd $HTDOCS
+doas rsync -avz --no-owner --no-group --no-perms --exclude .svn --exclude .Attic . /var/www/htdocs
+doas chown -R root:grexweb /var/www/htdocs
+doas chmod -R go-w /var/www/htdocs

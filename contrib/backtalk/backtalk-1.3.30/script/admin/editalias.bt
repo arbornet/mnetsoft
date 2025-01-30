@@ -1,0 +1,506 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editalias script
+%
+% This is the form generator and query handler for editing the conference
+% alias list.  If run without the "op" parameters, it just displays the
+% current conference alias list, with controls for editting them.
+%
+% This makes no attempt at locking - if more than one person is editing the
+% conference menu at the same time, chaos reigns.
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (M) = move an item to a different position in the list
+%                   (E) = edit an item already in the list
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%                   (V) = just display the menu.
+%    oldn=	(M,E,D Only) Line number of source item.
+%    newn=      (M,A Only) Line number of destination (insert before this).
+%    calias=    (A,E Only) New alias of conference.
+%    cdir=      (A,E Only) New directory for conference.
+%    tm=	Time file was last modifed.
+%    admhome=   URL of administrative menu
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/admin/begin)' def} if
+
+% <verb> conf_form - :  generate a form for editing a alias.  Passes through
+% current values of global variables op and oldn.  Defaults fields to current
+% values of global variables calias, cdir.
+
+/alias_form {
+  /verb xdef
+  (<FORM METHOD=post ACTION=editalias>
+  <STRONG>Conference Alias:</STRONG> (required)<BR>
+  <INPUT TYPE=hidden NAME=op VALUE=)op(>
+  <INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+  <INPUT TYPE=hidden NAME=tm VALUE=)filetime(>\n)
+  /oldn defined {(<INPUT TYPE=hidden NAME=oldn VALUE=)oldn(>\n)} if
+  (<INPUT TYPE=text NAME=calias VALUE=")calias(" SIZE=12><BR>
+  This an alias for a conference, that is, a name by which it can be
+  accessed.  It should be one word, all lower case letters and digits,
+  with no spaces.  Underscores may be inserted into the alias to mark
+  the minimum abbreviation.  For example, an alias of "astro_nomy" would
+  allow users to access the astronomy conference by the names "astro",
+  "astron", "astrono", "astronom" or "astronomy".  <P>
+  <STRONG>Conference Directory:</STRONG> (required)<BR>
+  <INPUT TYPE=text NAME=cdir VALUE=")cdir(" SIZE=30><BR>
+  This is the full path name of the directory in which the conference is
+  stored.  Normally this is <TT>)bbsdir(<EM>name</EM></TT>, where
+  <TT><EM>name</EM></TT> is the internal conference name.  In most cases,
+  you can just cut/paste a conference directory name from the table above.<P>
+  <INPUT TYPE=submit VALUE=")verb( Alias">
+  </FORM>\n)
+} def
+
+% <path> slashslash <path>
+% Given a pathname, eliminate any duplicate slashes.
+
+/slashslash
+{
+   {
+      dup (//) 0 search dup -1 eq {pop break} if
+      2 copy 0 exch substr
+      3 1 roll 1 + 999999 substr +
+   } loop
+} def
+
+% <dir> expand_dir <dir>
+% <dir> compress_dir <dir>
+% These expand and compress directory names.  Compression substitutes a
+% leading % sign for a bbsdir path.
+
+/expand_dir
+{
+   dup 0 1 substr (%) eq {
+     bbsdir (/) + exch 1 999999 substr +
+     slashslash
+   } if
+} def
+
+/compress_dir
+{
+   slashslash
+   dup 0 bbsdir length substr bbsdir eq {
+      % clip bbsdir of front of pathname
+      bbsdir length 999999 substr
+      % clip off any leading slashs
+      {
+        dup 0 1 substr (/) ne {break} if
+        1 999999 substr
+      } loop
+      % paste on leading percent sign
+      (%) exch +
+   } if
+} def
+
+% <file> <index> oldvalues -
+% Given a memory image of the file and the index of a line in it, get that
+% line and pull the calias and cdir values out of it.  If the line doesn't
+% exist, we bomb.
+
+/oldvalues
+{
+   /target xdef
+   /cnt 0 def
+   {
+      /cnt inc
+      (\n) clip
+      cnt target eq {
+	 % parse apart the line
+	 (:) clip /calias xdef
+	     expand_dir /cdir xdef
+	 % discard the rest of the file
+	 pop
+	 break
+      } {
+	 % discard the line
+	 pop
+      } ifelse
+      dup ! {pop (No line number )oldn(\n</BODY></HTML>\n) stop} if
+   } loop
+} def
+
+
+% <name> check_calias <err>:  Return an error message if the given alias
+% name is illegal (must be all lower case).
+
+/check_calias {
+  dict begin
+  dup {
+     () % put non-error message on stack
+     /u_cnt 0 def  % count of underscores
+     exch {
+        /ch xdef
+        ch (_) eq {
+           /u_cnt inc
+        } {
+	   (abcdefghijklmnopqrstuvwxyz0123456789-.+@#%) ch 0 search 0 lt {
+              pop (Conference alias must be all lower case letters and digits.\n)
+              break
+           } if
+        } ifelse
+     } forall
+     u_cnt 1 gt {
+       pop (Conference alias should contain at most one underscore)
+     } if
+  }{
+    (Conference alias not entered.\n)
+  } ifelse
+  end
+} def
+
+
+% <name> check_cdir <err>:  Return an error message if the given directory
+% path is illegal (may contain no newlines).  There are probably other
+% ill-advised things to put into directory names that we aren't checking for,
+% but what the heck.
+
+/check_cdir {
+   dup length 0 eq {
+      pop (Conference directory not entered\n)
+   } {
+      () exch {
+         (\n) eq
+ 	    {pop (Directory path may not contain newlines\n) break} if
+      } forall
+   } ifelse
+} def
+
+
+(<HTML><HEAD><TITLE>Edit Conference Alias List</TITLE></HEAD>
+<BODY BGCOLOR=FFFFFF>
+)
+
+% set some defaults
+/cmds 1 def		% display commands on listing
+/rem 0 def		% don't kill anything
+/add 0 def		% don't add anything
+/edit 0 def		% don't edit anything
+/check 0 def		% don't check syntax
+/editted 0 def		% don't write out new listing
+/err () def		% no error message
+/op defined ! {/op (V) def} if
+/oldn defined {oldn cvi} {0} ifelse /oldn xdef
+/newn defined {newn cvi} {0} ifelse /newn xdef
+
+% Load the conference menu into memory
+(*conflist) read /cl xdef
+(*conflist) filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt {
+      /op (V) def
+      /err (Ignoring reloaded query - don't want to do same thing twice.\n) def
+      /calias () def
+      /cdir () def
+   } if
+} if
+
+% Do add case
+op (A) eq {
+   newn ! {
+      /cmds 0 def
+      /check 1 def
+   } {
+      % Do the insertion
+      /check 1 def
+      /add 1 def
+   } ifelse
+} if
+
+% Do move case
+op (M) eq {
+   oldn ! {
+      /op (V) def
+   } {
+   newn ! {
+      % Do the deletion, and ask for insertion location
+      /cmds 0 def
+      /rem 1 def
+   } {
+      % Do the insertion
+      /check 1 def
+      /add 1 def
+   } ifelse } ifelse
+} if
+
+
+% Do edit case
+op (E) eq {
+   oldn ! {
+      /op (V) def
+   } {
+   /calias defined /cdir defined or {
+      % Do the edit
+      /check 1 def
+      /edit 1 def
+   } {
+      % Get the old values
+      cl oldn oldvalues
+
+      % Display the edit form
+      (Change) alias_form
+      (</BODY></HTML>)
+      stop
+   } ifelse } ifelse
+} if
+
+
+% Do deletion case
+op (D) eq {
+   oldn ! {
+      /op (V) def
+   } {
+      % Do the deletion
+      /rem 1 def
+   } ifelse
+} if
+
+
+% if "add" or "edit" flag set, check sanity of data to be inserted
+check {
+
+   /calias defined {
+      calias check_calias dup {err exch + /err xdef} {pop} ifelse
+   } {
+      err (Conference alias not defined\n) + /err xdef
+   } ifelse
+
+   /cdir defined {
+      cdir check_cdir dup {err exch + /err xdef} {pop} ifelse
+   } {
+      err (Conference directory not defined\n) + /err xdef
+   } ifelse
+
+   % If we had errors, cancel operation
+   err {/cmds 1 def /rem 0 def /add 0 def  /edit 0 def} if
+
+} if
+
+
+% if "rem" flag set, delete oldn
+rem {
+   /newcl () def
+   /cnt 0 def
+   % Loop through lines of the file
+   cl
+   {
+      /cnt inc
+      (\n) clip
+      cnt oldn eq {
+         op (M) eq {
+	    % parse apart the deleted line
+	    (:) clip /calias xdef
+		     expand_dir /cdir xdef
+	 } {
+	    % discard the deleted line.
+	    pop
+	 } ifelse
+         % append rest of old file
+         newcl exch + /newcl xdef
+	 /editted 1 def
+         break
+      } if
+
+      % append line to new list
+      newcl exch + (\n) + /newcl xdef
+
+      dup ! {pop break} if
+   } loop
+   /cl newcl def
+} if
+
+
+% if "edit" flag set, replace oldn
+edit {
+   /newcl () def
+   /cnt 0 def
+   % Loop through lines of the file
+   cl
+   {
+      /cnt inc
+      (\n) clip
+      cnt oldn eq {
+         % discard old line
+	 pop
+	 % append new line
+	 newcl calias(:)+cdir compress_dir+(\n)+ +
+	 % append rest of file
+	 exch + /newcl xdef
+	 /editted 1 def
+         break
+      } if
+
+      % append line to new list
+      newcl exch + (\n) + /newcl xdef
+
+      dup ! {pop break} if
+   } loop
+   /cl newcl def
+} if
+
+
+% if "add" flag set, insert newn
+add {
+   /newcl () def
+   /cnt 0 def
+   % Loop through lines of the file
+   cl {
+      /cnt inc
+      cnt newn eq {
+	 % insert the new line
+	 newcl calias(:)+cdir compress_dir+(\n)+ +
+	 % append rest of file
+	 exch + /newcl xdef
+	 /editted 1 def
+	 break
+      } if
+
+      dup ! {pop break} if
+
+      (\n) clip
+
+      % append line to new list
+      newcl exch + (\n) + /newcl xdef
+
+   } loop
+   /cl newcl def
+} if
+
+editted {
+   cl (*conflist) write
+   (*conflist) filedate cvi /filetime xdef
+} if
+
+% display a heading
+cmds {
+  (<H1>Backtalk Admin Page: Edit Conference Alias List</H2>\n)
+} if
+
+% display any error messages
+err {
+   (<H2>Error:</H2>\n)
+   err {
+      (\n) clip
+      (<BR>\n) 3 -1 roll
+      dup ! {pop break} if
+   } loop
+} if
+
+% display a caption
+cmds {
+  (<H2>Current List of Conference Aliases:</H2>
+  This is the current conference alias list.
+  When anyone attempts to join a conference,
+  this file is searched for the name they give,
+  to find the conference directory.
+  The first matching line is used.
+  <P>
+  To edit, rearrange, or delete aliases use the controls on the left side
+  of this table.
+  To add new conferences or headings, use the forms below.<P>)
+} {
+  op (A) eq {
+     (<STRONG>Where do you want to insert the entry?</STRONG>\n)
+  } {
+     (<STRONG>To which location do you want to move the entry?</STRONG>\n)
+  } ifelse
+
+  /click 0 def
+  /url [(editalias?op=)op(&tm=)filetime
+        /oldn defined {(&oldn=)oldn} if
+        /calias defined {(&calias=)calias cgiquote} if
+        /cdir defined {(&cdir=)cdir cgiquote} if
+        ] def
+ 
+} ifelse
+
+(<TABLE BORDER=1 CELLPADDING=2>
+<TH)cmds{( COLSPAN=3>commands)}{(>)}ifelse(</TH><TH>alias</TH><TH>directory</TH>\n)
+
+cl ! {(No Conference Aliases Listed\n)} if
+
+0 /cnt xdef
+0 /rcnt xdef
+
+% Print out the current contents of the file
+{
+   /cnt inc
+
+   cl (\n) clip exch /cl xdef
+
+   % Skip comment lines
+   dup 0 1 substr (#) eq {pop continue} if
+
+   % Skip first two lines
+   /rcnt inc
+   rcnt 2 le {pop continue} if
+
+   % Pick apart the line
+   (:) clip /alias xdef
+            expand_dir /dir xdef
+
+   (<TR>)
+   cmds {
+      (<TD BGCOLOR=00FF00><A HREF=editalias?op=E&oldn=)cnt(&tm=)filetime
+         (&admhome=)admhome(>Edit</A></TD>)
+      (<TD BGCOLOR=FFFF00><A HREF=editalias?op=M&oldn=)cnt(&tm=)filetime
+         (&admhome=)admhome(>Move</A></TD>)
+      (<TD BGCOLOR=FF0000><A HREF=editalias?op=D&oldn=)cnt(&tm=)filetime
+         (&admhome=)admhome(>Delete</A></TD>)
+   } {
+      (<TD BGCOLOR=FFFF00><A HREF=)url(&newn=)cnt(&admhome=)admhome
+      (>here =></A>\n</TD></TR><TR><TD></TD>)
+   } ifelse
+
+   (<TD>)alias quote(</TD><TD>) dir quote(</TD>\n)
+
+   % flag conferences that don't exist with a create button.
+   cmds {
+      dir(/config)+ exists ! {
+	 dir { 
+	   (/) parse /cf xdef
+	   dup ! {break} if
+	 } loop
+         (<TD><A HREF=makeconf?conf=)cf(&admhome=)admhome
+	 (>create nonexistant conference?</A></TD>\n)
+      } if
+   } if
+   (</TR>\n)
+
+   cl ! {break} if
+
+} loop
+cmds ! {
+   (<TR><TD BGCOLOR=FFFF00><A HREF=)url(&newn=)cnt 1 +(&admhome=)admhome
+   (>here =></A></TD></TR>\n)
+} if
+(</TABLE>\n)
+
+cmds {
+  (<P><HR><H2>Add an Alias:</H2>
+  Use this section to add a new conference alias.\n)
+  /op (A) def
+  err ! {/calias () def /cdir () def} if
+  (Add) alias_form
+} if
+
+(<P>
+<A HREF=)admhome(>Return to adminstration page</A>.
+</BODY>
+</HTML>
+)

@@ -1,0 +1,4 @@
+#!/bin/sh
+p=/usr/local/bin/procmail
+rc=/var/users/staff/unspam-staff-talk
+exec $p -tYm $rc || exit 75

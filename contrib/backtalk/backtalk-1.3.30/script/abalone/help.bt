@@ -1,0 +1,1030 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% help script
+%
+% This script prints help.
+%
+% Query Parameters:
+%    topic=	    help topic.
+
+/noheader 1 defconstant
+flavor(config)+ include
+
+/abalone.menujump 0 def
+
+(Abalone Interface Help) (S)
+[/topic]
+[/abalone.menujump] []
+flavor(header)+ include
+
+/topic dup (general) default def
+/didit 0 def
+
+(<FORM NAME=nav METHOD=POST ACTION=help>
+<INPUT TYPE=hidden NAME=mainwin VALUE=)mainwin(>
+<TR><TD CLASS=mast>)
+mainwin !{
+(<INPUT TYPE=button VALUE="Close Help Window" onClick="window.close();">\n)
+} if
+(</TD><TD CLASS=mast ALIGN=right>Select Help Topic:
+<SELECT NAME=topic)
+abalone.menujump cvi!{( onChange="document.nav.submit()")}if (>
+<OPTION VALUE=general)topic(general)eq{( SELECTED)}if(>General Backtalk Information</OPTION>
+<OPTION VALUE=abalone)topic(abalone)eq{( SELECTED)}if(>General Abalone Information</OPTION>
+<OPTION VALUE=entrance)topic(entrance)eq{( SELECTED)}if(>Entrance Page</OPTION>
+<OPTION VALUE=confhome)topic(confhome)eq{( SELECTED)}if(>Conference Home Page</OPTION>
+<OPTION VALUE=read)topic(read)eq{( SELECTED)}if(>Read Page</OPTION>
+)
+post_log_file {
+(<OPTION VALUE=recent)topic(recent)eq{( SELECTED)}if(>Recent Postings Page</OPTION>\n)
+} if
+(<OPTION VALUE=pref)topic(pref)eq{( SELECTED)}if(>Preferences Page</OPTION>
+<OPTION VALUE=hotlist)topic(hotlist)eq{( SELECTED)}if(>Edit Hotlist Page</OPTION>
+<OPTION VALUE=find)topic(find)eq{( SELECTED)}if(>)Conference cap( Search Page</OPTION>
+<OPTION VALUE=html)topic(html)eq{( SELECTED)}if(>Backtalk HTML Reference</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>
+<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=colhead COLSPAN=2>Abalone Help:  )
+
+% =========================== GENERAL ==================================
+
+topic (general) eq {
+
+(General Backtalk Information</TD></TR>
+<TR><TD CLASS=odd><STRONG>The Backtalk Conferencing System</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+Backtalk is a web-based computer conferencing system developed by
+Jan Wolter and Steve Weiss.  For more information,
+see the <A HREF=http://www.unixpapa.com/backtalk>Backtalk web page</A>.
+<P>
+Computer conferencing systems allow people to post original messages,
+and to read and reply to the postings of other people.
+Unlike E-mail, computer conferencing systems are designed to gracefully
+support discussions amoung groups of people, sometimes very large groups.
+Unlike chat systems, computer conferencing systems are not real-time -
+the people involved in the discussion are not necessarily all online
+at the same time.
+
+<TR><TD CLASS=odd><STRONG>User Accounts</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+To participate in Backtalk conferencing, a user must have an account,
+with a login name and a password.
+When you first enter the conferencing system you will be asked to give
+these to identify yourself.
+This not only provides a measure of security for the )Conferences(,
+making it possible to restrict the set of people who can access it and
+allowing the author of each message to be identified,
+but it also means Backtalk can remember things about you.
+Thus, you will not normally be shown messages you have seen before,
+because Backtalk will remember what you have seen.
+<P>
+Normally each user will also provide a little personal information, so that
+people interested in the user's postings can satisfy their curiousity about
+the author.
+<P>
+<A NAME=anonymous>On</A> some systems, anonymous users, who do not have
+accounts, may be permitted to read the )Conferences(, but not to post to them.
+Many of the functions of Backtalk won't work for anonymous users.
+
+<TR><TD CLASS=odd><STRONG>Conference Structure</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+To help organize multiple threads of discussions,
+most conferencing systems impose some kind of structure on discussions.
+Backtalk adopts one of the most successful structures, which was pioneered
+by text-based systems like Confer and Picospan, and is now used in many
+other popular conferencing systems.
+<P>
+There are three levels to the structure:
+<DL>
+<DT><A NAME=conference>)Conferences cap(:</A>
+<DD>Any Backtalk system will have a selection of )Conferences(.
+    Each )Conference( covers some broad topical area.
+    Each is moderated by a person called ``)AFairwitness(.''
+    Some )Conferences( may be open to all users,
+    while others may be restricted to select list.
+<DT><A NAME=item>)Items cap(:</A>
+<DD>Each )Conference( can contain any number of ``)Items(.''
+    A)AnItem 1 100 substr( has a number, a title,
+    and some introductory text starting off a discussion of a new topic.
+    In most )Conferences(, any user will be able to enter )Items(.
+<DT><A NAME=response>)Responses cap(:</A>
+<DD>Users interested in discussing an )Item('s topic can append ``)Responses(''
+    onto the end of it.  Each )Response( is tagged with the author's name,
+    and they are kept strictly in the order they were posted.
+</DL>
+
+<TR><TD CLASS=odd><STRONG>Interface Flavors</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Backtalk's user interface is designed to be almost limitlessly reconfigurable.
+We call each different interface we create a ``flavor.''
+Different Backtalk flavors may look completely different and may have
+entirely different buttons and controls, but they all display the same
+discussions.
+<P>
+You are currently 
+using the <A HREF=help?topic=abalone&mainwin=)mainwin(>Abalone</A> flavor of Backtalk.
+)
+
+/didit 1 def
+} if
+
+% =========================== ABALONE ==================================
+
+topic (abalone) eq {
+
+(General Abalone Information</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The Backtalk conferencing system comes in several flavors, each of which
+provides a different look and feel.  You are currently using the "abalone"
+flavor of Backtalk.
+<P>
+Abalone is a full-featured interface designed to be attractive and easy to
+use.  It can be a bit slower than the older pistachio interface, because it
+sometimes does more processing on the server, and usually requires more
+a more net bandwidth and more complex rendering by your browser.
+It makes substantial use of Javascript,
+but all functions should still work, though not
+necessarily as nicely, for users who disable Javascript.
+<P>
+The design was originally inspired by InfoPop's OpenForum conferencing system,
+but it was never a close copy and it has evolved considerably.
+<P>
+It is named after a shell fish because it's tendancy to format everything in
+tables suggested something hard shelled and rigid to the author.  It's named
+abalone because he liked the sound of the word.  Maybe you'll find some
+cultured pearls in here somewhere.
+
+<TR><TD CLASS=odd><STRONG>Navigation</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+There is a pulldown list in the upper-right-hand corner of each page in
+abalone.  This is the main tool for navigating and issuing commands.  Just
+select what you want to do from the list.  Some commands appear in the
+pulldowns on all pages, some only on those where they make sense.
+There are usually other clickable things on the pages, but if you can't find
+a command for something you want to do, the first place to look is in
+the pulldown command list.
+<P>
+If you have a Javascript-enabled browser, you won't need to click the "Go"
+button after selecting a command from the list.  It'll just go.
+<P>
+Some commands names on the menu are followed by three dots.  These will
+generate a popup windows prompting for various information.  If you don't
+have Javascript, the prompt page will appear in the main window instead,
+which may prove a bit ugly.  If you have done other things to disable
+popups, you may have trouble using these abalone commands.
+<P>
+If you see a command whose name is prefixed with a "*", then that means you
+are )AFairwitness( in the current )Conference( and this is a command restricted
+to )Fairwitnesses(.  )Fairwitnesses cap( have various powers that enable
+them to administer their )Conferences(.
+
+<TR><TD CLASS=odd><STRONG>Reading</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+What most people want to do with Abalone is to read the )Conferences(.
+So when you arrive on the <A HREF=help?topic=entrance&mainwin=)mainwin(>Entrance Page</A>,
+you will see a list of your hotlist )Conferences(, and the pulldown menu
+will have "Visit Hotlist )Conferences cap( with New )Responses cap("
+preselected.  Clicking "Go" will get you into the first )Conference( on
+your hotlist that has new )Responses(.  Or you can click the name of one
+of the listed )Conferences( to goto that )Conference(.
+<P>
+Either way, you land at the <A HREF=help?topic=confhome&mainwin=)mainwin(>)Conference cap(
+Home Page</A>.   This shows a list of the new )Items( in the )Conference(.
+The "View New )Responses cap(" option is preselected on the command menu
+\(if there are any new )Responses(\).  Clicking "Go" will get you to the
+first )Item( with new )Responses(, or you can just click on )AnItem( title
+that looks interesting to you.
+<P>
+Either way, you land at the <A HREF=help?topic=read&mainwin=)mainwin(>Read Page</A>, which
+actually shows you the discussion in )AnItem(.  Only a few dozen )Responses(
+will be shown on each page.  For long )Items( you may have to click the tiny
+numbers at the top and bottom of the page to see more )Responses(.  When you
+get to the end, there will be an input box which you can use to post your
+own )Response(.
+<P>
+When you are done reading an )Item(, you can go on to the next by using the
+"View Next )Item cap(" command in the pulldown menu.
+ If the option doesn't appear,
+you have probably seen all the )Items( and it is time to use the "View Next
+)Conference cap(" button to proceed to the next )Conference(.
+<P>
+If )AnItem( is really boring you, and you never want to see it again, there
+is a "Forget this )Item cap(" option on the pulldown menu.
+
+<TR><TD CLASS=odd><STRONG>Posting</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+You can enter new )Items( by selecting the "Enter New )Item cap(" command
+while you are in a )Conference(.  You can respond to an existing )Item( by
+using the response form at the bottom of the page, or selecting "Respond to
+this )Item cap(" from the pulldown menu on the <A HREF=help?topic=read&mainwin=)mainwin(>Read
+Page</A>.
+
+<TR><TD CLASS=odd><STRONG>Your Account</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The "profile" and "preferences" links in the top header bar on each page
+let you edit your personal information and option settings.  You can
+can change the color scheme and various behaviors of the interface.  You can
+also change your password.
+
+<TR><TD CLASS=odd><STRONG>Exiting</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+)
+sessions {
+(There are logout commands on all abalone command lists.
+Clicking one of these will log you out.
+It's best to remember to do this, especially if you are on a public computer,
+as otherwise people coming soon after you leave may be able to access your
+account.  It is never a bad precaution to exit the browser before leaving
+the computer in such environments.
+)
+} {
+(You don't have to do anything special to exit.
+Just go wandering off to another web page, or exit your browser, or whatever.
+Backtalk will never be confused by this.
+<P>
+<STRONG>Warning:</STRONG>
+If you using Backtalk from a public computer, it is important that you exit
+the browser before leaving.
+Otherwise, the browser will retain your login and password in its memory,
+and the next user of the terminal will be able to enter the )Conferences(
+as you.
+)
+} ifelse
+
+(<TR><TD CLASS=odd><STRONG>More Help</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+For more help, you can read the detailed help pages for each Abalone
+page.  You can start with the <A HREF=help?topic=entrance&mainwin=)mainwin(>entrance page</A>.
+But really, you might as well just start using the system.
+There are help commands on most pages that will send you to the help
+page for that page.
+)
+
+/didit 1 def
+} if
+
+% =========================== ENTRANCE ==================================
+
+topic (entrance) eq {
+
+(Entrance Page</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The Entrance Page is the front door to the conferencing
+system.  It displays any daily messages put up by the system administrators,
+and a list of )Conferences(.)
+post_log_file {
+  (  A list of the most recent postings may also be displayed.)
+} if
+(  The pulldown menu features various commands to
+access the )Conferences(.
+<P>
+If you want to set a bookmark so you can return easily any time you like,
+use the ``Bookmark'' facility of your browser to set a bookmark on this page.
+<P>
+On the pulldowns on all other pages, you will see a "Goto Entrance"
+command.  Selecting one of these will return you to this Entrance Page.
+
+<TR><TD CLASS=odd><STRONG>Getting to the )Conferences cap(</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Since the main thing people come to a conferencing system for is )Conferences(,
+there are several different ways to get into the )Conferences( from here.
+All of these will get you to the <A HREF=help?topic=confhome&mainwin=)mainwin(>)Conferences( home
+page</A> for the )Conferences( you choose:
+<UL>
+<LI> The default selection on the pulldown menu is usually "Visit Hotlist
+     )Conferences cap( with New )Responses cap(".  Each user maintins a hot
+     list of the )Conferences( they are most interested in.  This menu option
+     will start you reading all the new )Items( and )Responses( in all your
+     hot )Conferences(, skipping over those )Conferences( that have nothing
+     new in them.
+<P>
+<LI> Your hotlist )Conferences( are displayed on this page.  Clicking on the
+     name of one gets you in.
+<P>
+<LI> If you click on the "All )Conferences cap(" checkbox above the list of
+     )Conferences(, you will get a complete list of all the )Conferences(.
+     Clicking on the name of one works.
+<P>
+<LI> There is a ``Visit All )Conferences cap('' command on pulldown that
+     let's you go through every )Conference( on the system, in the same order
+     listed when you list all )Conferences(.
+<P>
+<LI> There is a ``Goto )Conference cap(...'' command on the pulldown that
+     brings up a popup box where you can type the name of a )Conference( you
+     want to goto.
+</UL>
+
+The pulldown has a number of other useful commands, allowing you to
+edit your hotlist, profile, or preferences.  You can also use the
+``Search User Profiles'' option to view public information about other
+users of the system.
+)
+/didit 1 def
+} if
+
+% =========================== CONFHOME ==================================
+
+topic (confhome) eq {
+
+(Conference Home Page</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Every Backtalk )Conference( has a home page which provides the basic commands
+for reading and posting to that )Conference(.  You can reach the )Conference(
+home page from the <A HREF=help?topic=entrance>entrance page</A> by selecting a
+)Conference( to read and you may return to by selecting
+``Goto )Conference cap( Home Page'' from many other pages.
+<P>
+The )Conference( home page is headed by with a display of the )Conference(
+login file,which includes introductory text and images.  This can be changed
+by the)Fairwitness(.
+After this, it displays the names of the )Fairwitnesses( of the )Conference(
+and the default name you are using in the )Conference(.
+<P>
+Below this, is a list of all )Items( in the )Conference( that have new
+)Responses(.  Initially the list shows only )Items( with new )Responses(, but
+several other options can be selected by clicking the checkboxes above the
+listing.
+
+<TR><TD CLASS=odd><STRONG>Reading the )Conference cap(</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+If the )Conference( has any new postings, you can read it by selecting
+``View New )Responses cap('' from the pulldown, or just by clicking on the
+title of the first listed )Conference(.  Then you'll be able to use the
+``View Next )Item cap('' button to go through all the new )Items(.
+<P>
+If you want to see everything in the )Conference(, not just the new )Responses(,
+then the ``View All )Responses cap('' command can be used instead.
+<P>
+Alternately, you can check the boxes next to the titles of the )Items( that
+sound interesting and then select either ``View New )Responses cap(''
+or ``View All )Responses cap('' to see just those )Items(.
+They will be shown one by one, but the ``View Next )Item cap('' option
+will lead to the next selected )Item(.
+<P>
+
+<TR><TD CLASS=odd><STRONG>Posting to a )Conference cap(</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+To post )Responses( to )AnItem( you should first read the )Item(, as above, but
+you can post new )Items( directly from the )Conference( home page using the
+``Enter a New )Item(</A>'' command.  When you enter
+)AnItem( or )AResponse(, your name will be set by default to the one shown on
+the)Conference( home page.  You can change this default name by clicking on it
+or by selecting ``Change Name in this )Conference cap('' from the menu.
+
+<TR><TD CLASS=odd><STRONG>Favoring )Items cap(</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+If there are )Items( listed that you are especially interested in, you can
+mark them as favorites.  Favorites will be listed first on the )Conference(
+home page and will be displayed first when you read the )Conference(.
+You can favor )Items( by checking the boxes next to their titles and then
+selecting ``Favor Selected Items'' from the pulldown menu.  You can
+``disfavor'' )Items( in much the same way.
+
+<TR><TD CLASS=odd><STRONG>Forgetting )Items cap(</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+If there are )Items( listed that you don't want to see, you can forget them.
+Once forgotten, )AnItem( will effectively disappear for you, unless you
+ask for a list of forgotten )Items(.
+<P>
+You forget )Items( by checking the boxes next to their titles,
+and then selecting
+``Forget Selected )Items cap('' from the pulldown.
+<P>
+If any forgotten )Items( are listed on the display, a ``Remember Selected 
+)Items cap('' command will appear on the pulldown, which works the same way.
+
+<TR><TD CLASS=odd><STRONG>Resigning from a )Conference cap(</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+You join )AConference( automatically just by going to the )Conference
+( home page.  If you decide you never want to go there again, you can use the
+``resign from this )Conference('' button to do so.
+When you resign, the system will recover a little disk space by
+erasing its records of which )Items( and )Responses( you have already seen.
+
+<TR><TD CLASS=odd><STRONG>)Fairwitness cap( Commands</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+If you are )AFairwitness( in this )Conference
+(, you will be supplied with additional options on the pulldown menu.
+These allow you to freeze, thaw, retire, unretire, or delete most of the
+)Items( in the )Conference(, by checking the boxes next to the )Items( and
+selecting the command from the menu.
+<P>
+A frozen )Item( can no longer be posted to by any user.  A retired )Item(
+is effectively forgotten by all users - it is still accessible, but is
+not included in the list of )Items( unless the user requests it.  A deleted
+)Item( is, of course, simply gone.
+<P>
+Linked )Items(  are shared between two different )Conferences(.  Only the
+)Fairwitness( can link )Items(.  If you delete a linked )Item( then you
+are deleting only your link to it.  So you can move )Items( between
+)Conferences( by first linking them into a new )Conference( and then
+deleting them from the old )Conference(.
+<P>
+There is also a link to the <A HREF=help?topic=confopt&mainwin=)mainwin(>)Conference( option
+page</A>, where the )Fairwitness( can configure various )Conference( settings.
+
+)
+/didit 1 def
+} if
+
+% =========================== READ ==================================
+
+topic (read) eq {
+
+(Read Page</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The read )Item( page is one the most important page in the Backtalk systems,
+since it is used for what Backtalk is mainly there to do:  reading what
+other people have read, and posting your own )Responses(.
+The page contains the title of the )Item(, followed by all the )Responses(
+that you have selected \(usually all new )Responses(\).
+<P>
+To the right of the )Item( title, you may see a number of small icons
+that indicate the status of the )Item(.  Icons show are:
+<TABLE BORDER=0 CELLPADDING=6>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(fav.gif"></TD>
+<TD><STRONG>Favorite</STRONG></TD>
+<TD>You have this )Item( marked as a favorite.  It will be displayed
+    before others.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(tmpfav.gif"></TD>
+<TD><STRONG>Temporary Favorite</STRONG></TD>
+<TD>This )Item( is marked as a temporary favorite.  Normally this happens
+    after you post to it.  It will be a favorite the next time you read,
+    but thereafter.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(froze.gif"></TD>
+<TD><STRONG>Frozen</STRONG></TD>
+<TD>This )Item( cannot be responded to unless thawed first.  )
+    Fairwitnesses cap(, system administrators, and sometimes )Item(
+    authors can do this.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(forgot.gif"></TD>
+<TD><STRONG>Forgotten</STRONG></TD>
+<TD>You have forgotten this )Item(, so it will not be shown
+    to you unless you ask for it specifically.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(retire.gif"></TD>
+<TD><STRONG>Retired</STRONG></TD>
+<TD>This )Item( has been retired by an adminstrator, )Fairwitness(, or
+    possibly the Item author, so it will not be shown
+    to users unless they ask for it specifically.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(linked.gif"></TD>
+<TD><STRONG>Linked</STRONG></TD>
+<TD>This )Item( is linked, so that it appears in more than one
+    )Conference(.</TD>
+</TR>
+
+</TABLE>
+<P>
+Each )Response( is shown with the name of it's author and the date it was
+entered.  Clicking on the login ID will give more information about the
+author, if any is available.
+)Responses cap( have various small icons next to them that can be used to
+perform various operations on the )Response(.  The meanings of these icons
+are:
+<P>
+<TABLE BORDER=0 CELLPADDING=6>
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(unseen.gif"></TD>
+<TD><STRONG>)Unseen cap(</STRONG></TD>
+<TD>Marks this )Response( as the first unseen )Response(, so that the next
+    time you read new )Items( in this )Conference(, this will be the
+    first new one.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(edit.gif"></TD>
+<TD><STRONG>Edit</STRONG></TD>
+<TD>Edit this )Response(.
+)author_edit {(En)}{(Dis)} ifelse(abled on this system.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(hide.gif"></TD>
+<TD><STRONG>)Hide cap(</STRONG></TD>
+<TD>)Hide cap( this )Response(.  The )Response( won't be shown to users unless
+    they specifically request it.
+)author_hide {(En)}{(Dis)} ifelse(abled on this system.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(show.gif"></TD>
+<TD><STRONG>)Show cap(</STRONG></TD>
+<TD>)Show cap( this )Response(.  Restores a )Hidden( )Response( to normal.
+)author_hide {(En)}{(Dis)} ifelse(abled on this system.</TD>
+</TR>
+
+<TR><TD CLASS=mast><IMG BORDER=0 SRC=")imghost(/)flavor(erase.gif"></TD>
+<TD><STRONG>)Erase cap(</STRONG></TD>
+<TD>)Erase cap( this )Response(.  Deletes the text of the )Response( so no
+    one will be able to see it.  This command is non-reversable.
+)author_erase {(En)}{(Dis)} ifelse(abled on this system.</TD>
+</TR>
+</TABLE>
+<P>
+Whether users are allowed to edit or )Erase( their )Responses( depends on
+the system configuration, as does whether )Fairwitnesses( can edit or
+)Erase( other user's posts.  These icons appear in red if you can do it
+only because you are a )Fairwitness( in the )Conference(.  System
+administrators can always perform all of these operations.
+
+The commands to move on to other )Items( and )Conferences( are in the
+pulldown menu.
+There are also command there to remember, forgot, freeze, thaw, retire,
+unretire, retitle or delete the current )Item(,
+if you have the power to do these things.  If you have that power only
+because you are a )Fairwitness(, the command name will be prefixed by a
+star.
+
+<TR><TD CLASS=odd><STRONG>Paging Up or Down</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+<P>
+Since the page is sometime very long, it differs a bit from other Abalone
+pages by having a navigation pulldown both at the top and the bottom of the
+page.
+
+Normally only a few dozen )Responses( will be displayed per page.  \(The
+actual number of )Responses( to display per page is an option you can
+set on the <A HREF=help?topic=preferences&mainwin=)mainwin(>preferences page</A>.\)  If you
+want to see earlier or later )Responses(, the easiest way is to click on one
+of the ranges of )Response( numbers displayed in small print above and
+below the )Responses(.  Alternately, you can use the ``View )Response cap(
+Range...'' option on the pulldown to view arbitrary ranges of )Responses(.
+
+
+<TR><TD CLASS=odd><STRONG>Responding</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The response form is only displayed at the bottom of the screen if you
+displayed the last )Response( in the )Item(.  Otherwise, you can respond
+by using the ``Respond to this )Item cap(..'' option on the pulldown
+menu to call up a pop-up response box.
+<P>
+If you are reading anonymous, or the )Item( is frozen, or the )Conference(
+is read-only, you will not get a response form.
+<P>
+You post simply by typing your )Response( in the big box, and pressing the
+``Post'' button.  Your new )Response( will then be displayed.
+Sometimes someone else will have posted a )Response( between the time you
+read the )Item( and the time you posted your )Response(.
+In this case, your )Response( will not be entered immediately.  The
+``slipped in'' )Responses( will be shown, and you will be given a chance to
+revise your )Response( before posting it.
+<P>
+You can change the version of your name that will be attached to )AResponse(
+by editing the full name box above the response window before pressing the
+post button.
+
+<TR><TD CLASS=odd><STRONG>Response Formatting</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Backtalk offers three slightly different )Response( formatting options:
+<UL>
+<LI><STRONG>Plain Text</STRONG>
+    <P>
+    The )Response( will be displayed pretty much just as it was when you typed
+    it in, in a fixed width font with the spacing unaltered.
+<P>
+<LI><STRONG>HTML</STRONG>
+    <P>
+    Your )Item( text will be treated as HTML text.
+    HTML is the standard markup language used to create web pages.
+    HTML text is automatically formatted by the reader's browser, usually
+    in a proportional font.
+    <P>
+    You can use some <A HREF=help?topic=html&mainwin=)mainwin(>HTML tags</A> in your
+    )Response( to control spacing, formatting, text size and style,
+    to include images, and to create links.
+<P>
+<LI><STRONG>Lazy HTML</STRONG>
+    <P>
+    Normally in HTML you need to enter a <TT>&lt;P&gt;</TT> tag every
+    time you want to leave a blank line.
+    The "lazy HTML" option is just like the "HTML" option,
+    but it automatically converts blank lines to <TT>&lt;P&gt;</TT> tags.
+    This is intended to allow you to forget that you are entering HTML
+    text, and still have it come out reasonable looking.
+</UL>
+
+The HTML formatting options may not be enabled on some systems, or in
+some )Conferences(.
+<P>
+In all cases, certain types of strings will be automatically made clickable.
+For example:
+<UL>
+<LI><TT>http://www.unicef.org</TT><BR>
+    URL's beginning with <TT>http:</TT> or <TT>https:</TT> connect to
+    that site when clicked.
+<P>
+<LI><TT>mailto:backtalk@hvcn.org</TT><BR>
+    E-mail addresses with a <TT>mailto:</TT> prefix send mail to the
+    given E-mail address when clicked.
+<P>
+<LI><TT>ftp://someplace.com/pub/filename</TT><BR>
+    Strings starting the <TT>ftp:</TT> prefix connect to an ftp server
+    and fetch the named file or directory listing when clicked.
+<P>
+<LI><TT>conf:general</TT><BR>
+    If you type <TT>conf:</TT> followed by )AConference( name, then
+    click it will connect to the <A HREF=confhome&mainwin=)mainwin(>)Conference( home page</A>        for that )Conference(.
+<P>
+<LI><TT>item:9</TT><BR>
+    <TT>item:general,9</TT><BR>
+    If you type <TT>item:</TT> followed by a number, or )AConference( name
+    and number, then clicking on it displays the named )Item(.  If no
+    )Conference( name is given, that )Item( in the current )Conference( is
+    displayed.
+<P>
+<LI><TT>resp:53</TT><BR>
+    <TT>resp:9,53</TT><BR>
+    <TT>resp:general,9,53</TT><BR>
+    If you type <TT>resp:</TT> followed by )AResponse( number, then
+    clicking on it will display that )Response( of the current )Item(.
+    Alternately, you can specify the )Conference( name and )Item( number
+    as well.
+</UL>
+You can use dots or colons in place of the commas in the above examples.
+<P>
+In HTML and lazy HTML modes, you can also enter tags like
+<PRE>
+     I like &lt;A HREF="resp:general,9,53">General Conference Item 9 Response 53&lt;/A&gt;
+</PRE>
+The "<TT>resp:general,9,53</TT>" inside the URL will automatically be replaced
+with an appropriate URL referencing response 53 of general item 9.
+
+<TR><TD CLASS=odd><STRONG>Private Titles</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+There is an option on the pulldown menu to set ``Private Titles''.  If
+you find an )Item('s title insuffiently meaningful, or if you want to append
+a short note to it, you can use this to set a new title for the )Item(.  This
+private title will only be seen by you, not by other users.
+If you are a )Fairwitness( for the )Conference( then you can change the
+public title as well.
+
+)
+
+/didit 1 def
+} if
+
+% =========================== EDIT HOTLIST ==================================
+
+topic (hotlist) eq {
+
+(Edit Hot List
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Your hotlist is a list of the )Conferences( that you are most interested
+in.  You can edit this list by selecting ``Edit Your )Conference cap( Hotlist''
+from the pulldown menus on the
+<A HREF=help?topic=entrance&mainwin=)mainwin(>Entrance Page</A> or
+the <A HREF=help?topic=confhome&mainwin=)mainwin(>Conference Home Page</A>.
+<P>
+The edit page allows you to select which )Conferences( are on your hotlist,
+and what order they are in.  Your hotlist )Conferences( will be listed in
+the order given on the
+<A HREF=help?topic=entrance&mainwin=)mainwin(>Entrance Page</A> and when
+you ``Visit Hotlist )Conferences cap( with New )Responses cap('' you will
+see go through your hotlist )Conferences( in the order listed.
+<P>
+The page for editting your hotlist shows your current hotlist at the top
+of the page, and a list of all )Conferences( at the bottom.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Operations</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+The following operations may be performed on your hotlist:
+<P>
+<DL>
+<DT><STRONG>To Add a )Conference cap (:</STRONG>
+<DD>Select the <IMG BORDER=0 SRC=")imghost(/)flavor(here.gif">
+    arrow icon next to one of the )Conferences
+    ( in the list of all )Conferences(,
+    or type the name of the )Conference( into the box and click ``Add It''.
+    You will get another screen showing your current hotlist.  Click an
+    arrow indicating where you want to insert the new )Conference(.
+<P>
+<DT><STRONG>To Delete a )Conference cap (:</STRONG>
+<DD>Select the <IMG BORDER=0 SRC=")imghost(/)flavor(erase.gif">
+    erase icon next to one of the )Conferences( in the list of your hotlist
+    )Conferences(.
+<P>
+<DT><STRONG>To Move a )Conference cap (:</STRONG>
+<DD>Select the <IMG BORDER=0 SRC=")imghost(/)flavor(move.gif">
+    move icon next to one of the )Conferences( in the list of your hotlist
+    )Conferences(.
+    You will get another screen showing your current hotlist without the
+    moved )Conference(.  Click an
+    arrow indicating where you want to insert the new )Conference(.
+</DL>
+<P>
+Clicking on the name of a )Conference( sends you to the )Conference( home
+page for that )Conference(.
+
+)
+
+/didit 1 def
+} if
+
+% =========================== PREFERENCES ==================================
+
+topic (pref) eq {
+
+(Editting Preferences
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+You can change some settings to alter the appearance and behavior of the
+abalone interface.  This is done on the preferences page, which can be
+reached using the "preferences" link at the top of each page, or from the
+``Set Your Preferences'' option on the pulldown menu.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>)Conferences cap( to List</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+By default the <A HREF=help?topic=entrance&mainwin=)mainwin(>Entrance Page</A>
+shows the )Conferences( on you hot list.  You can instead have it list all
+)Conferences( every time you go there.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Default )Response cap( Format</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+When you enter )AnItem( or )AResponse(, you can select which format option
+you want to use.  If you don't select, they normally default to ``Plain Text''.
+You can change what the default is.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Color Scheme</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Abalone has several predefined color schemes you can choose among.
+If you are courageous, you can also make one of your own.  This requires
+writing a new "cascading style sheet".  For a sample of a style sheet, see
+<A HREF=")csshost(/)flavor(coffee.css">)csshost(/)flavor(coffee.css<A>.  For
+some notes on how abalone's style sheets word, see
+<A HREF=")csshost(/)flavor(README">)csshost(/)flavor(README.css<A>.
+You need to supply the URL of your custom style sheet, which normally means
+putting it up on a web server somewhere, but if you are only going to use it
+from one computer, you can put it on that computer and give a
+"<TT>file:///path/name/to/myfile.css</TT>" style URL.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Auto-Favorites</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+If you mark )AnItem( as a favorite, then it is listed first on the )Conference(
+home page, and displayed first when you read new )Items(.  By default, any
+)Item( you post yourself automatically become a favorite.  If you respond to
+)AnItem(, then, by default, it will become a temporary favorite.  Temporary
+favorites are only favorites until the next time you read the )Item(.
+You can change the settings here to determine if )Items( become favorites
+after you enter or respond to them, and whether they become permanent or
+temporary favorites.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Time Zone</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+You can set your time zone.  Then when you read the )Conferences(, all dates
+and times will be displayed in the timezone you select.
+
+)
+nopwedit ! {(</TD></TR>
+<TR><TD CLASS=odd><STRONG>Password</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+You can reset you password by entering a new value twice.  After changing
+your password, you will have to re-login with the new password the next
+time you access a page.
+) } if
+
+/didit 1 def
+} if
+
+% =========================== PROFILE ==================================
+
+topic (profile) eq {
+
+(User Profiles
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+Your profile contains information about you.  You can either make this
+information visible only to the system administrators, or you can make it
+available to all other users.  The exact information included in your
+profile is configurable, and may be different on different on different
+servers.
+<P>
+You can access your own profile by clicking on the ``profile'' link that
+is on the top of most pages.  You can view profiles of other users by
+selecting the "Search User Profiles" link from a pulldown menu.  Also,
+in most places where user's names appears, such as in the headers of
+)Items( and )Responses(, clicking on the user's name will display their
+profile.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Editting Your Profile</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+If you view your own profile, there will be a link at the top of this page
+which, if clicked, lets you edit your profile information.
+<P>
+Note that changing your name in your profile will not change your name
+in all your )Conferences(.  You have to change it separate in each )Conference(
+in which you participate, by going to the appropriate
+<A HREF=help?topic=confhome&mainwin=)mainwin(>)Conference( home page</A>
+and clicking on your name there.  The name in your profile will, however,
+become your default name in an new )Conferences( you join in the future.
+
+)
+
+/didit 1 def
+} if
+
+% =========================== FIND ==================================
+
+topic (find) eq {
+
+Conference cap( Search Page
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+This page allows you to search )AConference( for particular words or phrases,or for postings by particular users.
+It can be reached by selecting the ``search'' link on the top  of any page,
+or by selecting ``Search This )Conference cap('' from the pulldown menu
+on the )Conference cap( home page.
+Note that searchs are done while you wait without the use of any indexing,
+so this can be a bit slow in large )Conferences(.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Where to Search In</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The first two lines ask you for the name of the )Conference( that you
+want to search, and for the range of )Items( within that )Conference( that
+you want to search.
+A)AConference 1 99999 substr( name must be given.  Only one )Conference(
+can be searched at a time.
+<P>
+The )Item( range to search defaults to ``1-$'' which means to search )Items(
+from the first to the last, in other words, all the )Items( in the 
+)Conference(.
+If you want to search only )Item( 16, change the contents of the box to ``16''.
+If you want to search )Items( 4, 8 and 12, enter ``4,8,12''.
+)Items cap( will be searched in the order they are listed in this box.
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>What to Search For</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The third line of the form lets you enter the text you want to search for.
+You type the text into the box, and then select the relevant switches
+below the box:
+
+<UL>
+<LI> <STRONG>Exact Match</STRONG><BR>
+if you select ``Exact Match,'' all strings that match what you type are found.
+This is not like a typical web search engine.  If you search for
+``<TT>blue dog</TT>'' you will find only those places where the word ``blue''
+immediately preceeds the word ``dog'' and there is only one space between
+them.
+
+<LI><STRONG>Regular Expression</STRONG><BR>
+For more flexibility,
+you can also indicate that your pattern is a regular expression, written in
+the standard Unix form.
+Regular expressions are a way of describing more general things to look for,
+but the syntax can be a bit obscure.
+For example the regular expression ``\$ ?[0-9,]*'' would search for strings of
+numeric digits (and possibly commas) preceeded by an optional space and a
+dollar sign.  In other words it would find all prices entered in the
+)Conference(.
+Sorry, we're not going to go into a detail explanation here.
+
+<LI><STRONG>Ignore Case</STRONG><BR>
+Selecting this indicates that you don't insist that the matching text be
+capitalized the same way that you typed it.  It works with either
+the exact match or regular expression options.
+Thus, if your pattern were ``nextstep'', it would match against
+``Nextstep'' or ``NeXTStep'' as well.
+</UL>
+
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>What to Match Against</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+The last part of the form allows you to select what parts of the )Conference(
+to search through.  You can check off more than one of these.
+
+<UL>
+<LI><STRONG>Message Text</STRONG><BR>
+This searchs the text of all the )Items( and )Responses( in the )Conference(.
+You use it when you are looking for something that was said.
+
+<LI><STRONG>)Item cap( Title</STRONG><BR>
+This searchs the titles of the )Items(.  This can be a quick way to
+find particular )Items( in the )Conference(.
+
+<LI><STRONG>Author's Full Name</STRONG><BR>
+This searchs the author names posted at the head of each )Response(.
+This, and the next option, are good ways to find everything a particular
+person has posted to the )Conference(.
+
+<LI><STRONG>Author's Login Name</STRONG><BR>
+This searchs just the author login names.
+</UL>
+
+)
+
+/didit 1 def
+} if
+
+% =========================== RECENT ==================================
+
+topic (recent) eq {
+
+(Recent Postings Page
+</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+
+This page shows the last few )Items( and/or )Responses( posted to the
+conferencing system.  The most recent posting is listed first.
+A shorter version of the same page can optionally
+be displayed on the front page.
+<P>
+To see the new )Response( or )Item(,
+you can just click on the response number.
+Sometimes some previous responses will be shown too, if you haven't
+read them and their aren't too many.
+<P>
+You can change the number of responses show by changing the number above
+the list, and hitting enter.
+)
+
+/didit 1 def
+} if
+
+% =========================== HTML ==================================
+
+topic (html) eq {
+
+(Backtalk HTML Tags</TD></TR>
+<TR><TD CLASS=odd><STRONG>Introduction</STRONG></TD></TR>
+<TR><TD CLASS=mast>
+)
+flavor(help_html)+ include
+
+/didit 1 def
+} if
+
+% =========================== OOPS! ==================================
+
+didit ! {
+(</TD></TR>
+<TR><TD CLASS=mast>
+Sorry, no help on this topic yet.
+</TD></TR>
+</TABLE>
+)
+} if
+
+(
+</TABLE>
+)global_footer
+(</BODY></HTML>
+)

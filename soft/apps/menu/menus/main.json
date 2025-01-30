@@ -1,0 +1,29 @@
+{
+    "title": "*** GREX MENU SYSTEM ***",
+    "entries": [
+        {"key":"B", "menu":"@/bbs.json", "desc":"Bulletin Board Systems"},
+        {"key":"Z", "exec":"/cyberspace/bin/bbsguide", "desc":"View BBS introductory info"},
+        {"key":"D", "exec":"/cyberspace/bin/support", "desc":"Donations to Grex"},
+        {"key":"X", "exec":"/usr/local/bin/lynx", "desc":"Lynx (textual WWW browser)"},
+        {"key":"C", "exec":"/cyberspace/bin/change", "desc":"Change Password/Other Stuff"},
+        {"key":"N", "exec":"@/scripts/d12", "desc":"Send a 'telegram' to a user"},
+        {"key":"T", "exec":"@/scripts/d8", "desc":"Talk live to a user - write"},
+        {"key":"A", "exec":"@/scripts/d7", "desc":"Answer (Answer write)"},
+        {"key":"H", "exec":"@/scripts/d1", "desc":"Talk to a (live) Helper"},
+        {"key":"W", "exec":"@/scripts/d2", "desc":"Who (who is on the system)"},
+        {"key":"V", "exec":"@/scripts/d6", "desc":"View daily message"},
+        {"key":"I", "exec":"@/scripts/d10", "desc":"Information about a user"},
+        {"key":"M", "exec":"@/scripts/d4", "desc":"Mail (Check your mail)"},
+        {"key":"S", "exec":"@/scripts/d5", "desc":"Send Mail"},
+        {"key":"F", "menu":"@/file.json", "desc":"File Utilities Menu"},
+        {"key":"P", "menu":"@/chat.json", "desc":"Party (multi-user chat) Menu"},
+        {"key":"U", "menu":"@/basics.json", "desc":"Basic Utilities Menu"},
+        {"key":"G", "menu":"@/games.json", "desc":"Games Menu"},
+        {"key":"O", "menu":"@/others.json", "desc":"Other Menus"},
+        {"key":"R", "exec":"@/scripts/d3", "desc":"Run a UNIX Program"},
+        {"key":"J", "exec":"@/scripts/d72", "desc":"List programs in your path"},
+        {"key":"Y", "exec":"@/scripts/d60", "desc":"Lock your terminal"},
+        {"key":"L", "exec":"@/scripts/d11", "desc":"Log off from Grex"},
+        {"key":"E", "exit":true, "desc":"Exit menu system"}
+    ]
+}

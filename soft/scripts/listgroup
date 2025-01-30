@@ -1,0 +1,10 @@
+#!/usr/bin/perl -w
+die "Usage: $0 group[s].\n" unless @ARGV;
+foreach $group (@ARGV) {
+	$members = (getgrnam($group))[3];
+	next if !defined($members);
+	$members =~ s/\s+/, /g;
+	open(FMT, '|-', 'fmt') || die "Can't pipe output to fmt: $!\n";
+	print FMT $group . ": " . $members . "\n";
+	close(FMT)
+}

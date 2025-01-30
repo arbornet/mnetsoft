@@ -1,0 +1,22 @@
+                    Fronttalk Settings:  SANE, SUPERSANE
+
+Usage:  SET SANE
+        SET SUPERSANE
+
+Setting SANE causes all settings and defines changed by the conference RC
+file or the user's .cfrc file to be undone.  Putting a SET SANE in the
+begining of your .cfrc file ensures that no conference RC file settings
+will effect you (since .cfrc is executed after the conference RC file),
+however putting SET NOSOURCE in your .cfonce is generally a better way to
+achieve this effect.  Putting SET SANE in a .cfonce file is useless,
+because .cfonce is executed before the conference RC file or the .cfrc file.
+
+Setting SUPERSANE resets all settings made from the system RC file, the
+.cfonce file and the command line to the compiled in defaults.  The sole
+exception is that it does not reset the SOURCE setting.  Users who don't
+want the settings and defines in the system RC file can place at the front
+of their .cfonce files.
+
+These switches reset past settings and defines.  They do not prevent more
+things from being defined in the future.  To prevent conference RC files
+from being executed in the future, use the SET NOSOURCE command.

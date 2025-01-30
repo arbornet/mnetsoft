@@ -1,0 +1,982 @@
+LOGFILE=/var/users/rt/procmail.log
+LOCKTIMEOUT=1
+
+:0
+* ^Subject.*Fast Reports Inc.: Changes in your request$
+/dev/null
+
+:0
+* ^Subject.*yniki wydanych polece.*$
+/dev/null
+
+:0
+* ^Subject.*rusfunny.*$
+/dev/null
+
+:0
+* ^Subject.*Check\ this\ out.*$
+/dev/null
+
+:0
+* ^Subject.*New\ shop.*$
+/dev/null
+
+:0
+* ^Subject.*rolex*.*$
+/dev/null
+
+:0
+* ^Subject.*copies.*$
+/dev/null
+
+:0
+* ^Subject.*Credit\ car.*$
+/dev/null
+
+:0
+* ^Subject.*Notification.*$
+/dev/null
+
+:0
+* ^Subject.*transaction.*$
+/dev/null
+
+:0
+* ^Subject.*Invoice.*$
+/dev/null
+
+:0
+* ^Subject.*ScanJet.*$
+/dev/null
+
+:0
+* ^Subject.*russian.*$
+/dev/null
+
+:0
+* ^Subject.*changlog.*$
+/dev/null
+
+:0
+* ^Subject.*changelog.*$
+/dev/null
+
+:0
+* ^Subject.*magazine.*$
+/dev/null
+
+:0
+* ^Subject.*affordable.*$
+/dev/null
+
+:0
+* ^Subject.*degree.*$
+/dev/null
+
+:0
+* ^Subject.*diploma.*$
+/dev/null
+
+:0
+* ^Subject.*accountant.*$
+/dev/null
+
+:0
+* ^Subject.*vacation.*$
+/dev/null
+
+:0
+* ^Subject.*profile.*$
+/dev/null
+
+:0
+* ^Subject.*impotence.*$
+/dev/null
+
+:0
+* ^Subject.*newsletter.*$
+/dev/null
+
+:0
+* ^Subject.*facebook.*$
+/dev/null
+
+:0
+* ^Subject.*comment.*$
+/dev/null
+
+:0
+* ^Subject.*proposal.*$
+/dev/null
+
+:0
+* ^Subject.*relation.*$
+/dev/null
+
+:0
+* ^Subject.*chair.*$
+/dev/null
+
+:0
+* ^Subject.*girl.*$
+/dev/null
+
+:0
+* ^Subject.*slut.*$
+/dev/null
+
+:0
+* ^Subject.*chick.*$
+/dev/null
+
+:0
+* ^Subject.*celebrate.*$
+/dev/null
+
+:0
+* ^Subject.*virgin.*$
+/dev/null
+
+:0
+* ^Subject.*chat.*$
+/dev/null
+
+:0
+* ^Subject.*rx.*$
+/dev/null
+
+:0
+* ^Subject.*pharma.*$
+/dev/null
+
+:0
+* ^Subject.*amazon.*$
+/dev/null
+
+:0
+* ^Subject.*ladie.*$
+/dev/null
+
+:0
+* ^Subject.*booster.*$
+/dev/null
+
+:0
+* ^Subject.*client.*$
+/dev/null
+
+:0
+* ^Subject.*whore.*$
+/dev/null
+
+:0
+* ^Subject.*resume.*$
+/dev/null
+
+:0
+* ^Subject.*meds.*$
+/dev/null
+
+:0
+* ^Subject.*million.*$
+/dev/null
+
+:0
+* ^Subject.*brand.*$
+/dev/null
+
+:0
+* ^Subject.*prostitute.*$
+/dev/null
+
+:0
+* ^Subject.*bitch.*$
+/dev/null
+
+:0
+* ^Subject.*webinar.*$
+/dev/null
+
+:0
+* ^Subject.*watch.*$
+/dev/null
+
+:0
+* ^Subject.*prescription.*$
+/dev/null
+
+:0
+* ^Subject.*enhancement.*$
+/dev/null
+
+:0
+* ^Subject.*dream.*$
+/dev/null
+
+:0
+* ^Subject.*education.*$
+/dev/null
+
+:0
+* ^Subject.*drug.*$
+/dev/null
+
+:0
+* ^Subject.*valentine.*$
+/dev/null
+
+:0
+* ^Subject.*survey.*$
+/dev/null
+
+:0
+* ^Subject.*credit.*$
+/dev/null
+
+:0
+* ^Subject.*meeting\ request.*$
+/dev/null
+
+:0
+* ^Subject.*cashpro.*$
+/dev/null
+
+:0
+* ^Subject.*security\ upgrade.*$
+/dev/null
+
+:0
+* ^Subject.*transfer.*$
+/dev/null
+
+:0
+* ^Subject.*earn.*$
+/dev/null
+
+:0
+* ^Subject.*please\ review.*$
+/dev/null
+
+:0
+* ^Subject.*growth.*$
+/dev/null
+
+:0
+* ^Subject.*receipt.*$
+/dev/null
+
+:0
+* ^Subject.*basketball.*$
+/dev/null
+
+:0
+* ^Subject.*delivery.*$
+/dev/null
+
+:0
+* ^Subject.*sexual.*$
+/dev/null
+
+:0
+* ^Subject.*consultation.*$
+/dev/null
+
+:0
+* ^Subject.*fortune.*$
+/dev/null
+
+:0
+* ^Subject.*partnership.*$
+/dev/null
+
+:0
+* ^Subject.*profit.*$
+/dev/null
+
+:0
+* ^Subject.*treasure.*$
+/dev/null
+
+:0
+* ^Subject.*investment.*$
+/dev/null
+
+:0
+* ^Subject.*income.*$
+/dev/null
+
+:0
+* ^Subject.*money.*$
+/dev/null
+
+:0
+* ^Subject.*financial.*$
+/dev/null
+
+:0
+* ^Subject.*snore.*$
+/dev/null
+
+:0
+* ^Subject.*british\ air.*$
+/dev/null
+
+:0
+* ^Subject.*customer.*$
+/dev/null
+
+:0
+* ^Subject.*banking.*$
+/dev/null
+
+:0
+* ^Subject.*russian.*$
+/dev/null
+
+:0
+* ^Subject.*customer.*$
+/dev/null
+
+:0
+* ^Subject.*secret.*$
+/dev/null
+
+:0
+* ^Subject.*love.*$
+/dev/null
+
+:0
+* ^Subject.*sale.*$
+/dev/null
+
+:0
+* ^Subject.*sharing.*$
+/dev/null
+
+:0
+* ^Subject.*xerox.*$
+/dev/null
+
+:0
+* ^Subject.*linked.*$
+/dev/null
+
+:0
+* ^Subject.*corporate.*$
+/dev/null
+
+:0
+* ^Subject.*advantage.*$
+/dev/null
+
+:0
+* ^Subject.*amaze.*$
+/dev/null
+
+:0
+* ^Subject.*partner.*$
+/dev/null
+
+:0
+* ^Subject.*generator.*$
+/dev/null
+
+:0
+* ^Subject.*stock\ symbol.*$
+/dev/null
+
+:0
+* ^Subject.*guru.*$
+/dev/null
+
+:0
+* ^Subject.*contact\ info.*$
+/dev/null
+
+:0
+* ^Subject.*news.*$
+/dev/null
+
+:0
+* ^Subject.*buzz.*$
+/dev/null
+
+:0
+* ^Subject.*free.*$
+/dev/null
+
+:0
+* ^Subject.*business.*$
+/dev/null
+
+:0
+* ^Subject.*pleased.*$
+/dev/null
+
+:0
+* ^Subject.*enter\ data.*$
+/dev/null
+
+:0
+* ^Subject.*vigara.*$
+/dev/null
+
+:0
+* ^Subject.*caribbean.*$
+/dev/null
+
+:0
+* ^Subject.*golf.*$
+/dev/null
+
+:0
+* ^Subject.*try\ it.*$
+/dev/null
+
+:0
+* ^Subject.*amazing.*$
+/dev/null
+
+:0
+* ^Subject.*tracking.*$
+/dev/null
+
+:0
+* ^Subject.*ach\ file.*$
+/dev/null
+
+:0
+* ^Subject.*order\ today.*$
+/dev/null
+
+:0
+* ^Subject.*discount.*$
+/dev/null
+
+:0
+* ^Subject.*contact.*$
+/dev/null
+
+:0
+* ^Subject.*geanlouisy.*$
+/dev/null
+
+:0
+* ^Subject.*payroll.*$
+/dev/null
+
+:0
+* ^Subject.*urgent.*$
+/dev/null
+
+:0
+* ^Subject.*purchase.*$
+/dev/null
+
+:0
+* ^Subject.*have\ been\ sent.*$
+/dev/null
+
+:0
+* ^Subject.*intuit.*$
+/dev/null
+
+:0
+* ^Subject.*weight\ loss.*$
+/dev/null
+
+:0
+* ^Subject.*boost.*$
+/dev/null
+
+:0
+* ^Subject.*traffic.*$
+/dev/null
+
+:0
+* ^Subject.*your\ order.*$
+/dev/null
+
+:0
+* ^Subject.*order\ n.*$
+/dev/null
+
+:0
+* ^Subject.*picture.*$
+/dev/null
+
+:0
+* ^Subject.*order\ confirmation.*$
+/dev/null
+
+:0
+* ^Subject.*hi\!\ i\'m.*$
+/dev/null
+
+:0
+* ^Subject.*your\ flight.*$
+/dev/null
+
+:0
+* ^Subject.*your\ order.*$
+/dev/null
+
+:0
+* ^Subject.*order\ n.*$
+/dev/null
+
+:0
+* ^Subject.*picture.*$
+/dev/null
+
+:0
+* ^Subject.*photo.*$
+/dev/null
+
+:0
+* ^Subject.*hotel.*$
+/dev/null
+
+:0
+* ^Subject.*table.*$
+/dev/null
+
+:0
+* ^Subject.*price\ list.*$
+/dev/null
+
+:0
+* ^Subject.*comparison.*$
+/dev/null
+
+:0
+* ^Subject.*tax\ payment.*$
+/dev/null
+
+:0
+* ^Subject.*deposit.*$
+/dev/null
+
+:0
+* ^Subject.*sex.*$
+/dev/null
+
+:0
+* ^Subject.*contact.*$
+/dev/null
+
+:0
+* ^Subject.*awaiting.*$
+/dev/null
+
+:0
+* ^Subject.*tungsten.*$
+/dev/null
+
+:0
+* ^Subject.*added\ you.*$
+/dev/null
+
+:0
+* ^Subject.*women.*$
+/dev/null
+
+:0
+* ^Subject.*sending\ again.*$
+/dev/null
+
+:0
+* ^Subject.*meet\ me.*$
+/dev/null
+
+:0
+* ^Subject.*statement\ required.*$
+/dev/null
+
+:0
+* ^Subject.*erection.*$
+/dev/null
+
+:0
+* ^Subject.*pens.*$
+/dev/null
+
+:0
+* ^Subject.*insane.*$
+/dev/null
+
+:0
+* ^Subject.*cash.*$
+/dev/null
+
+:0
+* ^Subject.*prices.*$
+/dev/null
+
+:0
+* ^Subject.*tumblr.*$
+/dev/null
+
+:0
+* ^Subject.*last\ chance.*$
+/dev/null
+
+:0
+* ^Subject.*submission.*$
+/dev/null
+
+:0
+* ^Subject.*your\ favorite.*$
+/dev/null
+
+:0
+* ^Subject.*keychain.*$
+/dev/null
+
+:0
+* ^Subject.*weekend.*$
+/dev/null
+
+:0
+* ^Subject.*ups\ package.*$
+/dev/null
+
+:0
+* ^Subject.*hours\ left.*$
+/dev/null
+
+:0
+* ^Subject.*your\ package.*$
+/dev/null
+
+:0
+* ^Subject.*ups.*$
+/dev/null
+
+:0
+* ^Subject.*emotions.*$
+/dev/null
+
+:0
+* ^Subject.*impoptence.*$
+/dev/null
+
+:0
+* ^Subject.*abatement.*$
+/dev/null
+
+:0
+* ^Subject.*importjence.*$
+/dev/null
+
+:0
+* ^Subject.*impottenoce.*$
+/dev/null
+
+:0
+* ^Subject.*ciaalis.*$
+/dev/null
+
+:0
+* ^Subject.*gucci.*$
+/dev/null
+
+:0
+* ^Subject.*what\ do\ you\ need.*$
+/dev/null
+
+:0
+* ^Subject.*wanna.*$
+/dev/null
+
+:0
+* ^Subject.*matches.*$
+/dev/null
+
+:0
+* ^Subject.*ematch.*$
+/dev/null
+
+:0
+* ^Subject.*hyip.*$
+/dev/null
+
+:0
+* ^Subject.*coupon.*$
+/dev/null
+
+:0
+* ^Subject.*bling.*$
+/dev/null
+
+:0
+* ^Subject.*buddy.*$
+/dev/null
+
+:0
+* ^Subject.*vuitton.*$
+/dev/null
+
+:0
+* ^Subject.*subscribe\ now.*$
+/dev/null
+
+:0
+* ^Subject.*submit\ to.*$
+/dev/null
+
+:0
+* ^Subject.*snoring.*$
+/dev/null
+
+:0
+* ^Subject.*impressive.*$
+/dev/null
+
+:0
+* ^Subject.*ezmlm.*$
+/dev/null
+
+:0
+* ^Subject.*motorpass.*$
+/dev/null
+
+:0
+* ^Subject.*foreclosure.*$
+/dev/null
+
+:0
+* ^Subject.*savings.*$
+/dev/null
+
+:0
+* ^Subject.*wiki.*$
+/dev/null
+
+:0
+* ^Subject.*burn\ fat.*$
+/dev/null
+
+:0
+* ^Subject.*hot\ stuff.*$
+/dev/null
+
+:0
+* ^Subject.*presence.*$
+/dev/null
+
+:0
+* ^Subject.*cheap.*$
+/dev/null
+
+:0
+* ^Subject.*c\ h\ e\ a\ p.*$
+/dev/null
+
+:0
+* ^Subject.*update\ released.*$
+/dev/null
+
+:0
+* ^Subject.*alexa\ rank.*$
+/dev/null
+
+:0
+* ^Subject.*let\'s\ talk.*$
+/dev/null
+
+:0
+* ^Subject.*let\'s\ meet.*$
+/dev/null
+
+:0
+* ^Subject.*slim.*$
+/dev/null
+
+:0
+* ^Subject.*weight\ loss.*$
+/dev/null
+
+:0
+* ^Subject.*lose\ fat.*$
+/dev/null
+
+:0
+* ^Subject.*flatter.*$
+/dev/null
+
+:0
+* ^Subject.*best\ advice.*$
+/dev/null
+
+:0
+* ^Subject.*dr\.\ oz.*$
+/dev/null
+
+:0
+* ^Subject.*lose\ weight.*$
+/dev/null
+
+:0
+* ^Subject.*hot\ guy.*$
+/dev/null
+
+:0
+* ^Subject.*meet\ with\ you.*$
+/dev/null
+
+:0
+* ^Subject.*private\ message.*$
+/dev/null
+
+:0
+* ^.*coding.*koi8-r.*$
+/dev/null
+
+:0
+* ^.*Type:.*application/zip.*$
+/dev/null
+
+:0b
+* ^.*large\ amount\ of\ unsolicited\ commercial\ e-mail.*$
+/dev/null
+
+:0b
+* ^.*large\ amount\ of\ spam.*$
+/dev/null
+
+:0
+* ^From.*adp\.com.*$
+/dev/null
+
+:0
+* ^From.*sanjeev@aol\.in.*$
+/dev/null
+
+:0
+* ^From.*support@rusfunny\.ru.*$
+/dev/null
+
+:0
+* ^From.*kaspersky\.com.*$
+/dev/null
+
+:0
+* ^From.*geanlouisy@gmail\.com.*$
+/dev/null
+
+:0
+* ^From.*jhernandez@kimo\.com.*$
+/dev/null
+
+:0
+* ^RT-Originator.*minimalist@mail2\.bcs\.ru$
+/dev/null
+
+:0
+* ^From.*minimalist@mail2\.bcs\.ru.*$
+/dev/null
+
+:0
+* ^Sender.*minimalist@mail2\.bcs\.ru.*$
+/dev/null
+
+:0
+* ^From.*Minimalist Manager via RT.*$
+/dev/null
+
+:0
+* ^From.*agger@linuxmail.org.*$
+/dev/null
+
+:0
+* ^From.*@travel\.ru.*$
+/dev/null
+
+:0
+* ^From.*@mail\.ru.*$
+/dev/null
+
+:0
+* ^From.*@zjnu\.net.*$
+/dev/null
+
+:0
+* ^From.*@animecon\.hu.*$
+/dev/null
+
+:0
+* ^From.*@yhbia\.com.*$
+/dev/null
+
+:0
+* ^From.*@aocp\.com.*$
+/dev/null
+
+:0
+* ^From.*@wonderware\.com.*$
+/dev/null
+
+:0
+* ^From.*@targetemailgroup\.com.*$
+/dev/null
+
+:0
+* ^From.*@ua-bcn\.kiev\.ua.*$
+/dev/null
+
+:0
+* ^From.*@ua-bcn\.com\.ua.*$
+/dev/null
+
+:0
+* ^From.*@fiansy\.kiev\.ua.*$
+/dev/null
+
+:0
+* ^From.*@maemae\.com\.cn.*$
+/dev/null
+
+:0
+* ^From.*@gulf-trainers\.com.*$
+/dev/null
+
+:0
+* ^From.*@legalshield\.com.*$
+/dev/null
+
+:0
+* ^From.*@advance-hayama\.com.*$
+/dev/null
+
+:0
+* ^From.*@qip\.ru.*$
+/dev/null
+
+:0
+* ^From.*@vm\.uff\.br.*$
+/dev/null
+
+:0
+* ^From.*postmaster@.*$
+/dev/null
+
+:0
+* ^From.*MAILER-DAEMON@.*$
+/dev/null
+
+:0fw
+* < 256000
+| /usr/local/bin/spamc -u rt
+
+:0e
+{
+EXITCODE=$?
+}
+
+:0
+* ^X-Spam-Status: Yes
+/dev/null
+
+:0: /var/users/rt/.procmail/lock
+|/usr/local/bin/rt-mailgate --queue $QUEUE --action $ACTION --url https://localhost/helpdesk/

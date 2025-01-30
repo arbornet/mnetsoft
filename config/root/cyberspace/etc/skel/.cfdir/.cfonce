@@ -1,0 +1,16 @@
+# here is where you can put PicoSpan customization
+
+# This line defines your pager.  Delete it if you want your text to scroll
+# continuously; then use control-S and control-Q to pause and resume scrolling.
+define pager "grexmore"
+
+# This line defines an extended Ok: prompt.  Delete it for just Ok:
+define prompt  "\nBrowse (item list), Read (new items),\nJoin confname (type \"help conf\" for a list of conferences), \nHelp (for more help), pine (for e-mail)\nQuit (to exit) or !change (to change settings).\n\nOk: "
+
+# This line defines an extended Respond or pass? prompt.  Delete it for
+# just "Respond or pass?"
+define rfpprompt "\nRespond, pass, forget, quit, or ? for more options? "
+
+# The next two lines enable word-wrapping in Picospan
+define editor gate
+set edalways

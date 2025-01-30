@@ -1,0 +1,13 @@
+                       Fronttalk Setting:  HIDE
+
+Usage:  SET HIDE
+        SET NOHIDE
+
+The HIDE flag controls whether or not the text of hidden responses are
+displayed when you do a READ.
+
+By default HIDE is set, so that hidden responses will not be shown.  If
+you set NOHIDE, they will be shown.
+
+You can see an individual hidden response without setting the NOHIDE flag
+by doing 'ONLY <response number>'.

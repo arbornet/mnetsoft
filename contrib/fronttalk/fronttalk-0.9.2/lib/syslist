@@ -1,0 +1,12 @@
+<SYSTEM NAME="grex,cyberspace" HREF="file:/usr/local/libexec/cgi-bin/backtalk">
+Grex, via direct execution.
+</SYSTEM>
+<SYSTEM NAME="mnet,arbornet" HREF="https://www.arbornet.org/cgi-bin/backtalk">
+M-Net.
+</SYSTEM>
+<SYSTEM NAME=hvcn HREF="http://www.hvcn.org/cgi-bin/backtalk/backtalk">
+Huron Valley Community Network.
+</SYSTEM>
+<SYSTEM NAME=httpgrex HREF="http://www.grex.org/cgi-bin/backtalk">
+Grex, via HTTP.
+</SYSTEM>

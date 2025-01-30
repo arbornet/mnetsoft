@@ -1,0 +1,41 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% killconfirm script
+%
+% This script asks a user to confirm that he really wants to delete his
+% account.  If he says yes, the "killuser.bt" script actually does the job.
+% This will only work on systems where "nopwedit" is false.
+%
+% Query Parameters:
+%    login=	login id of user to kill.
+
+flavor(config)+ include
+
+% page header
+(<HTML><HEAD>
+<TITLE>Confirm Deletion of )login(</TITLE></HEAD>
+)global_header
+<BODY)body_tags(>
+<H1>Confirm Delection of )login(</H1>
+)
+
+% warn off illegal kill attempts
+amadm ! { login id ne {
+ (Only )login( or an administrator can delete )login('s account.
+ </BODY></HTML>\n)
+ stop
+} if } if
+
+% explain what is happening and ask for a confirmation
+(This command will permanently delete the )login( account.
+It will generally not be possible to restore the account if this is done.
+<P>
+To perform the deletion, check the box below, and hit "Continue".
+<FORM METHOD=POST ACTION=killuser>
+<INPUT TYPE="hidden" NAME=login VALUE=)login(>
+<INPUT TYPE="checkbox" NAME=really VALUE="Y"> Really Kill )login(.<BR>
+<INPUT TYPE=submit VALUE="Continue">
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,64 @@
+#!/bin/sh
+# @(#) identify: identify user(s)     carl@cyberspace.org
+
+ident(){
+search="^$1:"
+line="`grep $search /etc/passwd`"
+if	[ -z "$line" ]
+	then	echo
+		echo "$1:  No such user."
+		echo
+		exit
+fi
+home=`echo $line | awk -F: '{ print $6 }'`
+shell=`echo $line | awk -F: '{ print $7 }'`
+echo
+echo $1 /etc/passwd:
+echo $line
+echo
+echo $1 id:
+id $1
+echo
+echo "$1 finger:"
+finger -m $1
+echo
+case $shell in
+	/usr/local/bin/tcsh)
+		if [ -f $home/.tcshrc ]
+			then echo $home'/.tcshrc:'
+			cat $home/.tcshrc
+		fi
+		if [ -f $home/cshrc ]
+			then echo $home'/.cshrc:'
+			cat $home/.cshrc
+		fi
+		echo
+		echo $home'/.login:'
+		cat $home/.login
+		echo;;
+	/bin/csh)
+		echo $home'/.cshrc:'
+		cat $home/.cshrc
+		echo
+		echo $home'/.login:'
+		cat $home/.login
+		echo;;
+	*)
+		echo $home'/.profile:'
+		cat $home/.profile
+		echo;;
+esac
+echo "Files and directories in "$home":"
+ls -ARF $home
+}
+ 
+if [ $# -eq 0 ]
+	then echo "$0:  Usage: $0 userlist"
+		exit
+fi
+while [ "$#" -gt 0 ]
+do
+	ident $1 | grexmore
+	shift
+done
+exit $?

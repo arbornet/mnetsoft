@@ -1,0 +1,28 @@
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+hdrdir= @srcdir@/../incl
+VPATH= @srcdir@
+
+INSTALL= @INSTALL@
+
+htmldir= @htmldir@
+imagedir= @htmldir@/image
+owner= @owner@
+
+binaries:
+
+install: install-scripts
+
+install-scripts:
+	../install-sh -d -o $(owner) -m 755 $(imagedir)
+	../install-sh -d -o $(owner) -m 755 $(imagedir)/pistachio
+	../install-sh -d -o $(owner) -m 755 $(imagedir)/abalone
+	for dir in `ls -d pistachio/??? pistachio/????`; do \
+	    ../install-sh -d -o $(owner) -m 755 $(imagedir)/$$dir; \
+	done
+	for file in `ls *.jpg pistachio/*.gif pistachio/*/*.gif abalone/*.gif`; do \
+	    $(INSTALL) -o $(owner) -m 644 $$file $(imagedir)/$$file; \
+        done
+
+clean:

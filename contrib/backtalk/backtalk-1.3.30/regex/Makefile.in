@@ -1,0 +1,69 @@
+CC=@CC@
+RANLIB=@RANLIB@
+LIB=@LIBS@
+
+# For testing, include -DREDEBUG (which strengthens testing by enabling a
+# lot of internal assertion checking and some debugging facilities).
+# Put -Dconst= in for a pre-ANSI compiler.
+# Do not take -DPOSIX_MISTAKE out.
+CFLAGS= -I. -DPOSIX_MISTAKE @CPPFLAGS@ @CFLAGS@
+
+# If you have a pre-ANSI compiler, put -o into MKHFLAGS.  If you want
+# the Berkeley __P macro, put -b in.
+MKHFLAGS=
+
+# Flags for linking but not compiling, if any.
+LDFLAGS=
+
+# Internal stuff, should not need changing.
+OBJPRODN=regcomp.o regexec.o regerror.o regfree.o regtoflat.o fake.o
+OBJS=$(OBJPRODN)
+H=cclass.h cname.h regex2.h utils.h
+REGSRC=regcomp.c regerror.c regexec.c regfree.c regtoflat.c fake.c
+ALLSRC=$(REGSRC) engine.c
+
+# Stuff that matters only if you're trying to lint the package.
+LINTFLAGS=-I. -Dstatic= -Dconst= -DREDEBUG
+LINTC=regcomp.c regexec.c regerror.c regfree.c regtoflat.c
+JUNKLINT=possible pointer alignment|null effect
+
+# arrangements to build forward-reference header files
+.SUFFIXES:	.ih .h
+.c.ih:
+	sh ./mkh $(MKHFLAGS) -p $< >$@
+
+default:	lib
+
+lib:	$(OBJPRODN)
+	rm -f libregex.a
+	ar cr libregex.a $(OBJPRODN)
+	$(RANLIB) libregex.a
+
+purge:
+	rm -f *.o
+
+# stuff to build regex.h
+REGEXH=regex.h
+REGEXHSRC=regex2.h $(REGSRC)
+$(REGEXH):	$(REGEXHSRC) mkh
+	sh ./mkh $(MKHFLAGS) -i _REGEX_H_ $(REGEXHSRC) >regex.tmp
+	cmp -s regex.tmp regex.h 2>/dev/null || cp regex.tmp regex.h
+	rm -f regex.tmp
+
+# dependencies
+$(OBJPRODN) debug.o:	utils.h regex.h regex2.h
+regcomp.o:	cclass.h cname.h regcomp.ih ../incl/common.h ../incl/config.h
+regexec.o:	engine.c engine.ih ../incl/common.h ../incl/config.h
+regerror.o:	regerror.ih ../incl/common.h ../incl/config.h
+regtoflat.o:	regtoflat.ih ../incl/common.h ../incl/config.h
+
+# various forms of cleanup
+tidy:
+	rm -f junk* core core.* *.core dtr *.tmp lint
+
+clean:	tidy
+	rm -f *.o *.s *.ih re libregex.a
+
+# don't do this one unless you know what you're doing
+spotless:	clean
+	rm -f mkh regex.h

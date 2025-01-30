@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+foreach my $user (@ARGV) {
+	my $homedir = (getpwnam $user)[7];
+	unless ($homedir) {
+		print STDERR "user '$user' does not exist.\n";
+		next;
+	}
+	my $tzfile = $homedir . '/.tz';
+	unless (-f $tzfile) {
+		print STDERR "user '$user' does not publish a timezone.\n";
+		next;
+	}
+	open(my $F, $tzfile) || die "Can't open tz file: $!";
+	my $tz = <$F>;
+	close $F;
+	chomp($tz);
+	$ENV{'TZ'} = $tz;
+	print "date for $user is ";
+	system 'date';
+}

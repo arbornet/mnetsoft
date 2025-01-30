@@ -1,0 +1,96 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% enteritem script
+%
+% Show an item entry form.
+%
+% Query Parameters:
+%    conf=	current conference
+
+/rtype (text/plain) def
+
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: )exch(\n) halt
+} if
+
+flavor(config.bt)+include
+
+/allowhtml dflt_html def
+
+`bbsname ( ) conftitle ( New )Item cap' quote (C)
+[/conf /nextnew /csel]
+[] [/allowhtml]
+flavor(header.bt)+include
+
+(
+</TABLE>
+<P><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=colhead COLSPAN=2>\n)
+
+maypost {
+  (Posting New )Item cap( to )conftitle
+  (</TD></TR>
+  <FORM NAME=item METHOD=post ACTION=newitem>
+  <TR>
+  <TD CLASS=odd>Title:</TD>
+  <TD CLASS=odd><INPUT NAME=title size=68></TD></TR>
+  <TR>
+  <TD CLASS=even>Author:</TD>
+  <TD CLASS=even><INPUT NAME=pseudo VALUE=")alias quote(">&nbsp;&nbsp;
+  <SPAN CLASS=big><A HREF=")
+  /extern_bio constant { id extern_view_bio } { (bio?login=)id cgiquote } ifelse
+  (">)id(</A></SPAN></TD></TR>\n)
+
+  allowhtml {
+    (<TR><TD CLASS=odd>Format:</TD><TD CLASS=odd>\n)
+    (<SELECT NAME=texttype>
+    <OPTION VALUE="text/plain">Plain Text
+    <OPTION VALUE="text/html")
+      rtype (text/html) eq {( SELECTED)}if (>Pure HTML
+    <OPTION VALUE="text/html-blanks")
+     rtype (text/html-blanks) eq {( SELECTED)} if
+    (>lazy HTML</SELECT></TD></TR>
+    <TR>\n)
+    /c (even) def
+    /d (odd) def
+  } {
+    (<INPUT TYPE=HIDDEN NAME=texttype VALUE="text/plain">
+    <TR>\n)
+    /c (odd) def
+    /d (even) def
+  } ifelse
+  (<TD CLASS=)c( VALIGN=TOP>Text:</TD><TD CLASS=)c(>
+  <TEXTAREA NAME="text" ROWS=24 COLS=72 WRAP=HARD></TEXTAREA>)
+  canattach {
+    (<BR>\n<INPUT NAME=atch TYPE=checkbox VALUE=1>&nbsp;Attach a File\n)
+  } if
+  (</TD></TR>
+  <TR><TD CLASS=)d(>&nbsp;</TD><TD CLASS=)d
+  (><INPUT TYPE=submit VALUE="Post")
+  canattach {
+    ( onClick="if (document.item.atch.checked) {attachpop(); return false;} else return true;")
+    /javafunc javafunc
+    (function attachpop() { var f= document.item; var i,inp; var arg= '';
+for (i= 0; i<f.elements.length; i++) { if (arg != '') arg= arg+'&';
+arg= arg+f.elements[i].name+'='+escape(f.elements[i].value);}
+window.open('askattach?item=-1&'+arg, 'attachpop',
+'scrollbars=yes,resizable=yes,height=150,width=550'); }
+)+ def
+  } if
+  (></TD></TR>
+  <INPUT NAME=conf TYPE=hidden VALUE=)conf(>\n)
+  csel {(<INPUT NAME=csel TYPE=hidden VALUE=)csel(>\n)} if
+  /nextnew defined {(<INPUT NAME=nextnew TYPE=hidden VALUE=)nextnew(>\n)} if
+  /cpass defined {(<INPUT NAME=cpass TYPE=hidden VALUE=)cpass(>\n)} if
+  /dunno defined {(<INPUT NAME=dunno TYPE=hidden VALUE=)dunno(>\n)} if
+  (</TD></TR></FORM></TABLE>\n)
+} {
+  Item cap( Entry Not Possible: )
+  id {Conference cap( is read-only)} {(You are not logged in)} ifelse
+  (</TD></TR></TABLE>\n)
+} ifelse
+
+global_footer
+(</BODY>
+</HTML>
+)

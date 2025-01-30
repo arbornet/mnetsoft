@@ -1,0 +1,71 @@
+#!/usr/local/bin/python
+
+import sys
+import subprocess
+import socket
+import getpass
+import re
+
+HOST = 'grex.org'
+PORT = 77          # 'rje'
+
+cmdtbl = {
+    'ps':        '1:p,',
+    'ps_reboot': '2:pr,',
+    'quit':      '1:Q,',
+    'reboot':    '1:r,',
+    'restart':   '1:s,',
+    'wake':      '1:a,',
+    'who':       '1:w,'
+}
+
+def readline(s):
+    r = t = s.recv(1)
+    while t and t != "\n":
+        t = s.recv(1)
+        r = r + t
+    return r
+
+def error(str):
+    sys.stderr.write("grexctl: " + str + "\n")
+    exit(1)
+
+def getsock():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((HOST, PORT))
+    return s
+
+def getresponse(passphrase, challenge):
+    p = subprocess.Popen(["./robochallenge", "-q"], shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+    p.stdin.write(passphrase + "\n");
+    p.stdin.write(challenge + "\n");
+    return p.stdout.readline().strip()
+
+# Here we go.
+if len(sys.argv) != 2:
+    error("Need a command")
+
+cmd = sys.argv[1]
+if not cmdtbl.has_key(cmd):
+    error("Bad command: " + cmd)
+pcmd = cmdtbl[cmd]
+
+passphrase = getpass.getpass('passphrase: ').strip()
+s = getsock()
+t = readline(s).strip()
+if t != '0:,':
+    error("Bad magic from server")
+s.send(pcmd + "\r\n")
+rawchal = readline(s).strip()
+chal = re.sub(r'66:c=([0-9a-f]+),', r'\1', rawchal)
+response = getresponse(passphrase, chal)
+rawresponse = "66:r=" + response + ",\r\n"
+s.send(rawresponse)
+
+print "Challenge: " + chal
+print "Response:  " + response
+
+t = readline(s)
+while t:
+    sys.stdout.write(t)
+    t = readline(s)

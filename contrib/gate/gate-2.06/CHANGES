@@ -1,0 +1,18 @@
+Unfortunately, I never kept any changelog for gate during the first 18-odd
+years of its existance.  Oh well.
+
+gate 2.06 - Jan 24, 2005
+  - Taught configure.in to also seek tgetent in -lcurses library.
+  - Support for sigaction().
+  - Print error message when given command line arguments with only one dash.
+
+gate 2.05a - Dec 21, 2003
+  - Fixed sed syntax error in configure.in
+
+gate 2.05 - Jun 19, 2003
+  - Added autoconf configure script.  Many changes to support this.
+  - Added support for aspell spell checker.
+  - Do a wait() after running spell checkers so we don't leave zombie
+    processes.
+  - Added README and CHANGES file.
+  - Some cleanup of source code formatting.

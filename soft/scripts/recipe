@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# $Id: recipe 1244 2012-01-02 16:21:02Z cross $
+#
+
+PATH=/usr/local/bin:/cyberspace/bin:/usr/bin:/bin
+export PATH
+
+archive=/cyberspace/share/recipes
+choosecategory() {
+	echo ''
+	echo 'Recipe categories are:'
+	ls -1 $archive | column | grexmore
+	echo ''
+	echo -n 'Choose a recipe category, or q to quit: '
+	read category
+}
+
+echo ''
+echo "Welcome to Grex's recipe archives!"
+while choosecategory
+do
+	case $category in
+	Q|q)
+		echo ''
+		exit
+		;;
+	?*)
+		dir=$archive/$category
+		if [ ! -d $dir ]; then
+			echo "Category $category not found."
+			continue
+		fi
+
+		echo ''
+		echo 'Recipe names are:'
+		ls -1 $dir | column | grexmore
+		echo ''
+		echo 'Choose a recipe to see.  You can just'
+		echo 'type the first letters of its name.'
+		echo ''
+		echo -n 'Recipe name: '
+		read recipe
+		test $recipe || continue
+
+		if [ -z "`ls -1 $dir | grep $recipe`" ]; then
+			echo "Recipe $recipe not found."
+			continue
+		fi
+		grexmore $dir/$recipe*
+
+		echo ''
+		echo -n 'Press Enter to continue....'
+		read dummy
+		;;
+	esac
+done
+echo ''

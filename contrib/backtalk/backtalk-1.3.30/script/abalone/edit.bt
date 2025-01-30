@@ -1,0 +1,172 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% edit script
+%
+% A script to display a form for editing a single item from a conference.
+%
+% Query Paramters:
+%    conf=	conference to view a response from
+%    item=	item number to view a response from
+%    resp=	response number to view
+%    goto=	page to return to after edit.
+% Query Parameters passed through:
+%    csel,rsel,skip,since,showforgotten,nextnew
+
+flavor(config.bt)+ include
+
+/abalone.menujump 0 def
+
+/allowhtml dflt_html def
+
+flavor(openconf)+ stopped {
+  (Backtalk internal error: )exch(\n) halt
+} if
+
+`bbsname( )conf( )Conference cap( - )Item cap( )item(, )Response( )resp' (I)
+[/conf /item /resp /goto /csel /rsel /nextnew /skip /since
+ /showforgotten /nextnew]
+[/timezone /abalone.menujump]
+[/allowhtml]
+flavor(header.bt)+ include
+
+secret 2 eq /dunno defined ! and {
+  [/conf /item /resp] flavor(confpass)+ jump
+} if
+
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop.bt)+ include
+
+(<TR><TD CLASS=mast>&nbsp;</TD>
+<TD CLASS=mast VALIGN=BOTTOM ALIGN=RIGHT>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+cpass {(<INPUT TYPE=hidden NAME=cpass VALUE=)cpass(>\n)} if
+/dunno defined {(<INPUT TYPE=hidden NAME=dunno VALUE=)dunno(>\n)} if
+isel {(<INPUT TYPE=hidden NAME=isel VALUE=)isel(>\n)} if
+rsel {(<INPUT TYPE=hidden NAME=rsel VALUE=)rsel(>\n)} if
+since {(<INPUT TYPE=hidden NAME=since VALUE=)since(>\n)} if
+(<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>\n)
+isel next_item ! {pop pop (<OPTION VALUE=nextitem>View Next )Item cap(</OPTION>\n)} if
+csel {(<OPTION VALUE=nextconf>Visit Next )Conference cap(</OPTION>\n)} if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=confhome>Goto )Conference cap( Home Page</OPTION>\n)
+sessions { id { (<OPTION VALUE=logout>Logout</OPTION>\n)} if } if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR>
+</FORM>
+</TABLE>
+)
+
+/blindfold 1 store
+
+mayread ! {(The )conf( conference cannot be read.) halt } if
+
+/tmpresp resp def
+resp cvs item this_item { Item cap( )item( does not exist.\n) halt} if
+read_item {(Could not read )Item( )item(.\n) halt} if pop
+/resp tmpresp def
+
+resp read_resp 
+{(An error has occurred reading this )Response(.) halt} if
+
+mayedit ! {(You do not have permission to edit this )Response(.) halt} if
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=colhead COLSPAN=2>
+Editing )conftitle( )Conference cap( )Item cap( )item
+(, )Response cap( )resp(:</TD></TR>
+<FORM METHOD=POST ACTION=respedit)
+canattach {( ENCTYPE="multipart/form-data")}if(>
+<TR><TD CLASS=odd>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD CLASS=odd>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0><TR><TD CLASS=odd>
+<INPUT NAME=pseudo VALUE=")authorname quote(">&nbsp;&nbsp;
+<SPAN CLASS=big><A HREF=")
+/extern_bio constant { id extern_view_bio } { (bio) } ifelse
+(">)id(</A></SPAN>
+</TD><TD CLASS=odd ALIGN=RIGHT>\n)
+allowhtml {
+  (<SELECT NAME=texttype>
+  <OPTION VALUE="text/plain">Plain Text
+  <OPTION VALUE="text/html")
+    texttype (text/html) eq {( SELECTED)}if (>Pure HTML
+  <OPTION VALUE="text/html-blanks")
+   texttype (text/html-blanks) eq {( SELECTED)} if
+  (>lazy HTML</SELECT>&nbsp;\n)
+} {
+  (<INPUT TYPE=HIDDEN NAME=texttype VALUE="text/plain">\n)
+} ifelse
+(<INPUT TYPE=submit VALUE="Post"></TD></TR>
+<TR><TD CLASS=odd ALIGN=CENTER COLSPAN=2>
+<TEXTAREA NAME="text" ROWS=24 COLS=72 WRAP=HARD>\n)
+erased ! {2 read_text quote} if
+(</TEXTAREA>
+<INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+<INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+<INPUT NAME=item TYPE=hidden VALUE=)item(>
+<INPUT NAME=resp TYPE=hidden VALUE=)resp(>
+<INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+<INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>
+<INPUT NAME=parentresp TYPE=hidden VALUE=)parentresp(>
+<INPUT NAME=goto TYPE=hidden VALUE=)goto(>
+<INPUT NAME=prevmax TYPE=hidden VALUE=)maxresp(>\n)
+since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten
+  (>\n)} if
+/nextnew defined {(<INPUT NAME=nextnew TYPE=hidden VALUE=)nextnew(>\n)} if
+(</TD></TR></TABLE></TD></TR>)
+
+canattach {
+  /i 0 def
+  attachments {
+    (<TR><TD CLASS=even VALIGN=top><STRONG>Current<BR>Attachments:</STRONG></TD>
+    <TD CLASS=even>
+    <TABLE BORDER=0>
+    <TR><TD CLASS=resphead>Size</TD><TD CLASS=resphead>Description</TD><TD CLASS=resphead>Type</TD><TD CLASS=resphead>Delete?</TD>\n)
+    {
+      /i inc
+      attachments (,) clip /hand xdef /attachments xstore
+      (<INPUT TYPE=hidden NAME=hand)i( VALUE=")hand quote(">\n<TR>)
+      hand get_attach dup 0 gt {
+        (<TD COLSPAN=3>)
+        exch 1 eq { (Missing) } { (Permission Denied) } ifelse
+        (</TD>\n)
+      } {
+        pop
+        /url xdef /desc xdef /size xdef /type xdef
+        (<TD><A HREF=")url(" TARGET=_top>)
+        size 2048 lt { size( bytes) }
+        { size 2097152 lt {size 1024 / (K)}
+          {size 1048576 / (M)} ifelse } ifelse
+        (</A></TD>\n)
+        (<TD><INPUT TYPE=text NAME=desc)i( VALUE=")desc quote(" SIZE=35></TD>\n)        (<TD><INPUT TYPE=text NAME=type)i( VALUE=")type quote(" SIZE=20></TD>\n)      } ifelse
+      (<TD ALIGN=center><INPUT TYPE=checkbox NAME=del)i(></TD></TR>\n)
+      attachments ! {break} if
+    } loop
+    (</TABLE></TD></TR>\n)
+    /class (odd) def
+  } {
+    (<P>)
+    /class (even) def
+  } ifelse
+  (<INPUT TYPE=hidden NAME=nattach VALUE=)i(>
+  <TR><TD CLASS=)class( VALIGN=top><STRONG>New<BR>Attachment:</STRONG></TD>
+  <TD CLASS=)class(><TABLE BORDER=0>
+  <TR><TD><STRONG>File&nbsp;to&nbsp;Attach:</STRONG></TD>
+  <TD><INPUT TYPE=file NAME=baa_file SIZE=35>
+  </TD></TR>
+  <TR><TD>
+  <STRONG>Description</STRONG>:</TD><TD><INPUT TYPE=text NAME=desc SIZE=55>
+  </TD></TR>
+  </TABLE></TD></TR>\n)
+} if
+(</FORM></TABLE>
+)
+
+global_footer
+(</BODY></HTML>
+)

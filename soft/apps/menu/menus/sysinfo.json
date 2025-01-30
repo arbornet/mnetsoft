@@ -1,0 +1,12 @@
+{
+    "title":"*** SYSTEM INFORMATION ***",
+    "entries": [
+        {"key":"D", "exec":"/cyberspace/bin/support", "desc":"Donations"},
+        {"key":"H", "exec":"grexmore /cyberspace/grex/docs/grex-faq", "desc":"Grex FAQ's"},
+        {"key":"S", "exec":"/cyberspace/bin/staff", "desc":"Staff information"},
+        {"key":"B", "exec":"/cyberspace/bin/board", "desc":"Board information"},
+        {"key":"P", "exec":"/cyberspace/bin/phones", "desc":"Phone lines available"},
+        {"key":"L", "exec":"/cyberspace/bin/extract coop 2 0 | grexmore", "desc":"Bylaws of Cyberspace"},
+        {"key":"E", "exit":true, "desc":"Exit this menu"}
+    ]
+}

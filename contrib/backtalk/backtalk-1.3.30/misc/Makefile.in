@@ -1,0 +1,186 @@
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+VPATH= @srddir@
+
+CC= @CC@
+INSTALL= @INSTALL@
+
+prefix= @prefix@
+exec_prefix= @exec_prefix@
+cgidir= @cgidir@
+bindir= @bindir@
+cgisuffix= @cgisuffix@
+etcdir= @etcdir@
+logdir= @logdir@
+passwddir= @passwddir@
+userdir= @userdir@
+htmldir= @htmldir@
+htmlurl= @htmlurl@
+owner= @owner@
+httpd= @httpd@
+authtype= @authtype@
+identtype= @identtype@
+grouptype= @grouptype@
+logintype= @logintype@
+sesstype= @sesstype@
+nuidtype= @nuidtype@
+suexec= @suexec@
+
+binaries:
+
+clean:
+	rm -f /tmp/nextuid.temp /tmp/htaccess.pw \
+		/tmp/htaccess.adm
+
+# Program installation
+install-binaries:
+	../install-sh -d -o $(owner) -m 700 $(logdir)
+	touch $(logdir)/bt_acct.log $(logdir)/bt_crash.log
+	chown $(owner) $(logdir)/bt_acct.log $(logdir)/bt_crash.log
+	chmod 600 $(logdir)/bt_acct.log $(logdir)/bt_crash.log
+	../install-sh -d -o $(owner) -m 755 $(bindir)
+	$(INSTALL) -o $(owner) -m 755 btinstall $(bindir)
+
+# Script installation
+install-scripts:  browser_list mimename backtalk.conf
+	$(INSTALL) -o $(owner) -m 755 cgitest $(cgidir)/cgitest$(cgisuffix)
+	@if test $(logintype) = basic; then \
+	  echo ../install-sh -d -o $(owner) -m 755 $(cgidir)/pw; \
+	  ../install-sh -d -o $(owner) -m 755 $(cgidir)/pw; \
+	  echo ../install-sh -d -o $(owner) -m 755 $(cgidir)/adm; \
+	  ../install-sh -d -o $(owner) -m 755 $(cgidir)/adm; \
+	  echo $(INSTALL) -o $(owner) -m 755 cgitest $(cgidir)/pw/cgitest$(cgisuffix); \
+	  $(INSTALL) -o $(owner) -m 755 cgitest $(cgidir)/pw/cgitest$(cgisuffix); \
+	  echo $(INSTALL) -o $(owner) -m 755 cgitest $(cgidir)/adm/cgitest$(cgisuffix); \
+	  $(INSTALL) -o $(owner) -m 755 cgitest $(cgidir)/adm/cgitest$(cgisuffix); \
+	fi
+	if test $(authtype) != passwd -a $(authtype) != shadow; then \
+	    ../install-sh -d -o $(owner) -m 755 $(htmldir); \
+	fi
+	../install-sh -d -o $(owner) -m 755 $(etcdir)
+	$(INSTALL) -o $(owner) -m 644 browser_list $(etcdir)
+	$(INSTALL) -o $(owner) -m 644 mimename $(etcdir)
+	@if test -f $(etcdir)/backtalk.conf; then \
+	   echo cp $(etcdir)/backtalk.conf $(etcdir)/backtalk.conf.bak; \
+	   cp $(etcdir)/backtalk.conf $(etcdir)/backtalk.conf.bak; \
+	fi
+	$(INSTALL) -o $(owner) -m 600 backtalk.conf $(etcdir)
+
+# Installation of User Database files owned by OWNER
+install-users-owner:
+	@if test $(logintype) = basic; then \
+	 echo ../install-sh -d  -o $(owner) -m 755 $(cgidir)/pw; \
+	 ../install-sh -d  -o $(owner) -m 755 $(cgidir)/pw; \
+	 echo ../install-sh -d  -o $(owner) -m 755 $(cgidir)/adm; \
+	 ../install-sh -d  -o $(owner) -m 755 $(cgidir)/adm; \
+	 case $(authtype) in \
+	 text) echo 'AuthUserFile $(passwddir)/bt_passwd' > /tmp/htaccess.pw; \
+	   echo 'AuthGroupFile /dev/null' >> /tmp/htaccess.pw ;; \
+	 dbm) echo 'AuthDBMUserFile $(passwddir)/bt_passwd'>/tmp/htaccess.pw; \
+	   echo 'AuthDBMGroupFile /dev/null' >> /tmp/htaccess.pw ;; \
+	 db) echo 'AuthDBUserFile $(passwddir)/bt_passwd' > /tmp/htaccess.pw; \
+	   echo 'AuthDBGroupFile /dev/null' >> /tmp/htaccess.pw ;; \
+	 passwd|shadow) echo 'AuthExternal pwauth' > /tmp/htaccess.pw; \
+	 esac; \
+	 echo 'AuthName Backtalk' >> /tmp/htaccess.pw; \
+	 echo 'AuthType Basic' >> /tmp/htaccess.pw; \
+	 echo 'require valid-user' >> /tmp/htaccess.pw; \
+	 echo $(INSTALL) -o $(owner) -m 644 /tmp/htaccess.pw $(cgidir)/pw/.htaccess;\
+	 $(INSTALL) -o $(owner) -m 644 /tmp/htaccess.pw $(cgidir)/pw/.htaccess;\
+	 sed 's/Backtalk/BacktalkAdm/' /tmp/htaccess.pw > /tmp/htaccess.adm; \
+	 echo $(INSTALL) -o $(owner) -m 644 /tmp/htaccess.adm $(cgidir)/adm/.htaccess; \
+	 $(INSTALL) -o $(owner) -m 644 /tmp/htaccess.adm $(cgidir)/adm/.htaccess; \
+	 echo rm -f /tmp/htaccess.pw /tmp/htaccess.adm; \
+	 rm -f /tmp/htaccess.pw /tmp/htaccess.adm; \
+	fi
+	@if test $(nuidtype) = 'file' -a -f $(etcdir)/bt_nextuid; then \
+	   echo "***********************************************************"; \
+	   echo "FILE $(etcdir)/bt_nextuid ALREADY EXISTS"; \
+	   echo "***********************************************************"; \
+	   exit 1; \
+	fi
+	@if test $(nuidtype) = 'file'; then \
+	 echo "../install-sh -d -o $(owner) -m 755 $(etcdir)"; \
+	 ../install-sh -d -o $(owner) -m 755 $(etcdir); \
+	 echo "echo '1' > /tmp/nextuid.temp"; \
+	 echo '1' > /tmp/nextuid.temp; \
+	 echo $(INSTALL) -o $(owner) -m 644 /tmp/nextuid.temp $(etcdir)/bt_nextuid; \
+	 $(INSTALL) -o $(owner) -m 644 /tmp/nextuid.temp $(etcdir)/bt_nextuid; \
+	 echo rm -f /tmp/nextuid.temp; \
+	 rm -f /tmp/nextuid.temp; \
+	fi
+	@if test $(identtype) = 'text' -a -f $(etcdir)/bt_user; then \
+	   echo "***********************************************************"; \
+	   echo "FILE $(etcdir)/bt_user ALREADY EXISTS"; \
+	   echo "***********************************************************"; \
+	   exit 1; \
+	fi
+	-rm -rf $(userdir)
+	../install-sh -d -o $(owner) -m 700 $(userdir)
+	@case $(identtype) in \
+	text) echo ../install-sh -d -o $(owner) -m 700 $(etcdir) 2> /dev/null; \
+	  ../install-sh -d -o $(owner) -m 700 $(etcdir) 2> /dev/null; \
+	  echo cat /dev/null > $(etcdir)/bt_user; \
+	  cat /dev/null > $(etcdir)/bt_user; \
+	  echo chown $(owner) $(etcdir)/bt_user; \
+	  chown $(owner) $(etcdir)/bt_user; \
+	  echo chmod 644 $(etcdir)/bt_user ; \
+	  chmod 644 $(etcdir)/bt_user ; \
+	  echo $(INSTALL) -o $(owner) -m 644 bt_group $(etcdir)/bt_group ; \
+	  $(INSTALL) -o $(owner) -m 644 bt_group $(etcdir)/bt_group ;; \
+	hash) echo ../install-sh -d -o $(owner) -m 700 $(etcdir) 2> /dev/null ;\
+	  ../install-sh -d -o $(owner) -m 700 $(etcdir) 2> /dev/null ;\
+	  echo $(INSTALL) -o $(owner) -m 644 bt_group $(etcdir)/bt_group ; \
+	  $(INSTALL) -o $(owner) -m 644 bt_group $(etcdir)/bt_group ;; \
+	sql) echo ../src/sqlinit ident ; \
+	  ../src/sqlinit ident ; \
+	  echo ../src/sqlinit nextuid ; \
+	  ../src/sqlinit nextuid ;; \
+	authfile) if test $(authtype) = 'sql'; then \
+	    echo ../src/sqlinit ident ; \
+	    ../src/sqlinit ident ; \
+	    echo ../src/sqlinit nextuid ; \
+	    ../src/sqlinit nextuid ; \
+	  fi ;; \
+	esac
+	@if test $(authtype) = 'sql'; then \
+	   echo ../src/sqlinit auth; \
+	   ../src/sqlinit auth; \
+	fi
+	@if test $(grouptype) = 'sql'; then \
+	   echo ../src/sqlinit group; \
+	   ../src/sqlinit group; \
+	fi
+	@if test $(sesstype) = 'sql'; then \
+	   echo ../src/sqlinit sess; \
+	   ../src/sqlinit sess; \
+	fi
+
+# Installation of User Database files owned by HTTPD
+install-users-httpd:
+	@if test $(authtype) = 'text' -a -f $(passwddir)/bt_passwd; then \
+	   echo "***********************************************************"; \
+	   echo "FILE $(passwddir)/bt_passwd ALREADY EXISTS"; \
+	   echo "***********************************************************"; \
+	   exit 1; \
+	fi
+	@case $(authtype) in \
+	text) echo ../install-sh -d -o $(httpd) -m 700 $(passwddir); \
+	  ../install-sh -d -o $(httpd) -m 700 $(passwddir); \
+	  echo cat /dev/null > $(passwddir)/bt_passwd; \
+	  cat /dev/null > $(passwddir)/bt_passwd; \
+	  echo chown $(httpd) $(passwddir)/bt_passwd; \
+	  chown $(httpd) $(passwddir)/bt_passwd; \
+	  echo chmod 600 $(passwddir)/bt_passwd; \
+	  chmod 600 $(passwddir)/bt_passwd ;; \
+	db|dbm) echo ../install-sh -d -o $(httpd) -m 700 $(passwddir); \
+	  ../install-sh -d -o $(httpd) -m 700 $(passwddir) ;;\
+	esac
+	-if test $(suexec) != no -a $(authtype) != sql; then \
+	  chmod 755 $(passwddir) 2> /dev/null; \
+	  chmod 644 $(passwddir)/bt_passwd 2> /dev/null; \
+	fi
+
+# User Database Installation
+install-users: install-users-owner install-users-httpd

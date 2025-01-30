@@ -1,0 +1,149 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Creating User Accounts</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Creating User Accounts</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+If your Backtalk system is set up so that users use real Unix login ids
+to log into Backtalk, then you won't be able to create accounts with
+Backtalk.  You should use the Unix commands instead.
+<P>
+However, if you system is set up to only use Backtalk accounts,
+then accounts can be created either through the administrative web interface
+or through the Unix "<TT>btmkuser</TT>" command.
+Just follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+
+<H2>Creating Accounts by using the Web Interface</H2>
+
+Backtalk can be installed in any of three configurations:
+<UL>
+<LI> So anyone can fill out a form and immediately create themselves a
+     usable account.
+<LI> So anyone can fill out a form and create an account, but the accounts
+     are not usable until an conference adminstrator has
+     <A HREF=admin-user-valid.html>validated</A> them.
+<LI> So only conference administrators and users in the 'gradm' group
+     can create accounts.
+</UL>
+So there are two different web-based account creation forms.  The public
+user registration form will work only on systems configured in one of the
+first two ways described above.
+The "Create User Account" link on the Backtalk administrative menu leads
+to a similar form (though it has a few more options) which works on all
+installations.
+<P>
+Creating accounts with the public newuser page shouldn't require any
+explanation here (it is, after all, desgined to be usable by any random
+person who wanders in off the web).
+The administrative page is hardly more complex, but we'll go through it
+step by step anyway.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Goto the user creation page.
+<P>
+There is a link on the administration page labelled "Create User Account".
+Click on this.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Fill out the form.
+<P>
+The account creation form has two sections.  The first part asks for
+information that Backtalk needs to make a working account.  The second
+asks various other random information that system administators like to
+collect (you can configure what is asked for here by editing the
+<TT>lib/userinfo.bt</TT> script, as described in the installation manual).
+<P>
+The only non-obvious part of this is the selection of groups.  As in unix,
+each account is associated with one primary group, and zero or more other
+groups.  For users in more than one group, it mostly doesn't matter which
+is entered as the 'primary group' and which are entered as 'other groups'.
+<P>
+Two groups are special.  The 'cfadm' group is the administrative group.
+Any login in that group will be able to create, edit, and destroy conferences
+and user accounts.  Obviously only very trusted users should be given access
+to accounts in the cfadm group.
+<P>
+Users in the 'gradm' group function as "group leaders" for any other groups
+they are in.  They can create and configure accounts in those groups,
+<P>
+The 'user' group is the default group for all ordinary users.
+
+<HR>
+</FORM>
+</OL>
+
+<H2>Creating Accounts by using <TT>btmkuser</TT> command from Unix</H2>
+
+The <TT>btmkuser</TT> command can only be used from
+the conference adminstrator account, not by random other people.
+It creates minimal accounts, with only the login name, password and fullname
+set, not with all the other stuff like gender and email addresses.
+It's meant mainly as an aid to people who have to create accounts in large
+batches and want to write shell scripts to do so.
+Maybe we'll add more features if there is a demand.
+
+<FORM>
+<OL>
+<LI><INPUT TYPE=checkbox> Log into the Unix conference administration account
+<P>
+This is the account that owns all the conference files, user database
+files, and Backtalk itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Run the <TT>btmkuser</TT> command
+
+<P>
+You can create an account interactively by just running:
+<PRE>
+    btmkuser
+</PRE>
+It will ask you for the account name, the user's full name, and the 
+initial password (twice).
+<P>
+You can also specify some or all of this information on the command line:
+<PRE>
+    btmkuser -l eve -n "Eve, Daughter of God" -p "OmiGosh!"
+</PRE>
+The <TT>-l</TT>, <TT>-n</TT> and <TT>-p</TT> options allow you to specify the
+login, fullname and password on the command line.
+If you omit any of these, you will be asked for them.
+Not that full names and passwords are generally likely to contain spaces
+and weird characters, and should generally be quoted.
+<P>
+<STRONG>Warning:</STRONG> Specifying the password on the command line is
+potentially a bad idea.
+If there are other users on your system who can do a "<TT>ps</TT>" command,
+they will be able to see the commands you are running, with their arguments.
+Thus they can see the login name and password of the account you are
+creating.
+If you have untrustworthy users on your system, we recommend not using the
+"-p" option.
+<P>
+In addition, it is possible to specify the user's primary group on the
+<TT>btmkuser</TT> command with a -g option, like
+<PRE>
+    btmkuser -l adam -g humans -n "Adam, Son of God" -p "GeeWhiz!"
+</PRE>
+Other groups can be set by editing the Backtalk group file.
+</OL>
+</FORM>
+</BODY></HTML>

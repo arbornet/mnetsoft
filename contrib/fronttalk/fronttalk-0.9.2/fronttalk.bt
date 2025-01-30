@@ -1,0 +1,11 @@
+`(<INFO NAME=")bbsname quote(" AUTH=) sessions {(cookie)}{(basic)} ifelse
+allowanon {( ANON)} if
+nopwedit ! {( PWEDIT)} if
+( PWURL=")serverurl pw_url quote(" VERSION=0.9.2>
+<BANNER>
+Welcome to )bbsname quote(
+</BANNER>
+<BBSRC>
+)' (*bbsrc) read quote
+(</BBSRC>
+)

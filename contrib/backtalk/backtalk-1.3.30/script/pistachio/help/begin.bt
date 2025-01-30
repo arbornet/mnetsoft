@@ -1,0 +1,93 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/butsel 6 defconstant flavor(buttondef)+ include
+
+(Entrance Page) (pistachio/help/header) include
+
+(<H2>The Entrance Page:</H2>
+
+The Entrance Page is the front door to the conferencing
+system.  Since there is a lot of traffic through this page, we have kept it
+short and simple.  It displays any daily messages put up by the system
+administrators, and it gives a few commands to start reading )Conferences( and
+configure your account.
+<P>
+If you want to set a bookmark so you can return easily any time you like,
+use the ``Bookmark'' facility of your browser to set a bookmark on this page.
+<P>
+On other pages, you will see lots of )entrance_button( buttons.  Clicking
+one of these will return you to this Entrance Page.
+
+<H2>Getting to the )Conferences cap(:</H2>
+
+Since the main thing people come to a conferencing system for is )Conferences(,
+there are three different ways to get into the )Conferences( from here.
+All of these will get you to the )hrefbegin(help/confhome>)Conferences( home
+page</A> for the )Conferences( you choose:
+<UL>
+<LI> The )readnew_button( button is big and brassy because that's the most
+     common way to scan the )Conferences(.  Each user can maintain a hot list of
+     the )Conferences( they are most interested in.  This buttons will start
+     you reading all the new )Items( and )Responses( in all your hot )
+     Conferences(, skipping over those )Conferences( that have nothing new in
+     them.
+<P>
+<LI> ``List all )Conferences('' displays a list of all the )Conferences( on the
+     system.  You can then click on the name of which ever )Conference( you want
+     to read.  This is especially useful for new-comers to the system who
+     aren't familiar with the )Conferences( available.
+<P>
+<LI> ``Goto )Conference('' allows you to type the name of a particular )Conference(
+     that you'd like to visit.  You can often abbreviate the names, and it
+     doesn't matter if you type them in upper case or lower case.
+</UL>
+You can also edit your hot list of )Conferences( using the ``)hrefbegin
+(help/hotlist>Edit your )Conference( hot list</A>'' button.
+This is your chance to customize the list of )Conferences( that the
+``Read New'' button walks you through.
+(Note:  You can't edit the hot list if you are an anonymous user, so this
+button won't appear.)
+<P>
+If you want to see a quick summary of how many active
+)Items( there are in each of your hot list )Conferences(,
+select the ``Summarize hot list )Conference( activity'' button.
+This will bring up a list of you hot list )Conferences(, each with
+its number of brand new )Items(, and its number of )Items( with new )Responses(.
+There is an option on the <A HREF=optform>option setting</A> page that
+causes this summary to always be shown on the entrance page.
+)
+post_log_file {
+(<P>
+Pistachio can display a list of the most recently posted )Items( and )
+Responses(.  By default, the )dflt_recent_entrance( newest messages are
+displayed.  The number displayed can be changed from the
+<A HREF=optform>option setting</A> page.
+Alternatively, you can use the ``<A HREF=help/recent>List last postings</A>''
+button to goto a page that displays many more recent messages.
+)
+} if
+(
+
+<H2>User Information Commands:</H2>
+
+Normally all users of the Backtalk conferencing system will have accounts
+that they use to access it.  Each user can set various options and make
+various personal information available to other users.
+The entrance page has two commands for accessing user information:
+<UL>
+<LI> ``)hrefbegin(help/bio>Edit your Personal Settings</A>.''
+This button will bring you to a page where you can customize various
+aspects of your account,
+including the information that is displayed to other users and
+a few settings that effect the behavior of the Pistachio interface.
+<P>
+<LI> ``)hrefbegin(help/users>Search for a User</A>.''
+This button will bring you to a page where you can list other users and
+see what they have to say about themselves.
+</UL>
+)
+global_footer
+(</BODY></HTML>
+)

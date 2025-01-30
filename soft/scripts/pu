@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Like `users' but prints out party users.
+#
+pwho | tail +2 | cut -d' ' -f1 | paste -sd ' ' -

@@ -1,0 +1,417 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% begin script
+%
+% List all available conferences.  This parses and pretty prints the
+% public.txt or the confmenu file, with conference names clickable so you can
+% go straight to them.
+%
+% clist=  (all) or (hot).
+
+flavor(config.bt)+include
+
+/abalone.list id{(hot)}{(all)}ifelse def
+/abalone.menujump 0 def
+post_log_file {/abalone.recent dflt_recent_entrance def} if
+bbsname (S)
+[]
+[/abalone.list /timezone /abalone.menujump
+ post_log_file {/abalone.recent} if] []
+flavor(header.bt)+include
+
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+include
+
+% if we are going to be showing a list of recent postings, we need to cache
+% conference titles to avoid reading the same conference config file multiple
+% times.  The following functions inplement this.
+post_log_file {
+  /cft dict def
+
+  % <conf> <conftitle> set_cf_title -
+  % Add a title to the cache
+  /set_cf_title {
+    abalone.recent { cft 3 1 roll put } if
+  } def
+
+  % <conf> get_cf_title <title>
+  % Get a title from a cache, if there.  Look it up otherwise.
+  /get_cf_title {
+    dup /cf xdef cft exch known {
+      % get title from cache
+      cft cf get
+    } {
+      % get title from conference config file
+      /conf cf store snoop_conf { cf cap } {conftitle close_conf} ifelse
+      % add to cache
+      dup cf exch set_cf_title
+    } ifelse
+  } def
+} if
+
+(</TD></TR>
+<TR><TD CLASS=mast>)
+bbslogo
+(</TD><TD CLASS=mast VALIGN=bottom>
+<SPAN CLASS=big>Welcome to )bbsname(</SPAN><P>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit();")}if
+(>
+<OPTION VALUE=readhotconf)id{( SELECTED)}if
+(>Visit Hotlist )Conferences cap( with New )Responses cap(</OPTION>
+<OPTION VALUE=readallconf)id!{( SELECTED)}if
+(>Visit All )Conferences cap(</OPTION>
+<OPTION VALUE=@1gotoconf>Goto )Conference cap(...</OPTION>\n)
+post_log_file dflt_recent_page and {
+(<OPTION VALUE=recent>List Last )dflt_recent_page( Postings</OPTION>\n)
+} if
+(<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {
+  (<OPTION VALUE=edithot>Edit Your )Conference cap( Hotlist</OPTION>
+  <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions {(<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(<OPTION VALUE=@0help:entrance>Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></TABLE>
+)
+
+% if "show_motd" is true, show the contents of the /etc/motd file.
+% Otherwise just show bbs/motd.html file.
+/show_motd constant {
+
+  flavor(links)+ include
+
+  (<CENTER><TABLE><TR><TD CLASS=mast><PRE>)
+
+  (/etc/motd) read expand
+
+  % Grex has some additional motd files
+  bbsname (Grex) eq {
+    (/usr/local/lib/motd.birthday) read expand
+  } if
+
+  (</TD></TR></TABLE></PRE></CENTER>\n)
+
+} {
+  (*motd.html) read
+} ifelse
+
+% Set default 'clist' setting to (all) for anonymous, (hot) for logged in users
+/clist defined ! {
+  /clist abalone.list def
+} if
+
+
+% Some check mark images
+`(<IMG SRC=")imghost(/)flavor
+ (uncheck.gif" BORDER=0 HEIGHT=10 WIDTH=10 ALT="[ ]">)' /uncheck xdef
+`(<IMG SRC=")imghost(/)flavor
+ (check.gif" BORDER=0 HEIGHT=10 WIDTH=10 ALT="[X]">)' /check xdef
+
+(<P><TABLE WIDTH=100% BORDER=0 CELLPADDING=0>
+<TR><TD CLASS=mast>Listing of:</TD>
+<TD class=mast ALIGN=center>)
+clist (all) eq {check}{(<A HREF="begin?clist=all">)uncheck(</A>)}ifelse
+(&nbsp;All&nbsp;)Conferences cap(</TD>
+<TD class=mast ALIGN=center>)
+clist (hot) eq {check}{(<A HREF="begin?clist=hot">)uncheck(</A>)}ifelse
+(&nbsp;Hotlist&nbsp;)Conferences cap(</TD></TR>
+</TABLE>
+)
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR>
+<TD CLASS=colhead>&nbsp;</TD>
+<TD CLASS=colhead>)Conference cap(</TD>
+<TD CLASS=colhead>)Items cap(</TD>
+<TD CLASS=colhead>New )Items cap(</TD>
+<TD CLASS=colhead NOWRAP>Last )Response cap(</TD>
+<TD CLASS=colhead>)Fairwitness cap(</TD>
+</TR>
+)
+
+% <fwlist> fws ...
+% Given a string with login ID's separated, print their full names, in clickabe
+% form.
+
+/fws {
+  /fn 0 def	% counter
+  {
+    (, ) parse /fwid xdef
+    fwid ! {break} if
+    /fn inc
+    ` fn 1 gt {(,\n)} if
+      (<A HREF=")
+      /extern_bio constant {
+        fwid extern_view_bio
+      } {
+        (bio?login=)fwid cgiquote
+      } ifelse (">)
+      fwid userinfo pop pop pop 3 1 roll pop pop
+      dup {nopwedit {(,) clip exch pop} if}{pop fwid} ifelse
+      quote (</A>) '
+    exch
+  } loop
+  fn ! { (none) } if
+} def
+
+% <header> <des> header_line ...
+% Print a header line in the table.
+/header_line {
+  /des xdef
+  /hdr xdef
+  clist (hot) ne {
+    (<TR><TD CLASS=sechead COLSPAN=6><SPAN CLASS=big>)hdr(</SPAN>)
+    des {(<BR>\n)des} if
+    (</TD></TR>\n)
+  } if
+} def
+
+/odd 0 def
+
+% <confid> <conftitle> <description> <csel> conf_line
+% Print a conference line.
+/conf_line {
+  /hsel xdef
+  /des xdef
+  /ttl xdef
+  /conf xstore
+
+  post_log_file {
+    conf ttl set_cf_title	% save conference to title cache
+  } if
+
+  cache_confs {
+    % generate no output - save info in cache keyed by conference directory
+    cache conf conf_dir [ttl des hsel] put
+   } {
+
+    /class odd {(odd)}{(even)}ifelse def
+    (<TR>\n)
+
+    snoop_conf {
+      % no such conference
+      ttl ! {/ttl conf def} if
+      (<TD CLASS=)class(>&nbsp;</TD>
+      <TD CLASS=)class(><SPAN CLASS=bigbold>)ttl quote(</SPAN><BR>\n)
+      des quote(</TD>
+      <TD CLASS=)class( COLSPAN=4>conference not accessible</TD>\n)
+    } {
+      % a real live conference
+      ttl ! {/ttl conftitle def } if
+      (<TD CLASS=)class(>&nbsp;</TD>
+      <TD CLASS=)class(><A CLASS=bigbold HREF="confhome?conf=)conf
+      clist (hot) eq {(&csel=)hsel} if
+      (">)ttl quote(</A><BR>\n)des quote(</TD>\n)
+
+      mayread {
+	% loop through all items - talk about costly!
+	/isel (1-$) def /rsel (all) def /noskip 1 def
+	/ntop 0 def /npost 0 def /lpost 0 cvt def
+	{
+	  isel next_item { break } { this_item { break } {
+	    pop /isel xstore
+	    /ntop inc
+	    lastdate lpost gt {/lpost lastdate def} if
+	  } ifelse } ifelse
+	} loop
+	(<TD CLASS=)class( ALIGN=CENTER>)ntop
+	(</TD><TD CLASS=)class( ALIGN=CENTER>)conf_new pop + exch pop
+	(</TD><TD CLASS=)class(><SPAN CLASS=small>)
+	lpost {
+	  /tm lpost ztime def
+	  tm 0 10 substr(, )
+	  tm 24 4 substr(<BR>)
+	  tm 11 12 substr
+	}{
+	  (&nbsp;)
+	}ifelse
+	(</SPAN></TD>\n)
+      } {
+	(<TD CLASS=)class( COLSPAN=3>no read access to conference</TD>\n)
+      } ifelse
+      (<TD CLASS=)class(>)fwlist fws(</TD>\n)
+      close_conf
+    } ifelse
+    (</TR>)
+
+    /odd 1 odd - def
+  } ifelse
+} def
+
+% <confid> ok_to_show <bool>
+/ok_to_show {
+  /hsel () def
+  clist (hot) eq {
+    conf_dir dup {
+      hotdirs in dup -1 eq {
+        pop 0				% not in hotlist - return false
+      } {
+	dup 1+ cvs(@)exch+ /hsel xdef	% in hotlist - construct csel
+        hotdirs exch 0 put		% erase value from array
+        1				% return true
+      } ifelse
+    } {
+      pop 0			% conference doesn't exist - return false
+    } ifelse
+  } {
+    pop 1			% no hot-list - return true
+  } ifelse
+} def
+
+1 cache_conflist
+
+% load the hotlist if we are listing hotlist conferences
+clist (hot) eq dup /cache_confs xdef {
+  % Construct an array of all the names of conferences in the hotlist
+  1 cflist_array /hotconfs xdef
+
+  % Construct an array of the directories of all the conferences in the hotlist
+  [ hotconfs { conf_dir } forall ] /hotdirs xdef
+
+  % While going through conference menu, we'll cache info instead of printing
+  % it.
+  /cache dict def
+} if
+
+/usepublic_txt constant {
+  % Load the "public.txt" file
+  bbsdir(/public.txt)+ read /remainder xdef
+
+  % Process the file, line-by-line
+  {
+    % get the next line
+    remainder (\n) parse
+      dup () eq {break} if
+      /work_line xdef
+      /remainder xdef 
+
+    work_line pt_confline sgrep {
+       % found a conference line
+       aload /cdes xdef /conf xstore pop
+       conf ok_to_show {
+         conf dup cap % conf id and conf title
+         cdes % description
+	 hsel % csel
+         conf_line
+       } if
+    } {
+       work_line pt_headline sgrep {
+         % found a header line
+	 1 get () header_line
+       } if
+    } ifelse
+  } loop
+} {
+  % Load the confmenu file
+  (*confmenu) read /remainder xdef
+
+  % Process the file, line-by-line
+  {
+    % get the next line
+    remainder (\n) parse exch /remainder xdef
+    dup ! {break} if
+
+    % skip comments
+    dup 0 1 substr (#) eq {pop continue} if
+
+    % parse apart the line
+    (:) clip /cname xdef
+    (:) clip /ctitle xdef /cdes xdef
+
+    cname {
+      % Format a conference name
+      cname ok_to_show {
+        cname ctitle cdes hsel conf_line
+      } if
+    } {
+      % Format a header line
+      ctitle cdes header_line
+    } ifelse
+
+  } loop
+} ifelse
+
+% Now print the hotlist
+clist (hot) eq {
+  /cache_confs 0 def
+  hotconfs {
+    /conf xstore
+    /dir conf conf_dir def
+    cache dir known {
+       % was in conference menu
+       cache dir get conf exch aload conf_line
+    } {
+       % not listed in conference menu
+       conf () ()  () conf_line
+    } ifelse
+  } forall
+} if
+
+(</TABLE>
+)
+
+% Optional recent postings
+post_log_file { (lib/readpostlog) include abalone.recent {
+
+(<P>
+Listing of Last )abalone.recent( Postings:<BR>
+<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR>
+<TD CLASS=colhead>Posting</TD>
+<TD CLASS=colhead>)Item cap( Title</TD>
+<TD CLASS=colhead>Author</TD>
+<TD CLASS=colhead>Date</TD>
+</TR>
+)
+
+  abalone.recent -1 {
+    /pl_title xdef /pl_fn xdef /pl_id xdef /pl_resp xdef /pl_item xdef
+    /pl_conf xdef /pl_date xdef
+
+    /class odd {(odd)}{(even)}ifelse def
+    (<TR>\n)
+
+    (<TD CLASS=)class(><A HREF="read?&conf=)pl_conf(&item=)pl_item(&rsel=)
+      pl_resp(-$&noskip&showforgotten=1&seeno=2">)
+      pl_conf get_cf_title(&nbsp;)Item(&nbsp;)pl_item
+      pl_resp {(&nbsp;)Response(&nbsp;)pl_resp} if
+      (</A></TD>)
+
+    (<TD CLASS=)class(>)pl_title(</TD>)
+
+    (<TD CLASS=)class(><A HREF=")
+      /extern_bio constant { 
+        pl_id extern_view_bio
+      } { 
+        (bio?login=)pl_id cgiquote
+      } ifelse (">)
+      pl_fn 0 30 substr ( )(&nbsp;)0 replace
+      pl_fn 31 100 substr(</A></TD>)
+
+    (<TD CLASS=)class(>)pl_date ( )(&nbsp;)0 replace(</TD></TR>\n)
+
+    /odd 1 odd - def
+
+  } for_postlogs
+
+  (</TABLE>)
+
+} if } if
+
+saverep secure ! or {
+  amadm {
+    (<P><STRONG>Warning:</STRONG> This site has <TT>)
+    saverep {(saverep</TT> set) secure ! {( and <TT>)} if} if
+    secure ! {(secure</TT> not set)} if
+    ( in <TT>script/config.bt</TT>.  This is not secure for production use.)
+  } if
+} if
+
+
+% Page footer
+global_footer
+(</BODY></HTML>
+)

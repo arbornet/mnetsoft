@@ -1,0 +1,3 @@
+% Current Vanilla Version Number
+
+/if_version (Vanilla version 1.3.5) defconstant

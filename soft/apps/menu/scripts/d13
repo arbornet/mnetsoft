@@ -1,0 +1,15 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+echo -n "
+UNIX: rm -r <directory>
+
+*WARNING*: This will also remove all files below the directory to be removed!
+
+Immmediate sub-directories are:
+`ls -p | grep \/$`
+
+Directory to remove? "
+read kill_dir
+rm -r $kill_dir
+

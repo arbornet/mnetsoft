@@ -1,0 +1,258 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% confopt script
+%
+% This script, which is only accessible by fairwitnesses and system
+% administrators, allows the user to set conference options, including
+% the color scheme, the button designs and the login screens.
+%
+% Query Parameters:
+%    conf=	    name of conference we are configuring
+%    csel=          current conference selector, if any
+%    msg=	    text message to display near top of page.
+%    newallow=      if defined, 0=don't allowhtml
+%				1=allowhtml/don't allowgraphics,
+%				2=allowhtml/allowgraphics
+%    newnorobots=   New value of norobots
+
+% "state" is a standard part of links to other pages
+/state [(conf=)conf csel {(&csel=)csel} if] def
+
+flavor(config)+ include
+
+% Defaults
+/login () def
+/allowhtml dflt_html def
+/new_isel (1,$) def
+/new_since 0 def
+/norobots 1 def
+
+% page header
+(<HTML><HEAD>
+<TITLE>Set Options for )
+`( )Conference cap(</TITLE>
+)/metatags(</HEAD>\n)'
+
+% open the conference
+/nopersonal 1 defconstant
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+% get conference password if we need it
+secret 2 eq /dunno defined ! and {
+  [/conf /csel /msg] flavor(confpass)+ jump
+} if
+
+conftitle 3 1 roll
+
+global_header
+
+% Load settings (norobots already got loaded by openconf)
+(*settings) [/login /allowhtml /allowgraphics /new_isel /new_since] loadvar pop
+
+% change the HTML setting
+/newallow defined {
+  newallow cvi 0 eq {
+    /allowhtml 0 def
+    /allowgraphics 0 def
+  } {
+    /allowhtml 1 def
+    /allowgraphics newallow cvi 2 eq def
+  } ifelse
+  (*settings) [/allowhtml /allowgraphics] savevar
+} if
+
+% Change the robots exclusion
+/newnorobots defined {
+  confrobots 1 ne {
+    /errmsg `This )Conference( is not configured to allow )Fairwitnesses
+      ( to control robot exclusion)' def
+  } {
+    /norobots newnorobots cvi {1}{0} ifelse def
+    (*settings) [/norobots] savevar
+  } ifelse
+} if
+
+(<H1>Set Options for )conftitle`( )Conference cap(</H1>
+These settings will affect all readers of the )Conference( and may only be
+manipulated by the )Conference( )Fairwitnesses( or the conference administrator.
+)'
+
+% boot out non-fairwitnesses
+amfw ! {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+ stop
+} if
+
+% print any message returned from helper scripts
+/msg defined {
+ msg(<HR>\n)
+} if
+
+% load various buttons
+/butsel 5 defconstant flavor(buttondef)+ include
+
+(<P>
+Return to <A HREF=confhome?)state(>)confhome_button(</A> or
+<A HREF=begin>)entrance_button(</A>.
+)
+
+% Set default colors (these are netscape defaults)
+bgcolor ! {/bgcolor (COCOCO) def} if
+textcolor ! {/textcolor (000000) def} if
+linkcolor ! {/linkcolor (0000EE) def} if
+vlinkcolor ! {/vlinkcolor (551A8B) def} if
+alinkcolor ! {/alinkcolor (FF0000) def} if
+
+(<H2>HTML Postings</H2>
+
+)
+(Currently users are )
+allowhtml {
+  `(allowed to post HTML )Responses( and )Items( with)'
+  allowgraphics !{(out)} if
+  `( images in this )Conference(.\n)'
+} {
+  `(not allowed to post HTML )Responses( and )Items( in this )Conference(.\n)'
+} ifelse
+(This may be changed below.
+<FORM METHOD=post ACTION=confopt>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+(<SELECT NAME=newallow>
+<OPTION VALUE=0) allowhtml ! {( SELECTED)} if
+(>No HTML postings allowed
+<OPTION VALUE=1) allowhtml allowgraphics ! and {( SELECTED)} if
+(>HTML postings without embedded images allowed
+<OPTION VALUE=2) allowhtml allowgraphics and {( SELECTED)} if
+`(>HTML postings with embedded images allowed
+</SELECT>
+<INPUT TYPE=submit VALUE="Change">
+</FORM>
+
+<H2>Initial New )Items cap(</H2>
+
+By default, when a user joins a )Conference( for the first time, only
+the first and last )Items( will be "new".  All the other )Items( are "unseen".
+If a user does a "read new", they see only the two "new" )Items(.  Other )
+Items( won't become "new" until at least one new )Response( is made to them.
+This is done to ensure that people don't get innundated with ancient,
+inactive )Items( when they join large )Conferences( for the first time.
+<P>
+You can change which )Items( will be "new" for first-time users.  The )
+Items( that will start out "new" for first-time users of the )'conf`( )
+Conference( are:
+<BLOCKQUOTE>
+Initial New )Items cap(: <STRONG>)'
+new_isel {
+  new_isel (1-$) eq {
+    (ALL)
+  }{
+    new_isel ($) (LAST) 0 replace
+    new_since {( and )} if
+  } ifelse
+} {
+  new_since ! {(NONE)} if
+} ifelse
+dup (ALL) ne new_since and {
+  `(any )Items( which have had new )Responses( in the last )'new_since( day)
+  new_since 1 ne {(s)}if (.)
+} if
+(\n</STRONG></BLOCKQUOTE>
+&nbsp;<A HREF=setinew?)state(>)fw_button(</A> Change Initial new )Items(.
+
+<H2>Colors and Buttons</H2>
+
+The following settings allow you to select the default colors to be used in
+the )conf( )Conference(.  Users can override these choices, but probably
+won't, unless your choices are really bad.  Change these with caution - color
+combinations that look great on your computer may be completely illegible on
+other people's computers.
+<P>
+This page is displayed using the colors you have selected as the default for
+other users, even if you have set other colors for yourself.
+<P>
+Note that if you haven't explicitly set a color, or if you have set them
+to ``default'' then then the standard Netscape default values will be used
+on this page.  These may or may not be <EM>your</EM> default colors,
+(which you will see if you look at most any other page) since these can be
+reset in most browsers.
+<P>
+&nbsp;<A HREF=color?)state(&what=bgcolor&old=)bgcolor(>)fw_button(</A>
+Change Background Color.<BR>
+&nbsp;<A HREF=setbg?)state(>)fw_button(</A>
+Change Background Image.<BR>
+&nbsp;<A HREF=color?)state(&what=textcolor&old=)textcolor(>)fw_button(</A>
+Change Text Color.<BR>
+&nbsp;<A HREF=color?)state(&what=highcolor&old=)highcolor(>)fw_button(</A>
+Change <FONT COLOR=")highcolor(">Highlit Text</FONT> Color.<BR>
+&nbsp;<A HREF=color?)state(&what=linkcolor&old=)linkcolor(>)fw_button(</A>
+Change <FONT COLOR=)linkcolor(><U>Unused Link</U></FONT> Color.<BR>
+&nbsp;<A HREF=color?)state(&what=vlinkcolor&old=)vlinkcolor(>)fw_button(</A>
+Change <FONT COLOR=)vlinkcolor(><U>Used Link</U></FONT> Color<BR>
+&nbsp;<A HREF=color?)state(&what=alinkcolor&old=)alinkcolor(>)fw_button(</A>
+Change <FONT COLOR=)alinkcolor(><U>Clicked Link</U></FONT> Color
+(if this one is illegible, it doesn't matter).<BR>
+&nbsp;<A HREF=buttonmenu?)state(&what=regbutton&old=)regbutton(>)button(</A>
+Change Standard Button Color (used for most buttons users see).<BR>
+&nbsp;<A HREF=buttonmenu?)state(&what=offbutton&old=)offbutton(>)no_button(</A>
+Change Disabled Button Color (used for buttons that won't work).<BR>
+&nbsp;<A HREF=buttonmenu?)state(&what=admbutton&old=)admbutton(>)fw_button(</A>
+Change )Fairwitness cap+( Button Color (should contrast to standard button).
+)+
+
+% load the ascii login screen text
+/asciilogin (*login) read def
+
+`(<H2>Login Screens</H2>
+When a user enters a )Conference(, he first sees the ``)Conference
+( home'' page.
+A )Conference( login screen is shown at the top of that page.  Normally this
+would include things like:
+<UL>
+<LI>The name of the )Conference(.
+<LI>The names of the )Fairwitnesses(.
+<LI>A description of the )Conference(.
+<LI>Maybe some small logo.
+</UL>
+There are two versions of this screen.  Backtalk prefers to use the HTML
+version, which is currently )'
+login { (set to: <HR>)login(<BR CLEAR=BOTH><HR>)}
+      { (not defined.<P>)} ifelse
+(
+&nbsp;<A HREF=editform?)state(&target=login.html&goto=confopt>)fw_button(</A>
+Edit this HTML version of the login screen.
+<P>
+If no HTML version is defined, Backtalk will use the ASCII version.
+This is also used by Picospan and Yapp.  It is currently )
+asciilogin {(set to:\n<HR><PRE>)asciilogin expand(</PRE><HR>)}
+           {(not defined.<P>)} ifelse
+(
+&nbsp;<A HREF=editform?)state(&target=login&goto=confopt>)fw_button(</A>
+Edit this ASCII version of the login screen.)
+
+confrobots 1 eq {
+  (<H2>Robot Exclusion</H2>
+  Currently robots are ) norobots {(not )} if
+  `(allowed to index this )Conference(.  Robot exclusion works by generating
+  headers on each page requesting that robots not index this page.  These
+  will be respected by civilized robots, like Google's web spider, but
+  probably not by things like email address harvesters run by spammers.
+  You can change the setting for this conference below.
+  <FORM METHOD=post ACTION=confopt>
+  <INPUT TYPE=hidden NAME=conf VALUE=)'conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+  (<SELECT NAME=newnorobots>
+  <OPTION VALUE=0) norobots ! {( SELECTED)} if
+  (>Allow robots to index this )Conference(</OPTION>
+  <OPTION VALUE=1) norobots {( SELECTED)} if
+  (>Do not allow robots to index this )Conference(</OPTION>
+  </SELECT>
+  <INPUT TYPE=submit VALUE="Change">
+  </FORM>\n)
+} if
+
+global_footer
+(</BODY></HTML>
+)

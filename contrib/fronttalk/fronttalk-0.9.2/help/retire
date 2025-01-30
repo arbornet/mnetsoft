@@ -1,0 +1,23 @@
+                       Fronttalk Command:  RETIRE
+
+Usage:  RETIRE <item range>
+
+Mark all selected items as retired.  Only a conference fairwitness or
+(depending on the Backtalk server configuration) the original author of an
+item may retire an item.  A retired item is effectively forgotten by all
+users, so they will only see it if the use the "NOFORGET" or "FORGOTTEN"
+flags on their READ and BROWSE commands.
+
+A retired item can be restored to normal by doing "UNRETIRE".
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   RETIRE 13         - Retire item 13.
+   RETIRE (joe)      - Retire items entered by login ID joe.
+
+If you just say "RETIRE" the default is to retire the current item.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to retire it.

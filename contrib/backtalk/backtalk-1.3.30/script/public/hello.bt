@@ -1,0 +1,18 @@
+(<HTML>
+<HEAD>
+<TITLE>Your )bbsname( Conference Account has been Created.</TITLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<H1>Your )bbsname( Conference Account has been Created.</H1>
+)
+newuseropen 1 eq {
+  (You will be able to login as soon as your account has been validated.)
+} {
+  (You may now <A HREF=")anon_url(">enter the conferencing system</A>.)
+} ifelse
+(
+<P>
+Don't forget your account name and password.
+</BODY>
+</HTML>
+)

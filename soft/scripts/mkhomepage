@@ -1,0 +1,197 @@
+#!/bin/sh
+# @(#) mkhomepage: create homepage in $HOME/www    carl@cyberspace.org
+#  5-22 97 srw  - suppressed automativ mail to webmaster
+#  8-10-96 srw  - changed gfile to "g" then "file"
+# 12-11-95 srw  - modified to expound on Grex multimedia file policy
+#  3-20-96 robh - updated the script for the Sun 4
+#  7- 5-96 robh - added <html> <body> and <head> tags, also changed
+#                 the $full variable to only include the name from
+#                 /etc/passwd, without phone numbers or location
+# 12-??-96 ???  - Changed text for hierarchical /home.
+# 12-29-96 vm   - Removed long pathnames from www/index.html filename,
+#                 because it was confusing to the users.
+#
+
+
+#mail -s mkhomepage webmaster </usr/local/www/mkr
+clear
+umask 22
+cd
+if	test ! -d www
+then	mkdir www || exit 1
+fi
+log=`echo $LOGNAME`
+search="^`echo $log`:"
+line=`grep $search /etc/passwd`
+full=`echo $line | awk -F: '{ print $5 }' | awk -F, '{print $1 }'`
+first=`echo $full | awk '{ print $1 }'`
+home=`echo $line | awk -F: '{ print $6 }'`
+www=`echo $home`/www
+hp=`echo $www`/index.html
+
+#renaming the file without telling the user does not strike me
+#as a good idea.  -rh
+
+#if test ! -f $hp
+#then if test -f $www/homepage.html
+#then mv $www/homepage.html $hp
+#fi
+#fi
+
+hpt=`echo $hp`_
+quit=n
+while	[ "$quit" = "n" ]
+do	clear
+	echo '
+  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+ 
+                    mkhomepage  --  the WWW homepage utility
+ 
+  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *  *
+ 
+                    Please enter your choice below:
+ 
+                    1) Read about hypertext on Grex
+                    2) See my current homepage
+                    3) Create a new homepage
+                    4) See my previous homepage
+                    5) Restore my previous homepage
+                    6) Edit my homepage
+                    7) Mail webmaster requesting help
+                    8) Quit
+'
+	echo -n "                    Your choice: "
+	read choice
+	case $choice in
+	1)	clear ; echo -n "
+
+                           Hypertext on Grex
+
+Hypertext is a specially formatted text which is designed to be viewed
+through a viewer (such as Lynx or Mosaic).  When you see your homepage
+in this program, you will see it unprocessed.  It may not be a pretty
+sight.  ;-)
+
+After you exit this program, run lynx and type g. Then at the URL prompt,
+type:
+
+     www/index.html
+
+This will show you what your homepage looks like when it is processed.
+
+
+If you'd like, your homepage can be listed with those of other Grex
+users.  That would make it much easier for you to edit your homepage
+and for others to see it.  Mail the webmaster to have it included
+on the list and available to the World Wide Web.
+
+Press [ENTER]" ; read q
+		;;
+	2)	clear
+		if	test -f $hpt
+		then	grexmore $hpt ; echo -n "Press [ENTER]" ; read q
+		else 	if	test -f $hp
+			then	grexmore $hp ; echo -n "Press [ENTER]" ; read q
+			else	echo '
+  You don'"'"'t yet have a homepage.  Feel free to make one!'
+				sleep 5
+			fi
+		fi
+		;;
+	3)	clear
+		exec 5>&1 >$hpt
+		echo '<html>
+<head>
+<title>'$first"'"'s Home Page</title>
+</head>
+<body>
+<h1>Welcome to my Home Page</h1>
+<p>
+ 
+My name is '$full' and this is my prototype homepage.
+<p>
+ 
+You may <a href=mailto:'$log'@cyberspace.org>send mail</a> to me
+addressed to '$log'@cyberspace.org.
+<p>
+I will be changing or replacing this prototype page, but I will not
+introduce any graphic, audio, or CGI files on Grex, in compliance
+with the Grex policy.
+</body>
+</html>'
+		exec >&5
+		echo
+		echo "You now have a new homepage."
+		echo
+		echo "Note: Because of bandwidth limitations, Grex does not"
+		echo "permit graphic, audio, or CGI files. Please limit your"
+		echo "content to text and hypertext. You may point to any files"
+		echo "on another server, if you like."
+		sleep 10
+		;;
+	4)	clear
+		if	test -f $hp
+		then	grexmore $hp ; echo -n "Press [ENTER]" ; read q
+		else	echo '
+  You don'"'"'t yet have a homepage.  Feel free to make one!'
+			sleep 5
+		fi
+		;;
+	5)	clear
+		if	test -f $hp
+		then	cp $hp $hpt
+		else	echo '
+  You don'"'"'t yet have a homepage.  Feel free to make one!'
+			sleep 5
+		fi
+		;;
+	6)	clear ; echo -n '
+
+To edit your homepage, please exit this program and then run lynx.
+To see your home page, press the "g" key and then type:
+
+       www/index.html
+
+As you are viewing your homepage, press "e" to bring up your editor.
+When you finish editting, you will be back in lynx viewing what your
+homepage looks like.
+
+If you have any web-related questions, please mail the webmaster.
+
+Press [ENTER]' ; read q
+		;;
+	7)	clear
+		echo '
+Your comments and suggestions are most welcome concerning this
+program which is still under development.
+
+Please type in your questions/comments, and I'"'"'ll respond as
+soon as I get a chance, usually in a day or two.
+
+After you finish typing, enter a "." on a new line, then press
+[ENTER] at the "Cc:" prompt.
+
+Your message:
+'
+		mail -s "mkhomepage question" webmaster
+		;;
+	8|q|Q)	clear
+		if test -f $hpt
+			then cp $hpt $hp
+			rm $hpt
+		fi
+		echo '
+    Thanks for using mkhomepage!
+
+    If you have any comments, please mail them to:
+
+    webmaster@cyberspace.org
+
+'
+		quit=y
+		;;
+	*)	echo "                    Please enter a menu choice from 1 to 8"
+		sleep 5
+		;;
+	esac
+done

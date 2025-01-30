@@ -1,0 +1,9 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+echo -n "
+UNIX: mkdir <directory-name>
+
+Name for your new directory? "
+read dir
+mkdir $dir

@@ -1,0 +1,13 @@
+                        Fronttalk Defines:  PRINTMSG
+
+Usage:  DEFINE PRINTMSG "<string>"
+
+The PRINTMSG define is a conference separator printed before the first
+item displayed by a PRINT command.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+  "%QPrinted from %H conference %s on %N"

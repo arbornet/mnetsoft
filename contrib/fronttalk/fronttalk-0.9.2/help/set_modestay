@@ -1,0 +1,12 @@
+                       Fronttalk Setting:  MODESTAY
+
+Usage:  SET MODESTAY
+        SET NOMODESTAY
+
+The MODESTAY flag is similar to the STAY flag, in that it effects what happens
+after you execute commands at the "Respond or Pass?" prompt.  Do you stay at
+the same item, or pass on to the next item?
+
+The STAY flag, however, effects only what happens after the RESPOND command,
+while MODESTAY effects what happens after FORGET, REMEMBER, RETIRE, UNRETIRE,
+FREEZE, THAW, MARK SEEN, FAVOR and DISFAVOR.  The MODESTAY flag defaults on.

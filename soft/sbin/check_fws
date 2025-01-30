@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+
+#
+# Perl script to check for non-existent and long-lost fair witnesses.
+# Written by Valerie Mates, 1/11/98
+#
+
+print "Looking up a list of fair witnesses who haven't logged on in\n";
+print "more than two months, and fair witnesses who don't exist.\n\n";
+
+# Open the lastlog file, for use later:
+open(LASTLOG, "/var/log/lastlog");
+
+# Set date $two_months_ago to date two months ago, for later use.
+# (There are 5184000 seconds in two months (60 days)).
+$two_months_ago = time - 5184000;
+
+# Some other constants
+$lastlog_struct = "l c8 c256";
+$lastlog_sz = 268; # sizeof(struct lastlog) = 4 + 8 + 256
+
+# Read a list of all files in the /bbs directory into array @bbsfiles:
+opendir(BBSDIR, "/bbs") || die "can't open /bbs directory";
+@bbsfiles = readdir(BBSDIR);
+closedir BBSDIR;
+@bbsfiles = sort(@bbsfiles);
+
+# Loop through all files in @bbsfiles to see when each fw was last on.
+foreach $dir (@bbsfiles) {
+   $config_file = "/bbs/$dir/config";
+   if (open(CONFIG, $config_file)) {
+
+      print "Checking $dir...\n";
+
+      # Skip over 3 lines of junk:
+
+      $junk = <CONFIG>;
+      $junk = <CONFIG>;
+      $junk = <CONFIG>;
+
+      # Fair Witness list is on the 4th line.  Read it into var $fw_list.
+      # Close the config file.  Removing trailing newline from $fw_list.
+
+      $fw_list = <CONFIG>;
+      close(CONFIG);
+      chomp($fw_list);
+
+      # Split fair witness list into an array of fws.  Loop through the
+      # fws in the list, checking each one's last login.
+
+      @fw_array = split('[, ]+', $fw_list);
+      foreach $fw (@fw_array) {
+         if ($fw ne "cfadm") {
+            $pw_info = getpwnam($fw);
+            if ($pw_info eq "") {
+               print "   $fw (fw of $dir) does not exist!\n";
+            } else {
+               ($uid, $junk) = split(/:/, $pw_info);
+   
+               # Look up the last time the fw logged in:
+               seek(LASTLOG, $uid * $lastlog_sz, 0);
+               read(LASTLOG, $lastlog[$i], $lastlog_sz);
+               ($last_on, $ll_line, $ll_host) = 
+                                        unpack($lastlog_struct, $lastlog[$i]);
+               $text_last_on = localtime($last_on);
+               if ($last_on < $two_months_ago) {
+                  print "   $fw (fw of $dir) last logged in on $text_last_on\n";
+               }
+            }
+         }
+      }
+   }
+}

@@ -1,0 +1,86 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% begin script
+%
+% This is a home page for the conference administrator.  Offers various links
+% to different administration tools.
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome `(admhome=)SCRIPT_NAME(/)flavor(begin)' def
+
+(<HTML><HEAD>
+<BASE HREF=")backtalkurl(/)flavor(">
+<TITLE>Backtalk Administration Tools</TITLE>
+</HEAD>
+<BODY BGCOLOR=FFFFFF>
+<H1>Backtalk Administration Tools</H2>
+
+<H2>Conferences:</H2>
+
+<UL>
+<LI> <A HREF=askconf?action=editconf&)admhome(>Edit a Conference</A>
+     - change fairwitnesses, change open/close/fishbowl status, or set title.
+<LI> <A HREF=askconf?action=confopt&)admhome(>Configure a Conference</A>
+     - change the various things fairwitnesses can change too: button styles,
+     login screens and colors.
+<LI> <A HREF=askconf?goto=admin/begin&action=editulist&)
+     admhome(>Edit a Conference's User List</A>
+     - for closed conferences, edit the list of users who can enter.
+<LI> <A HREF=makeconf?)admhome(>Make a New Conference</A>
+     - make a new conference.
+<LI> <A HREF=editmenu?)admhome(>Edit the Conference Menu</A>
+     - edit list shown when users ask for a list of conferences.
+<LI> <A HREF=editalias?)admhome(>Edit the Conference Aliases</A>
+     - edit names by which conferences can be accessed.
+<LI> <A HREF=edithot?)admhome(>Edit the Default Conference Hotlist</A>
+     - edit default hotlist for users who don't have their own.
+<LI> <A HREF=askconf?action=killconf&)admhome(>Delete a Conference</A>
+     - erase an entire conference from existance.
+</UL>
+
+<H2>Users:</H2>
+
+<UL>
+<LI> <A HREF=listusers?)admhome(>List Users</A>
+     - list users or search for a user.
+)
+nopwedit ! {
+(<LI> <A HREF=newuser?)admhome(>Create User Account</A>
+     - open a new account for a user.
+) }if
+(<LI> <A HREF=askuser?action=showuser&)admhome(>Edit User Account</A>
+     - change info on a user's personal information, password, conferencing
+     options, ignore list, or timezone.  Also deletes accounts.
+)
+nopwedit ! {
+(<LI> <A HREF=editgroup?)admhome(>Manage User Groups</A>
+     - Edit the list of user groups.
+)} if
+(</UL>
+)
+
+sessions {
+  (<A HREF=")backtalkurl(/public/logout">Logout</A>
+)} if
+
+saverep secure ! or {
+  amadm {
+    (<P><STRONG>Warning:</STRONG> This site has <TT>)
+    saverep {(saverep</TT> set) secure ! {( and <TT>)} if} if
+    secure ! {(secure</TT> not set)} if
+    ( in <TT>script/config.bt</TT>.  This is not secure for production use.)
+  } if
+} if
+
+(</BODY></HTML>
+)

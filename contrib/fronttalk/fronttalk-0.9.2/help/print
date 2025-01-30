@@ -1,0 +1,6 @@
+                       Fronttalk Command:  PRINT
+
+Usage:  PRINT <item range>                               ("Ok:" prompt only)
+
+The PRINT command is mostly equivalent to "READ PASS FF".  It is meant to be
+used to generate output in a printable format.

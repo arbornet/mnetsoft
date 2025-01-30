@@ -1,0 +1,176 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+%
+% Output Script - RSS 0.91 Version
+%
+% NOTES:
+%
+%   - Some specs for RSS 0.91 limits the number of items per channel to 15.
+%     The rss_item function returns true when this limit has been reached,
+%     but the calling program could forge on regardless.
+%
+%   - Limits on most data fields are 100 or 500 characters.  For some fields,
+%     this code will truncate longer values to the maximum legal length.
+%     Email addresses, however, are not truncated.  Overlong email addresses
+%     are deleted entirely.
+%
+%   - Images have a maximum height of 400 and a maximum width of 144.
+%     If not specified, default height is 31, default width is 88.
+%     These limits are not enforced by this script.
+%
+%   - if rss_language is not defined, then we default to 'us-en' for RSS
+%     0.91.
+
+flavor(config)+ include
+
+
+% <time> rtime <string>
+%   Convert a time into an RSS 822 format time string, pleasantly
+%   bastardized with a four digit years.
+/rtime {
+  htime (-) ( ) 0 replace
+} def
+
+
+% <string> <maxlength> maxquote <quotedstring>
+%   Truncates to the given limit and then quotes.  Note that final quoted
+%   string may be longer than limit.  Dunno if this is legal within 0.91 or
+%   not.
+/maxquote {
+  0 exch substr quote
+} def
+
+
+% <fullnamevar> <emailvar> <maxlength> maxusrstr <string>
+%  Given a full name and an email address, make a standard email address
+%  including both.  Limit the length to the given length.  Either both
+%  of name and email can be empty strings or undefined.
+
+/maxusrstr {
+   dict begin
+   /max xdef
+   dup defined {exec} {pop ()} ifelse /em xdef
+   dup defined {exec} {pop ()} ifelse /fn xdef
+   % Over length email parts are deleted completely.
+   em length max gt {/em () def} if
+   em {
+     fn {
+	% have email and name
+        em ( \()+ fn+ max 1 - maxquote (\))+
+     } {
+        em quote
+     } ifelse
+   } {
+     fn {
+       % have name but no email
+       (\() fn+ max 1 - maxquote (\))+
+     } if
+   } ifelse
+   end
+} def
+
+/rss_start {
+   /http_content_type (text/xml) store
+   (<?xml version="1.0"?>
+<!DOCTYPE rss SYSTEM "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+<rss version="0.91">
+)
+   print
+} def
+
+
+/rss_start_channel {
+
+   /rss_language defined ! {/rss_language (en-us) def} if
+
+   (  <channel>
+    <title>)rss_title 100 maxquote(</title>
+    <link>)rss_link 500 maxquote(</link>
+    <description>)rss_description 500 maxquote(</description>
+    <language>)rss_language quote(</language>
+    <docs>http://backend.userland.com/rss091</docs>
+)
+    /rss_copyright defined {
+    	(    <copyright>)rss_copyright 100 maxquote(</copyright>\n)
+    } if
+
+    /rss_managingeditor_name defined  /rss_managingeditor_email defined or {
+    	(    <managingEditor>)
+	      /rss_managingeditor_name /rss_managingeditor_email 100 maxusrstr
+	    (</managingEditor>\n)
+    } if
+
+    /rss_webmaster_name defined  /rss_webmaster_email defined or {
+    	(    <webMaster>)/rss_webmaster_name /rss_webmaster_email 100 maxusrstr
+		(</webMaster>\n)
+    } if
+
+    /rss_image_url defined {
+        (    <image>\n)
+	(      <url>)rss_image_url 500 maxquote(</url>\n)
+	(      <link>)rss_link 500 maxquote(</link>\n)
+	(      <title>)rss_image_title 100 maxquote(</title>\n)
+	/rss_image_description defined {
+	(      <description>)rss_image_description quote(</description>\n)
+	} if
+	/rss_image_width defined {
+	(      <width>)rss_image_width(</width>\n)
+	} if
+	/rss_image_height defined {
+	(      <height>)rss_image_height(</height>\n)
+	} if
+        (    </image>\n)
+    } if
+
+    /rss_textinput_link defined {
+        (    <textinput>\n)
+	(      <title>)rss_textinput_title 100 maxquote(</title>\n)
+	(      <description>)rss_textinput_description 500 maxquote
+	        (</description>\n)
+	(      <name>)rss_textinput_name 20 maxquote(</name>\n)
+	(      <link>)rss_textinput_link 500 maxquote(</link>\n)
+        (    </textinput>\n)
+    } if
+
+    /rss_pubdate defined {
+    	(    <pubDate>)rss_pubdate rtime (</pubDate>\n)
+    } if
+    /rss_lastbuilddate defined {
+    	(    <lastBuildDate>)rss_lastbuilddate rtime (</lastBuildDate>\n)
+    } if
+
+    print
+
+    % Initialiaze item count
+    /rss_item_count 0 def
+
+} def
+
+
+/rss_item {
+
+   (    <item>
+      <title>)rss_title 100 maxquote(</title>
+      <link>)rss_link 500 maxquote(</link>
+)
+  /rss_description defined {
+    (      <description>)rss_description 500 maxquote(</description>\n)
+  } if
+  (    </item>\n)
+  print
+
+  % return true if we have reached or exceeded maximum count
+  % RSS 0.91 allows at most 15 items in a channel
+  /rss_item_count inc
+  rss_item_count 15 ge
+
+} def
+
+
+/rss_end_channel {
+   (  </channel>\n)
+} def
+
+
+/rss_end {
+   (</rss>\n)
+} def

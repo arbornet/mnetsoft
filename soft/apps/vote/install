@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Script to install 'vote' on Grex
+# (not written yet; to install manually, see the instructions in
+# doc/INSTALL)

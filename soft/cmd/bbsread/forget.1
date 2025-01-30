@@ -1,0 +1,48 @@
+.\"	@(#)forget.1	1.0
+.\"
+.TH FORGET 1 "Dec 4, 1995"
+.AT 3
+.SH NAME
+forget \- forget (or remember) a PicoSpan item
+.SH SYNOPSIS
+.B forget
+[-c] <confname> <item>
+.SH DESCRIPTION
+.I Forget
+is a program to mark a PicoSpan item forgotten.
+It is convenient to use when you aren't in that conference.
+For example,
+when you find out that the item you are reading has been linked to another
+conference, you can forget it in that conference so you won't read it again.
+
+If the item is already forgotten, the
+.I forget
+command will remember it instead.
+
+Ordinarily, 
+.I forget
+will only forget items in conference which you have joined in the past.
+However, if the
+.B -c
+flag is given, it will join the conference just so it can forget that item
+(which is weird).
+
+In Yapp environments (but not with Picospan),
+if you have never seen the item you are forgetting,
+the
+.I forget
+command will mark the item text (but not the responses)
+read before forgetting it.
+This is necessary because Yapp cannot forget an unseen item.
+Because of this, if you remember the item again, Yapp will act as if
+you item text has been read (which is weird, but shouldn't occur often).
+
+.SH AUTHOR
+Jan Wolter
+.SH BUGS
+.I Forget 
+will not work on a conference you are currently in.
+.SH "SEE ALSO"
+.IR bbs (1),
+.IR extract (1),
+.IR bbsread (1)

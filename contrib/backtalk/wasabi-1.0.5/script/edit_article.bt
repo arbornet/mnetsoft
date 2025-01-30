@@ -1,0 +1,43 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+
+% Open a conference
+open_conf {
+  (Error: Could not open conference ')conf('.\n)
+  halt
+} if
+
+/newtext defined {
+
+  /resp 0 store
+  /text newtext store
+  edit_resp dup {
+    dup 2 eq {(Article )item( not found) halt} if
+    3 eq {(Permission to edit denied) halt} if
+  } if pop
+
+  flavor(begin)+ jump
+
+} if
+
+
+(0) item this_item { (Cannot access article )item halt } if
+read_item { (Error reading article )item halt } if
+0 read_resp { (No response 0?) halt } if
+(<html>
+<head>
+<title>)conftitle(: Edit Article</title>
+</head>
+<body>
+<h1>Edit Article</h1>
+<form method=post action=edit_article>
+<input type=hidden name=conf value=")conf(">
+<input type=hidden name=item value=")item(">
+<input type=hidden name=texttype value="text/html">
+<br><strong>New HTML Text:</strong><br>
+<textarea name=newtext rows=30 cols=70>)2 read_text quote(</textarea>
+<br>
+<input type=submit value="Post">
+</form>
+</body>
+</html>
+)

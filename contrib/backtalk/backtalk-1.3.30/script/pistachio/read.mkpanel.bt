@@ -1,0 +1,90 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% read.mkpanel script
+%
+% This include file is used to generate a control panel, either in a frame
+% (when called from "read.panel.bt" or in the top-level window (when called
+% from "read.bt").  
+%
+% It expects to find a flag on the top of stack, which, if true, means we are
+% at a good item.
+
+% figure out if there is a next item
+mayread and dup /readitem xdef {
+  isel next_item {() () 0} {} ifelse /nitem xdef /nrsel xdef /nisel xdef
+} {
+  /nitem 0 def
+} ifelse
+
+
+% next item button
+(<TABLE WIDTH=100% BORDER=0>
+<TR><TD ALIGN=LEFT>)
+nitem {
+  (<A TARGET="_parent" HREF="read?isel=)nisel(&conf=)conf(&csel=)csel(&tmprsel=)nrsel
+  showforgotten {(&showforgotten=)showforgotten} if
+  noskip {(&noskip=)noskip} if
+  since {(&since=)since cvi} if
+  (&item=)nitem(&rsel=)rsel(">)nextitem_button(</A>\n)
+} {
+  nonextitem_button(\n)
+} ifelse
+
+% next conf button
+csel next_conf /nconf xdef /ncsel xdef
+nconf {
+  (<A TARGET="_parent" HREF="confhome?conf=)nconf(&csel=)ncsel(&nextnew=">)nextconf_button(</A>\n)
+} {
+  nonextconf_button(\n)
+} ifelse
+
+% favor/disfavor button
+readitem id and {
+  (<A HREF="favor?conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+  (&goto=) /in_frame constant {(read.mktext)}{(read)}ifelse
+  /tmprsel defined {(&tmprsel=)tmprsel} if
+  /at defined {(&at=)at} if
+  noskip {(&noskip=)noskip} if
+  since {(&since=)since cvi} if
+  item (fav) get_item_note 1 eq {
+    (&op=0" TARGET=_self>)disfavor_button(</A>\n)
+  } {
+    (&op=1" TARGET=_self>)favor_button(</A>\n)
+  } ifelse
+} {
+  nofavor_button(\n)
+} ifelse
+
+% forget/remember button
+readitem id and {
+  (<A TARGET="_parent" HREF="forget?conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+  noskip {(&noskip=)noskip} if
+  since {(&since=)since cvi} if
+  forgotten {
+    (&op=remember">)remember_button(</A>\n)
+  } {
+    (&op=forget">)forget_button(</A>\n)
+  } ifelse
+} {
+  noforget_button(\n)
+} ifelse
+
+% itemlist button
+(</TD><TD ALIGN=RIGHT>
+<A TARGET="_parent" HREF="browse?conf=)conf(&csel=)csel(">)itemlist_button(</A>\n)
+
+% confhome button
+(<A TARGET="_parent" HREF="confhome?conf=)conf(&csel=)csel(">)confhome_button(</A>\n)
+
+% entrance button
+(<A TARGET="_parent" HREF=begin>)entrance_button(</A>\n)
+
+% logout button
+sessions { id {
+  (<A HREF=")backtalkurl(/public/logout" TARGET="_parent">)logout_button(</A>\n)
+} if } if
+
+% help button
+(&nbsp;&nbsp;&nbsp;<A TARGET="_parent" HREF=help/read>)help_button(</A>
+</TD></TR></TABLE>
+)

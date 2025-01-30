@@ -1,0 +1,10 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: finger <userid> | more
+
+Who would you like to finger? "
+read person
+echo ""
+finger $person | menumore

@@ -1,0 +1,22 @@
+                     Fronttalk Defines:  RSEP
+
+Usage:  DEFINE RSEP "<string>"
+
+The RSEP define is an item separator used to generate the header line
+printed above each response during a READ.
+
+For full details on its format, see help pages on SEPARATORS, ITEMFUNC,
+ITEMCOND, and SEPDATE.
+
+The default value is:
+
+  "#%r %a:"
+
+Probably a nicer value would be:
+
+  "\n#%r of %n: by %a (%l) on %d:"
+
+If an rsep is set that doesn't include checks to generate special
+messages flagging hidden and erased responses, then Fronttalk will
+automatically extend the isep to print messages like "<scribbled item>"
+if appropriate.

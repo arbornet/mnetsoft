@@ -1,0 +1,81 @@
+.TH LETTER 1  "28 Jan 2003"
+.SH NAME
+letter \- play the n-letter word guessing game
+.SH SYNOPSIS
+.B letter
+[-\fs\fR] [-\fI<size>\fR] [\fI<datafile>\fR]
+.I file
+.SH DESCRIPTION
+.I Letter
+is a mastermind-like guessing game.
+The computer chooses a word with, say, five letters.
+You guess five letter words.  It tells you how many letters are correct,
+that is, how many of the five letters in your guess are the same as the
+letter in the corresponding position in the target word.
+You win when you guess the correct word.
+.LP
+The
+.I letter
+program keeps track of the lowest number of guesses anyone has used to
+successfully guess each word.  If you break a previous record, you will
+be told.
+The
+.I -s
+option cause
+.I letter
+to print out a score summary, telling how many games each user holds the
+record on, and the average of the scores on those record breaking games
+(not on all games the user has played).
+.LP
+You can choose different games by choosing different dictionaries.  The
+standard dictionaries are choosen by by options like
+.IR -4 ,
+.IR -5 ,
+.IR -6 ,
+etc.
+Dictionaries with sizes from 1 to 20 are supplied (though playing at either
+extreme is absurd).
+The default dictionaries are fairly comprehensive.  The words that the
+computer will select from will mostly be found in any good unabridged
+dictionary.  The words allowed as guesses are drawn from a much more
+comprehensive list, including many extremely obscure words.
+No words contain apostrophes.  No proper nouns, contractions, or abbreviations.
+No umlauts or cedillas - just the standard 26 letters.
+.LP
+While entering guesses, you can type a control-R or control-L to redisplay
+the guesses to date.  Unless you are guessing one letter words, entering
+the one-letter word 'r' will do the same thing.
+.SH "DATA FILE FORMAT"
+It is possible to make your own dictionaries.  Give the filename of the
+dictionary on the command line.
+The first line of the dictionary should be like:
+.RS
+.nf
+    6 2342 123 Fred's Own Six-Letter Word List
+.fi
+.RE
+The first number is the length of the words in the file.  All words in 
+a dictionary must be the same length.
+The second number is the number of words in the file.
+The third number is the number of them that can be used as target words
+by the computer.
+The rest of the line is a title describing the word list, which is printed
+before each run.
+.LP
+The rest of the file contains the words, one per line, sorted in alphabetical
+order.  Words that the computer can use as targets should be followed by
+three zeros, and eight stars, like this:
+.RS
+.nf
+    beauty000********
+.fi
+.RE
+Words that are acceptable as guesses, but which will not be target words have
+eleven stars appended.
+.RS
+.nf
+    xyzdgy***********
+.fi
+.RE
+.SH AUTHOR
+Jan Wolter

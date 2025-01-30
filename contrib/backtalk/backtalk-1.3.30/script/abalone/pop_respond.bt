@@ -1,0 +1,80 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% respond script
+%
+% Show a response form in a pop-up window
+%
+% Query Parameters:
+%    conf=	current conference
+%    item=	item to read now, if zero start with first item in isel
+
+flavor(config.bt)+ include
+
+/popup 1 defconstant
+flavor(makeresp.bt)+ include
+/popup undefconstant
+
+/rtype (text/plain) def
+/allowhtml dflt_html def
+
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: )exch(\n) halt
+} if
+
+/noheader 1 defconstant
+`bbsname ( ) conftitle ( )Conference cap( )Item cap( ) item' quote (I)
+[/conf /isel /item /rsel]
+[] [/allowhtml]
+flavor(header.bt)+ include
+
+(
+</TABLE>
+<P>)
+(colhead) rtheader
+
+/none_such {
+  Item cap( )item
+  ( Does Not Exist!</TD></TR></TABLE></BODY></HTML>\n)
+  halt
+} def
+
+mayresp {
+  ($) item this_item { none_such } {read_item { none_such } if } ifelse pop
+  (Responding to )conftitle( )Item cap( #)item(: )title quote
+  24 rtbody
+} {
+  (Response Not Possible: )
+  id {
+    frozen
+      { Item cap(is frozen) }
+      { Conference cap( is read-only) } ifelse
+  } {
+    (You are not logged in)
+  } ifelse
+  (</TD></TR></TABLE>\n)
+} ifelse
+
+% Javascript to close popup on submission
+mainwin!{
+  /javafunc `javafunc (function inmain() {
+  var txt= document.resp.text.value;
+  var tt= document.resp.texttype;
+  if (txt != '') opener.location=document.resp.action+'?conf=)conf
+    (&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+    (&goto=abalone/read&prevmax=)maxresp
+    since {(&since=)since} if
+    showforgotten {(&showforgotten=)showforgotten} if
+    (&pseudo='+escape(document.resp.pseudo.value)+\n)
+    allowhtml {
+    ('&texttype='+tt.options[tt.selectedIndex].value)
+    } {
+    ('&texttype='+tt.value)
+    } ifelse
+    (+'&text='+escape(txt);
+  window.close(); return false;}\n)' def
+} if
+
+global_footer
+(</BODY>
+</HTML>
+)

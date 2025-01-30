@@ -1,0 +1,12 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+UNIX: du
+
+Here is how much disk you're using:
+(This is in 1K BLOCKS)
+
+Checking...
+"
+du

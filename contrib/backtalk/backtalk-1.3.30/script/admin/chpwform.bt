@@ -1,0 +1,59 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% chpwform script
+%
+% This script displays a form in which the user can enter a new password.  The
+% actual password change is done by the changepass.bt script.  It is used both
+% for users to change their own passwords and for system administrators to
+% change other people's passwords.  This script is not useful on systems where
+% nopwedit is true.
+%
+% Query Parameters
+%   uname=	User whose password we want to change
+%   errmesg=	Optional error message to display at the top of the page
+%   admhome=    URL of administrative menu
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+/uname defined ! {(user name not defined) stop} if
+
+% Print the header
+(<HTML><HEAD>
+<TITLE>Change Password for )uname(</TITLE></HEAD>
+<BODY BGCOLOR=white>
+<H1>Change Password for )uname(</H1>
+)
+
+% Display error message from previous attempt, if any
+/errmsg defined {
+  errmsg { (<STRONG>Password not changed: )errmsg(</STRONG><P>\n)} if
+} if
+
+% Display the form -- It's important to use the POST method here, since we
+% don't want these parameters displayed or logged.
+
+(Enter the new password twice, once in each box.
+<FORM METHOD=POST ACTION=changepass>
+<INPUT TYPE=hidden NAME=uname VALUE=)uname(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+New Password: <INPUT TYPE="password" NAME=passwd1> <BR>
+Same Password: <INPUT TYPE="password" NAME=passwd2> <BR>
+<INPUT TYPE=submit VALUE="Change Password">
+</FORM>
+<P>
+Return to <A HREF=)admhome(>admin menu</A>
+<BR>
+Return to <A HREF=showuser?uname=)uname(&admhome=)admhome(>)uname('s page</A>
+</BODY></HTML>
+)

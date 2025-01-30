@@ -1,0 +1,6 @@
+                       Fronttalk Setting:  PASSWORD
+
+Usage:  SET EDALWAYS
+        SET NOEDALWAYS
+
+Not implemented.  Fronttalk is permanently stuck in EDALWAYS mode.

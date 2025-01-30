@@ -1,0 +1,150 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% optform script
+%
+% This generates a form for setting some user options in Pistachio.  The
+% "optset.bt" script is the handler for this.
+%
+% Query Parameters:
+%    uname=	User whose options we are setting
+%    admhome=   URL of administrative menu
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+/uname defined ! {(Oops, no user defined\n)} if
+
+% page header
+(<HTML><HEAD>
+<TITLE>Set Options for )uname(</TITLE></HEAD>
+<BODY BGCOLOR=white>
+<H1>Set Options for )uname(</H1>
+)
+
+% warn off unauthorized users
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+% load current option values
+/frames 1 def
+/rpage 30 def
+/rtype (text/plain) def
+/confsummary 1 def
+/abalone.rpage 25 def
+/abalone.list (hot) def
+/abalone.scheme () def
+uname selectuser
+(*.backtalk)
+  [/frames /rpage /rtype /confsummary /abalone.list /abalone.rpage
+  /abalone.scheme]
+  loadvar pop
+
+(Goto <A HREF=)admhome(>admin home</A><BR>
+Goto <A HREF=showuser?uname=)uname(&admhome=)admhome(>)uname('s page</A>
+<P>
+<STRONG>Note:</STRONG>
+Not all options listed here are used by all interfaces, some of the
+interfaces listed here might not be installed on your system, and some of
+the interfaces installed on your system may have options not listed here.
+<HR>
+<FORM METHOD=POST ACTION=optset>
+<INPUT TYPE=hidden NAME=uname VALUE=)uname(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+)
+
+% page size option
+(<STRONG>Maximum Responses per Page</STRONG><BR>
+Maximum number of responses to show on a single page:
+<BLOCKQUOTE>
+in pistachio and bubblegum:<BR>
+<INPUT TYPE=text NAME=rpage SIZE=4 VALUE=)rpage(><BR>
+in abalone:<BR>
+<INPUT TYPE=text NAME=abalone.rpage SIZE=4 VALUE=)abalone.rpage(>
+</BLOCKQUOTE>
+)
+
+% response type option
+(<STRONG>Default Response Format</STRONG><BR>
+Items and responses may be entered in several different formats at the option
+of the user. This is the default format to use.
+(used by all interfaces except vanilla):
+<BLOCKQUOTE>
+<SELECT NAME=rtype>
+<OPTION VALUE="text/plain">Plain Text
+<OPTION VALUE="text/html")rtype (text/html) eq {( SELECTED)}if(>Pure HTML
+<OPTION VALUE="text/html-blanks")rtype (text/html-blanks) eq {( SELECTED)}if(>lazy HTML
+</SELECT>
+</BLOCKQUOTE>
+)
+
+% frames option:
+(<STRONG>Frames</STRONG><BR>
+Use frames with browsers that support frames (pistachio interface only):
+<BLOCKQUOTE>
+<INPUT TYPE=radio NAME=frames VALUE=1) frames {( CHECKED)} if (> Yes
+&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=frames VALUE=0) frames ! {( CHECKED)} if (> No
+</BLOCKQUOTE>
+)
+
+% conference summary option
+(<STRONG>Conference Summary</STRONG><BR>
+In some interfaces, a list of conferences can be shown on the front page
+when you enter.
+<BLOCKQUOTE>
+in pistachio, should we show summary of activity in all hotlist conferences:
+<BR>
+<INPUT TYPE=radio NAME=confsummary VALUE=1) confsummary {( CHECKED)} if (> Yes
+&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=confsummary VALUE=0) confsummary ! {( CHECKED)} if (> No
+<BR>
+in abalone, which conferences should be listed in the summary:
+<BR>
+<SELECT NAME=abalone.list>
+<OPTION VALUE=hot>Hot List Forums
+<OPTION VALUE=all) abalone.list (all) eq {( SELECTED)} if
+(>All Forums
+</SELECT>
+</BLOCKQUOTE>
+)
+
+% color scheme
+(<STRONG>Abalone Color Scheme</STRONG><BR>
+Which color scheme should be used in the abalone interface:
+<BLOCKQUOTE>
+<TABLE BORDER=0>
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=abalone.scheme VALUE="")
+abalone.scheme () eq {( CHECKED)} if
+(></TD><TD><STRONG>System Default.</STRONG><BR>
+Whatever the system default is.</TD></TR>
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=abalone.scheme VALUE=openforum)
+abalone.scheme (openforum) eq {( CHECKED)} if
+(></TD><TD><STRONG>Green and Grey.</STRONG><BR>
+Highly professional.  Similar to InfoPop OpenForum.</TD></TR>
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=abalone.scheme VALUE=bright)
+abalone.scheme (bright) eq {( CHECKED)} if
+(></TD><TD><STRONG>Maximally Bright.</STRONG><BR>
+Sure cure for Seasonal Affective Disorder (even in the summer).</TD></TR>
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=abalone.scheme VALUE=coffee)
+abalone.scheme (coffee) eq {( CHECKED)} if
+(></TD><TD><STRONG>Coffee Colors.</STRONG><BR>
+So very beige.</TD></TR>
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=abalone.scheme VALUE=dark)
+abalone.scheme (dark) eq {( CHECKED)} if
+(></TD><TD><STRONG>Black and Blue.</STRONG><BR>
+and a little bit of yellow.</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+<INPUT TYPE=submit VALUE="Change Settings">
+</FORM>
+<HR>
+</BODY></HTML>
+)

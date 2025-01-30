@@ -1,0 +1,17 @@
+                       Fronttalk Command:  KILL
+
+Usage:  KILL <item range>
+
+Delete an item permanently and irrevocably from the conference.  Each selected
+items header will be printed, and you will be asked if you really want to
+kill it.
+
+For a full description of item ranges, do "HELP RANGE".  If you just say
+"KILL" without arguments, the default is to kill the current item.
+
+If an item is linked to multiple conferences, this only removes it from the
+current conference, not all other conferences.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+NOCONFIRM flag on the command line.  Then all selected items will be killed
+without stopping to ask if you you really want to kill each one.

@@ -1,0 +1,69 @@
+.\"	@(#)sumcheck.8	
+.\"
+.TH SUMCHECK 8 "May 1, 2001"
+.AT 3
+.SH NAME
+sumcheck \- check, repair or generate a Backtalk conference summary file
+.SH SYNOPSIS
+.B sumcheck
+[-cusnfri] confdir [sumfile]
+.SH DESCRIPTION
+.I Sumcheck
+is a utility for checking, repairing or generating sum files for Backtalk,
+Picospan or Yapp conferences.  It is mainly a debug and error recovery tool,
+since all of these programs normally create and maintain summary files
+automatically.  You only need this if they screw up.
+.PP
+The summary file resides in the conference directory and is normally called
+'sum'.  It contains a header followed by one block of data for each item
+in the conference.  It is used by the conferencing programs to rapidly
+determine which items have had new activity.  All the information in it
+is derived from other data stored in the conference directory.
+.PP
+By default, the sumcheck program examines the existing sum file in the
+given conference directory, and compares it to the actual items stored there.
+If it detects any inconsistancies it prints a message describing them.
+Normally it checks against the file named 'sum' in the given conference
+directory, but you can name a different file if you wish.
+.PP
+If the
+.B \-u 
+update flag is given,
+any errors found will be repaired by modifying the sum file.
+If the
+.B \-c
+create flag is given and the sum file does not already exist, it is created.
+This implies
+.BR \-u .
+.PP
+The
+.B \-s
+silent surpresses the printing of messages describing the differences.
+Note that
+.I sumcheck
+will always return a non-zero return code if any errors were found.
+.PP
+The other flags supress various kinds of error checking.
+The
+.B \-i
+flag is the most useful of these.
+It suppresses checking of item creation dates, which Picospan and Backtalk
+sometimes handle differently - Backtalk extracts the date stored in the
+item file for response 0 (the item text), while Picospan seems to at least
+sometimes use the file creation date.  The difference mostly doesn't matter.
+Note that this flag suppress both the detection and repair of such errors.
+.PP
+Similarly, the
+.B \-n
+flag suppress checks on the numbers of responses,
+the
+.B \-f
+flag suppresses checks on the flags, and
+the
+.B \-r
+flag suppresses checks on the last response date.
+.SH AUTHORS
+Jan Wolter
+(backtalk@hvcn.org)
+.SH "SEE ALSO"
+.IR dumpsum (8)

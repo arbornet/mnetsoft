@@ -1,0 +1,68 @@
+% Functions to generate robots and rss meta tags
+%
+%  This generates all the metatags for a page.  Invoke as:
+%
+%    (<HEAD><TITLE>This is a page</TITLE>\n)
+%    (C) flavor(meta)+ include
+%    (</HEAD>\n)
+%
+%  It expects a flag on the stack that classifies the page.
+%    (S)  page doesn't refer to any particular conference or user.
+%    (C)  page contains an overview of a conference, refering to multiple items
+%    (I)  page refers to just one item
+%    (U)  page refers to one or more users
+%
+%  This loads the /norobot settings from the conference settings page if it
+%  looks like we'll need it.  That means the conference must be open before
+%  calling it, and it might cause us to inefficiently scan the settings file
+%  more than once.
+
+/pagetype xdef
+
+/confrobots defined /biorobots defined or {
+  (lib/robots) include
+} if
+
+/confrobots defined { confrobots 0 gt {
+
+  pagetype (S) eq { index_robot } if
+  pagetype (C) eq pagetype (I) eq or {
+    confrobots 1 eq { /norobots 1 def (*settings) /norobots loadvar pop } if
+    conf_robot
+  } if
+
+} if } if
+
+/biorobots defined { biorobots 0 gt {
+
+  pagetype (U) eq { bio_robot } if
+
+} if } if
+
+use_rss_autodiscovery {
+  pagetype (C) eq expose_rss_conf and {
+    `(<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for items in )
+    bbsname( )'conftitle( Conference" HREF=")
+    anon_url(cinnamon?conf=)conf(">\n)
+  } if
+
+  pagetype (I) eq expose_rss_item and {
+    `(<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for responses to )
+    bbsname( )'conftitle`( Item #)'item(" HREF=")
+    anon_url(cinnamon?conf=)conf(&item=)item(">\n)
+  } if
+} if
+
+/use_atom_autodiscovery defined { use_atom_autodiscovery {
+  pagetype (C) eq expose_rss_conf and {
+    `(<LINK REL="alternate" TYPE="application/atom+xml" )
+    (Title="Atom feed for items in )bbsname( )'conftitle`( Conference" HREF=")'
+      anon_url(cinnamon?conf=)conf(&fmt=Atom-1.0">\n)
+  } if
+
+  pagetype (I) eq expose_rss_item and {
+    `(<LINK REL="alternate" TYPE="application/atom+xml" )
+    (Title="Atom feed for responses to )bbsname( )'conftitle`( Item #)'item
+    (" HREF=")anon_url(cinnamon?conf=)conf(&item=)item(&fmt=Atom-1.0">\n)
+  } if
+} if } if

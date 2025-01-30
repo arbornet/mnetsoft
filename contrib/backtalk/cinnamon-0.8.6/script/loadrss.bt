@@ -1,0 +1,97 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+
+% To load an RSS interface, include this file.  The variable /fmt should be
+% defined before including it.  Legal values for /fmt are:
+%    RSS-0.91
+%    RSS-1.0
+%    RSS-1.1
+%    RSS-2.0
+%    RSS-2.0/DC
+%    Atom-1.0
+% The following also work, but they are essentially jokes:
+%    RSS-3.0
+%    ESF
+% If /fmt is not defined, it will default to RSS-2.0/DC
+% 
+%
+% GENERIC INTERFACE:
+%
+% This defines the following functions, which all take their data from
+% global variables.  You normally use this by first calling rss_start,
+% then rss_start_channel, then one call to rss_item for each item, then
+% rss_end_channel and rss_end.
+%
+%  rss_start - output header of an RSS page.  No inputs.
+%
+%  rss_start_channel - output start of an RSS channel.  Input:
+%    rss_title - title of channel (required)
+%    rss_link - url of channel (required)
+%    rss_description - description of channel (required)
+%    rss_language - language (optional)
+%    rss_copyright - copyright message (optional)
+%    rss_webmaster_name - webmaster fullname (optional)
+%    rss_webmaster_email - webmaster email address (optional)
+%    rss_managingeditor_name - managing editor fullname (optional)
+%    rss_managingeditor_email - managing editor email address (optional)
+%    rss_pubdate - date of publication (optional)
+%    rss_lastbuilddate - date of last update to channel (optional)
+%    rss_image_url - image url (optional)
+%    rss_image_link - image url (required with rss_image_url defined)
+%    rss_image_title - image title (required with rss_image_url defined)
+%    rss_image_description - image description (optional)
+%    rss_image_width - image width (optional)
+%    rss_image_height - image height (optional)
+%    rss_textinput_link - link to search page (optional)
+%    rss_textinput_title - title for search (required with rss_textinput_link)
+%    rss_textinput_description - search des (required with rss_textinput_link)
+%    rss_textinput_name - name for search (required with rss_textinput_link)
+%    rss_categories - like 'realm1:category1,realm2:category2,category3'
+%
+%  rss_item - output an RSS item.  Input:
+%    rss_title - title of item (required)
+%    rss_link - url of item (required)
+%    rss_description - description of item (optional)
+%    rss_author_name - author fullname (optional)
+%    rss_author_email - author email address (optional)
+%    rss_categories - same syntax as in rss_start_channel function (optional)
+%    rss_comments - url of comments page for the item (optional)
+%    rss_enclosure_url - where enclosure is locate (optional)
+%    rss_enclosure_type - type of enclosure (required with rss_enclosure_type)
+%    rss_enclosure_length - length of enclosure (required with rss_enclo*_type)
+%    rss_guid - globally unique id (optional)
+%    rss_quid_permalink - is guid a permalink? (required with rss_guid)
+%    rss_pubdate - publication date of item (optional)
+%  This function returns 'true' if the maximum number of items has been
+%  reached.  It should not be called again after that.
+%
+%  rss_end_channel - output end of an RSS channel.  No inputs.
+%
+%  rss_end - output end of an RSS page.
+
+% If no format defined, do RSS-2.0/DC
+/fmt defined ! { /fmt (RSS-2.0/DC) def } if
+fmt ! { /fmt (RSS-2.0/DC) def } if
+
+% Force to upper case
+/fmt fmt caps def
+
+fmt (RSS-2.0) eq {
+  flavor(rss20)+ call
+} { fmt (RSS-0.91) eq {
+  flavor(rss091)+ call
+} { fmt (RSS-1.0) eq {
+  flavor(rss10)+ call
+} { fmt (RSS-1.1) eq {
+  flavor(rss11)+ call
+} { fmt (RSS-2.0/DC) eq {
+  flavor(rss20dc)+ call
+} { fmt (ATOM-1.0) eq {
+  flavor(atom10)+ call
+} { fmt (RSS-3.0) eq {
+  flavor(rss30)+ call
+} { fmt (ESF) eq {
+  flavor(esf)+ call
+} {
+    (<error>Unknown Format: )fmt(</error>\n)
+    halt
+} ifelse } ifelse } ifelse } ifelse } ifelse } ifelse } ifelse } ifelse

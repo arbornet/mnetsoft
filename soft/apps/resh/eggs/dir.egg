@@ -1,0 +1,27 @@
+(shelling to script....)
+
+CONNECTING TO TOPS-20...DONE
+
+CONNECT 9600
+
+@login jmf
+ Job 8 on TTY42 22-Oct-2037 2:53PM
+ Previous LOGIN: 22-Oct-2037 1:44AM
+
+WELCOME TO TOPS-20
+
+@dir
+
+   PS:<JMF>
+ EMACS.TECO.2047
+ INIT.LSP.29
+ NOTIT.MAC.2
+ ZORK.SAV.4
+
+ Total of 127 pages in 4 files
+@ ^C
+
+Killed Job 8, User JMF TTY42 grex.org, at 22-Oct-2037 14:53PM
+ Used 0:00:00 in 0:00:23
+*EOF*
+Connection closed by foreign host.

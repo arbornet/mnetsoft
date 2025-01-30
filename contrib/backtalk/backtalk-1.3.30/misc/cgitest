@@ -1,0 +1,44 @@
+#!/bin/sh
+sedcmd="sed -e s/&/\&amp;/g -e s/</\&lt;/g -e s/>/\&gt;/g"
+echo "Content-type: text/html"
+echo ""
+echo "environment variables:<BR>"
+echo "HTTP_USER_AGENT=${HTTP_USER_AGENT-undefined}" | $sedcmd
+echo "<BR>"
+echo "PATH_INFO=${PATH_INFO-undefined}" | $sedcmd
+echo "<BR>"
+echo "PATH_TRANSLATED=${PATH_TRANSLATED-undefined}" | $sedcmd
+echo "<BR>"
+echo "QUERY_STRING=${QUERY_STRING-undefined}" | $sedcmd
+echo "<BR>"
+echo "REMOTE_ADDR=${REMOTE_ADDR-undefined}" | $sedcmd
+echo "<BR>"
+echo "REMOTE_HOST=${REMOTE_HOST-undefined}" | $sedcmd
+echo "<BR>"
+echo "REMOTE_USER=${REMOTE_USER-undefined}" | $sedcmd
+echo "<BR>"
+echo "SCRIPT_NAME=${SCRIPT_NAME-undefined}" | $sedcmd
+echo "<BR>"
+echo "HTTP_HOST=${HTTP_HOST-undefined}" | $sedcmd
+echo "<HR>"
+echo "httpd id:<BR>"
+# Go through absurd permutations to identify our id in a portable way.
+# First see if the gnu 'id' command is in our path.
+p=`echo $PATH | sed 's/:/ /g'`
+c=id
+for d in $p /usr/local/bin; do
+   if test -e "$d/$c"; then
+      f="$d/$c"
+      break
+   fi
+done
+if test -z $f; then
+   # No 'id' program.  Try creating a file and using 'ls' to find owner
+   f=/tmp/cgitest$$
+   touch $f
+   ls -l $f | sed 's/^ *-[^ ]* [ 0-9]*\([^ 0-9][^ ]*\) .*$/\1/'
+   rm -f $f
+else
+   # Have 'id' program.  Use it.
+   $f | $sedcmd
+fi

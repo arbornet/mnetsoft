@@ -1,0 +1,82 @@
+% Backtalk Library Routines -- (c) 2005, Jan Wolter, Steve Weiss
+%
+% Functions to walk through the list of conferences
+%
+%   - firstconf <confname> <conftitle> <confdes>
+%   - nextconf <confname> <conftitle> <confdes>
+%
+%  If <confname> and <conftitle> are both empty, we have reached end of conf
+%  list.  If <confname> is empty but <conftitle> is not, then we have a
+%  header line.
+
+/usepublic_txt constant {
+
+  /nextconf {
+    dict begin
+
+    {
+      % get next line
+      cfl_remainder (\n) parse exch /cfl_remainder xstore
+      /ln xdef
+
+      ln ! {
+	% End of list
+	() () ()
+	break
+      } {
+	% check if it is a conference line
+	ln pt_confline sgrep {
+	  aload 3 -1 roll pop ()
+	  break
+	} {
+	  % check if it is a header line
+	  ln pt_headline sgrep {
+	    () exch 1 get ()
+	    break
+	  } if
+	} ifelse
+      } ifelse
+    } loop
+
+    end
+  } def
+
+
+  /firstconf {
+    % Load the "public.txt" file
+    bbsdir (/public.txt) + read /cfl_remainder xdef
+    nextconf
+  } def
+
+} {
+
+  /nextconf {
+    dict begin
+    % get next non-comment line
+    {
+      cfl_remainder (\n) parse exch /cfl_remainder xstore
+      % if it's not a comment, stop getting lines
+      dup 0 1 substr (#) ne { break} if
+      % discard comment line
+      pop
+    } loop
+    /ln xdef
+
+    ln ! {
+      % end of list
+      () () ()
+    } {
+      % parse the line
+      ln (:) clip exch (:) clip exch
+    } ifelse
+    end
+  } def
+
+
+  /firstconf {
+    % Load the confmenu file
+    (*confmenu) read /cfl_remainder xdef
+    nextconf
+  } def
+
+} ifelse

@@ -1,0 +1,48 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+/http_content_type (text/plain) store
+
+open_conf
+{(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+conf_new /unsee xdef /newr xdef /newi xdef /items xdef
+
+% find first item number
+/rsel (all) store
+/showforgotten 1 store
+(1-$) next_item {0}{exch pop exch pop} ifelse /minitem xdef
+
+(<CONF NAME=")conftitle quote(" FW=")fwlist quote(")
+mayresp !{( READONLY)} if
+maypost !{( NOENTER)} if
+fishbowl {( FISHBOWL)} if
+userlist {( USERLIST)} if
+grouplist {( GROUPLIST)} if
+secret {( PASSWORD)} if
+( PARTFILE=)particip quote
+( LOGINDATE=)(*login)filedate
+( LOGOUTDATE=)(*logout)filedate
+( INDEXDATE=)(*index)filedate
+( BULLDATE=)(*bull)filedate
+( WELCOMEDATE=)(*welcome)filedate
+( CONFRCDATE=)(*confrc)filedate
+( ULISTDATE=)(*ulist)filedate
+( GLISTDATE=)(*glist)filedate
+(>
+<ITEMS FIRST=)minitem( LAST=)maxitem( N=)items(>
+)
+id {(<USER NAME=")alias quote(" NEWRESP=)newr( NEWITEM=)newi( UNSEEN=)unsee
+  ( LASTIN=)last_in_conf cvi
+  amfw {( FAIRWITNESS)} if
+  (>\n) } if
+(<LOGIN>
+)conf_login quote
+(</LOGIN>
+<LOGOUT>
+)conf_logout quote
+(</LOGOUT>
+<CONFRC>
+)(*confrc)read quote
+(</CONFRC>
+)

@@ -1,0 +1,69 @@
+#!/bin/sh
+
+PATH=/cyberspace/bin:/usr/local/bin:/bin:/usr/bin;export PATH
+
+echo 'This is the program to change settings on Grex accounts'
+echo 'Written by Valerie Mates 3/23/96'
+
+# Version 7/31/96
+# This script is released into the public domain.
+# If you run this script on your own system, I'd appreciate an e-mailed note.
+# I'm curious about where my scripts travel to. - valerie@cyberspace.org
+
+while true
+do
+	echo ' '
+	echo 'What would you like to change?'
+	echo 'P) Password'
+	echo 'S) Shell - for example, change to menu shell, or csh shell'
+	echo 'N) Name (your name)'
+	echo 'W) Write settings - can people send you chat requests, tels, etc?'
+	echo 'F) Forward mail'
+	echo -n 'M) My finger settings - info about you in your .plan file + '
+	echo 'who can read it'
+	echo 'C) Cflist - the list of conferences you see in BBS'
+	echo 'Q) Quit program'
+	echo ' '
+	echo -n 'Choice: '
+	read choice
+
+	case $choice in
+
+		p|P)
+			exec passwd
+			;;
+
+		s|S)
+			exec chsh
+			;;
+
+		n|N)
+			exec chfn
+			;;
+
+		w|W)
+			exec change_write_perms
+			;;
+
+		f|F)
+			echo ' '
+			exec forward
+			;;
+
+		m|M)
+			echo ' '
+			exec change_plan
+			;;
+
+		c|C)
+			echo ' '
+			exec cflbuild
+			;;
+
+		q|Q)
+			echo ' '
+			exit
+			;;
+
+	esac
+done

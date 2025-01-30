@@ -1,0 +1,17 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% vanilla/hide - hides, shows, and erases responses (works with read)
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+fn (E) eq
+  { erase_resp }
+  { fn (H) eq hide_resp }
+  ifelse
+
+{
+  (Backtalk error: could not )
+  fn (E) eq {(Erase)} {fn (H) eq {(Hide)} {(Show)} ifelse } ifelse
+  ( response ) resp ( of item ) item ( in the ) conf ( conference.\n) halt} if
+
+flavor (read) + jump

@@ -1,0 +1,26 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+(User List Page) (pistachio/help/header) include
+
+(<H2>The User List Page:</H2>
+
+The user list page allows you to list users on the system,
+either listing all users, or only those with names containing a
+string you type.
+<P>
+To list all users, leave the text box empty, and just click ``Do Scan''
+<P>
+To search for particular users, type any fragment of their name into
+the text box, and then click ``Do Scan''.
+<P>
+You will be presented with a list of users who matched your query.
+You can click on their names to find out more information about the user.
+<P>
+If more than 40 people matched your request, only the first 40 will be
+displayed.  To see the next 40, click on ``More Matches.''
+)
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,8 @@
+                       Fronttalk Command:  PASS
+
+Usage: PASS                                 ("Respond or Pass?" prompt only)
+
+Go on to the next item without posting a response to the current item.
+
+Hitting return without entering a command does the same thing as the PASS
+command.

@@ -1,0 +1,51 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% cfform - webscript code to process changes to .cflist
+
+% macro parseline. snatches next number from "linenum" list of line numbers,
+% converts it to numeric, and puts it in curli
+% updates linenum
+% curli set to 0 if no line numbers left
+
+/parseline
+{linenum (,) parse /curline xdef /linenum xstore 
+ (0) curline + cvi /curli xdef } 
+def
+
+/linenum defined ! {() /linenum xdef (top) /movewhere xdef} if
+1 /lnum xdef parseline
+
+() /matched xdef () /unmatched xdef () /toadd xdef
+
+% loop through conferences
+% moving lines to matched" or "unmatched" depending on whether the
+% line number appears in linenum
+
+1 cflist_array { /conf xstore
+  lnum curli eq
+  { matched conf (\n) + + /matched xdef parseline}
+  { unmatched conf (\n) + + /unmatched xdef }
+  ifelse
+  /lnum inc
+} forall
+
+% now loop through each field of csel, making a list of confs to add
+csel {
+  { csel (,) parse /conf xstore /csel xstore
+    toadd conf (\n) + + /toadd xdef
+    csel
+  } while
+} if
+
+% now reassemble matched and unmatched
+movewhere (top) eq 
+{ matched unmatched + }
+{ unmatched movewhere (bottom) eq {matched +} if } 
+ifelse /remainder xdef
+
+% now reassemble with added confs if any
+addwhere (top) eq { toadd remainder } {remainder toadd } ifelse
++ (*.cflist) write
+
+% now return to show the cfmod dialog
+flavor (conflist) + jump

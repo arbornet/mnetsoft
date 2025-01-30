@@ -1,0 +1,104 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% changeuser script
+%
+% The changeuser script processes submissions of new personal information from
+% the "showuser.bt" script.  It can update either the tags in the .backtalk file
+% or the body of the .plan file.
+%
+% Query Parameters (if /useplan is defined):
+%    uname=	Login name of the user whose bio we are changing
+%    plan=      New body of .plan file
+%
+% Query Parameters (if /useplan is not defined):
+%    uname=	Login name of the user whose bio we are changing
+%    privacy=   User wants information to be secret if this is defined as 1
+%    birth=	User's birthdate
+%    fullname=	User's fullname
+%    email=	User's email address
+%    sex=       User's gender
+%    telephone= User's phone number
+%    bio=       User's biography text
+%    url=       User's home page url
+%    primegroup=User's primary group name or id
+%    oldaltgroup= Comma-separated list of user's current other groups
+%    altgroup=  Comma-separated list of user's future other groups
+
+% lookup old fullname and home directory from the password info
+uname userinfo
+   /status xdef
+   /laston xdef
+   /userdir xdef
+   /ofullname xdef
+   /ogid xdef	% discard group id number
+   pop	% discard user id number
+
+% userinfo returns () if there is no such user
+userdir ! {
+  (<HTML><BODY BGCOLOR=white>User ")uname
+  (" no longer appears to have an account.</BODY></HTML>\n)
+  halt
+} if
+
+% get the generic user information routines
+(lib/userinfo) include
+
+checkinfo {/errmsg xdef flavor(showuser)+ jump} if
+
+% Get new gid number
+/primegid primegroup groupid def
+primegid 0 lt {
+  /errmsg `(Group ")primegroup(" does not exist)' def
+  flavor(showuser)+ jump
+} if
+
+% update primary gid number, if it is different
+primegid ogid ne {
+   uname primegid changegroup dup
+   { /errmsg xdef flavor(showuser)+ jump } {pop} ifelse
+} if
+
+% update alternate groups
+/altgroup dup () default def
+oldaltgroup altgroup ne {
+  % remove him from any groups no longer checked
+  [oldaltgroup (,) split] {
+    /g xdef
+    g altgroup (,) inlist ! {
+      g uname delgroupmem pop
+    } if
+  } forall
+  % insert him in any groups newly checked
+  [altgroup (,) split] {
+    /g xdef
+    g oldaltgroup (,) inlist ! {
+      g uname newgroupmem pop
+    } if
+  } forall
+} if
+
+uname selectuser
+
+/useplan constant {
+
+  % update .plan file
+
+  plan (*.plan) write
+
+} {
+
+  % update .backtalk file
+  saveinfo
+
+} ifelse
+
+% if there is a new full name given, do the change
+fullname ofullname ne nopwedit ! and {
+  fullname changename
+  dup {(Fullname not changed: )exch + /errmsg xdef} {pop} ifelse
+} if
+
+% reset the user
+() selectuser
+
+flavor(showuser)+ jump

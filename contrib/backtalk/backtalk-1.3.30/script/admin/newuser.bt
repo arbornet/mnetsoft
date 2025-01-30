@@ -1,0 +1,157 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% newuser script
+%
+% This is a form/handler which administrators can use to create a new account.
+% It offers a few more options than the public script does.
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+/err () def
+
+(<HTML>
+<HEAD><TITLE>Create New Account</TITLE></HEAD>
+<BODY BGCOLOR="white">
+<H1>Create New Account</H1>
+
+)
+
+(lib/userinfo) include
+
+/login defined /passwd1 defined and /passwd2 defined and /group defined and
+/fullname defined and {
+
+  % some basic error checks
+  fullname ! {/err `err (No full name was given.\n)' def} if
+  login ! {/err `err (No login name was given.\n)' def} if
+  passwd1 ! {/err `err (The first password box was blank.\n)' def} if
+  passwd2 ! {/err `err (The second password box was blank.\n)' def} if
+  passwd1 passwd2 and passwd1 passwd2 ne and
+    {/err `err (The two passwords do not match.\n)' def
+    /passwd1 () def
+    /passwd2 () def
+  } if
+
+ err ! {
+
+    % Check sanity of various fields
+    checkinfo {/err xdef} if
+
+    % Create the account
+    err ! {
+      login fullname passwd1 group [/privacy infovars] newuser /err xdef
+    } if
+
+    err ! {
+      /altgroups defined {
+        /altgroups altgroups(,)+ def
+        % Insert user into secondary groups
+        {
+          altgroups () eq {break} if
+	  altgroups ( ,) parse exch /altgroups xdef
+	  login newgroupmem pop
+        } loop
+      } if
+
+      % Declare the job a success
+      (Login )login( created for user )fullname
+      (\n<P>\n<A HREF=)admhome(>Return to Admin Menu</A>\n<P>\n)
+      (<A HREF=newuser?admhome=)admhome
+      (>Create Another Account</A>\n</BODY></HTML>\n)
+      stop
+    } if
+  } if
+} if
+
+err {
+  (<FONT COLOR=red><STRONG>Please correct the following errors:</STRONG><UL>\n)
+  /err err(\n)+ def
+  {
+     err () eq {break} if
+     err (\n) parse exch /err xdef
+     (</UL>)exch(\n)
+  } loop
+  (</TD></FONT>\n)
+} if
+
+/fullname dup () default store
+/login dup () default store
+/privacy dup 0 default store
+/passwd1 dup () default store
+/passwd2 dup () default store
+
+(<P><A HREF=)admhome(>Return to Admin Menu</A>
+<FORM ACTION="newuser" METHOD=POST>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+
+<H2>Account Identification</H2>
+
+<STRONG>Full Name:</STRONG>
+<INPUT NAME=fullname VALUE=")fullname quote(" SIZE=40> 
+<BLOCKQUOTE>
+This is the user's name as it will be displayed to other users.
+</BLOCKQUOTE>
+<STRONG>Login ID:</STRONG>
+<INPUT NAME=login VALUE=")login quote(" SIZE=)loginlen(>
+<BLOCKQUOTE>
+Account must have a unique login ids with no more than )loginlen( characters.
+</BLOCKQUOTE>
+<STRONG>Password:</STRONG>
+<INPUT TYPE="password" NAME="passwd1" VALUE=")passwd1 quote(" SIZE=12>
+<STRONG>Same Password Again:</STRONG>
+<INPUT TYPE="password" NAME="passwd2" VALUE=")passwd2 quote(" SIZE=12>
+)
+amadm {
+  (<P><STRONG>Primary Group:</STRONG> <SELECT NAME=group>\n)
+  [groups] {
+    (<OPTION VALUE=")exch dup(")exch
+    dup /group dfltgroup default eq {( SELECTED)exch}if
+    (>)exch(\n)
+  } forall
+  (</SELECT>
+  <P><STRONG>Other Groups:</STRONG><BR>
+  <TABLE WIDTH=100%>\n)
+  /ncol 6 defconstant
+  /col 0 def
+  /glist /altgroups () default def
+  [groups] {
+    /g xdef
+    col 0 eq {(<TR>)} if
+    /col inc
+    (<TD><INPUT TYPE=checkbox NAME=altgroups VALUE=)g
+    g glist (\n ,;\t) inlist {( CHECKED)} if
+    (> )g(&nbsp;&nbsp;&nbsp;&nbsp;</TD>)
+    col ncol eq {(</TR>\n) /col 0 def} if
+  } forall
+  (</TABLE>\n)
+} {
+  (<INPUT TYPE=hidden NAME=group VALUE=)dfltgroup(>\n)
+  (<INPUT TYPE=hidden NAME=altgroups VALUE="">\n)
+} ifelse
+
+(<HR>
+<H2>Personal Information</H2>
+)
+
+{(<BR>)} () () promptinfo
+
+anonymity 3 lt {
+  /privacy dup (x) default def
+  (<P> <STRONG>Privacy:</STRONG>
+  Who may see the information in this section of the form?
+  <BR><INPUT TYPE="radio" NAME=privacy VALUE=0 )
+  privacy ! {( CHECKED)} if (> All )
+  (Privileged users) (authenticated users) (users) 3 anonymity select (.
+  <BR><INPUT TYPE="radio" NAME="privacy" VALUE=1)
+  privacy {( CHECKED)} if (> Admins only.\n)
+} {
+  (<INPUT TYPE=hidden NAME=privacy VALUE=1>\n)
+} ifelse
+
+(<P>
+<INPUT TYPE=submit VALUE="Submit">.
+</FORM>
+<HR>
+</BODY>
+</HTML>
+)

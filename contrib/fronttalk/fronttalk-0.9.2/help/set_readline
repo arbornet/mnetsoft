@@ -1,0 +1,25 @@
+                       Fronttalk Setting:  READLINE
+
+Usage:  SET READLINE
+        SET NOREADLINE
+
+"Readline" is a standard Unix package used by many shells to allow command
+line editing.  When READLINE is turned on in Fronttalk, they you can use
+the arrow keys and other control keys to edit commands you are typing,
+our to go back (with the up-arrow key) and edit and re-enter previous
+commands.
+
+READLINE defaults on in Fronttalk, but if your system doesn't have any
+Perl Term::ReadLine library installed, or if you turn it off, Fronttalk
+still work, minus the command line editing capability.
+
+The main reason for turning it off is that at least some versions of the
+Perl::ReadLine modules seem to be rather flakey, and prone to causing
+"Segmentation Fault" crashes.
+
+There are two different modules around, and if your system has both installed,
+you can select which one to use by setting the PERL_RL environment variable
+to "Perl" (for Term::ReadLine::Perl) or "Gnu" (for Term::ReadLine::Gnu) before
+running Fronttalk.
+
+DISPLAY READLINE will tell you which ReadLine library Fronttalk is using.

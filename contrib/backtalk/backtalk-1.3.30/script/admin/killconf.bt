@@ -1,0 +1,108 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% killconf script
+%
+% This script displays the form for kiling a conference as well as a
+% confirmation screen and finally does the conference killing.
+%
+% Query Parameters:
+%   conf=	if defined, this the conference to kill.
+%   c1,c2,c3=	if confirmed, these should be "Y" "E" and "S" respectively.
+%    admhome=   URL of administrative menu
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+(<HTML><TITLE>Backtalk Conference Deletion</TITLE>
+<BODY BGCOLOR=FFFFFF>
+<H1>Backtalk Conference Deletion</H2>
+)
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+(This screen deletes a conference and all its items from the system.
+If you do this, it will not be possible to recover the contents.
+<P>
+)
+
+% decide if we have a valid conference name
+conf {
+  open_conf {(Conference )conf( does not exist.\n) /conf () store} if
+  close_conf
+} if
+
+% If conference name not given, ask for a conference name
+conf ! {
+   (<FORM METHOD=post ACTION=)SCRIPT_NAME(/admin/killconf>\n)
+   (<INPUT TYPE=hidden NAME=admhome VALUE=)+admhome(>\n)
+   (Conference to Delete: <INPUT TYPE=text NAME=conf SIZE=20>\n)+
+   (<INPUT TYPE=submit VALUE="Kill It">\n</FORM></BODY></HTML>\n)+
+   (<P><A HREF=begin>Return to adminstration page</A>.\n)+
+   stop
+} if
+
+% decide if we have a confirmation
+/c1 defined /c2 defined /c3 defined and and {
+  /confirmed c1 (Y) eq c2 (E) eq c3 (S) eq and and def
+} {
+  /confirmed 0 def
+} ifelse
+
+% if confirmed, do the deletion
+confirmed {
+  pop	% discard the 'what this page does' message
+  conf del_conf
+  (Conference )conf( deleted.<P>
+  You may want to check if it is still in the <A HREF=editmenu>conference
+  menu</A> or the global default hot list.<P>
+  <A HREF=)admhome(>Return to Admin Page</A>
+  </BODY></HTML>\n)
+  stop
+} if
+
+% if not confirmed ask for confirmation
+(You have asked to delete the )conf( conference.
+This will destroy all items and responses in the conference, along with all
+configuration information and all user's participation files.
+Unless you have a back up, none of this will be recoverable.
+<P>
+If you are really sure this is what you want to do, use the three boxes below
+to spell the word "<TT>YES</TT>".
+<P>
+<FORM METHOD=post ACTION=)SCRIPT_NAME(/admin/killconf>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<STRONG>Are you sure you want to kill the )conf( conference?</STRONG>
+<SELECT NAME=c1>
+<OPTION>A<OPTION>B<OPTION>C<OPTION>D<OPTION>E<OPTION>F<OPTION>G<OPTION>H
+<OPTION>I<OPTION>J<OPTION>K<OPTION>L<OPTION>M<OPTION>N<OPTION>O<OPTION>P
+<OPTION>Q<OPTION>R<OPTION>S<OPTION>T<OPTION>U<OPTION>V<OPTION>W<OPTION>X
+<OPTION>Y<OPTION>Z
+</SELECT>
+<SELECT NAME=c2>
+<OPTION>A<OPTION>B<OPTION>C<OPTION>D<OPTION>E<OPTION>F<OPTION>G<OPTION>H
+<OPTION>I<OPTION>J<OPTION>K<OPTION>L<OPTION>M<OPTION>N<OPTION>O<OPTION>P
+<OPTION>Q<OPTION>R<OPTION>S<OPTION>T<OPTION>U<OPTION>V<OPTION>W<OPTION>X
+<OPTION>Y<OPTION>Z
+</SELECT>
+<SELECT NAME=c3>
+<OPTION>A<OPTION>B<OPTION>C<OPTION>D<OPTION>E<OPTION>F<OPTION>G<OPTION>H
+<OPTION>I<OPTION>J<OPTION>K<OPTION>L<OPTION>M<OPTION>N<OPTION>O<OPTION>P
+<OPTION>Q<OPTION>R<OPTION>S<OPTION>T<OPTION>U<OPTION>V<OPTION>W<OPTION>X
+<OPTION>Y<OPTION>Z
+</SELECT><BR>
+<INPUT TYPE=submit VALUE="Kill )conf(">
+</FORM>
+<P>
+If you don't want to kill )conf(,
+<A HREF=)admhome(>return to the adminstration page</A>.
+</BODY></HTML>
+)

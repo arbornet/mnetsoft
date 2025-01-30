@@ -1,0 +1,16 @@
+% Copyright 2005, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to resign from a conference
+%   conf          conference
+% Response:
+%   <DONE>
+% or
+%   <ERROR MSG=whatever>
+
+/http_content_type (text/plain) store
+
+% open conference - and make a list of the items to link over
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+resign_conf
+(<DONE>\n)

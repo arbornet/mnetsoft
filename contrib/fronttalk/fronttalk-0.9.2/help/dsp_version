@@ -1,0 +1,6 @@
+                   Fronttalk Display Value:  VERSION
+
+Usage:  DISPLAY VERSION
+
+Display software version numbers of the Fronttalk client being run,
+and of the Fronttalk server scripts on the currently connected server.

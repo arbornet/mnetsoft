@@ -1,0 +1,456 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% read script
+%
+% Read all or part of an item.
+%
+% Query Parameters:
+%    conf=	current conference
+%    csel=	selector for future conferences to read
+%    item=	item to read now, if zero start with first item in isel
+%    isel=	selector for items to read after this
+%    rsel=	response selector - (all) (new) (since) or numeric range
+%    tmprsel=   responses to actually show - (back) (fore) (first) (last) range
+%    noskip=	if true, display even items with no selected responses.
+%    since=	if rsel is (since) this gives date.
+%    showforgotten= show all, unforgotten, or forgotten items.
+%    slipped=   set to old resp text if displaying slipped in messages.
+%    sliptype=  set to old resp type if displaying slipped in messages.
+
+flavor(buttondef)+ include
+
+/shyfile constant {flavor(unreg)+ include} if
+
+% construct byline macro used in more than one place
+/byline {
+ mayseealias {
+   ( by <I>)authorname quote(</I> \(<A HREF=")
+   /extern_bio constant {
+     (lib/biolink) include
+     authorid extern_view_bio
+   } {
+     (bio?login=)authorid
+   } ifelse
+   (">)
+   authorid expand (</A>\) on )
+ } {
+   ( by <FONT COLOR=red>)authorid expand (</FONT> on )
+ } ifelse
+ date
+} def
+
+/toprows 1 def
+
+% scrollup form macro
+/scrollup {
+  /first 0 def
+  [
+  resp 0 gt amfw or {
+    /toprows 2 def
+
+    /args `(conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+    (&at=)resp
+    noskip {(&noskip=)noskip} if
+    since {(&since=)since} if
+    showforgotten {(&showforgotten=)showforgotten} if
+    ' def
+
+    (<TD VALIGN=bottom>)
+    resp 0 gt {
+      (<A HREF="read?)args(&tmprsel=back">Previous )
+      resp rpage gt {rpage} {resp} ifelse
+      dup( )exch 1 eq {Response cap}{Responses cap} ifelse (</A>\n)
+      amfw {( | )} if
+    } if
+
+    amfw {
+      frozen {
+        (<A HREF="itemop?op=T&)args(">Thaw )Item cap(</A>\n)
+      } {
+        (<A HREF="itemop?op=F&)args(">Freeze )Item cap(</A>\n)
+      } ifelse
+      (| )
+      retired {
+        (<A HREF="itemop?op=U&)args(">Show )Item cap(</A>\n)
+      } {
+        (<A HREF="itemop?op=R&)args(">Hide )Item cap(</A>\n)
+      } ifelse
+      (| <A HREF="itemop?op=K&)args(">Delete )Item cap(</A>\n)
+    } if
+    (</TD></TR><TR>)
+  } if
+  ] exch
+} def
+/first 1 def
+
+% scrolldown form macro
+/scrolldown {
+  /left maxresp resp - def
+  (<A HREF="read?conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+  (&at=)resp(&tmprsel=)nrs{nrs}{(fore)}ifelse
+  noskip {(&noskip=)noskip} if
+  since {(&since=)since} if
+  showforgotten {(&showforgotten=)showforgotten} if
+  (">)
+  cnt {(Next )}{(First )}ifelse
+  left rpage gt{rpage}{left}ifelse
+  dup( )exch 1 eq{Response cap}{Responses cap}ifelse(</A>\n)
+} def
+
+% response control panel macro
+/rcp {
+  resp {(<BR CLEAR=ALL><HR>)} if
+  id mayhide mayerase mayedit or or and {
+    (<DIV ALIGN=right>)
+    mayhide {
+      (<A HREF="hide?conf=)conf(&csel=)csel(&item=)item(&resp=)resp
+      since{(&since=)since}if noskip {(&noskip=)noskip}if
+      showforgotten{(&showforgotten=)showforgotten}if
+      (&isel=)isel(&rsel=)rsel(&fn=)
+      hidden {(S" target="_self">Show)} {(H" target="_self">Hide)} ifelse
+      (</A>\n)
+    } if
+    mayerase {
+      (<A HREF="hide?conf=)conf(&csel=)csel(&item=)item(&resp=)resp
+      since{(&since=)since}if noskip {(&noskip=)noskip}if
+      showforgotten{(&showforgotten=)showforgotten}if
+      (&isel=)isel(&rsel=)rsel(&fn=E" TARGET=_self>Erase</A>\n)
+    } if
+    mayedit {
+      (<A HREF="edit?conf=)conf(&csel=)csel(&item=)item
+      (&resp=)resp(&lastresp=)maxresp
+      since{(&since=)since}if noskip{(&noskip=)noskip}if
+      showforgotten{(&showforgotten=)showforgotten}if
+      (&isel=)isel(&rsel=)rsel(" TARGET=_self>Edit</A>\n)
+    } if
+    (</DIV>)
+  } if
+} def
+
+% <what> show_text <text>...
+/show_text {
+  /what xdef
+  /cnt inc
+  /ignore 0 def
+  twitlist {authorid twitlist (,) inlist {/ignore 1 def} if } if
+  hidden erased ignore or or {
+    erased {
+      (<I>This )what( has been erased.</I>)
+    } {(<A HREF="view?conf=)conf(&csel=)csel(&item=)item
+        (&resp=)resp("><I>View )
+        ignore {(ignored )}{(hidden )}ifelse
+        what(</I></A>.)
+    } ifelse
+    resp 1 + item mark_unseen pop
+    (<P>\n)
+  } {
+    /shyfile constant {form_text} {1 read_text} ifelse
+    attachments {
+      (<P><FONT SIZE=-1><EM><U>Attachments</U>:</EM>\n)
+      {
+        attachments (,) clip /hand xdef /attachments xstore
+        (<BR>&nbsp;&nbsp;)
+        hand get_attach dup 0 gt {
+          1 eq { (<EM>Deleted</EM>) }
+               { (<EM>Permission Denied</EM>) } ifelse
+        } {
+          pop
+          /url xdef /desc xdef /size xdef /type xdef
+          (<A HREF=")url(">)desc quote(</A> \() type mimename( - )
+          size 2048 lt { size( bytes) }
+          { size 2097152 lt {size 1024 / (K)}
+            {size 1048576 / (M)} ifelse } ifelse
+          (\))
+        } ifelse
+
+        attachments ! {break} if
+      } loop
+      (</FONT>\n)
+    } if
+  } ifelse
+} def
+
+% Load URL Filter Macros
+flavor(links)+ include
+
+% ===== Get to work =====
+
+% if item is 0, skip to first item in isel
+item ! {
+  open_conf {(Cannot access )Conference( ')conf(') halt} if
+  isel ! {/isel (1-$) store} if
+  isel next_item {(No such item) halt} if
+  /item xstore pop /isel xstore
+} if
+
+% get rpage settings = first set defaults, then load .backtalk
+/rpage 30 def /rtype (text/plain) def /twitlist () def
+(*.backtalk) [/rpage /rtype /timezone /twitlist] loadvar pop
+
+% page header
+(<HTML><HEAD> 
+<BASE HREF=")backtalkurl(/)flavor(read">
+<TITLE>)bbsname( )/conftitle
+`( )Conference cap( - )Item cap( )'item(</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>\n)
+use_rss_autodiscovery expose_rss_item and {
+  `(<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Responses
+  ( to )bbsname( )'conftitle`( )Item cap( #)'item(" HREF=")
+  anon_url(cinnamon?conf=)conf(&item=)item(">\n)
+} if
+(</HEAD>
+<BODY )background(>
+)
+
+% open conference and load lots of button definitions
+flavor(openconf)+ stopped {`Conference cap( )'conf( does not exist.\n) halt} if
+% If a password is required, ask for it
+secret 2 eq /dunno defined ! and {
+  [/conf /item /csel /isel /rsel /tmprsel /noskip /since /showforgotten
+   /slipped] flavor(confpass)+ jump
+} if
+
+global_header
+
+mayread dup /readitem xdef {
+  % if we have tmprsel, it selects responses to actually show
+  /tmprsel defined
+    { tmprsel (back) eq
+      { at cvi rpage - dup 0 lt {pop 0} if cvs (-)+ at cvi 1 - cvs + }
+    { tmprsel (fore) eq
+      { at cvi 1 + cvs (-$) + }
+    { tmprsel (first) eq
+      { (0-) at cvi dup rpage gt {pop rpage} if 1 - cvs + }
+    { tmprsel (last) eq
+      { (-) rpage cvs + }
+    { tmprsel } ifelse } ifelse } ifelse } ifelse }
+    { rsel }
+  ifelse
+  % having constructed the rsel we are using, show open item, converting it
+  % to a numeric response selector
+  item this_item ! dup { exch /nrs xstore } if
+  % set readitem true if we are at a readable item
+  /readitem xdef
+} if
+
+% Generate the control panel
+(<TABLE CELLPADDING=8>
+<TR><TD VALIGN=TOP ROWSPAN=)/toprows(>
+)
+
+% figure out if there is a next item
+readitem {
+  isel next_item {() () 0} {} ifelse /nitem xdef pop /nisel xdef
+} {
+  /nitem 0 def
+} ifelse
+
+% next item button
+[
+/needsp 0 def
+/atbottom 1 def
+nitem {
+  (<A HREF="read?isel=)nisel(&conf=)conf(&csel=)csel
+  showforgotten {(&showforgotten=)showforgotten} if
+  noskip {(&noskip=)noskip} if
+  since {(&since=)since cvi} if
+  (&item=)nitem(&rsel=)rsel(">)nexttopic_button(</A><BR>\n)
+  /needsp 1 def
+} {
+  booktalk_buttons {
+    /atbottom 0 def
+    nonexttopic_button(<BR>)
+    /needsp 1 def
+  } {
+    % next conf button
+    csel next_conf /nconf xdef /ncsel xdef
+    nconf {
+      (<A HREF="confhome?conf=)nconf(&csel=)ncsel(&nextnew=">)
+      nextforum_button(</A><BR>\n)
+      /needsp 1 def
+    } if
+  } ifelse
+} ifelse
+] dup /nextbut xdef
+
+% confhome button
+/oneitem constant {
+  spacer
+}{
+  needsp {spacer} if
+  (<A HREF="confhome?conf=)conf(&csel=)csel(">)forumhome_button(</A><BR>\n)
+} ifelse
+
+% entrance button
+/oneconf constant ! {
+  spacer(<A HREF=begin>)entrance_button(</A><BR>\n)
+} if
+
+% logout button
+sessions { id {
+  spacer(<A HREF=")backtalkurl(/public/logout">)logout_button(</A><BR>\n)
+} if } if
+
+% scroll up stuff gets inserted here
+(</TD>)
+[
+(<TD BGCOLOR=)text_bg( VALIGN=top ROWSPAN=)/txtrows(>
+)
+
+mayread ! /nrs defined ! or {
+  `(No )Item( )'item`( in )conf( )Conference(.\n)'
+  halt
+} if
+
+% generate the text body
+
+nrs read_item {`(Cannot access )Item(.\n)' stop} if
+
+/nrs xstore
+
+/slipped defined ! { /slipped () def } if
+
+slipped {
+  `(<CENTER><TABLE BORDER=3 WIDTH=65%><TR><TD BGCOLOR=FF0000>
+  <FONT COLOR=FFFFFF><STRONG>
+  The )Response( below was posted since you last read this )Item(.<P>
+  Your new )Response( has NOT yet been posted.<P>
+  If you still want to post your )Response(, you may edit it and hit the
+  post button again.</STRONG></FONT></TD></TR></TABLE></CENTER><P>\n)'
+  /rtype sliptype store
+} if
+
+resp ! {rcp} if
+(<STRONG><FONT SIZE=+1>)bbsname
+( <A HREF=confhome?conf=)conf(&csel=)csel(>)conftitle
+`(</A> )Item cap( )'item(: <I>)title expand(</I>)
+linked {( [shared])} if forgotten {( [forgotten])} if
+frozen {( [frozen])} if retired {( [hidden])} if
+(<BR>
+ Entered)byline ztime (:</FONT></STRONG>
+)
+
+/cnt 0 def
+resp {
+  (<P><B>)nrs maxresp count_sel ( new of )
+} {
+  ] scrollup [
+  editdate erased ! and {
+    (<BR><EM>\(edited )editdate ztime(\)</EM><P>\n)} if
+  (<P>)
+  (item text) show_text
+ (<P><B>)
+} ifelse
+maxresp ( )maxresp 1 eq {Response}{Responses}ifelse( total.
+</B><P>)
+]
+
+{ cnt rpage ge {break} if
+  nrs next_resp {break} if
+  read_resp {pop break} if
+  /nrs xstore
+
+  first {scrollup} if
+  rcp
+  (<B>#)resp( of ) maxresp byline ctime(:</B>\n)
+  parentresp {(<EM>\(responding to )parentresp(\)</EM>\n)} if
+  editdate erased ! and {
+    (<BR><EM>\(edited )editdate ztime(\)</EM>\n)} if
+  (<P>\n)
+
+  (response) show_text
+
+} loop
+first {scrollup} if
+
+(</TD></TR>\n)
+atbottom cnt 3 gt and {
+  (<TR><TD ROWSPAN=)/botrows( VALIGN=bottom>)
+  nextbut
+  (</TD></TR>\n)
+  /txtrows 2 def
+} {
+  /txtrows 1 def
+} ifelse
+
+% show scroll-down link if last responses was not shown
+resp maxresp lt {
+  (<TR><TD>) scrolldown (</TD></TR>\n)
+  txtrows 1 eq {/toprows inc} {/botrows 2 def} ifelse
+} {
+  /botrows 1 def
+} ifelse
+
+% show response box if we showed no responses or last response
+resp maxresp lt resp -1 gt and {
+  (</TABLE>\n)
+} {
+  (</TABLE>\n)
+  mayresp
+  {
+    /allowhtml dflt_html def (*settings) /allowhtml loadvar pop
+    (
+    <FORM METHOD=POST TARGET="_self" ACTION=response>
+    <TABLE CELLPADDING=6>
+    <TR><TD VALIGN=TOP><INPUT TYPE=image NAME=post )postcomment_button_src(</TD>
+    <TD><B>#)maxresp 1 +( of )maxresp
+    (: by <INPUT NAME=pseudo TYPE=hidden VALUE=")alias quote(">\n)
+    mayseealias
+       {alias quote( \()id(\))}
+       {(<FONT COLOR=red>)id expand(</FONT>)} ifelse
+    (</B>\n)
+    allowhtml {(
+    <SELECT NAME=texttype>
+    <OPTION VALUE="text/plain">Plain Text
+    <OPTION VALUE="text/html")
+    	rtype (text/html) eq {( SELECTED)}if (>Pure HTML
+    <OPTION VALUE="text/html-blanks")
+    	rtype (text/html-blanks) eq {( SELECTED)} if (>lazy HTML
+    </SELECT>
+    )} {(<INPUT TYPE=HIDDEN NAME=texttype VALUE="text/plain">
+    )}ifelse
+    (<BR>\n<INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+    <INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+    <INPUT NAME=item TYPE=hidden VALUE=)item(>
+    <INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+    <INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>
+    <INPUT NAME=prevmax TYPE=hidden VALUE=)maxresp(>\n)
+    noskip {(<INPUT NAME=noskip TYPE=hidden VALUE=)noskip(>\n)} if
+    since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+    showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten(>\n)} if
+    (<TEXTAREA NAME="text" ROWS=12 COLS=72 WRAP=HARD>)slipped(</TEXTAREA><BR>
+  
+    </TD></TR></TABLE>
+    </FORM>
+    )
+  } {
+    (<P><I>Response not possible - )
+    id {
+      frozen { `Item cap( is frozen.)' }
+	     { `(You are not authorized to post to this )Conference(.)' } ifelse
+    } {
+      (You must <A HREF=)
+      sessions {
+        anon_url(public/login?bounce=http://)HTTP_HOST anon_url
+	flavor(read%3Fconf%3D)conf cgiquote(%26csel%3D)
+	csel(%26item%3D)item(%26isel%3D)isel(%26rsel%3D)rsel
+	/tmprsel defined {(%26tmprsel%3D)tmprsel}if
+      } {
+        pw_url flavor(read?conf=)conf cgiquote(&csel=)
+	csel(&item=)item(&isel=)isel(&rsel=)rsel
+      } ifelse
+      (>login</A> before posting.)
+    } ifelse
+    (</I><P>\n)
+  } ifelse
+} ifelse
+
+
+% footer
+global_footer
+(</BODY></HTML>
+)

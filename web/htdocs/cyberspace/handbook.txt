@@ -1,0 +1,1574 @@
+                             Wizard in Training
+
+                        Your GREX Beginner's Handbook
+
+  ------------------------------------------------------------------------
+
+                              Table of Contents
+
+                                           * Getting into the Conferencing
+                                             System
+    * Janitorial Staff
+                                           * Using the Conferencing System
+    * A Bit of History                          o Prompts
+                                                o Selecting a Conference
+    * How GREX Works                            o Reading a Conference
+                                                o Seeing a List of Items
+    * Making Sense of This (Web)                o Reading Specific Items
+      Booklet                                   o Reading New Items in a
+         o Type Conventions                       Conference
+         o A Note about !s                      o Responding to an
+                                                  Interesting Item
+    * The Psychology of Electronic              o Viewing Particular
+      Communication                               Responses
+         o Emoticons                            o Entering a New Item
+                                                o Forgetting a Boring or
+    * Netiquette: Social Lubricant in             Annoying Item
+      Cyberspace
+         o Flames                          * Getting The Hang Of E-Mail
+         o Advertising                          o Selecting a Mailer
+
+    * GREX Membership: What and Why        * Party
+                                                o Noises
+    * Donations: The Lifeblood of a
+      Bottom Feeder                        * The World Wide Web
+         o Donations Especially Useful          o Accessing the Web through
+           to GREX                                Lynx
+                                                o Making Your Own Home Page
+    * The Ecology of a Small System               on GREX
+         o Mail Limits
+         o Resources: The Final            * Peek into Your Mathom Closet
+           Frontier
+         o Why GREX Isnt an Internet       * Finger
+           Service Provider (ISP)
+                                           * Going One-on-One: Using Chat,
+    * Off to a Good Start - Getting          Write, Talk, and Tel
+      Connected to GREX                         o Chat and Write
+         o Dialing in to GREX                   o Talk
+         o Using Telnet to Connect to           o Tel
+           GREX                                 o Preventing People from
+         o Logging in                             Writing to You
+
+    * Creating a New Account               * Text Files and Editors
+         o Finding Your Terminal Type           o Your Home Directory
+                                                o Editors
+    * Selecting a Shell                         o Using an Editor from
+                                                  within PicoSpan or Mail
+    * Changing Things about your Login
+                                           * Uploading and Downloading
+    * Getting More Help                      Files
+         o The Info Conference                  o Transferring Files over a
+         o GREX On-Line Helpers                   Dial-up Connection
+         o The Trouble Login                    o FTP
+         o More Documentation
+                                           * UNIX (Whats That?)
+    * Wandering through the
+      Conferences: the Real GREX!          * Bibliography
+         o Terminology
+                                           * The GREX Statement of
+                                             Principles
+
+
+
+  ------------------------------------------------------------------------
+
+                              Janitorial Staff
+
+The 2002 Cyberspace Communications Board of Directors:
+        Eric Bassey (other) - Chair
+        Anne Perry (mooncat) - Secretary
+        Mark Conger (aruba) - Treasurer
+        Mary Remmers (mary)
+        STeve Andre' (steve)
+        Greg Fleming (flem)
+        Marcus Watts (mdw)
+                E-mail the board at board@cyberspace.org
+
+The Grex Staff:
+        STeve Andre' (steve)            Charles Mitchell (arthurp)
+        Mic Giansiracusa (spooked)      John Remmers (remmers)
+        Steve Gibbard (scg)             Marcus Watts (mdw)
+        Dan Gryniewicz (dang)           Jan Wolter (janc)
+        Scott Helmke (scott)            Steve Weiss (srw)
+        Valerie Mates (valerie)
+                E-mail the staff at staff@cyberspace.org
+
+Conference Administrators (cfadms):
+        Walter Cramer  (i)              Valerie Mates (valerie)
+        Scott Helmke (scott)            John Remmers (remmers)
+
+Webmaster:
+        Steve Weiss (srw)
+
+Software Designers:
+        Valerie Mates (valerie)         Mathom
+        Mic Giansiracusa (spooked)      New Menus
+        John Remmers (remmers)          Vote, Web Vote
+        Marcus Watts (mdw)              PicoSpan, Newuser, Telnet Queue, Spam blocks, a bunch of other stuff
+        Steve Weiss (srw)               Lynx Menu, Backtalk
+        Jan Wolter (janc)               Party, Write, Mesg, Gate, Backtalk, Web Newuser
+
+This handbook written by:
+        Misti Tucker (mta)              Mark Conger (aruba)
+With help from:
+        STeve Andre' (steve)             Valerie Mates (valerie)
+adapted for the Web by:
+        Eric Bassey (other)
+
+
+
+  ------------------------------------------------------------------------
+
+                              A Bit of History
+
+Grex was conceived in 1990 by a dozen people with little more in common than
+a love for computer conferencing. Over the course of several months, they
+met once a week to discuss their ideas about how the ideal system might be
+run, and to work out a common vision. The process wasn't always smooth; each
+founder had very clear ideas and there were sometimes differences that were
+very hard to resolve. They persevered and finally arrived at a consensus.
+
+Once their vision for Grex was formed, they spent the next several months
+working to pull the system together. Once they had collected the money and
+equipment their new system would need just to open to the public, they
+agreed amongst themselves that they would finance the system's operations
+out of their own pockets for the first year.
+
+On July 18, 1991, Grex opened its lines to the modeming public.
+
+Grex got its start running on a donated Sun-2/170, with only 5 phone lines,
+4 Meg of RAM, and 2 ancient 80 Meg Fujitsu SMD hard drives. It was housed in
+the warehouse of a generous local business owner, Ken Ascher, for just the
+cost of the electricity and telephones. NetMeg, owned and operated by Meg
+Geddes, supplied the Internet mail feed.
+
+Things have changed some since then. Grex is now living in its own
+apartment, a 12' by 12' room in a building near downtown Ann Arbor. We're
+running on a Sun-4/670 with 384MB of RAM, 31 gigabytes of disk and 7 dial-in
+phone lines. Most important, Grex is now attached to the Internet by a
+dedicated DSL connection!
+
+
+
+  ------------------------------------------------------------------------
+
+                               How GREX Works
+
+Cyberspace Communications, Inc., is a Michigan non-profit corporation.
+
+Any user may become a member of Grex just by making a donation of $2 a month
+or $18 a year to the system. The membership makes all major decisions about
+the system's direction.
+
+The Board of Directors, elected by the members of Grex, makes routine
+administrative decisions. The Board normally meets once a month. Members
+(and anyone else who's interested) are welcome to attend.
+
+Daily operations of Grex are managed by an all volunteer staff, which is
+responsible for keeping Grex up and running smoothly. The staff is appointed
+by the board and is responsible for keeping Grex up and happy. It's a
+thankless job that keeps them busy for hours every week. (Thanks, folks!)
+Normally, the staff is represented at all board meetings.
+
+
+
+  ------------------------------------------------------------------------
+
+                     Making Sense of This (Web) Booklet
+
+There are a few things you'll need to understand to make sense of the
+instructions in this (web) booklet.
+
+
+
+Type Conventions
+--------------------------------------
+
+If I want you to type something,
+
+     [it will look like this.]
+
+So if you see:
+
+     Ok: [chat]
+
+it means, type the word chat where you see Ok: on the screen.
+
+
+
+A Note about !s
+--------------------------------------
+
+There is a convention that many UNIX programs observe: when you want to run
+one program from within another, you type a ! (pronounced bang) before the
+command. Most of the examples shown in this booklet dont use a ! , but in
+some cases (such as when you are at a menu prompt) you may need one. So in
+general, if a command doesnt work right for you, try putting a ! in front of
+it.
+
+
+
+  ------------------------------------------------------------------------
+
+                 The Psychology of Electronic Communication
+
+Communicating electronically is different from talking face to face or over
+the telephone. Without the feedback of facial and vocal cues, it's easy to
+misunderstand, especially because English is an inherently ambiguous
+language.
+
+Take the time to wordsmith your comments. When you remove the ambiguity, you
+ensure that the hundreds of people who will read your words will understand
+them as you meant them. That can make all the difference in the world,
+especially since Grex has users coming in from all over the world, many of
+whom speak English as a second or third language.
+
+It's also a good idea to give other people the benefit of the doubt if they
+say something that can be taken more than one way. As you become more
+familiar to the Grex old-timers and more familiar with the verbal shorthand
+we've developed, you'll find it becomes second nature.
+
+
+
+Emoticons
+--------------------------------------
+
+One way to help keep your responses from being misinterpreted is to use
+emoticons (sometimes called smileys) to help readers know what facial
+expression to associate with your words. For instance, if you say something
+in jest, it's a good idea to put a  :)  after it. If you're sad about something, 
+use  :(  . If you want to wink at someone, use  ;)  . There are many other 
+possibilities - don't hesitate to experiment.
+
+
+
+
+
+  ------------------------------------------------------------------------
+
+                 Netiquette: Social Lubricant in Cyberspace
+
+As with every community, Cyberspace has a system of norms that allows us to
+get along in harmony most of the time. Various nooks have variations on the
+norms, of course. An excellent Internet convention is to try to be generous
+in interpreting what you read, but diplomatic and refined in what you say.
+
+
+
+Flames
+--------------------------------------
+
+A flame is a personal attack on another user, usually in a public forum like
+the conferences or Party. Public flame fests are unpleasant and make the
+system a stressful place to hang out.
+
+From time to time it's likely that someone will make a remark that makes you
+really angry. When that happens, remember:
+
+   * Take time to cool off before you respond.
+   * If the remark was intentionally provocative, the best response is no
+     response.
+   * Respond to the idea and not the speaker.
+   * If you feel you absolutely must make a personal remark, please take it
+     to e-mail and keep it private.
+
+
+
+Advertising
+--------------------------------------
+
+Grex is a not-for-profit organization. It is not a platform for serious
+business transactions. (This applies to private individuals as well as
+companies.) We do however have a classifieds conference specifically set up
+to let people with something to peddle meet people who want to barter or
+buy.
+
+
+
+  ------------------------------------------------------------------------
+
+                       GREX Membership: What and Why
+
+Becoming a member of Grex is easy. You can type
+
+    [ support ]
+
+or sometimes
+
+    [ !support ]
+
+at almost any prompt to get more information.
+
+But what is a Grex membership, and why should you bother? After all, Grex is
+a free system.
+
+Well, yes, you are free to use Grex, whether you're a member or not. But
+when you make a donation and become a Grex member, you buy a little piece of
+our collective. You become a part owner in an exciting social experiment.
+You get a voice in the running of the system, and most important, you help
+ensure that this valuable community resource can continue to be available to
+everyone.
+
+Grex is entirely supported by its users. No large corporations or government
+agencies contribute any of the money needed to keep the system running. This
+means Grex is really and truly a grass roots organization, and it has the
+freedom to change in whatever directions its members would like. But it also
+means that it is entirely dependent on the good will of its users. If enough
+people don't commit to supporting Grex, it may go away.
+
+
+
+  ------------------------------------------------------------------------
+
+                Donations: The Lifeblood of a Bottom Feeder
+
+Without donations, Grex wouldn't exist today. We are always happy to accept
+any computer equipment in danger of becoming boat anchors and door stops. We
+use what we can to expand Grex. We repair and sell the rest to electronics
+hobbyists to buy the things we need. If you have out of date equipment
+around the house, please feel free to let us know! If you know of something
+that is in danger of being pushed off a dock, please give us a call! Contact
+us by sending e-mail to staff@cyberspace.org.
+
+
+
+Donations Especially Useful to GREX
+--------------------------------------
+
+If you have old Sun equipment that you don't need, we'd love to hear about
+it. We're also always interested in things like PCs and Macs, SCSI disks,
+RAM chips, modems, commercial software, and printers.
+
+
+
+  ------------------------------------------------------------------------
+
+                       The Ecology of a Small System
+
+
+
+Mail Limits
+--------------------------------------
+
+Because of our limited resources, we ask that you limit the amount of mail
+passing through your account (both incoming and outgoing) to 100K per day or
+less. Please also refrain from sending large files. If you have to send
+them, please break them into 100K chunks first and send those out, one per
+day. Also, please don't sign up for a mailing list unless you're sure you
+can keep up with the traffic and not let the mail accumulate in your inbox!
+
+
+
+Resources: The Final Frontier
+--------------------------------------
+
+Grex is an all volunteer system, supported, maintained, and expanded with
+funds donated by members and friends. As with any group that relies on the
+beneficence of the public, sometimes we can't grow fast enough to keep up
+with demand. It's important to realize that we all share Grex's resources
+equally. When the resources run out, we also share equally in the hassles
+and the responsibilities to help solve the problem. Please don't keep large
+files in your home directory for more than a few days and please read and
+remove your mail regularly.
+
+
+
+Why GREX Isnt an Internet Service Provider (ISP)
+--------------------------------------
+
+Our Internet link is currently one DSL line. This means that Grex isnt all
+that fast compared to the big guys that are well connected. While we're very
+grateful for the connection, the size of the link does require some
+restraint on everyone's part to avoid overtaxing it. Since lots of things
+use this link, like telnet, FTP, e-mail, etc., you shouldnt think of Grex as
+an Internet provider. Think of us instead as a conferencing system that has
+some Internet capabilities.
+
+
+
+  ------------------------------------------------------------------------
+
+              Off to a Good Start - Getting Connected to GREX
+
+There are two ways to log into Grex: by dialing into Grex's modem bank and
+by telnetting in over the Internet.
+
+
+
+Dialing in to GREX
+--------------------------------------
+
+Dialing in to Grex requires comparatively little equipment.
+You need:
+
+   * a computer or terminal
+   * a modem
+   * working telephone service
+   * a communication package such as ProComm, Telix, Kermit, or the Windows
+     Terminal program.
+
+Of course, it can't hurt to have some documentation about using Grex, or a
+friend who's familiar with the system, too.
+
+Setting Up Your Communication Parameters
+Almost any terminal program, on any computer, can connect to Grex. Refer to
+your documentation for the details of how your modem and communication
+program work.
+
+Next set your modem to the highest speed it will support, up to 14400 bps.
+
+Dialing
+When you've set your communication parameters, you're ready to dial Grex.
+Tell your terminal program to dial
+
+     (734) 761-3000
+
+When your modem connects to Grex, you'll hear a whistling in several tones.
+When it finishes, you'll see a welcome message on the screen, followed by
+the prompt
+
+     login:
+
+
+
+Using Telnet to Connect to GREX
+--------------------------------------
+
+If your computer is already connected to the Internet through some other
+service, you can access Grex with a telnet program. Most of the time that
+means typing the command
+
+    [ telnet cyberspace.org ]
+
+Or it might mean starting the telnet program and then telling it to open a
+connection to cyberspace.org. If you connected correctly, you should see the
+same prompt as above:
+
+
+
+Logging in
+--------------------------------------
+
+*Note: If this is your first time on Grex, see Creating a New Account.
+
+Type your Grex login ID (the one selected when you ran the Newuser program)
+at the login prompt. For instance, if your login is waffles, type
+
+     grex.org login: [ waffles ]
+
+Next you'll be prompted for your password. If your password is pancakes,
+type
+
+     waffles's Password: [ pancakes ]
+
+Grex won't show the letters you type here so that no one can learn your
+password by watching over your shoulder as you log in.
+
+Finally, Grex will show you the terminal type youve selected. If you're
+logging in from the same type of computer as usual, just press the enter
+key; otherwise type in the appropriate terminal type.
+
+*Note: If you always log in from the same type of terminal, you can use the
+change program to tell Grex not to prompt you every time. See Changing
+Things About Your Login.
+
+
+
+  ------------------------------------------------------------------------
+
+                           Creating a New Account
+
+Creating an account on Grex is free. You don't have to send money or
+identification, you can create a new account and start conferencing during
+the same session!
+
+To create a new account, simply type
+
+     grex.org login: [ newuser ]
+
+The Grex Newuser program will tell you something about the system, then will
+ask you a series of questions. This booklet contains the information you'll
+need to answer the hard questions.
+
+In answering the personal questions, keep in mind that 1) creating a new
+account doesnt obligate you to anything, ever and 2) you'll decide whether
+to let everyone see the information you entered. If you put the privacy
+switch on, only staff will see your information. (Staff won't divulge your
+private information without a court order.)
+
+But, of course, if you don't want to answer any personal questions, that's
+OK too. We do recommend, however, that you give some contact information to
+Newuser, such as an alternate e-mail address or a physical address. That
+way, if you ever forget your password, you can send the Grex staff mail from
+your other address, and they will reset the password for you.
+
+
+
+Finding Your Terminal Type
+--------------------------------------
+
+The computer and communications software you use to access Grex are together
+called your terminal. UNIX systems can theoretically be accessed by many
+users using very different computers and communication software. For this
+reason Grex and systems like it support a wide variety of terminal types.
+This, as you might expect, causes some confusion.
+
+There are some programs on Grex that need to know how to talk to your
+terminal, which means you can't use them if you don't know your terminal
+type. That makes it worth figuring it out what terminal type you are using.
+
+*Note: You don't have to know your terminal type to use Grex, but Grex will
+work better for you if you do.
+
+Usually the terminal type is explained in the communication program
+documentation under Terminal Emulation. Fortunately, almost all
+communication programs these days have the ability to look like a vt100
+terminal (that's the name of a terminal standard developed by Digital
+Corporation), so if you aren't sure try that. If you find out that you made
+the wrong choice in the Newuser program, don't worry. You can change it
+later. (Computers are wonderful that way!)
+
+
+
+  ------------------------------------------------------------------------
+
+                             Selecting a Shell
+
+A shell is a UNIX program which gets run as soon as you log in, and keeps
+running until you log off. All other programs that you run are launched from
+within your shell. It's kind of like a stage on which everything happens.
+
+Grex offers a number of different shells for you to choose from. Which one
+you should choose depends on how familiar you are with UNIX and how you want
+to use Grex.
+
+   * The Menu Shell
+     The menu shell is very popular because it lets you choose most of
+     Grex's options from a simple menu. It doesn't explain what those
+     options mean, but if you've had some experience with conferencing
+     systems this is your best bet.
+
+   * The Lynx Shell
+     The Lynx shell gives you the most information and takes the guess work
+     out of using Grex. If you're completely unfamiliar with conferencing
+     systems, UNIX, and the Internet, this is probably your best bet. It
+     does take a certain amount of patience, though, because there is a lot
+     of information and it continues to show up whether you need it or not.
+
+   * The BBS Shell
+     If you're familiar with conferencing systems and you know generally
+     what you want to do here on Grex, whether it's conferencing, e-mail,
+     chatting, or something else, you may find the BBS shell the easiest way
+     to go. It requires that you learn a few simple commands, but it's fast
+     and flexible. For a BBS Tipsheet, send a SASE to Grex INFO at the
+     address listed in the Getting More Help section .
+
+   * Programmer Shells (csh, zsh, ksh, sh, tcsh, and bash)
+     If you're familiar with UNIX and command-line interfaces and you want
+     the full power of a UNIX system available to you when you're using
+     Grex, you may find the C shell (csh), or one of the other UNIX shells
+     mentioned above, the most efficient way to go. They require that you
+     know standard UNIX commands, but they are quick and flexible. For a C
+     shell Tipsheet, send a SASE to Grex INFO at the address listed in the
+     Getting More Help section.
+
+
+
+  ------------------------------------------------------------------------
+
+                      Changing Things about your Login
+
+When you run the Grex Newuser program, you make a number of decisions about
+things like what character would be used for backspace, which editor to use,
+etc.
+
+If you've decided that something isn't quite right for you and you'd like to
+change it, the change program will help you fix things. From inside
+PicoSpan, type:
+
+    [ !change ]
+
+or, from another shell, type:
+
+    [ change ]
+
+The change program is completely menu driven and will prompt you each step
+of the way. It does all the hard stuff for you.
+
+
+
+  ------------------------------------------------------------------------
+
+                             Getting More Help
+
+There are a number of good ways to get answers to your Grexish questions or
+problems. The first thing you might try is typing
+
+    [ help ]
+
+(or possibly
+
+    [ !help ]
+
+) wherever you happen to be. If that doesn't tell you what you need to know,
+try one of these other options.
+
+
+
+The Info Conference
+--------------------------------------
+
+One of the best ways to get answers is to join the info conference, where
+people have been asking and answering questions throughout Grex's existence.
+If you don't find the answer to your question there, you can always post it
+and check back in a couple of hours.
+
+
+
+GREX On-Line Helpers
+--------------------------------------
+
+If you have an urgent question, you can type:
+
+    [ write help ]
+
+That notifies a Grex helper (if one is logged on) that you have a question.
+Please wait several minutes for a response, since the helper may be helping
+someone else or in the middle of an uninterruptible process when you call.
+
+A Grex helper is just a more experienced user who has agreed to answer basic
+Grex questions. Not every helper will know the answer to every question, and
+helpers don't have any capabilities (other than knowledge) that you don't
+have.
+
+
+
+The Trouble Login
+--------------------------------------
+
+If you have trouble logging in, you can log in as trouble. That login
+automatically sends mail to the people who can help you straighten out
+account problems. Be sure to give us the information about your account and
+how we can reach you. (Staff clairvoyance is a very limited resource.)
+
+
+
+More Documentation
+--------------------------------------
+
+If there's a document you want, or you need more information about a
+specific topic, send a request to
+comments@cyberspace.org or mail your request to:
+
+    Cyberspace Communications
+    P.O. Box 4432
+    Ann Arbor, Michigan 48106
+
+
+
+  ------------------------------------------------------------------------
+
+             Wandering through the Conferences: the Real GREX!
+
+While it's true that Grex has many services to offer, conferencing is the
+heart of the system. Without our conferences, we'd be little more than
+another file stop on the information highway. You'll find more than 100
+conferences on Grex, with topics ranging from hobbies to public issues, from
+computers and games to life roles, with new conferences starting frequently.
+
+So, what is computer conferencing? It's a way of letting a group of people
+talk to each other over time, with the computer acting as a scribe, keeping
+track of all that has been said. At any point, any participant in a
+conference can go back and see everything that has been discussed since the
+last restart.
+
+
+
+Terminology
+--------------------------------------
+
+A conference is a general area for discussion of related topics. (You may
+have heard the term forum used elsewhere to describe what we call a
+conference on Grex.) For example the kitchen conference is where people talk
+about food, cooking and restaurants. In the micros conference the topic is
+microcomputers. The coop conference is where you can learn more about how
+Grex is run and participate in the decision making process. And the smalls
+conference is dedicated to conversation about living with and raising
+children.
+
+Each conference consists of items, which anyone in the conference can enter.
+An item is a topic for conversation related to the conference subject. For
+instance, in the smalls conference you might find items about toilet
+training, schools, and cute remarks the little shavers make. You might think
+of an item as a comment you've written on a piece of paper, and stuck on a
+bulletin board or kiosk in a busy place. As people wander by, they can read
+your item. After reading it, they can add a comment or response to the
+bottom of the page.
+
+Over time, an item might have many responses and new conversations (called
+drift) may evolve from the original item; some popular items have hundreds
+of responses. Interaction between the participants of the conference spurs
+further discussion and brings up new points, which may spin off into new
+items...or not.
+
+So, to summarize the terminology: A conference is a place where people
+discuss a particular topic, such as cooking or children. Each conference
+consists of items, each of which is a discussion. Items may have any number
+of responses, entered by any number of people.
+
+
+
+  ------------------------------------------------------------------------
+
+                    Getting into the Conferencing System
+
+Grex's conferences can now be accessed in two different ways: through
+PicoSpan and through Backtalk. PicoSpan is a program written by Grex founder
+Marcus Watts in 1984, and it's the easiest thing to use when you're already
+logged on to Grex. Backtalk was written by Grex staffers Jan Wolter and
+Steve Weiss in 1996-98, and it operates through the World Wide Web. If you
+have access to the web, you can check out Backtalk by going to
+www.cyberspace.org and following a few links.
+
+Since this handbook is mainly about what you do when you're logged in to
+Grex, it will focus on PicoSpan. First, getting into it:
+
+   * If You Use the Menu Shell:
+     Select
+
+         [ B ]
+
+     for BBS.
+
+   * If You Use the Lynx Shell:
+     From the initial screen, choose
+
+          Grex Activities Menu
+
+     followed by
+
+          Computer conferencing
+
+   * If You Use the BBS Shell:
+     If you selected the BBS shell when you created your account, you should
+     see the
+
+          Ok:
+
+     prompt as soon as you log in to Grex. That means you're already in
+     PicoSpan.
+
+   * If You Use One of the Programmer Shells:
+     To get into the PicoSpan conferencing system from another shell, type:
+
+         [ bbs ]
+
+     at your shell's prompt.
+
+
+
+  ------------------------------------------------------------------------
+
+                       Using the Conferencing System
+
+
+
+Prompts
+--------------------------------------
+
+First things first. The two basic prompts that PicoSpan gives you are:
+
+     Ok:
+
+which means that you are reading a conference but not a specific item, and
+
+     Respond or pass?
+
+which you see after you have just read an item.
+
+*Note: Your prompts may differ slightly from the above. For instance, they
+may include a few lines of explanatory text or mention more possible
+actions. Dont let that throw you - all the examples in this handbook still
+apply.
+
+
+
+Selecting a Conference
+--------------------------------------
+
+When you begin conferencing for the first time, you will automatically start
+out in the agora conference. Agora is the main meeting hall on Grex, through
+which virtually everyone passes at one time or another. Almost any subject
+might come up in here so you'll probably find something there that interests
+you.
+
+Many people never go any farther than agora, but there are lots of other
+choices! To see an updated list of all the conferences, type:
+
+     Ok: [ help conf ]
+
+You'll be presented with a list of conferences sorted by subject. If you'd
+like to look in on, say, the kitchen conference, type:
+
+     Ok: [ join kitchen ]
+
+The first time you do that you'll get a message saying
+
+     You are not a member of /bbs/kitchen2. Do you wish to Join, quit,
+     or help?
+
+Type [ J ] to join the conference.
+
+
+
+Reading a Conference
+--------------------------------------
+
+Once you've found a conference you're interested in, you really only need to
+know a few commands to get started using PicoSpan. The commands are browse,
+read, and respond.
+
+
+
+Seeing a List of Items
+--------------------------------------
+
+The browse command presents a list of all the items in the conference. It
+will display the item name and the number that identifies that item to the
+system.
+
+Once you enter a conference, type:
+
+     Ok: [ browse ]
+
+A list of the items available will scroll across your screen. Note the
+numbers of any items that interest you.
+
+*Note: Many PicoSpan commands can be abbreviated. For instance, browse can
+be abbreviated as b . We won't discuss all the abbreviations here, but you
+may want to guess at them to save yourself some keystrokes.
+
+If you've been in a conference before and want to see which items have
+changed since your last visit, type:
+
+     Ok: [ browse new ]
+
+
+
+Reading Specific Items
+--------------------------------------
+
+Once you've found an item that interests you, the read command shows you the
+text of a particular item. If you don't specify an item number, PicoSpan
+will show all the items that you haven't read yet. (Not a good idea until
+you've gotten familiar with a conference.)
+
+To read, say, item 5, type:
+
+     Ok: [ read 5 ]
+
+If you want to read several items, you can list all of them separated by a
+single space and they will come up in the order you listed them. So to read
+items 1, 7 and 4 in that order, type:
+
+     Ok: [ read 1 7 4 ]
+
+
+
+Reading New Items in a Conference
+--------------------------------------
+
+Once you've been reading a conference for a while, you might want to read
+everything anyone has said there since you last checked in.
+
+To read all the new responses in a conference, type:
+
+     Ok: [ read new ]
+
+To read all new responses in items 1, 7, and 4, type:
+
+     Ok: [ read 1 7 4 new ]
+
+
+
+Responding to an Interesting Item
+--------------------------------------
+
+When you've finished reading an item, you may decide that you want to make a
+comment about the subject under discussion.
+
+PicoSpan will automatically ask if you want to respond or pass. To respond
+to the item, enter:
+
+     Respond or pass? [ r ]
+
+Then type in the text of your response. When you're done, type Ctrl-D or
+place a period on a line by itself and hit enter.
+
+To pass on to the next item without responding, enter:
+
+     Respond or pass? [ p ]
+
+(Actually, if you just hit the enter key without typing a command, thats the
+same as typing p.) If you are interested in responding to an item, but would
+rather do it later, you can type:
+
+     Respond or pass? [ postpone ]
+
+The item will show up again the next time you read new responses.
+
+
+
+Viewing Particular Responses
+--------------------------------------
+
+Responses, like items, all have numbers. Because a single item can have
+hundreds of responses, you may want to go back and view a few of them at a
+time without rereading the whole item. To view, say, response number 50,
+type:
+
+     Respond or pass? [ only 50 ]
+
+To view all the responses since response 34, simply type:
+
+     Respond or pass?  [ 34 ]
+
+To view the original text of the item, type:
+
+     Respond or pass? [ only 0 ]
+
+To see the title of the item, type:
+
+     Respond or pass? [ header ]
+
+
+
+Entering a New Item
+--------------------------------------
+
+Once you've been around a while, you'll very likely want to start a new item
+of your own to discuss something that no one has brought up yet.
+
+To enter a brand new item:
+
+     Ok: [ enter ]
+
+PicoSpan will then ask you for the text of the item and its title.
+
+
+
+Forgetting a Boring or Annoying Item
+--------------------------------------
+
+The forget command lets you tell PicoSpan that you don't want to follow an
+individual item. When the topic of an item doesn't interest you or you find
+something irritating about the drift of the conversation, you can easily
+dismiss the item from the list of those you'll read in the future. (So the
+next time you do a read new or a browse, it won't show up even if it has new
+responses.)
+
+To forget an item you have just read, type:
+
+     Respond or pass? [ forget ]
+
+
+
+  ------------------------------------------------------------------------
+
+                         Getting The Hang Of E-Mail
+
+Using e-mail, you can: get to know people around the world, get back in
+touch with friends and family you haven't seen in far too long, and keep up
+to date on plans with your local friends.
+
+E-mail here on Grex won't cost you anything, so feel free to send and
+receive lots of messages -- only, please, keep them reasonably small. We do
+have a limited amount of bandwidth to serve the more than 3000 users who log
+in each day.
+
+So, how do you get started using e-mail? The first step is to collect some
+e-mail addresses for people you want to send mail to, and to give your
+e-mail address to people you want to hear from.
+
+Your e-mail address here is yourloginid@cyberspace.org. In other words, if
+your login on Grex is tina, your address is: tina@cyberspace.org
+
+
+
+Selecting a Mailer
+--------------------------------------
+
+Grex offers several programs to allow you to send and receive mail. The only
+difference is in the way you use the program to read and send messages. Grex
+transmits all e-mail the same way, so that it will be compatible with other
+systems on the Internet.
+
+   * Pine
+     Pine is a simple, menu driven mailer. Many people who are used to using
+     a mouse prefer this mailer. (Its main drawback is that it can be quite
+     slow when Grex is busy.) You need to have your terminal type set
+     correctly to use Pine. To run Pine, type:
+
+          Ok: [ pine ]
+
+   * Elm
+     Elm is also a simple, menu driven mailer. It's similar in concept to
+     Pine, but it's been around longer and the details of how it works are a
+     bit different. Elm, like Pine, requires that your terminal type be set
+     correctly. To run Elm, type:
+
+          Ok: [ elm ]
+
+   * UNIX Mail
+     The UNIX Mail mailer will work on any terminal. It's a command line
+     mailer, so it's a bit trickier to get used to, but once you get the
+     hang of it, it's also faster to use and less of a strain on Grex's
+     resources than the other two. To run Mail, type:
+
+          Ok: [ !mail ]
+
+
+
+  ------------------------------------------------------------------------
+
+                                   Party
+
+Party is a very popular program on Grex which allows users to have
+conversations in real time. It's similar to what are called chat rooms on
+the Internet.
+
+You enter Party by typing:
+
+     Ok: [ party ]
+
+If other people are already there (as is almost always the case), very soon
+you will start to see messages from them appearing on your screen. You can
+respond by simply typing what you want to say. Hit the Enter key to send the
+text to everyone.
+
+
+
+Noises
+--------------------------------------
+
+Occasionally you may see text appear on your screen which looks like:
+
+     <robh hugs steve>
+
+That is called a noise. Party has a table of many noises you can make. You
+make a noise by typing the noise's name followed by any parameters it takes.
+To make the noise above, for instance, robh typed:
+
+     /hug steve
+
+To see a table of all the noises you can make, just enter a slash (/) by
+itself. But be warned, the list is over a thousand lines long. There is a
+catch all noise called emote which you may want to know about, because it
+lets you use it however you want. For instance, if robh types:
+
+     /emote quacks like a duck
+
+everyone will see:
+
+     <robh quacks like a duck>
+
+
+
+  ------------------------------------------------------------------------
+
+                             The World Wide Web
+
+The popularity of the World Wide Web is what has driven the Internet boom of
+the 1990s. That boom promises to become one of the most significant changes
+in our society begun in the twentieth century.
+
+
+
+Accessing the Web through Lynx
+--------------------------------------
+
+Grex provides access to the textual portions of the Web through a browser
+called Lynx. We would like to be able to show you pictures too, but our link
+just can't handle that much traffic.
+
+To run Lynx, type:
+
+     Ok: [ !lynx ]
+
+You will see a web page on Grex which will help you to get started. There is
+lots of help for Lynx available online, but here are a few tips:
+
+   * If you know the address of a web page you want to visit, type g
+     followed by the address.
+   * The up and down arrow keys are used for moving the cursor around within
+     a page. Use them to highlight a link you want to follow and press Enter
+     to go there.
+   * The left and right arrow keys move you backward and forward within the
+     list of pages you have visited.
+   * Hit ? for help.
+   * If your screen gets messed up for some reason, you can have Lynx redraw
+     it by hitting Ctrl-R.
+   * Hit q to quit out of Lynx.
+
+
+
+Making Your Own Home Page on GREX
+--------------------------------------
+
+If you'd like to create your own little corner of the Web you can do it on
+Grex. Its not quite as simple as typing in a text document; you will need to
+know HTML (Hypertext Markup Language). Many references are available both on
+the Web and in bookstores on HTML. And of course, you can't store pictures
+or multimedia files on Grex, but your page can contain references to them if
+they are elsewhere.
+
+To make your own homepage on Grex, type:
+
+     Ok: [ !mkhomepage ]
+
+You'll get a menu which lets you choose to create a new homepage or edit an
+old one, and also gives you more information. If you create a new one, it
+will be a file called index.html in a subdirectory of your home directory
+called www. The address people use to access your page depends on your user
+ID; for instance, if you login as janc, then your home page is:
+http://www.cyberspace.org/~janc
+
+If you'd like to see the list of frequently asked questions about Grex web
+pages, there is a link to it on the first page you see when you run Lynx.
+
+
+
+  ------------------------------------------------------------------------
+
+                        Peek into Your Mathom Closet
+
+This is a quote from The Fellowship of the Ring by J.R.R. Tolkien:
+
+     So, though there was still some store of weapons in the Shire,
+     these were used mostly as trophies, hanging above hearths or on
+     walls, or gathered into the museum at Michel Delving. The
+     Mathom-house it was called; for anything that Hobbits had no
+     immediate use for, but were unwilling to throw away, they called a
+     mathom. Their dwellings were apt to become rather crowded with
+     mathoms, and many of the presents that passed from hand to hand
+     were of that sort.
+
+So mathom, strictly speaking, refers to that class of item that while
+useless, is too delightful to throw away. Most people have a closet
+somewhere in the house where at least a few pieces hide.
+
+Here on Grex, mathom is also a program that allows you to create text gifts
+for the people you like. Larry Kestenbaum (polygon) suggested that we adopt
+the idea here on Grex, and Valerie Mates (valerie) created the program.
+
+To run the Mathom program, type:
+
+     Ok: [ mathom ]
+
+at any PicoSpan prompt. The program is pretty much self-explanatory. The
+commands may all be abbreviated to one letter. So for instance, when you see
+the prompt:
+
+     Look (at your mathom), Create (new mathom), Someone (else's mathom
+     to look at), Who (has mathom?), Help, or Exit?
+
+that means you can enter [ L ] to look at your mathom, [ C ] to create a new mathom,
+etc.
+
+The first time someone gives you a mathom, the program will send you mail to
+let you know about it. Once you have mathom (either because you created it
+or because someone gave it to you), you can look at it or give it away.
+
+
+
+  ------------------------------------------------------------------------
+
+                                   Finger
+
+Recall that when you create a Grex account through the Newuser program, you
+are asked for some information about yourself. Your answers to those
+questions are stored in a file in your home directory called .plan.
+
+You can see someone's .plan by using the finger command. At a PicoSpan
+prompt, type:
+
+     Ok: [ finger mta ]
+
+to see mta's .plan. (You'll also see information about when mta last logged
+on, and a few other things.) If you enter finger with no parameters:
+
+     Ok: [ finger ]
+
+you'll get a list of everyone who's on Grex right now.
+
+Note that finger is a standard Internet protocol, so if you want them to,
+everyone on the Net can see what's in your .plan; or you can set it so that
+it is completely private. You can switch back and forth between these
+settings using the change program.
+
+
+
+  ------------------------------------------------------------------------
+
+             Going One-on-One: Using Chat, Write, Talk, and Tel
+
+Chat, Write, Talk, and Tel are all programs that let you converse with
+another user one-on-one in real time. This can be a good way to make
+arrangements on-line to meet with friends for dinner later, or to get to
+know another user more personally, even though you live thousands of miles
+apart.
+
+
+
+Chat and Write
+--------------------------------------
+
+Chat and Write are essentially the same program with different options. Both
+allow one user on Grex to type text which then appears on another user's
+terminal, and vice-versa. Chat passes characters as they arrive, one
+character at a time, and Write passes them one line at a time.
+
+To use Chat to talk to user aruba, type:
+
+     Ok: [ chat aruba ]
+
+From now on, everything you type will appear on aruba's screen. This could
+potentially be quite confusing and annoying to the recipient, so there are a
+few rules of ettiquette which have been established to make Chat and Write
+work more smoothly:
+
+   * The person initiating the call waits for the other person to respond
+     before saying anything.
+   * To signal that it's the other persons turn to type, end your
+     transmission with an o (for over) on its own line.
+   * Wait for the other person to signal with an o that it's your turn to
+     type.
+   * When you want to end the conversation, type oo? (for over and out) on a
+     line by itself. The other person will respond with oo if he or she is
+     ready to sign off.
+
+To exit Chat or Write, type Ctrl-D.
+
+When someone taps you to talk using Chat or Write, youll see a line on your
+screen that looks like:
+
+     message from popcorn on ttyq8 at 20:47...
+
+Respond with:
+
+     Ok: [ write ]
+
+or
+
+     Ok: [ chat ]
+
+
+
+Talk
+--------------------------------------
+
+Talk is the most sophisticated of the conversational programs. It draws a
+horizontal line halfway down your screen. Whatever you type appears on the
+top half of the screen, and whatever the other person types appears on the
+bottom. That keeps the text from getting tangled.
+
+You must have your terminal type set correctly for Talk to work. If you get
+all the text as a single column down the left side of your screen, it means
+your terminal type is set up incorrectly.
+
+When someone taps you to talk using the Talk program, you'll see something
+like:
+
+     Message from Talk_Daemon@grex.org at 13:23 ...
+     talk: connection requested by aruba@grex.org.
+     talk: respond with: talk aruba@grex.org
+
+Actually all you need to type to respond is:
+
+     Ok: [ talk aruba ]
+
+The reason that the Talk program gave you a full Internet address is that
+Talk (unlike Chat and Write) is capable of connecting you to people on other
+machines besides Grex.
+
+To exit talk press your interrupt character (usually Ctrl-C).
+
+
+
+Tel
+--------------------------------------
+
+Tel is short for telegram, and it's a program you can use to send a quick
+message to someone else on Grex. To send a message to aruba, type:
+
+     Ok: [ !tel aruba ]
+
+Then enter your text:
+
+     Telegram to aruba on ttyrf...
+     Msg: How's it going?
+
+The message you typed will then appear on aruba's screen.
+
+
+
+Preventing People from Writing to You
+--------------------------------------
+
+If you don't want anyone to tap you for a one-to-one conversation right now,
+you can close the chat door by going to any PicoSpan prompt and typing:
+
+     Ok: [ mesg n ]
+
+That will tell people who try to chat with you using Chat, Write, Talk, or
+Tel that you're busy right now and not accepting messages. If you decide
+that you're open to conversation later in your session, you can re-open the
+chat door by typing:
+
+     Ok: [ mesg y ]
+
+It's possible to be more selective about who is allowed to chat you and who
+isn't. The change program allows you to set those options.
+
+
+
+  ------------------------------------------------------------------------
+
+                           Text Files and Editors
+
+
+
+Your Home Directory
+--------------------------------------
+
+When someone creates a new account on Grex, a place is set aside for that
+account's files. This is called the account's home directory. Certain
+programs store information in files there, and on top of that you can put
+any files you want in your home directory, though we ask that you keep your
+total disk usage to under 1 megabyte.
+
+Most files on UNIX systems are text files, meaning they contain only
+printable characters (letters, numbers, and punctuation) and a few
+formatting characters (end-of-line markers and tabs) but no fancy formatting
+stuff. Occasionally you may want to create or modify text files in your home
+directory - such as the .plan file mentioned in the section on Finger.
+
+
+
+Editors
+--------------------------------------
+
+An editor program allows you to change text files and create new ones. Its
+also useful if you enter a long response in the Mail program or in PicoSpan,
+and then realize you made a mistake on the first line and need to go back
+and change it.
+
+Most editors show you the full text of a file and allow you to move around
+in your text and to cut and paste blocks of text in different places. An
+editor is like a word processor, but without a lot of formatting commands
+(like boldface and italics) which don't apply to text files. Grex offers a
+number of different editors. Which one you should use should depend on what
+you're used to and how much fancy stuff you want to do.
+
+   * Pico
+     Pico is probably the best bet for a novice Grex user. It's designed to
+     fit well with the Pine mailer (it was written by the same people), so
+     if you selected Pine, you'll want to use Pico for a consistent
+     interface. To use Pico to edit a file called foo, type:
+
+          Ok: [ pico foo ]
+
+     Pico shows you a list of commands you can type at the bottom of the
+     screen, which makes it easy to get started without learning a lot of
+     keystrokes first. The only drawbacks to using it are that it's a bit
+     slow and you can't do anything fancy with it. But it's usually fast
+     enough, and you usually don't need to do anything fancy.
+
+   * Joe
+     Joe is another simple editor you may want to try - it is similar to
+     Wordstar. Type:
+
+          Ok: [ joe foo ]
+
+     to edit the file foo with Joe. You can get it to show you a list of
+     commands right on the screen by typing Ctrl-K followed by h.
+
+   * vi, emacs, and the rest
+     If you are an experienced UNIX user, you can choose one of the standard
+     UNIX editors. These are not for the timid, though.
+
+
+
+Using an Editor from within PicoSpan or Mail
+--------------------------------------
+
+In order to use an editor from within PicoSpan or Mail or another program,
+you must first tell the system what editor you prefer. Type:
+
+     Ok: [ !change ]
+
+and follow the prompts to do that. Then if you're typing a response in
+PicoSpan and would like to edit it in your editor, enter a colon on a line
+by itself:
+
+     >[ : ]
+
+and PicoSpan will put you in your editor. To do the same thing in Mail,
+type:
+
+     [ & ~v ]
+
+
+
+  ------------------------------------------------------------------------
+
+                      Uploading and Downloading Files
+
+There are times when you may want to copy a file that is currently on Grex
+onto your home computer, or vice-versa. Knowing how to do that is a very
+useful skill, because it allows you to compose long messages offline, to
+save text you like on your home computer (so you need not log onto Grex to
+get to it), and even to exchange personal computer programs with other
+users.
+
+Copying a file from Grex to your home computer is called downloading the
+file. (Think of Grex as being upstairs, and your PC as being downstairs.)
+Sending files the other way is called uploading.
+
+
+
+Transferring Files over a Dial-up Connection
+--------------------------------------
+
+There are several protocols used for transferring files over a dial-up
+connection.
+
+The ones Grex supports are Kermit, X-Modem, Y-Modem, and Z-Modem. Which
+protocol you use depends on what your communications software will support.
+Check your documentation for references to transferring files.
+
+Downloading over a Dial-up Connection
+Downloading a file is a two-step process. First decide what protocol you are
+using, and be sure you know the filename. We'll suppose the file is called
+waffles.
+
+     1. First tell Grex to send the file. How you do this depends on
+     the protocol you're using:
+
+           Kermit: Ok: [ !kermit -s waffles ]
+           X-Modem:Ok: [ !sx waffles ]
+           Y-Modem:Ok: [ !sy waffles ]
+           Z-Modem:Ok: [ !sz waffles ]
+
+     2. As soon as you get a message that says the file is ready to be
+     sent, tell your communications program to receive the file. How
+     you do that depends on what program youre using; you'll have to
+     read the documentation to find out.
+
+Uploading over a Dial-up Connection
+Uploading is also a two-step process. Decide what protocol you're using,
+then:
+
+     1. First tell Grex to receive the file. Depending on the protocol,
+     you would type:
+
+           Kermit:    Ok: [ !kermit -r ]
+           X-Modem:   Ok: [ !rx ]
+           Y-Modem:   Ok: [ !ry ]
+           Z-Modem:   Ok: [ !rz ]
+
+     2. After you get a message that says Grex is ready to receive, go
+     to your communications program and tell it to send the file.
+     Again, how you do that depends on your program, so check the
+     documentation.
+
+
+
+FTP
+--------------------------------------
+
+If you connect to Grex over the Internet using telnet, the best way to
+transfer files to your home computer is by using FTP. FTP stands for File
+Transfer Protocol, and you'll need an FTP program on your home computer to
+transfer files. How it works will depend on just which program you have, but
+basically you want to tell it to open a connection to cyberspace.org, then
+give it your login ID and password.
+
+After you're connected, if you have a graphical interface you should be able
+to drag and drop the files you want to move. If you have a command-line
+interface (such as the one that comes with Windows 95), the commands are get
+to get a file from Grex and put to put a file onto Grex.
+
+
+
+  ------------------------------------------------------------------------
+
+                             UNIX (Whats That?)
+
+Grex runs a version of the UNIX operating system called SunOS 4.1.4. SunOS
+is the underlying software system that lets all the programs you use (such
+as PicoSpan, Mail, etc.) run, much as DOS, Mac OS, and Windows 95 allow
+programs to run on home computers. There are many versions of UNIX in
+existence; ours originally came from Sun Microsystems Inc., the makers of
+the Sun-4 computer Grex runs on now.
+
+Explaining the intricacies of UNIX is a formidable task, well beyond the
+scope of this handbook. But you are welcome to use Grex to learn as much as
+you can about it, studying the documentation online and asking lots of
+questions.
+
+
+
+  ------------------------------------------------------------------------
+
+                                Bibliography
+
+Much of what you need to know to make full use of all GREX's facilities can
+be found in a good UNIX reference. The most of the rest can be found in a
+good Internet reference. We recommend you check out the local library! Here
+are a few places to start:
+
+     Take me To Your Modem: a pocket guide to GREX
+     Cyberspace Communications, 1993
+
+     UNIX for Dummies by John R. Levine
+     IDG Books Worldwide 1993
+
+     Internet for Dummies by John R. Levine
+     IDG Books Worldwide 1993
+
+     Zen and the Art of the Internet: A Beginner's Guide by Brendon P.
+     Kehoe
+     Prentice Hall, 1993
+
+     The Virtual Community: Homesteading on the Electronic Frontier by
+     Howard Rheingold
+     Addison-Wesley, 1993
+
+
+
+  ------------------------------------------------------------------------
+
+                      The GREX Statement of Principles
+
+This system is intended to foster community education and the spiritual and
+intellectual enrichment of its users, through the peaceable interchange of
+ideas.
+
+The members of this system hope to attract a large, diverse, and mature
+group of thinking individuals and thereby to contribute to a better-informed
+citizenry.
+
+Governance of the system is based on cooperative principles, including open
+membership, democratic control, and nonprofit economics.
+
+This is an open-access system; the public is welcome. However, we encourage
+regular users to become members and help support the system financially.
+Voting on system policy matters is restricted to members.
+
+It should go without saying that the system is specifically NOT intended for
+any illegal purpose.
+
+Users are asked to be considerate of others, and are especially asked to
+make a point of setting a good example for those few who may from time to
+time fail to return the favor.

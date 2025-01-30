@@ -1,0 +1,14 @@
+                       Fronttalk Settings:  ULIST, GLIST
+
+Usage:  SET ULIST
+        SET GLIST
+	DISPLAY ULIST
+	DISPLAY GLIST
+
+Display/Edit the user or group files for the current conferences.  These are
+only meaningful for closed conferences, in which case they determine which
+users can access the conferences.  To be able to access the conference, a
+user's login name must be in the ulist file, or one of his group names must
+be in the glist file.
+
+Each file should be formatted with one name per line.

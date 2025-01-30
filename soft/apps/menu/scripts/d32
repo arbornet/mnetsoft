@@ -1,0 +1,31 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+Party HELP screen.                                  Copyright: Dave Parks
+      ----
+"
+sleep 1
+echo "
+Party is a multi-user chat program.  Everything you type is shown on the
+screen of everybody else who is running party.  Everything they type is
+shown on your screen.  Here is a list of the Party menu options:
+
+P)arty    * Join party!
+W)ho      * Tells you who is currently in the party program.
+S)earch   * Searches a party log for a string you'd like to read about.
+            For example, use this option to see every time your name
+            was mentioned this week.
+L)ist     * Shows a list of all files in the party log directory.
+            This will show you what files you can read/tail/search/join.
+R)ead     * Reads any party channel without really joining that channel.
+            NOTE: People can see you reading that channel, so it's not
+            really a great way to spy.  NOTE: Press your Interrupt
+            character to exit.
+T)ail     * Displays the last 10 lines of any channel.
+F)requently asked questions:
+          * Shows a list of frequently asked questions about party.
+M)anual page:  * Displays the Unix manual page for the party program.
+H)elp     * Prints this screen.
+E)xit     * Exits this menu.
+"

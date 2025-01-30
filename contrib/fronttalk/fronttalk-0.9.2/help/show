@@ -1,0 +1,8 @@
+                       Fronttalk Command:  HIDE
+
+Usage: SHOW <response number>               ("Respond or Pass?" prompt only)
+
+Undoes the effect of a "HIDE <response number>" command.  See "HELP HIDE"
+for details.
+
+Synonyms:  UNHIDE, UNEXPURGATE

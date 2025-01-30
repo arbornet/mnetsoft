@@ -1,0 +1,283 @@
+* {
+        border:  none;
+        margin:  0;
+        padding: 0;
+}
+
+body
+{
+        font-family: "Trebuchet MS",Verdana,Sans-Serif;
+        color:       #000000;
+        font-size:   normal;
+        font-weight: normal;
+        text-align:  center;
+}
+
+
+/*============================================================
+ Wrapper
+============================================================*/
+#wrap
+{
+        background-color: #f5f5dc; /* Beige  */
+        margin:           0 auto;
+        margin-top:       0.5%;
+        padding:          0.5%;
+        text-align:       left;
+        width:            97%;
+}
+
+
+/*============================================================
+ Header
+============================================================*/
+#header
+{
+        width:      100%;
+        background: #8fbc8f; /* DarkSeaGreen */
+        color:      #595750; /* gray33 */
+}
+
+#header h1
+{
+        color:       #5c4033; /* Very Dark Brown */
+        padding:     3% 3% 3% 1%;
+        margin:      0 0 2% 0;
+        font-size:   xx-large;
+        font-weight: bold;
+}
+
+/*============================================================
+ Content
+============================================================*/
+#content
+{
+        background:     #f5f5dc; /* Beige  */
+        float:          left;
+        margin-top:     1em;
+        padding-bottom: 1em;
+        width:          100%;
+        font-size:      0.8em;
+        max-width:      75em;
+}
+
+#content h1
+{
+        color: #595750;
+}
+
+#content h2, h3, h4, h5, h6
+{
+        color:     #5c4033; /* Very Dark Brown */
+        margin:    2% 2% 0% 1%;
+}
+
+
+/* =======================Para tags======================== */
+#content p
+{
+        margin:    0.4% 2% 1% 2%;
+        color:     #000000;     /* black */
+}
+
+#content strong
+{
+        color: #595750; /* gray33 */
+}
+
+#content tt
+{
+        font-weight: bold;
+        color:       #a52a2a; /* brown */
+        font-size:   1.1em;
+}
+
+#content tt.menu
+{
+        border: 0.1em solid black;
+        padding: 0 0.2em 0 0.2em;
+        color: black;
+}
+
+#content samp
+{
+        margin:  2% 2% 2% 8%;
+        display: block;
+}
+
+#content a:link,a:visited
+{
+        color:           #cd950c; /* DarkGoldenRod3 */
+        font-weight:     bold;
+        text-decoration: none;
+}
+
+#content a[href^="mailto"]
+{
+        color:       #0000ff; /* blue */
+        font-weight: bold;
+}
+
+#content ul, ol, dl
+{
+        margin: 0.4% 2% 2% 5%;
+}
+
+#content li, dt
+{
+        color:     #000000; /* black */
+}
+
+#content dd
+{
+        margin-left: 0% 4% 0% 4%;
+}
+
+#content address
+{
+        margin:      1% 0% 1% 4%;
+        color:       #36648b;   /* SteelBlue4; */
+        font-weight: bold;
+        font-style:  normal;
+        font-size:   1.1em;
+        font-family: Monospace;
+}
+
+#content blockquote
+{
+        margin: 2%;
+}
+
+#content img
+{
+        float:  right;
+        margin: 1%;
+}
+
+#content pre
+{
+       margin:      2%;
+       padding:     2%;
+       border:      0.1em solid #cd950c; /* DarkGoldenRod3 */
+       line-height: 1.1em;
+       font-size:   1.1em;
+}
+
+
+/* =======================Table tags======================= */
+#content table {
+        border-width: thin;
+        border-style: none;
+        margin-left:  15%;
+}
+
+#content th {
+        border-width: thin;
+        border-style: dotted;
+        margin:       0;
+}
+
+#content td {
+        border-width: thin;
+        border-style: dotted;
+        margin:       0;
+}
+
+#content tr {
+        margin:       0;
+        border-width: thin;
+        border-style: dotted;
+}
+
+
+/* =======================Form CSS======================== */
+#authbx
+{
+        margin-left:      1%;
+        border:           0.1em dotted #ff00; /* red */
+        color:            black;
+        background-color: #add8e6;          /* lightblue; */
+        font-size:        small;
+        font-weight:      normal;
+        width:            15%;
+}
+
+#submit
+{
+        margin:      0% 0% 0% 1%;
+        border:      0.1em solid #ff00;
+        padding:     2px;
+        color:       #000000;       /* black */
+        background:  #cdd565;       /* khaki3 */
+        font-weight: bold;
+}
+
+
+/* =======================Form CSS======================== */
+#content hr
+{
+        border: 0.1em dotted #000000; /* black */
+}
+
+
+/* =======================Special CSS======================== */
+#toc ol
+{
+        font-size: 1.1em;
+        margin-left: 4%;
+}
+
+#toc ul
+{
+        font-size:   1em;
+        margin-left: 4%;
+}
+
+#toc li
+{
+        font-size: 0.9em;
+}
+
+
+/*============================================================
+ Page Footer
+============================================================*/
+#pagefooter
+{
+        border-top: 0.1em solid #000000; /* black */
+        clear:      both;
+        text-align: center;
+        width:      100%;
+}
+
+#pagefooter img
+{
+        height:         20px;
+        margin:         1%;
+        padding:        0;
+        vertical-align: middle;
+}
+
+#pagefooter a
+{
+        color: #556b2f; /* DarkOliveGreen  */
+        display:         inline;
+        font-weight:     normal;
+        font-weight:     bold;
+        text-decoration: none;
+        vertical-align:  middle;
+}
+
+#revision 
+{
+        font-size: small;
+        float: left;
+        margin-left: 2%;
+}
+
+#feedback
+{
+        font-size: small;
+        float: right;
+        margin-right: 2%;
+}

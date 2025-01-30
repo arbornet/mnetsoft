@@ -1,0 +1,12 @@
+                       Fronttalk Command:  QUIT
+
+Usage:  QUIT
+
+At the "Respond or Pass?" prompt, this ends the current READ command and
+returns you to the OK prompt.
+
+At the OK prompt, this exits the system.
+
+Unless IGNOREEOF is set, you can also exit by entering control-D.
+
+Synonyms:  Q, STOP, EXIT, BYE

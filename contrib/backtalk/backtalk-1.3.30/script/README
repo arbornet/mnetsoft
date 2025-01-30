@@ -1,0 +1,25 @@
+This directory contains all the backtalk scripts:
+
+   config.bt       - the configuration script, executed before executing any
+	            other.
+
+   peek.bt	   - a script to allow simple URLs to point into conferences.
+
+   begin.bt        - default entry point if no flavor specified in URL.
+
+   lib/*           - various useful hunks of Backtalk code that are used by
+                     multiple interfaces.
+
+   lib/userinfo.bt - defines which information should be collected about users
+   	             and provides some common code to handle this stuff.
+
+   pistachio/*	   - the pistachio interface scripts.
+
+   abalone/*	   - the abalone interface scripts.
+
+   admin/*	   - scripts for web-based administrative tools.
+
+   public/*        - various public scripts that can be run by unauthenticated
+   		     users.
+
+   email/*         - templates for email messages sent by the system.

@@ -1,0 +1,61 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% linkform script
+%
+% Display a form for linking items from another conference into this
+% conference.  The actual linking is done by the "linkitem.bt" script.
+% Only fairwitnesses can do this.
+%
+% Query Parameters:
+%    conf=	conference to link into
+%    errmsg=    optional error message to display at top of screen
+%    lconf=     optional guess at conference to link from
+%    litem=     optional guess at item to link in
+
+flavor(config)+ include
+
+% page header
+(<HTML>
+<HEAD>
+<TITLE>)bbsname(: Link a )Item( into )/conftitle( )Conference(</TITLE>
+</HEAD>
+)
+
+% open conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+secret 2 eq /dunno defined ! and {
+  [/conf /errmsg /lconf /litem] flavor(confpass)+ jump
+} if
+
+global_header
+
+% warn off people without the proper access
+amfw ! {`(Only the )Fairwitness( can link )Items( into the )'
+        conftitle( )Conference(.\n)
+	stop} if
+
+% display any error message
+/errmsg defined {
+  errmsg { (Link failed: )errmsg(<P>\n)} if
+  } if
+
+% link form
+`(This form may be used to link )AnItem( from any other )Conference
+( into the )'conftitle`( )Conference(.
+<P>
+<TABLE BORDER=0>
+<FORM METHOD=POST ACTION=linkitem>
+<INPUT TYPE="hidden" NAME=conf VALUE=)'conf(>
+<TR><TD>)Conference cap( name:</TD>
+<TD><INPUT TYPE=text NAME=lconf SIZE=20)
+/lconf defined {( VALUE=)lconf( )} if
+(></TD></TR>
+<TR><TD>)Item cap( number:</TD><TD><INPUT TYPE=text NAME=litem SIZE=10)
+/litem defined {( VALUE=)litem( )} if
+(></TD></TR>
+<TR><TD></TD><TD><INPUT TYPE=submit VALUE="Link )Item cap("></TD></TR>
+</TABLE>
+</FORM>)
+
+flavor(footer)+ chain

@@ -1,0 +1,17 @@
+           Fronttalk Defines: PROMPT, NOCONFP, RFPPROMPT, OBVPROMPT
+
+Usage:  DEFINE PROMPT "\nOk: "
+	DEFINE NOCONFP "\n(no conf): "
+        DEFINE RFPPROMPT "\nRespond or pass? "
+        DEFINE OBVPROMPT "\nResponse not possible.  Pass? "
+
+These DEFINE commands configure the prompts used in various places in
+Fronttalk.  The default values are as shown above.
+
+The first two are are "Ok" prompts, used for top-level command input.  The
+NOCONFP version is used if you are not in a conference, an situation not
+yet supported by Fronttalk, so it never occurs.
+
+The second two are "Respond or Pass? " prompts, printed after each item when
+doing a READ.  The OBVPROMPT is used for frozen or retired items, or if the
+user is not logged in and thus cannot post.

@@ -1,0 +1,10 @@
+                       Fronttalk Command:  UNIX
+
+Usage:  UNIX <command>
+
+Execute an Unix command on the local system.  This is entirely equivalent to
+doing a shell escape with a ! prefix.  For example, you can list the /etc
+directory by doing any of:
+
+    UNIX ls /etc
+    !ls /etc/

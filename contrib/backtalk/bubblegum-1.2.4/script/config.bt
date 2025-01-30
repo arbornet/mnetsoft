@@ -1,0 +1,146 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% config script
+%
+% NOTE:  This is only the configuration file for the Bubble-Gum Interface.
+% The configuration file for backtalk as a whole has the same name but is in
+% the top level script directory.
+
+flavor(version)+ include
+
+% Default background colors for Bubble-Gum:
+
+/bg_color (FFFF99) defconstant
+/text_bg  (FFFFCC) defconstant
+/background `( BGCOLOR=")bg_color(" )' defconstant
+
+% Button Set:
+%   button_url is the URL of the image directory to use for bubblegum images.
+%      It ends with a backslash.
+%   button_h and button_w are the standard sizes of those buttons.
+%   button_sep is the number of pixels between vertically stacked buttons.
+%
+% The three button sets below are included in the distribution.  They each use
+% different terminology, so the terminology below should be editted to match.
+
+% Default gumball button set
+% (Terminology: Conference, Item, Response)
+/button_url `imghost(/bubblegum/gumball/)' defconstant
+/button_h 72 defconstant
+/button_w 100 defconstant
+/button_sep 3 defconstant
+
+% Booktalk's button set
+% (Terminology: Bookchat, Topic, Comments)
+%/button_url `imghost(/bubblegum/book/)' defconstant
+%/button_h 72 defconstant
+%/button_w 112 defconstant
+%/button_sep 8 defconstant
+
+% Maroon Buttons (thanks to Valerie Mates)
+% (Terminology: Forum, Topic, ___)
+%/button_url `imghost(/bubblegum/maroon/)' defconstant
+%/button_h 40 defconstant
+%/button_w 50 defconstant
+%/button_sep 4 defconstant
+
+% Global page header:
+%   This macro is executed at the top of every Bubble-Gum page.  By default, it
+%   does nothing.  It's a sensible place to put ads (yuck).
+%
+%   For example, a typical ad rotator might be done like this:
+%   /global_header {
+%     (<A HREF="http://ad.doubleclick.net/jump/www.hsx.com/;sz=468x60;ord=x">
+%     <IMG SRC="http://ad.doubleclick.net/ad/www.hsx.com/;sz=468x60;ord=x"
+%     WIDTH="468" HEIGHT="60" BORDER=0></A><P>\n)
+%   } def
+
+/global_header {
+} def
+
+% Global page footer:
+%   This macro is executed at the bottom of every Bubble-Gum page.  It normally
+%   generates some HTML footer text.   The default is a Backtalk copyright
+%   message, but you are welcome to take that out if you want to put something
+%   else here, say, links to other parts of your web site.
+
+/global_footer {
+  (<P><TD><FONT SIZE=-2>- )version
+  ( / )if_version( - )copyright(</FONT>)
+} def
+
+% Booktalk Customizations
+%   The Canton Public Library Booktalk system makes a few non-standard
+%   customizations to the bubblegum interface.
+%
+% booktalk_cflist
+%   In booktalk, users normally don't have their own .cflist files, and
+%   instead use a somewhat rigidly structured dflt.cflist with two tags
+%   in it (endclass and endpublic) that are treated specially.  This is
+%   enabled by defining booktalk_cflist as 1.
+%
+% booktalk_buttons
+%   Booktalk deletes the 'read new' button from begin, and the 'next forum'
+%   button from the confhome page.  Defining booktalk_buttons as 1 does this.
+%
+% booktalk_nolink
+%   Booktalk deletes the 'link' button that normally allows fairwitnesses
+%   to share items with other conferences.  Defining booktalk_nolink as 1
+%   does this.
+%
+% booktalk_teachtools
+%   The booktalk administrative tool set includes a page for teachers to
+%   administer student accounts.  If booktalk_teachtools is 1, then teachers
+%   will see a link to their admin page on their conference home page.
+
+/booktalk_cflist 0 defconstant
+/booktalk_buttons 0 defconstant
+/booktalk_nolink 0 defconstant
+/booktalk_teachtools 0 defconstant
+
+% Names for Things:
+%   Backtalk by default uses some slightly odd names for things.  Most of these
+%   are inherited from Picospan.  The following definitions let you rename
+%   them.  You might prefer 'host' to 'fairwitness', or 'topic' to 'item',
+%   or 'forum' to 'conference'.  Note that this doesn't redefine the words
+%   that appear on the buttons.  You'll have to edit the buttons the hard way.
+%   Note that the defined values should be all lower case.
+
+/Fairwitness (fairwitness) defconstant
+/AFairwitness (a fairwitness) defconstant
+/Fairwitnesses (fairwitnesses) defconstant
+/Item (item) defconstant
+/AnItem (an item) defconstant
+/Items (items) defconstant
+/Conference (conference) defconstant
+/AConference (a conference) defconstant
+/Conferences (conferences) defconstant
+/Response (response) defconstant
+/AResponse (a response) defconstant
+/Responses (responses) defconstant
+
+%/Fairwitness (moderator) defconstant
+%/AFairwitness (a moderator) defconstant
+%/Fairwitnesses (moderators) defconstant
+%/Item (topic) defconstant
+%/AnItem (a topic) defconstant
+%/Items (topics) defconstant
+%/Conference (bookchat) defconstant
+%/AConference (a bookchat) defconstant
+%/Conferences (bookchats) defconstant
+%/Response (comment) defconstant
+%/AResponse (a comment) defconstant
+%/Responses (comments) defconstant
+
+%/Fairwitness (host) defconstant
+%/AFairwitness (a host) defconstant
+%/Fairwitnesses (hosts) defconstant
+%/Item (topic) defconstant
+%/AnItem (a topic) defconstant
+%/Items (topics) defconstant
+%/Conference (forum) defconstant
+%/AConference (a forum) defconstant
+%/Conferences (forums) defconstant
+%/Response (posting) defconstant
+%/AResponse (a posting) defconstant
+%/Responses (postings) defconstant

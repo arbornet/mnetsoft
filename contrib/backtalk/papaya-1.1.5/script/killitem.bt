@@ -1,0 +1,91 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% killitem script
+%
+% This script asks a user to confirm that he really wants to delete his
+% account.  If he says yes, this script also does the deletion.
+%
+% Query Parameters:
+%    conf=	conference to kill in.
+%    item=	item number to kill.
+%    confirm=   if "Y" delete the item.
+%    doit=      defined if executing.
+
+flavor(config)+ include
+
+flavor(openconf)+ stopped {
+  (No )Conference( )conf(\n)
+  stop
+} if
+/body xdef
+
+/doit defined {
+  /confirm defined { confirm (Y) eq {
+
+    % do the kill
+    kill_item /rc xdef
+
+    % check return code
+    rc {
+      % failure
+      body
+      rc 2 eq {
+	`(Backtalk error: No item )item( in the )conf
+	 ( conference.\n)'
+      } if
+      rc 3 eq {
+	`(Backtalk error: Permission to delete item )item
+	 ( from )conf( )Conference
+	 ( denied.\n)'
+      } if
+      stop
+    } if
+  } if } if
+  flavor(confhome)+ jump
+} if
+
+% page header
+(<HTML>
+<HEAD>
+<TITLE>)bbsname(: Confirm deletion of )Item( )item(</TITLE>
+</HEAD>
+)global_header
+body
+
+(all) item this_item {
+  Item cap( )item( not found)
+  halt
+} if
+read_item {
+  Item cap( )item( not accessible)
+  halt
+} if
+pop
+
+% warn off illegal kill attempts
+maykill ! {
+ (You do not have the necessary permissions to kill this item.
+ </BODY></HTML>\n)
+ stop
+} if
+
+
+% explain what is happening and ask for a confirmation
+(This command will permanently delete the the following )Item(:
+<BLOCKQUOTE>
+<STRONG>)Item cap( )item(: )title(<BR>
+Entered by: )authorname( \()authorid(\)
+</STRONG></BLOCKQUOTE>
+It will generally not be possible to restore the )Item( if this is done.
+<P>
+To perform the deletion, check the box below, and hit "Continue".
+<FORM METHOD=POST ACTION=killitem>
+<INPUT TYPE="hidden" NAME=conf VALUE=")conf(">
+<INPUT TYPE="hidden" NAME=item VALUE=")item(">
+<INPUT TYPE="hidden" NAME=list VALUE=")list(">
+<INPUT TYPE="hidden" NAME=csel VALUE=")csel(">
+<INPUT TYPE="hidden" NAME=doit VALUE="1">
+<INPUT TYPE="checkbox" NAME=confirm VALUE="Y"> Really Kill )Item cap(.<BR>
+<INPUT TYPE=submit VALUE="Continue">
+</FORM>)
+flavor(footer)+ chain

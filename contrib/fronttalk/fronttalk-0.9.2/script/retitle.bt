@@ -1,0 +1,25 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+% retitle an item.
+%   conf=    conference
+%   item=    item number
+%   private= if true, we are setting a private title
+%   new=     new title
+
+/http_content_type (text/plain) store
+
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+/private 0 default cvi {
+  item /mytitle new set_item_note
+} {
+  new retitle_item /err xdef
+
+  err 1 eq {(<ERROR MSG="Blank title rejected">\n) stop} if
+  err 2 eq {(<ERROR MSG="Item )item( not found">\n) stop} if
+  err 3 eq {(<ERROR MSG="Permission to retitle item )item( denied">\n) stop} if
+} ifelse
+
+(<DONE>
+)

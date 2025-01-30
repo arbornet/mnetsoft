@@ -1,0 +1,262 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% help script
+%
+% Print some help.
+%
+%  page=     Page help was clicked on
+
+flavor(config)+ include
+
+(<HTML>
+<HEAD>
+<TITLE>)bbsname(: Help</TITLE>\n)
+(S) flavor(meta)+ include
+(</HEAD>
+<BODY )background(>
+<H2>Backtalk Papaya Interface Help</H2>
+)
+
+page (begin) eq {
+(Welcome to Backtalk's Papaya Interface.
+<P>
+)
+id !{
+  (Since you have not logged in, some functions described here are not
+  available.<P>)
+} if
+(You accessed help from the "<STRONG>main menu</STRONG>" page.  Things
+you might want to do from this page include:
+<P>
+<DL>
+<DT><STRONG>Select a conference to read</STRONG>.
+<DD>The primary purpose of this page is to let you select a conference.
+    There are several ways to do this:
+<P>
+<P>
+<UL>
+<LI>
+  Click on the name of a conference in your hotlist.  A hotlist is a list
+  you can maintain of your favorite conferences.  Those conferences are listed
+  on the main menu, with numbers of new items and responses.
+<P>
+<LI>
+  Click on the link on the top of the page to goto the first conference in 
+  your hotlist has new responses.
+<P>
+<LI>
+  Click on the "<STRONG>Conference index</STRONG>" link to get a full list of
+  all conferences.
+<P>
+<LI>
+  Type the name of a conference into the "Go to conference" box in the bottom
+  right corner of the screen.
+</UL>
+<P>
+<DT><STRONG>Edit your conference hotlist</STRONG>.
+<DD>Click on the "Conference index" tag.  Check the boxes next to the names
+    of the conferences you want on your hotlist, and click the "Update hotlist"
+    button at the bottom of the screen.
+<P>
+<DT><STRONG>Edit your profile</STRONG>.
+<DD>Your profile contains information about you, which you may or may not want
+    to make available to other users.  Click on the ")id( profile" link.
+<P>
+<DT><STRONG>Ignore some users</STRONG>.
+<DD>If you can abide by some users, the "Ignore users" link will let you
+    filter them out forever more.
+</DL>
+)
+} if
+
+
+page (confhome) eq {
+id !{
+  (Since you have not logged in, some functions described here are not
+  available.<P>)
+} if
+(You accessed help from the "<STRONG>conference</STRONG>" page.  Things
+you might want to do from this page include:
+<P>
+<DL>
+<DT><STRONG>Read all NEW responses in the conference</STRONG>.
+<DD>This lets you see everything that has been posted to the conference
+    that you haven't seen yet.  There are two ways to do this:
+    <UL>
+    <LI>
+       Click on  the <IMG BORDER=0 SRC=")imghost(/)flavor(readnew.gif">
+       button at the top of the page.
+    <P>
+    <LI>
+        Click on the "New" option from the list of possible rangees,
+	so that all "new" items are listed.
+	Then click on the first one to read it.
+    </UL>
+    Either way, you will see the first item with new responses, when you
+    have read it, use the
+    <IMG BORDER=0 SRC=")imghost(/)flavor(nextitem.gif">
+    button from there to read the rest.
+    <P>
+    Note that when you first join a conference, only a few items will
+    normally be flagged as new, to keep from completely flooding you with
+    new material to read.  The rest are "unseen" until new posts are made
+    to them.
+<P>
+<DT><STRONG>See everything in the conference</STRONG>.
+<DD>This lets you see everything, including things you've seen before.
+    Select the "All" option from the list of possible ranges.
+    This will give you a list of all items (except those you have forgotten).
+    You can click on the first and then use the
+    <IMG BORDER=0 SRC=")imghost(/)flavor(nextitem.gif"> button to walk through
+    the rest, you you can just click on the ones you are most interested in,
+    using your "back" button to return to the conference list after each one.
+<P>
+<DT><STRONG>See everything posted in the past 7 days</STRONG>.
+<DD>Select "Activity within last 7 days" from the list of possible ranges,
+    then click on the first item, or whatever you want to see.
+<P>
+<DT><STRONG>See what you've forgotten</STRONG>.
+<DD>It's possible to "forget" items that don't interest you.  Normally
+    forgotten items won't appear even in the list of "all" items.  If you
+    want to see them, and possibly restore them to your list of items,
+    click on the "Forgotten" link in the list of possible ranges.
+<P>
+<DT><STRONG>Forget an item</STRONG>.
+<DD>There is a "Forget this item" link next to each item.  Click it if you
+    never want to see it again.
+<P>
+<DT><STRONG>Change your name in this conference</STRONG>.
+<DD>You can use a different default name or handle in each conference.
+    You can edit the one for this conference from this page.  This won't
+    effect your name in any other conference, or your name in your profile.
+<P>
+<DT><STRONG>Mark everything as read</STRONG>.
+<DD>If you mark everything as read, then you automatically "catch up" with
+    the conference.  On future visits, only things posted after you "caught
+    up" will be "new".
+<P>
+<DT><STRONG>Enter a new item</STRONG>.
+<DD>Want to start a new topic of conversation?  Use the
+    <IMG BORDER=0 SRC=")imghost(/)flavor(enter.gif"> button at the top of
+    the page.
+<P>
+<DT><STRONG>Go to a different conference</STRONG>.
+<DD>You can use the 
+    <IMG BORDER=0 SRC=")imghost(/)flavor(nextconf.gif"> and
+    <IMG BORDER=0 SRC=")imghost(/)flavor(prevconf.gif"> buttons to go to the
+    next or previous conference on your hot list.  Or you can use the links
+    at the bottom of the screen to return to the main menu to select a new
+    conference or to type in the name of a conference you want to jump to.
+<P>
+<DT><STRONG>Search the conference</STRONG>.
+<DD>The
+    <IMG BORDER=0 SRC=")imghost(/)flavor(search.gif"> button
+    lets you search for words or phrases or posts by particular users
+    in the conference.
+<P>
+<DT><STRONG>See list of participations in this conference</STRONG>.
+<DD>List the users who have been in this conference by clicking on the
+    <IMG BORDER=0 SRC=")imghost(/)flavor(participants.gif"> button.
+<P>
+<DT><STRONG>Resign from this conference</STRONG>.
+<DD>This deletes all records of which item and responses you have read.
+    It also removes you from the list of participants.
+</DL>
+)
+} if
+
+page (read) eq {
+id !{
+  (Since you have not logged in, some functions described here are not
+  available.<P>)
+} if
+(You accessed help from the "<STRONG>read</STRONG>" page.  Things
+you might want to do from this page include:
+<P>
+<DL>
+<DT><STRONG>Respond to the item you are reading</STRONG>.
+<DD>There is a box at the bottom of the page where you can enter your own
+    response to this item.
+    Note that you can edit the version of your name that will be attached
+    to this particular response.  You may also be able to select between
+    several different formatting options.
+    <P>
+    <DL>
+    <DT>Plain Text
+    <DD>Response is displayed just as you typed it in.
+    <DT>Pure HTML
+    <DD>HTML tags may be embedded in your response.  Note that unclosed
+       tags will automatically be closed, and especially obnoxious HTML
+       constructs will be automatically deleted.
+    <DT>Lazy HTML
+    <DD>Same as pure HTML, except blank lines are automatically turned into
+        &lt;P&gt; tags.
+    </DL>
+    <P>
+    These options may not be available in some conferences.
+<P>
+<DT><STRONG>Go to another item</STRONG>.
+<DD>The 
+    <IMG BORDER=0 SRC=")imghost(/)flavor(previtem.gif"> and
+    <IMG BORDER=0 SRC=")imghost(/)flavor(nextitem.gif"> item links will
+    goto the next or previous selected item.  If you are reading new
+    responses, this will be the next or previous new item.  If you are
+    reading all responses, this will be the immediate next or previous
+    unforgotten item.
+<P>
+<DT><STRONG>See older responses</STRONG>.
+<DD>Normally you are only shown the new responses.  If you want to go back
+    and see some older ones too, the "Redisplay" control at the bottom of
+    the screen will do it for you.
+<P>
+<DT><STRONG>Preserve the item as unread</STRONG>.
+<DD>
+    If the item was new, and you still want it to be new the next time
+    you come back, the use the 
+    <IMG BORDER=0 SRC=")imghost(/)flavor(preserve.gif"> button at the
+    bottome of the screen.
+<P>
+<DT><STRONG>Forget the item</STRONG>.
+<DD>
+    Use the <IMG BORDER=0 SRC=")imghost(/)flavor(forget.gif"> button at the
+    top or bottom of the page if you never want to see this item again.
+<P>
+<DT><STRONG>Hide one of your postings</STRONG>.
+<DD>If a "hide" link appears next to your message, then clicking on it
+    will hide that response.  It will not be show by default, but other
+    users will still be able to see it by clicking on a link.  This is
+    a good thing to do with really long postings that are not of universal
+    interest.  You can reverse this by clicking on the "unhide" link that
+    will appear next your hidden responses.
+<P>
+<DT><STRONG>Delete one of your postings</STRONG>.
+<DD>If a "delete" link appears next to your message, then clicking on it
+    will delete that message.  It will no longer be possible for anyone
+    to read this response.  This is not reversable.
+<P>
+<DT><STRONG>Retitle one of your items</STRONG>.
+<DD>If a "retitle" link appears next to the item title, you can click this
+    to change the title of the item.
+<P>
+<DT><STRONG>Edit one of your responses</STRONG>.
+<DD>If an "edit" link appears next to your responses, then you can edit the
+    text of the response.  This is not enabled on all systems.
+<P>
+<DT><STRONG>Enter a new item</STRONG>.
+<DD>Want to start a new topic of conversation?  Use the
+    <IMG BORDER=0 SRC=")imghost(/)flavor(enter.gif"> button at the top of
+    the page.
+<P>
+<DT><STRONG>Go to a different conference</STRONG>.
+<DD>You can use the 
+    <IMG BORDER=0 SRC=")imghost(/)flavor(nextconf.gif"> and
+    <IMG BORDER=0 SRC=")imghost(/)flavor(prevconf.gif"> buttons to go to the
+    next or previous conference on your hot list.  Or you can use the links
+    at the bottom of the screen to return to the main menu to select a new
+    conference or to type in the name of a conference you want to jump to.
+</DL>
+)
+} if
+
+
+flavor(footer)+ chain

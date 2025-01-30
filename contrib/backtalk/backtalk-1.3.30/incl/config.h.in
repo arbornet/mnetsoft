@@ -1,0 +1,1026 @@
+
+/* Copyright 1996-1999, Jan D. Wolter and Steven R. Weiss, All Rights Reserved.
+ */
+
+#ifndef _BT_CONFIG_H
+#define _BT_CONFIG_H
+
+/* ============================== UID NUMBERS ============================ */
+
+/* Define CFADM_UID to the Unix uid number of the Unix account that will own
+ * all conference files.  If possible, this should be an account specially
+ * created for the use of Backtalk alone.
+ */
+#undef CFADM_UID
+
+/* Define SERVER_UID to the Unix uid number of the Unix account that cgi-bin
+ * programs are run under.  Normally this will be the uid number of "nobody"
+ * or whatever account the httpd runs as.
+ *
+ * Some systems use "suexec" or "cgiwrap" to run cgi programs as the owner of
+ * the file.  On such systems you should still use the real server uid number
+ * here, since we are interested more in the id used when checking
+ * authentication than when executing.  However partutil will not be usable
+ * under such a setup, so you can't use Unix login IDs.
+ */
+#undef SERVER_UID
+
+/* ============================= USER DATABASE =========================== */
+
+/* The Backtalk "user database" keeps track of the uid numbers, login names,
+ * home directories, and full names of all Backtalk users.  It does not
+ * normally include their passwords, which are stored in the authentication
+ * database defined below, though it is possible to configure Backtalk so
+ * that both are in the same file.  The choice of which type of user database
+ * is used depends on which of the src/ident_*.c files is linked in at compile
+ * time.  The following defines are used mostly by those files.
+ */
+
+/* Define IDENT_HDR to the name of the ident_*.h file for the ident module
+ * that is being used.  It must be enclosed in double quotes.  This is an
+ * unsatisfactory kludge.
+ */
+#undef IDENT_HDR
+
+/* Define UNIX_ACCOUNTS and link in ident_passwd.c or ident_shadow.c if the
+ * user database is the Unix password file.  This should be done if all your
+ * conference accounts are real unix accounts.
+ */
+#undef UNIX_ACCOUNTS
+
+/* Link in ident_text.c and define PASSWD_FILE if your identification file is
+ * a flat text file similar in format to /etc/passwd, but used only for
+ * backtalk.  PASSWD_FILE gives the full path of the file.
+ */
+#undef PASSWD_FILE
+
+/* Link in ident_hash.c and define DBM_NAM_FILE if your identification database
+ * is a hashed db or dbm file.  These give better performance that flat files,
+ * but are a bit harder to maintain.  In this case DBM_NAM_FILE should be
+ * defined to the full path name of the dbm file indexed by name.
+ *
+ * Theoretically you could also define DBM_UID_FILE as the full path of a
+ * dbm file indexed by UID, but it is only used in the extremely rare
+ * circumstance that you use ID_GETUID but not UID_MAP_FILE.  It hasn't been
+ * tested in eons and might not work.
+ */
+#undef DBM_NAM_FILE
+#undef DBM_UID_FILE
+
+/* Link in ident_tagfile.c if you want the user database to be a set of tagfiles
+ * stored in the user's home directories.  This is the best solution for
+ * most installations - it's fast and easy to maintain.  However, it uses more
+ * disk space than the other options, because it creates many little files
+ * instead of one big one.
+ */
+
+/* Define EDITUSER if we want to allow Backtalk to create, edit, and delete
+ * user accounts.  This should always be turned off if we are using Unix
+ * accounts, since backtalk shouldn't have the access to edit the unix
+ * password file.  It can be turned off for other authentication options,
+ * if you want to use some other set of tools to do user administration.
+ */
+#undef EDITUSER
+
+/* Backtalk needs to keep track of which uid number to issue next.  There are
+ * two options for doing this.  NEXTUID_TEXT maintains a text file with the
+ * next uid number to assign in it.  NEXTUID_SQL uses an SQL sequence.  The
+ * latter is normally used with SQL user databases, the former with everything
+ * else.  If neither is defined, NEXTUID_TEXT is the default.
+ */
+
+#undef NEXTUID_TEXT
+#undef NEXTUID_SQL
+
+/* ============================ AUTHENTICATION =========================== */
+
+/* The authentication database stores the encrypted password that goes with
+ * each account.  What type of authentication you are using depends on which
+ * of the src/auth_*.c files you link into Backtalk.  The following defines
+ * are used to configure them.
+ *
+ * If you are using UNIX_ACCOUNTS, the the authentication database is the
+ * unix password file.  Link in auth_passwd.c or auth_shadow.c define nothing
+ * in this section.
+ *
+ * Otherwise the authentication database will be some kind of database readable
+ * by the http daemon, which does the actual authentication, and maintained
+ * by Backtalk.
+ *
+ * IMPORTANT: Unlike all other Backtalk files, authentication files will
+ * normally be owned by the user httpd runs as, not by the user Backtalk runs
+ * as.  They must be in a directory that is owned by httpd, not by Backtalk.
+ * So that normally means they need to be in a different directory than any
+ * other Backtalk files.
+ */
+
+/* Define AUTH_HDR to the name of the auth_*.h file for the ident module
+ * that is being used.  It must be enclosed in double quotes.  This is an
+ * unsatisfactory kludge.
+ */
+#undef AUTH_HDR
+
+/* Define AUTH_FILE and link in auth_text.c if you are authenticating from a
+ * standard .htpasswd.  It should be the full path name of that file.  Note
+ * that the .htpasswd file should never be under the document root.
+ */
+#undef AUTH_FILE
+
+/* Define AUTH_DBM and link in auth_db.c or auth_dbm.c if you are using an
+ * Apache-style db or dbm file to authenticate from.  This is faster than
+ * using AUTH_FILE.  It should be set to the full path of the dbm file,
+ * normally omitting any .dir .pag or .db suffixes.  The dbm file should
+ * never be under the document root.
+ */
+#undef AUTH_DBM
+
+/* Define SHARE_AUTH_IDENT instead of AUTH_FILE or AUTH_DBM if you want to have
+ * authentification information stored in your user database (PASSWD_FILE or
+ * DBM_NAM_FILE).  This doesn't need to be defined if you are using Unix
+ * accounts.  It doesn't work with the UD_TAGFILE option.  The SHARE_AUTH_IDENT
+ * option may not work with some http daemons that reject authentication
+ * databases that contain more than just passwords (Apache should work).
+ * Note that the DBM_NAM_FILE or PASSWD_FILE must be in a directory owned by
+ * the account httpd runs as if this option is used.
+ */
+#undef SHARE_AUTH_IDENT
+
+/* Define READABLE_PASSWD if the password database should be kept publically
+ * readable.  This is generally a really bad idea, but if you are installing
+ * your CGIs to run under suExec or cgiwrap, then you may have no alternatives.
+ * With these systems, Apache still does authentication checking as 'nobody'
+ * so the password database must be readable to nobody, but your scripts don't
+ * run as 'nobody' so they can't maintain a password database that is owned
+ * by 'nobody.'
+ *
+ * Note that the password files contain only encrypted passwords, and can only
+ * be read by users who can actually log into a Unix account on your server.
+ * so this might not be too bad of a security problem.
+ */
+#undef READABLE_PASSWD
+
+/* Define ID_REMOTE_USER if user identities are to be taken from the
+ * REMOTE_USER environment variable.  This should always be defined.
+ *
+ * Define ID_GETUID if user identities are to be taken from getuid() call.
+ * ID_GETUID was designed to allow people to run Backtalk directly, via
+ * something like "lynxcgi" or "fronttalk".
+ *
+ * Backtalk can support any combination of the two.  If you define neither,
+ * then no user validation will be accepted, and all users will be anonymous
+ * users.  If both are defined, then ID_GETUSER will be used only if backtalk's
+ * realuid is neither SERVER_UID nor root, or if a -d is specified on the
+ * backtalk command line.
+ */
+#undef ID_REMOTE_USER
+#undef ID_GETUID
+
+/* ============================== LOGIN METHOD ============================ */
+
+/* Backtalk can do authentication either using Basic Authentication or
+ * form authentication.  Basic Authentication is the default.  The browser
+ * automatically pops up a login box when the user access a page he needs
+ * to login for.  The browser remembers the login and password and
+ * automatically resends it as needed to access future pages on the same
+ * site.
+ *
+ * In form authentication, login is via a login form on the backtalk web page.
+ * When a user successfully logs in, Backtalk generates a unique session ID
+ * number, which it sets in a cookie and saves to a session database.  In
+ * future page requests, the session ID from the cookie is looked up in the
+ * session database to identify the user.  Note that this is insecure on
+ * servers where untrusted people can run 'ps' and observe the contents of
+ * the environment varialbes used to pass cookies to cgis.
+ *
+ * Form authentication is used if the variable ID_SESSION is defined.  If
+ * ID_SESSION is defined, and we are linking with sess_file.c instead of
+ * sess_sql.c then the SESSION_FILE should give the full path name of the
+ * file containing the session database and SESSION_COOKIE is the name
+ * of a cookie to use to save session IDs.
+ */
+#undef ID_SESSION
+#undef SESSION_FILE
+#undef SESSION_COOKIE
+
+/* Session IDs (and also the random strings used for email IDs) are random
+ * strings.  Backtalk supports several methods of generating good hard-to-
+ * predict random strings.  On systems where a good source of randomness is
+ * not available (ie, those lacking /dev/random or /dev/urandom) Backtalk
+ * accumulates randomness itself.  This is done in an SQL table if an SQL
+ * server is being used, or in a file otherwise.  If we are using a file,
+ * then the value of NOISE_FILE is it's full path name.
+ */
+#undef NOISE_FILE
+
+/* ============================== DBM PACKAGES ============================ */
+
+/* If you are using UD_DBM or AUTH_DBM, then you need to define which dbm
+ * package to use.  Many systems have more than one dbm package, and if you
+ * are using AUTH_DBM then it is important that Backtalk be built using the
+ * same DBM package that Apache was built with.  If you haven't configured
+ * Backtalk to use any DBM files, then you can ignore this section.
+ *
+ * Warning:  Some dbm packages can emulate other packages.  In this section,
+ * define which interface you are using, not which actual library.  So if
+ * you are using GDBM to emulate NDBM, define NDBM, not GDBM.  Which actual
+ * library you use depends on the options you give when you link the program.
+ * For compatibility with Apache, you must normally use the same interface
+ * *and* the same library.
+ *
+ * If you aren't worried about compatibility with Apache, use the first one
+ * listed that is supported by your system.
+ */
+
+/* Define HASH_DB if you are using the Berkeley DB package.  Backtalk can
+ * handle either version 1, version 2 or version 3.  This must be used if
+ * you are using the AUTH_DBM option and Apache's mod_auth_db module.  If
+ * you want to use Berkeley DB's emulation of NDBM or old DBM, define
+ * those options below.
+ */
+#undef HASH_DB
+
+/* Define HASH_GDBM if you are using the Gnu GDBM package's native interface.
+ * If you want to use Gnu's emulation of NDBM or old DBM, define those options
+ * below.
+ */
+#undef HASH_GDBM
+
+/* Define HASH_NDBM if you are using the NDBM package, or if you are using
+ * GDBM or DB to emulate NDBM.  This must be used if you are using the AUTH_DBM
+ * option with Apache's mod_auth_dbm module.
+ */
+#undef HASH_NDBM
+
+/* Define HASH_ODBM if you are using the old DBM package, or if you are using
+ * GDBM or DB to emulate the old DBM package.
+ */
+#undef HASH_ODBM
+
+/* ======================= BACKTALK USER GROUPS ======================= */
+
+/* These are the group names and/or gid numbers of the three user groups that
+ * Backtalk cares about.  If you are using Backtalk accounts, you should 
+ * probably just leave the default names/values.  In this case they are
+ * Backtalk groups not Unix groups, and they have nothing to do with the
+ * groups defined by your Unix system, so there is no particular reason to
+ * set them to anything other than the Backtalk default values.
+ *
+ * For Unix accounts these are real group IDs but, only the CFADM_GID and
+ * CFADM_GROUP names matter.  Any accounts in that group will have full
+ * conference administration powers.
+ *
+ * You can leave the _GID values undefined, and just use the _GROUP names.
+ * This may make things a tiny bit slower, but is probably more robust.
+ *
+ * You can leave both CFADM_GID and CFADM_GROUP or both GRADM_GID and
+ * GRADM_GROUP undefined, in which case you will have no admin accounts.
+ * With Backtalk accounts at least one of USER_GID or USER_GROUP must be
+ # defined.
+ *
+ * Defaults are:
+ *
+ *    CFADM_GID=0      CFADM_GROUP="cfadm"
+ *       Conference administrators - Backtalk "superusers" who can create,
+ *       edit and destroy any backtalk user account or any backtalk conference,
+ *       and are fairwitnesses in all conferences.
+ *
+ *    USER_GID=1       USER_GROUP="user"
+ *       Normal users.  Not used for systems with Unix accounts.  Only accounts
+ *       in this group can ever be created by anonymous users.
+ *
+ *    GRADM_GID=2      GRADM_GID="gradm"
+ *       Users in the gradm group have administrative power over users in any
+ *       other, non-gradm group they are also members of.  They can create
+ *	 such accounts, even if ONLY_ADM_CREATE is defined.  They can delete
+ *	 and change passwords on such accounts.  They can also edit a default
+ *       conference list for their group.
+ *
+ * For systems using a Backtalk group file, if both _GID and _GROUP values are
+ * defined, and the Backtalk etc/group file doesn't exist, then it will use
+ * defined values as a default group file, slightly improving performance
+ * for systems with standard settings.
+ */
+#undef CFADM_GID
+#undef CFADM_GROUP
+#undef USER_GID
+#undef USER_GROUP
+#undef GRADM_GID
+#undef GRADM_GROUP
+
+/* ===================== SPECIAL FILES AND DIRECTORIES ==================== */
+
+/* Define BBS_DIR to the full path of the directory where all the conference
+ * directories will be stored.  This should not be under the document root.
+ * Name must have trailing slash!
+ */
+#undef BBS_DIR
+
+/* Define SCRIPT_DIR to the full path of the directory where all Backtalk
+ * scripts are stored.  Usually this directory will contain the welcome.bt
+ * and config.bt files, and a number of subdirectories containing the scripts
+ * for the different flavors.  This is normally not under the document root.
+ */
+#undef SCRIPT_DIR
+
+/* Define BT_COMPILER to the full path name where the Backtalk compiler will
+ * be installed.  Backtalk automatically recompile any scripts whose version
+ * numbers don't match the current compiler, or whose source files have
+ * changed since the last compilation.  So it needs the full path name of the
+ * compiler.
+ */
+#undef BT_COMPILER
+
+/* Define CONFIG_FILE to the full path name where the backtalk.conf file
+ * will be kept.  This has run time settings of various configuration
+ * options, including the SQL server settings.
+ */
+#undef CONFIG_FILE
+
+/* Define BROWSER_FILE to the full path name where the browser_list file
+ * will be kept.  This file classifies less common web browsers into rough
+ * catagories according to their capabilities.  If it is not defined, only
+ * Lynx, Netscape, and Internet Explorer are recognized.  This is largely
+ * obsolete, since nearly all modern browsers have all the capabilities needed
+ * for Backtalk.
+ */
+#undef BROWSER_FILE
+
+/* Define MIMENAME_FILE to the full path name where the mimename file
+ * will be kept.  This file gives English names for various mime types.
+ * It is only used if attachments are enabled.  If it is not defined,
+ * only a few of the most common mime types will be given English names.
+ */
+#undef MIMENAME_FILE
+
+/* Define GROUP_FILE to the full path name of the backtalk group file.  This
+ * is needed only if we are using the Backtalk group file (as opposed to the
+ * Unix group file or the SQL group database).
+ */
+#undef GROUP_FILE
+
+/* ============================== LOG FILES =============================== */
+
+/* Define ACCT_LOG_FILE to the full path of the file where account creations
+ * and deletions are logged.
+ */
+#undef ACCT_LOG_FILE
+
+/* Define ERROR_FILE to the full path name of the file where Backtalk will
+ * log all crashes.  If not defined, or if the file does not exist, then
+ * crashes are not logged.  This is a debugging tool.
+ */
+#undef ERROR_FILE
+
+/* Define LASTLOG_FILE to the full path name of the file where Backtalk will
+ * keep track of when each user last logged in.  This is useful if you want
+ * to be able to expire accounts of users who haven't logged in for a while,
+ * but it costs a bit of extra overhead on every hit to maintain.
+ *
+ * If you are using Unix logins, you may want to define UNIX_LASTLOG below
+ * instead.
+ */
+#undef LASTLOG_FILE
+
+/* Define LOG_FILE to the full path name of a file where Backtalk will log
+ * all transactions.  Logging is turned off if the file doesn't exist or
+ * if the Backtalk "loglevel" variable is set to zero.  Mostly I don't use
+ * the log file because the httpd logs give all the information I need.
+ */
+#undef LOG_FILE
+
+/* ========================= ACCOUNT CREATION STUFF ======================= */
+
+/* This is configuration information for the Backtalk account administration
+ * tools - tools to create and delete user accounts, change passwords, etc.
+ * They are only used with Backtalk accounts.  If you are using Unix accounts,
+ * you need to use the standard Unix account administration tools instead, so
+ * you can skip this section.
+ */
+
+/* Define USER_DIR to the full path of the directory where all user's home
+ * directories will be stored.  This contains participation files and such
+ * like stuff.  This should not be under the document root.  The name should
+ * end with a slash.
+ */
+#undef USER_DIR
+
+/* Define USER_DIR_LEVEL to the number of intermediate directory levels to
+ * use under USER_DIR.  USER_DIR_LEVEL causes intermediate directory levels
+ * to be created.  For example, if USER_DIR were "/bbs/user/" the directory
+ * for "janc" would be
+ *          "/bbs/user/janc"       if USER_DIR_LEVEL=0
+ *          "/bbs/user/j/janc"     if USER_DIR_LEVEL=1
+ *          "/bbs/user/j/a/janc"   if USER_DIR_LEVEL=2
+ * This can make directory accesses a bit faster if you have very large
+ * numbers of users, but it is a bit clumsier to administrate.  You can
+ * not set USER_DIR_LEVEL to larger numbers than 2.
+ */
+#undef USER_DIR_LEVEL
+
+/* Define NEXT_UID_FILE to the full path name of a file where Backtalk's
+ * account creation tools will keep track of the next Uid number to assign
+ * to a newly created Backtalk account.  This is only used if NEXTUID_TEXT
+ * is defined.
+ */
+#undef NEXT_UID_FILE
+
+/* Define MAX_LOGIN_LEN to the maximum number of characters in a Backtalk
+ * account name.  Eight is traditional, but more works.
+ */
+#define MAX_LOGIN_LEN 8
+
+/* Define AUTO_CREATE_DIR to cause backtalk to check for the existance of
+ * the user's home directory on every login, and to create it if it is
+ * missing.  This is primarily useful when integrating with accounts
+ * created by foreign newuser programs, which probably don't create a home
+ * directory.
+ */
+#undef AUTO_CREATE_DIR
+
+/* =============================== HTTP STUFF ============================= */
+
+/* The following, if defined are defaults for some environment variables
+ * normally passed to the CGI program.  Queries from some older browsers
+ * (like Netscape 1.22) don't define these, so having a sensible default
+ * values gains us a smidgeon more portability.  If these symbols aren't
+ * defined, then no default is set.
+ */
+#undef DFLT_HTTP_HOST
+#undef DFLT_SCRIPT_NAME
+
+/* On the other hand, if HTTP_HOST is wrong for some reason having to do with
+ * weird forwarding, you can define the variable below to the value you want
+ * used instead.
+ */
+#undef OVERRIDE_HTTP_HOST
+
+/* ============================ ATTACHMENT STUFF ========================== */
+
+/* Attachments are images or other multi-media files attached to Backtalk
+ * postings.  Backtalk can maintain a database of these.  The files themselves
+ * are always stored on disk, under a special attachment directory.  There is
+ * also an attachment index, however, which keeps supplementary information
+ * about each database.  We currently support versions of this in a hashed
+ * dbm file, or in an SQL database.
+ *
+ * Define one of ATTACH_HASH or ATTACH_SQL if you want attachments.  If
+ * neither is defined, it will not be possible to attach files to responses.
+ */
+#undef ATTACH_HASH
+#undef ATTACH_SQL
+
+/* ========================= DYNAMIC LOADING STUFF ======================== */
+
+/* As a CGI program, Backtalk typically gets loaded often for short runs.
+ * To improve it's overall performance, Backtalk can be configured so that
+ * various chunks of rarely used code are only linked on demand, that is if
+ * they are needed by the script being run.
+ *
+ * This is still experimental at this time, and may not work on all systems.
+ *
+ * To enable define DYNALOAD and define DYNALIB_DIR to the directory where
+ * the loadable modules will be.
+ */
+#undef DYNALOAD
+#undef DYNALIB_DIR
+#define DYNALIB_SUFFIX ".so"
+
+/* =========================== UNIX ACCOUNT STUFF ========================= */
+
+/* If you are using real Unix accounts with Backtalk, this section has some
+ * defines of interest.  Many relate to Yapp or Picospan compatibility,
+ * because the most sensible reason to be using Unix accounts is that you
+ * want to be able to run Yapp or Picospan.  If you aren't using Unix
+ * logins, and don't care about Yapp or Picospan, ignore this section.
+ */
+
+/* Define REAL_UID and/or READ_GID if the user's uid and/or gid is his real
+ * unix user id or group id number.  This is normally the case if and only if
+ * you are using real unix accounts.
+ *
+ * Normally backtalk will only let users access files permitted to "others".
+ * If these flags are defined, then it will take their group and user id
+ * numbers seriously, and allow them access files permitted to that group
+ * or user id.
+ */
+#undef REAL_UID
+#undef REAL_GID
+
+/* Define UNIX_LASTLOG instead of LASTLOG_FILE if you are using unix logins,
+ * if your unix has a lastlog file and if you want keep Backtalk last login
+ * times in the same file.  This is the same file that is updated when a user
+ * telnets in, and if you are using "pwauth" for authentication, it can be
+ * configured to update it too.  You don't have to give the pathname -
+ * Backtalk will get that from the system "lastlog.h" file.
+ */
+#undef UNIX_LASTLOG
+
+/* Define SHADOW_NONE if your system does not have a shadow password file -
+ * that is, if encrypted user passwords live in the publicly readable
+ * /etc/passwd file.  All Unix systems used to do this, but most modern
+ * systems keep encrypted passwords in a separate file that is readable only
+ * by root, often called /etc/shadow.
+ */
+#undef SHADOW_NONE
+
+/* Define PWAUTH_PATH if you are using session ids and form logins with
+ * Unix accounts on a system with shadow passwords.  pwauth is a program
+ * distributed with mod_auth_external that Backtalk needs in order to
+ * authenticate in that configuration.  PWAUTH_PATH should give the full
+ * path name of the program.
+ */
+#undef PWAUTH_PATH
+
+/* Define PICOSPAN_COMPAT to keep conference files strictly Picospan
+ * compatible.
+ *
+ * Define YAPP_COMPAT to keep conference files strictly Yapp 2.3 compatible.
+ *
+ * Define YAPP3_COMPAT to keep conference files strictly Yapp 3.0 compatible.
+ *
+ * Backtalk is designed to be able to share its conference database with
+ * Yapp 2.3 or Picospan (Yapp is a clone of Picospan), both command-line
+ * conferencing systems.  However, there are small incompatibilities between
+ * the two.  If you intend to have Backtalk share files with Picospan or
+ * Yapp, define the appropriate one of these.  Otherwise, define neither.
+ * Sorry, you can't define both - they aren't really compatible.
+ */
+#undef YAPP_COMPAT
+#undef YAPP3_COMPAT
+#undef PICOSPAN_COMPAT
+
+/* Define PARTUTIL and CF_GID if you are using Unix logins and want to be
+ * compatible with Yapp or Picospan.
+ *
+ * PARTUTIL is the full pathname where the "partutil" program will be
+ * installed.
+ *
+ * CF_GID is the unix group id number that will own all user's conference
+ * participation files.
+ *
+ * On systems where Picospan or Yapp 2.3 compatibility are required,
+ * participation files will reside in the user's real unix directory and be
+ * owned by him.  To work with Backtalk, these files should be in group
+ * CF_GID and should be writable to that group.  But Picospan and Yapp won't
+ * create them that way, so the "partutil" program must be installed as an
+ * suid-root program that creates, destroys or permits participation files
+ * so that Backtalk can use them.  On systems where Yapp or Picospan
+ * compatibility is not needed, PARTUTIL should not be defined and the
+ * PARTUTIL program should not be installed.
+ *
+ * Yapp 3.0 keeps participation files and .cflists under the bbs directory,
+ * owned by the conference account, so partutil is not needed to access
+ * these files.  However it is still used to access .plan files.
+ *
+ * CF_GID should be a group in which there are no regular users, or only very
+ * trusted ones, since they will have write access to everyone's participation
+ * files.
+ */
+#undef PARTUTIL
+#undef CF_GID
+
+/* =============================== SQL SERVERS ============================ */
+
+/* Backtalk can interface to any of several different SQL servers.
+ *
+ * Right now this is for experimental purposes only, but in the future we
+ * will support user authentication out of SQL and storing user information
+ * in SQL.
+ *
+ * If you want to use and SQL server, define at most one of the following
+ * options.
+ */
+
+/* PostgreSQL */
+#undef SQL_PGSQL
+
+/* MySQL */
+#undef SQL_MYSQL
+
+/* mSQL version 2.0 */
+#undef SQL_MSQL
+
+/* Oracle */
+#undef SQL_ORACLE
+
+/* Sybase */
+#undef SQL_SYBASE
+
+/* ============================== FILE LOCKING ============================ */
+
+/* To avoid problems with two programs try to simultaneously update the same
+ * file, file locking is used.  Different versions of Unix support different
+ * locking mechanisms.  It mostly doesn't matter much which you use, unless
+ * you want to use Backtalk with Picospan or Yapp.  Then it becomes important
+ * to use the same locking mechanism they use.
+ *
+ * Some kinds of locks don't work on NFS network-mounted file systems.  If
+ * any of Backtalk files will be network mounted, you try to choose a locking
+ * method that works over the network.  Which ones do varies a lot between
+ * different versions of unix.  Lock files should work over networks.
+ *
+ * If in doubt, use the first one listed that is supported by your system,
+ * except don't use LOCK_FCNTL with Yapp or Picospan.
+ */
+
+/* Define LOCK_FCNTL to use the fcntl() function to lock files.  Neither
+ * Yapp or Picospan support this.  fcntl() locks are usually compatible with
+ * lockf() locks.
+ */
+#undef LOCK_FCNTL
+
+/* Define LOCK_FLOCK to use the flock() function to lock files.  On many
+ * systems, flock() locks do not interact with lockf() or fcntl() locks.
+ */
+#undef LOCK_FLOCK
+
+/* Define LOCK_LOCKF to use the lockf() function to lock files.
+ */
+#undef LOCK_LOCKF
+
+/* Define LOCK_FILE to use temporary files to do locking.  Lock files are
+ * slower and more cumbersome than the other options, but they should work
+ * on even the most primitive system.  The implementation used here is
+ * compatible with Yapp's lock file option.  It should be very rare to use
+ * this.
+ */
+#undef LOCK_FILE
+
+/* ============================= MAILER STUFF  ========================== */
+
+/* Define SENDMAIL_PATH to enable sending mail with the sendmail program.
+ * It should be the full path of the sendmail program (or a reasonable
+ * facimile) on your system.  Most systems that run a mail transport service
+ * other than sendmail still have a script named 'sendmail' which will work
+ * for our purposes.
+ */
+#undef SENDMAIL_PATH
+
+/* =========================== DEBUGGING STUFF ========================== */
+
+/* Define TRAP_CRASH if you want Backtalk to (try to) produce the Backtalk
+ * crash screen instead of a core dump when a segmentation violation or other
+ * fatal error occurs in Backtalk.  Theoretically this should never happen,
+ * but Backtalk ain't perfect yet, and the dump screen is possibly more useful
+ * with a CGI program than a core dump file would be.  If TRAP_CRASH is
+ * defined, running Backtalk with a "-s" option turns it off.  It is not
+ * a security problem to leave this on.
+ */
+#undef TRAP_CRASH
+
+/* Define INSECURE to allow Backtalk to be run even if its real-uid is not
+ * SERVER_UID.  Normally Backtalk will generate a crash message if this is
+ * done, since the REMOTE_USER environment variable can not be trusted if
+ * Backtalk is not being run by the http daemon.  Turning INSECURE on is a
+ * big security hole, but it is useful for debugging.
+ */
+#undef INSECURE
+
+/* Define MTRACE to enable gnu-style mtrace memory debugging.
+ */
+#undef MTRACE
+
+/* Define DMALLOC to compile with the dmalloc memory debugging library.
+ * See http://dmalloc.com for information.  To use, compile with this option,
+ * and link with -ldmalloc.  Bash users define
+ * 	function dmalloc { eval `command dmalloc -b $*`; }
+ * csh users define
+ *      alias dmalloc 'eval `\dmalloc -C \!*`'
+ * Then do something like
+ *      dmalloc -l dm.log -i 100 low -p allow-free-null
+ * and run backtalk from the command line.  Note that the dm.log file will
+ * appear in the installed script directory.
+ */
+#undef DMALLOC
+
+/* ========================== SPELL CHECKING ============================ */
+
+/* To enable spell checking of postings, you must configure Backtalk to use
+ * an external spell checking program.  Pick one of the ones below.  If you
+ * have a choice of more than one, pick the first one listed.  If none are
+ * defined, spellchecking will be disabled.
+ */
+
+/* ASPELL_PATH - If you want to use Kevin Atkinson's Gnu aspell package,
+ * define ASPELL_PATH to the full pathname of the 'aspell' program.  Aspell
+ * comes up with better guesses for correct spellings of misspelled words
+ * than ispell does, at least for English words.  Aspell can emulate ispell.
+ *
+ * If both ASPELL_PATH and ASPELL_LIB are defined, then we link backtalk with
+ * the aspell library, and access it through the C-language API.  I think this
+ * exists in aspell versions after 0.50.  This has been coded, but not tested.
+ * It would be a miracle if it works.
+ */
+#undef ASPELL_PATH
+#undef ASPELL_LIB
+
+/* IISPELL_PATH - If you want to use international ispell version 3.x.x, define
+ * this to the full path of the ispell program installed on your system.  Note
+ * that this will not work with ispell 4.x, which is a completely different,
+ * incompatible, and, for our purposes, inferior program.  It is freely
+ * distributed.  See http://fmg-www.cs.ucla.edu/geoff/ispell.html.
+ */
+#undef IISPELL_PATH
+
+/* ============================ OBSOLETE STUFF ========================== */
+
+/* The defines in this section are for options that either aren't really
+ * supported anymore, or never really got fully supported.  Mostly you
+ * should ignore them.
+ */
+
+
+/* Define UID_MAP_FILE to the full path name of a dbm file that maps unix
+ * uid numbers to Backtalk login names.
+ *
+ * UID_MAP_FILE may optionally defined if ID_GETUID is define.  This
+ * should be done if the uid/login space for the conferencing system is
+ * different than the system uid/login names.  The map file will be used
+ * do convert from one to the other.
+ */
+
+#undef UID_MAP_FILE
+
+/* ============= NITTY-GRITTY UNIX FUNCTIONS AND HEADERS ================ */
+
+/* Defined SAVED_UID if the setuid() function supports saved uids.  If the
+ * _POSIX_SAVED_IDS flag is defined by <unistd.h> then you don't need to
+ * define this.
+ */
+#undef SAVED_UID
+
+/* Define FPRINTF_RETURNS_SIZE if fprintf() returns the number of characters
+ * printed.
+ */
+#undef FPRINTF_RETURNS_SIZE
+
+/* Define HAVE_VPRINTF if you have the vprintf() function.
+ */
+#undef HAVE_VPRINTF
+
+/* Define HAVE_DOPRNT if you don't have vprintf() but do have _doprnt().
+ */
+#undef HAVE_DOPRNT
+
+/* Define HAVE_SNPRINTF if you have the snprintf() function.
+ */
+#undef HAVE_SNPRINTF
+
+/* Define HAVE_VSNPRINTF if you have the vsnprintf() function.
+ */
+#undef HAVE_VSNPRINTF
+
+/* Define HAVE_VASPRINTF if you have the vasprintf() function.
+ */
+#undef HAVE_VASPRINTF
+
+/* Define HAVE_MKTIME if you have the mktime() function.
+ */
+#undef HAVE_MKTIME
+
+/* Define HAVE_GETTIMEOFDAY if you have the gettimeofday() function.
+ */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define HAVE_RANDOM if you have the random() function.
+ */
+#undef HAVE_RANDOM
+
+/* Define HAVE_FGETPWENT if you have fgetpwent().
+ */
+#undef HAVE_FGETPWENT
+
+/* Define HAVE_STRFTIME if you have the strftime() function.
+ */
+#undef HAVE_STRFTIME
+
+/* Define HAVE_HTONL if you have the htonl() function and netinet/in.h header.
+ */
+#undef HAVE_HTONL
+
+/* Define HAVE_SYS_WAIT_H if you have any <sys/wait.h> file at all.
+ */
+#undef HAVE_SYS_WAIT_H
+
+/* Define HAVE_UNION_WAIT_H if your has <sys/wait.h> but uses the old BSD
+ * style "union wait" type instead of an "int" to store status values.
+ */
+#undef HAVE_UNION_WAIT
+
+/* Define RETSIGTYPE as the return type of signal handlers (int or void).
+ */
+#undef RETSIGTYPE
+
+/* Define NO_JOBCONTROL on systems that don't have job control, even though
+ * their signal.h header files define TSIGTSTP.  (The configure script never
+ * sets this one.)
+ */
+#undef NO_JOBCONTROL
+
+/* Define size_t to `unsigned' if <sys/types.h> doesn't define it.
+ */
+#undef size_t
+
+/* Define pid_t to `int' if <sys/types.h> doesn't define it.
+ */
+#undef pid_t
+
+/* Define uid_t to `int' if <sys/types.h> doesn't define it.
+ */
+#undef uid_t
+
+/* Define gid_t to `int' if <sys/types.h> doesn't define it.
+ */
+#undef gid_t
+
+/* Define STDC_HEADERS if you have the ANSI C header files.
+ */
+#undef STDC_HEADERS
+
+/* Define TIME_WITH_SYS_TIME if you can safely include both <sys/time.h>
+ * and <time.h>.
+ */
+#undef TIME_WITH_SYS_TIME
+
+/* Define TM_IN_SYS_TIME if your <sys/time.h> declares struct tm.
+ */
+#undef TM_IN_SYS_TIME
+
+/* Define HAVE_GETTIMEOFDAY if you have the gettimeofday() function.
+ */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define HAVE_CLOCK_GETTIME if you have the clock_gettime() function.
+ */
+#undef HAVE_CLOCK_GETTIME
+
+/* Define HAVE_MKDIR if you have the mkdir() function.
+ */
+#undef HAVE_MKDIR
+
+/* Define HAVE_MKTIME if you have the mktime() function.
+ */
+#undef HAVE_MKTIME
+
+/* Define HAVE_TZSET if you have the tzset() function.
+ */
+#undef HAVE_TZSET
+
+/* Define HAVE_PUTENV if you have the putenv() function.
+ */
+#undef HAVE_PUTENV
+
+/* Define HAVE_STRCHR if you have the strchr() function.
+ */
+#undef HAVE_STRCHR
+
+/* Define HAVE_STRDUP if you have the strdup() function.
+ */
+#undef HAVE_STRDUP
+
+/* Define HAVE_STRERROR if you have the strerror() function.
+ */
+#undef HAVE_STRERROR
+
+/* Define HAVE_STRSTR if you have the strstr() function.
+ */
+#undef HAVE_STRSTR
+
+/* Define HAVE_STRSPN if you have the strspn() function.
+ */
+#undef HAVE_STRSPN
+
+/* Define HAVE_STRCASECMP if you have the strcasecmp() function.
+ */
+#undef HAVE_STRCASECMP
+
+/* Define HAVE_SETRLIMIT if you have the setrlimit() function.
+ */
+#undef HAVE_SETRLIMIT
+
+/* Define HAVE_MEMCMP if you have an eight-bit clean memcmp() function.
+ */
+#undef HAVE_MEMCMP
+
+/* Define HAVE_MEMMOVE if you have the memmove() function.
+ */
+#undef HAVE_MEMMOVE
+
+/* Define HAVE_MEMSET if you have the memset() function.
+ */
+#undef HAVE_MEMSET
+
+/* Define HAVE_SYSINFO if you have the sysinfo() function.
+ */
+#undef HAVE_SYSINFO
+
+/* Define HAVE_MYSQL_REAL_ESCAPE_STRING if you are using MySQL and have
+ * the function with that absurdly long name.
+ */
+#undef HAVE_MYSQL_REAL_ESCAPE_STRING
+
+/* Define HAVE_DIRENT_H if you have the <dirent.h> header file.
+ */
+#undef HAVE_DIRENT_H
+
+/* Define HAVE_FCNTL_H if you have the <fcntl.h> header file.
+ */
+#undef HAVE_FCNTL_H
+
+/* Define HAVE_LIMITS_H if you have the <limits.h> header file.
+ */
+#undef HAVE_LIMITS_H
+
+/* Define HAVE_NDIR_H if you have the <ndir.h> header file.
+ */
+#undef HAVE_NDIR_H
+
+/* Define HAVE_SYS_DIR_H if you have the <sys/dir.h> header file.
+ */
+#undef HAVE_SYS_DIR_H
+
+/* Define HAVE_SYS_FILE_H if you have the <sys/file.h> header file.
+ */
+#undef HAVE_SYS_FILE_H
+
+/* Define HAVE_SYS_NDIR_H if you have the <sys/ndir.h> header file.
+ */
+#undef HAVE_SYS_NDIR_H
+
+/* Define HAVE_SYS_TIME_H if you have the <sys/time.h> header file.
+ */
+#undef HAVE_SYS_TIME_H
+
+/* Define HAVE_UNISTD_H if you have the <unistd.h> header file.
+ */
+#undef HAVE_UNISTD_H
+
+/* Define HAVE_SYS_PARAM_H if you have the <sys/param.h> header file.
+ */
+#undef HAVE_SYS_PARAM_H
+
+/* Define HAVE_SYS_MOUNT_H if you have the <sys/mount.h> header file.
+ */
+#undef HAVE_SYS_MOUNT_H
+
+/* Define HAVE_SYS_STATVFS_H if you have the <sys/mount.h> header file.
+ */
+#undef HAVE_SYS_STATVFS_H
+
+/* Define HAVE_SYS_VFS_H if you have the <sys/mount.h> header file.
+ */
+#undef HAVE_SYS_VFS_H
+
+/* Define if using MySQL and the mysql.h header is in <mysql.h> or
+ * <mysql/mysql.h>.
+ */
+#undef HAVE_MYSQL_H
+#undef HAVE_MYSQL_MYSQL_H
+
+/* Define HAVE_NDBM_H if you have the <ndbm.h> header file.
+ */
+#undef HAVE_NDBM_H
+
+/* Define HAVE_GDBM_NDBM_H if you have the <gdbm/ndbm.h> header file.
+ */
+#undef HAVE_GDBM_NDBM_H
+
+/* Define HAVE_DB1_NDBM_H if you have the <db1/ndbm.h> header file.
+ */
+#undef HAVE_DB1_NDBM_H
+
+/* Define DB_EMULATES_NDBM if we are using Berkeley DB's emulation of NDBM
+ */
+#undef DB_EMULATES_NDBM
+
+/* Define HAVE_TM_GMTOFF if struct tm has a tm_gmtoff member.
+ */
+#undef HAVE_TM_GMTOFF
+
+/* Define HAVE_TM_ZONE if struct tm has a tm_zone member.
+ */
+#undef HAVE_TM_ZONE
+
+/* Define HAVE_TZNAME if the external array tzname[] exists.
+ */
+#undef HAVE_TZNAME
+
+/* Define HAVE_DEV_URANDOM if the the /dev/urandom device exists
+ */
+#undef HAVE_DEV_URANDOM
+
+/* Define HAVE_DEV_RANDOM if the the /dev/random device exists
+ */
+#undef HAVE_DEV_RANDOM
+
+/* Define HAVE_DEV_SRANDOM if the the /dev/srandom device exists
+ */
+#undef HAVE_DEV_SRANDOM
+
+/* Define NEED_USCORE if dlsym() requires a leading underscode in symbol names.
+ */
+#undef NEED_USCORE
+
+#include "localconfig.h"
+
+#endif /* _BT_CONFIG_H */

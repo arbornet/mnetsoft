@@ -1,0 +1,14 @@
+% Backtalk Login Form -- (c) 2001, Jan Wolter, Steve Weiss
+%
+% relogin script
+%
+% This is a form/handler used for logging back in after a session has been
+% expired.  The login.bt script does all the real work.
+
+/msg (Your session has expired.) def
+
+/oldscript defined {
+  /bounce `backtalkurl(/)oldscript cgiquery{(?)cgiquery}if' def
+} if
+
+(public/login) chain

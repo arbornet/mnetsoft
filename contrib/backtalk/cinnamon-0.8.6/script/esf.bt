@@ -1,0 +1,97 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2005, Jan Wolter
+%
+% Output Script - ESF - Epistula Syndication Format
+%
+% NOTES:
+%
+%   - Like RSS 3.0, ESF is another joke syndication format.  Or at least
+%     it's more obviously a joke than most.  This one is from Nicholas
+%     Avenell.
+%   - Spec is at http://www.aquarionics.com/article/name/esf
+
+flavor(config)+ include
+
+
+% <string> showval <string>
+%   Quote a value.  Well, really just delete all newlines and tabs.
+
+/showval {
+  (\n) ( ) 0 replace
+  (\t) ( ) 0 replace
+} def
+
+
+% <fullnamevar> <emailvar> usrstr <string>
+%  Given a full name and an email address, make a standard email address
+%  including both.  Either both can be empty strings or undefined.
+
+/usrstr {
+   dict begin
+   dup defined {exec} {pop ()} ifelse /em xdef
+   dup defined {exec} {pop ()} ifelse /fn xdef
+   em {
+     em showval
+     fn {
+	% have email and name
+        ( \()+ fn showval+ (\))+
+     } if
+   } {
+     fn {
+       % have name but no email
+       (\() fn showval+ (\))+
+     } if
+   } ifelse
+   end
+} def
+
+
+/rss_start {
+   /http_content_type (text/plain) store
+} def
+
+
+/rss_start_channel {
+
+  (title\t) rss_title showval(\n)
+  (link\t)rss_link showval(\n)
+
+  /rss_managingeditor_name defined /rss_managingeditor_email defined or {
+    (contact\t)/rss_managingeditor_name /rss_managingeditor_email usrstr (\n)
+  } {
+    /rss_webmaster_name defined /rss_webmaster_email defined or {
+      (contact\t)/rss_webmaster_name /rss_webmaster_email usrstr (\n)
+    } if
+  } ifelse
+
+  (\n)
+
+  print
+
+} def
+
+
+/rss_item {
+
+  /rss_pubdate defined {rss_pubdate} {time} ifelse
+  (\t)
+  /rss_title defined {rss_title} {(-)} ifelse
+  (\t)
+  /rss_link defined {rss_link} {(-)} ifelse
+  (\n)
+
+  print
+
+  % There is no maximum number of items, so always return false
+  0
+
+} def
+
+
+/rss_end_channel {
+   % do nothing
+} def
+
+
+/rss_end {
+   % do nothing
+} def

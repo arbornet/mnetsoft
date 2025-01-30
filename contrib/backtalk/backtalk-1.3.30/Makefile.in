@@ -1,0 +1,270 @@
+# Subdirectories with Makefiles
+
+SUBDIRS= src regex misc script image bbs
+
+# The following defines describe what goes in the distribution:
+
+BT_SRC= src/array.c src/browser.c src/builtin.c src/byteorder.c \
+	src/cgi_cookie.c src/cgi_query.c src/date.c src/dict.c src/exec.c \
+	src/file.c src/format.c src/group.c src/hashfile.c src/http.c \
+	src/lock.c src/last_log.c src/main.c src/math.c src/mksysdict.c \
+	src/picospan.c src/print.c src/printtoken.c src/ps_config.c \
+	src/ps_conflist.c src/ps_index.c src/ps_item.c src/ps_part.c \
+	src/ps_post.c src/ps_sum.c src/ps_ulist.c src/readcomp.c \
+	src/regular.c src/search.c src/sel.c src/session.c src/set_uid.c \
+	src/stack.c src/str.c src/tm2sec.c src/token.c src/ps_acl.c \
+	src/udb.c src/udb_check.c src/user.c src/snprintf.c src/sess_file.c \
+	src/userfunc.c src/dynaload.c src/grp_text.c src/grp_unix.c \
+	src/grp_sql.c src/adm_user.c src/ps_edit.c src/mod_conf.c src/spell.c \
+	src/sysconfig.c src/sqlutil.c src/qry.c src/nextuid.c src/showopt.c \
+	src/sess_none.c src/sess_sql.c src/hash.c src/free.c src/getput.c \
+	src/ps_cflist.c src/log.c src/tags.c src/debug.c src/vstr.c src/baaf.c \
+	src/baaf_core.c src/baai_hash.c src/baai_sql.c src/mimetype.c \
+	src/sess_stupid.c src/partdir.c src/email.c src/email_sendmail.c \
+	src/emailfunc.c src/md5.c src/entropy.c src/confaccess.c src/tag.c \
+	src/readfile.c src/partfile.c
+
+ADM_SRC= src/adm_check.c src/adm_conf.c
+
+BTC_SRC= src/comp_func.c src/comp_main.c src/comp_tok.c src/comp_util.c \
+	src/decomp.c
+
+AUTH_SRC=src/auth_db.c src/auth_dbm.c src/auth_passwd.c src/auth_shadow.c \
+	src/auth_text.c src/auth_sql.c src/auth_none.c
+
+IDENT_SRC=src/ident_hash.c src/ident_passwd.c src/ident_shadow.c \
+	src/ident_tagfile.c src/ident_text.c src/ident_sql.c src/ident_yapp.c
+
+SQL_SRC=src/sql_pgsql.c src/sql_mysql.c src/sql_msql.c src/sql_none.c
+
+MISC_SRC=src/partutil.c src/memchk.c src/shy.c src/btpasswd.c \
+	src/btrmuser.c src/btmkuser.c src/btvalid.c src/makeconf.c \
+	src/mkgdbinit.c src/gdbinit.tmpl src/cmd_die.c src/mkgdbinit.c \
+	src/version.c src/gdbinit.tmpl src/dumpsum.c src/sumcheck.c \
+	src/mksql.c src/sqlinit.c src/mktagdefs.c src/cleanattach.c \
+	src/dumpattach.c src/testemail.c src/dumpuser.c src/testdate.c
+
+SRC= $(BT_SRC) $(BTC_SRC) $(ADM_SRC) $(AUTH_SRC) $(IDENT_SRC) $(MISC_SRC) \
+	$(SQL_SRC) src/Makefile.in
+
+REGEX= regex/COPYRIGHT regex/Makefile.in regex/README regex/README.BACKTALK \
+        regex/WHATSNEW regex/cclass.h regex/cname.h regex/common.h \
+        regex/engine.c regex/fake.c regex/mkh regex/regcomp.c regex/regerror.c \
+	regex/regex.3 regex/regex.7 regex/regex.h regex/regex2.h \
+        regex/regexec.c regex/regfree.c regex/utils.h regex/regtoflat.c
+
+CONFIG= configure configure.in incl/config.h.in install-sh config.guess \
+	config.sub ltmain.sh aclocal.m4 acinclude.m4
+
+BT_HDR= incl/array.h incl/backtalk.h incl/browser.h incl/builtin.h \
+	incl/byteorder.h incl/cgi_cookie.h incl/cgi_query.h incl/common.h \
+	incl/conf.h incl/date.h incl/dict.h incl/exec.h incl/file.h \
+	incl/format.h incl/group.h incl/hashfile.h incl/http.h \
+	incl/last_log.h incl/lock.h incl/math.h incl/print.h incl/ps_acl.h \
+	incl/printtoken.h incl/ps_config.h incl/ps_conflist.h incl/ps_index.h \
+	incl/ps_item.h incl/ps_part.h incl/ps_post.h incl/ps_sum.h \
+	incl/ps_ulist.h incl/readcomp.h incl/regular.h incl/search.h \
+	incl/sel.h incl/session.h incl/set_uid.h incl/stack.h incl/str.h \
+	incl/tm2sec.h incl/token.h incl/udb.h incl/udb_check.h \
+	incl/user.h incl/userfunc.h incl/version.h incl/authident.h \
+	incl/waittype.h incl/dynaload.h incl/showopt.h incl/sess.h \
+	incl/adm_user.h incl/ps_edit.h incl/mod_conf.h incl/spell.h \
+	incl/sql.h incl/sum.h incl/snprintf.h incl/sysconfig.h incl/sqlutil.h \
+	incl/qry.h incl/sqlqry.h incl/nextuid.h incl/hash.h incl/free.h \
+	incl/getput.h incl/ps_cflist.h incl/log.h incl/tags.h \
+	incl/localconfig.h incl/debug.h incl/vstr.h incl/baaf.h \
+	incl/baaf_core.h incl/baai.h incl/mimetype.h incl/partdir.h \
+	incl/email.h incl/emailfunc.h incl/md5.h incl/entropy.h incl/tag.h \
+	incl/confaccess.h incl/partfile.h incl/readfile.h
+
+BTC_HDR= incl/comp.h incl/comp_tok.h incl/comp_util.h
+
+ADM_HDR= incl/adm.h incl/adm_check.h \
+	incl/adm_conf.h
+
+AUTH_HDR=incl/auth_db.h incl/auth_dbm.h incl/auth_passwd.h incl/auth_shadow.h \
+	incl/auth_text.h incl/auth_sql.h incl/auth_none.h
+
+IDENT_HDR=incl/ident_hash.h incl/ident_passwd.h incl/ident_shadow.h \
+	incl/ident_tagfile.h incl/ident_text.h incl/ident_sql.h \
+	incl/ident_yapp.h
+
+HDR= incl/README $(BT_HDR) $(BTC_HDR) $(ALT_HDR) $(ADM_HDR) $(AUTH_HDR) \
+	$(IDENT_HDR)
+
+DOC= doc/index.html doc/language.html doc/glossary.html doc/install.html \
+     doc/install1.html doc/install2.html doc/install3.html doc/install4a.html \
+     doc/install4b.html doc/install5a.html doc/install5b.html \
+     doc/install6.html doc/admin.html doc/admin-conf-change.html \
+     doc/admin-conf-create.html doc/admin-conf-delete.html \
+     doc/admin-conf-fw.html doc/LICENSE doc/admin-user-delete.html \
+     doc/admin-user-passwd.html doc/CHANGES doc/admin-user-create.html \
+     doc/admin-user-valid.html doc/admin-conf-backup.html \
+     doc/admin-conf-unerase.html doc/admin-conf-itemedit.html \
+     doc/auth.html doc/btmkuser.8 doc/btrmuser.8 doc/btvalid.8 \
+     doc/btpasswd.8 doc/dumpsum.8 doc/sumcheck.8 doc/admin-menu.html \
+     doc/tutorial.html doc/format.html doc/install7.html
+
+MISC= misc/browser_list misc/cgitest misc/Makefile.in misc/bt_group \
+      misc/btinstall.in misc/backtalk.conf misc/mimename
+
+SQL= sql/*/auth_ident.sql sql/*/auth.sql sql/*/ident.sql sql/*/nextuid.sql \
+     sql/*/types.sql sql/*/session.sql sql/*/auth_ident_group.sql \
+     sql/*/group.sql sql/*/baai.sql
+
+SCRIPT= script/README script/config.bt.in script/peek.bt script/lib/*.bt \
+	script/begin.bt script/public/hello.bt script/public/login.bt \
+	script/public/newuser.bt script/public/relogin.bt \
+	script/public/logout.bt script/public/welcome.bt \
+	script/public/showopt.bt script/pistachio/*.bt \
+	script/pistachio/help/*.bt script/abalone/*.bt \
+	script/admin/*.bt script/admin/README script/Makefile.in \
+	script/email/*.bt
+
+
+IMAGE= image/backtalk.jpg image/pistachio image/abalone image/Makefile.in
+
+CSS= css/abalone css/Makefile.in
+
+ROOT= README LICENSE Makefile.in
+
+BBS=  bbs/Makefile.in bbs/conflist bbs/confmenu bbs/dflt.cflist bbs/public.txt \
+      bbs/general/config bbs/general/login bbs/test/config bbs/test/login
+
+DISTRIB= $(ROOT) $(SRC) $(HDR) $(HTTPD) $(DOC) $(SCRIPT) $(MISC) $(IMAGE) \
+	$(CSS) $(BBS) $(CONFIG) $(REGEX) $(SQL)
+
+# Standard Makefile Stuff
+
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+VPATH= @srcdir@
+prefix= @prefix@
+top_builddir= .
+exec_prefix= @exec_prefix@
+authtype= @authtype@
+identtype= @authtype@
+logintype= @logintype@
+bindir= @bindir@
+passwddir= @passwddir@
+etcdir= @etcdir@
+cgiurl= @cgiurl@
+htmlurl= @htmlurl@
+cgisuffix= @cgisuffix@
+
+
+CC= @CC@
+TAR= tar
+MAKE= make
+
+# Compile binaries
+binaries: libtool
+	(cd regex; $(MAKE) lib)
+	(cd src; $(MAKE) binaries)
+
+# Install programs and scripts but not user or conference database
+install:
+	@echo "To install do as root:"
+	@echo "    make install-binaries"
+	@echo "    make install-scripts"
+	@echo "If you want to create a new conference database:"
+	@echo "    make install-bbs"
+	@echo "If you want to create a new user database:"
+	@echo "    make install-users"
+	@echo "To install without root access, see installation manuals"
+
+install-all: install-binaries install-scripts install-bbs install-users
+
+# Install all programs
+install-binaries:
+	(cd src; $(MAKE) install-binaries)
+	(cd misc; $(MAKE) install-binaries)
+
+# Install programs - files owned by owner
+install-binaries-owner:
+	(cd src; $(MAKE) install-binaries-owner)
+	(cd misc; $(MAKE) install-binaries)
+
+# Install programs - files owned by httpd
+install-binaries-httpd:
+	if test $(authtype) != passwd -a $(authtype) != shadow; then \
+	    (cd src; $(MAKE) install-binaries-httpd); \
+	fi
+
+# Install scripts and html files
+install-scripts:
+	(cd script; $(MAKE) install-scripts)
+	(cd image; $(MAKE) install-scripts)
+	(cd css; $(MAKE) install-scripts)
+	(cd misc; $(MAKE) install-scripts)
+
+# Install user database 
+install-users:
+	(cd misc; $(MAKE) install-users)
+	$(MAKE) install-cfadm
+	$(MAKE) urls
+
+# Install user database - files owned by owner
+install-users-owner:
+	(cd misc; $(MAKE) install-users-owner)
+
+# Install user database - files owned by httpd
+install-users-httpd:
+	(cd misc; $(MAKE) install-users-httpd)
+
+# Install conference database 
+install-bbs:
+	(cd bbs; $(MAKE) install-bbs)
+
+# Open up permissions so httpd files can be created
+open-perms:
+	chmod 777 $(bindir)
+	chmod 777 `echo $(passwddir) | sed 's/\/[^\/][^\/]*\/*$$//'`
+
+# Close up permissions after httpd files have been created
+restore-perms:
+	chmod 755 $(bindir)
+	chmod 755 `echo $(passwddir) | sed 's/\/[^\/][^\/]*\/*$$//'`
+	$(MAKE) install-cfadm
+	$(MAKE) urls
+
+close-perms: restore-perms
+
+install-cfadm:
+	@if test $(authtype) != passwd -a $(authtype) != shadow; then \
+	    echo $(bindir)/btmkuser -l cfadm -g 0 -n "Conference Administrator"; \
+	    echo "+----------------------------------------------+"; \
+	    echo "| Creating Backtalk 'cfadm' account.           |"; \
+	    echo "| Please choose a password for this account... |"; \
+	    echo "+----------------------------------------------+"; \
+	    $(bindir)/btmkuser -l cfadm -g 0 -n "Conference Administrator"; \
+	fi
+
+urls:
+	@echo ""
+	@echo "Backtalk Installation complete."
+	@echo "  Backtalk URL: $(cgiurl)/backtalk$(cgisuffix)"
+	@if test $(authtype) != passwd -a $(authtype) != shadow; then \
+	    echo "  Newuser  URL: $(cgiurl)/backtalk$(cgisuffix)/public/newuser"; \
+	fi
+	@if test $(logintype) = basic; then \
+	    echo "  Admin    URL: $(cgiurl)/adm/backtalk$(cgisuffix)/admin"; \
+	else \
+	    echo "  Admin    URL: $(cgiurl)/backtalk$(cgisuffix)/admin"; \
+        fi
+
+# Rebuild libtool if necessary
+LIBTOOL_DEPS= @LIBTOOL_DEPS@
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
+
+# Clean up
+clean:
+	for i in $(SUBDIRS) ; do \
+	    ( echo $$i ; cd $$i ; $(MAKE) clean ) \
+	done
+
+bt.tar: $(DISTRIB)
+	autoconf
+	$(TAR) cvhf bt.tar $(DISTRIB)

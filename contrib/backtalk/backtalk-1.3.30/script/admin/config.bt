@@ -1,0 +1,16 @@
+% Backtalk Admin Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% config script
+%
+% NOTE:  This is only the configuration file for the admin interface.
+% The configuration file for backtalk as a whole has the same name but is in
+% the top level script directory.
+
+% Helper Interface
+%  There are a few places where there are links from the admin pages back into
+%  the regular conferencing pages.  (Eg, clicking on the name of a conference
+%  my bring you to the conference home page.)  Normally these all connect to
+%  the pistachio interface.  However, if you don't have pistachio installed,
+%  you may need to point them to another interface.  This does that.
+
+/helper (pistachio) defconstant

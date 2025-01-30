@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../style/default.css";
+  </style>
+
+  <title>Why Some Systems Can't Deliver Mail to Grex</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>Why Some Systems Can't Deliver Mail to <span id="grex"><em>Grex</em></span></a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <p>Although, in theory, <a href="#ietf"><em>internet
+  standards</em></a> ought to permit grex to receive mail from any
+  site, in practice, there are sometimes reasons why we find it
+  necessary to disable mail from a particular site. The following
+  is a list of sites we've disabled; follow the link to learn more
+  details. <a href="#note">(Follow this link if you run one of
+  these systems).</a></p>
+
+  <h2>Some sites we don't like</h2>
+
+  <ul>
+    <li><a href="#gecom"><em>ns3.ge.com</em></a>truely excessive
+    mail bounces.</li>
+
+    <li><a href=
+    "#ukdemocracy"><em>ivision.coloc.web.xara.net</em></a> retries
+    right away on class 400 errors.</li>
+
+    <li><a href="#jobserve"><em>jobserve.com - Jobserve
+    Ltd.</em></a> sends mail from non-deliverable address.</li>
+
+    <li><a href="#usweb"><em>jobs.usweb.com - USWeb
+    Corporation</em></a> sends *lots* of mail to non-deliverable
+    address.</li>
+
+    <li><a href="#netspace"><em>netspace.org - Brown University
+    student group</em></a> - networking trouble.</li>
+
+    <li><a href="#hotmail"><em>hotmail.com - Hotmail Free
+    Email</em></a> - is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#msn"><em>msn.com - Microsoft Network</em></a> -
+    is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#expedia"><em>mx1.expedia.com - Microsoft
+    Corp.</em></a> - is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#didier"><em>didier.ee.gatech.edu - Georgia
+    Institute of Technology</em></a> - is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#lyndar"><em>193.97.54.190 -
+    lyndar.blr.novell.com</em></a> - is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#dnscnacom"><em>dns.cna.com - CNA
+    Insurance</em></a> - is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#kellogg"><em>gateway.kellogg.com - Kellogg
+    Company</em></a> - is not <a href=
+    "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+    compliant.</li>
+
+    <li><a href="#unisys"><em>bbmail1.unisys.com</em></a> - we
+    don't accept mail from here, because of a mail loop.</li>
+
+    <li><a href="#wipsys"><em>kmglmail.wipsys.soft.net</em></a> -
+    we don't accept mail from mailer-daemon@wipsys.soft.net,
+    because it does not exist there.</li>
+
+    <li><a href="#datasys"><em>mail.datasys.net</em></a> - we don't
+    accept mail from here, because aliens keep sending and
+    resending 199609230951.FAA00296@mail.datasys.net.</li>
+
+    <li><a href="#moneyworld"><em>moneyworld.com</em></a> -
+    spam.</li>
+
+    <li><a href="#moneyworld"><em>natureplus.com</em></a> -
+    spam.</li>
+
+    <li><a href="#mobiusloop"><em>po*.wam.umd.edu -
+    *@mobius.loop</em></a> - we don't accept mail from
+    owner-rage-l@mobius.loop, because it does not exist.</li>
+
+    <li><a href="#c2"><em>c2.net</em></a> - endless mail to one of
+    our users.</li>
+
+    <li><a href="#cybermirror1"><em>cybermirror1.com</em></a> -
+    misconfigured automatic mail response system.</li>
+
+    <li><a href="#seepz"><em>seepz.tcs.co.in</em></a> - bombarding
+    user with full mailbox.</li>
+
+    <li><a href="#delhi"><em>delhi.tcs.co.in</em></a> - bad mailer
+    configuration.</li>
+
+    <li><a href="#pacbell"><em>mail-gw.pacbell.net</em></a> -
+    defective anti-spam rule can be used to bombard random
+    users.</li>
+
+    <li><a href="#dmshouston"><em>dmshouston.net</em></a> - does
+    not accept mail from &lt;&gt;</li>
+
+    <li><a href="#erosmail"><em>qmail.erosmail.com</em></a> - web
+    server went insane</li>
+
+    <li><a href="#infophil"><em>bali.infophil.com</em></a> - no way
+    to unsubscribe; seems to send spam</li>
+  </ul>
+
+  <p>In addition, we don't accept mail from sites that appear to
+  be dial-up IP connections, especially when we find that they are
+  generating mass mail. There are too many of these sites to list
+  here, look at</p>
+  <pre>
+/usr/adm/badsys
+  </pre>
+  <p>on grex to learn about them.</p>
+
+  <p><a id="note">If you administer any of the above
+  systems, and want to fix the problem, you must also</a> <a href=
+  "mailto:postmaster@cyberspace.org">send mail to us</a> to have us
+  re-enable mail service.</p>
+  <hr />
+  <p>In the past, we had a lot of problems with sites that had the in
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC
+  1435</a> problem. <a id="more">Here's a list of sites
+  that had this problem (a long time ago).</a></p>
+  <pre>
+146.174.250.100 noping, worf.qntm.com (HP)
+152.163.200.7   noping, no incoming smtp (=listmail.aol.com)
+198.93.152.11   noping, adeskgate.autodesk.com (SMI-5.3)
+200.13.16.8     noping, no incoming smtp (=NIC.DATA.NET.MX, no rev arpa)
+204.144.158.25  noping, puck.solbourne.com MS IE Connector
+204.70.138.39   noping, neptune.pcy.mci.net Sendmail 8.6.12
+205.229.27.7    noping, no incoming smtp (no rev arpa, =uunet technologies, inc.)
+206.215.36.2    noping, no incoming smtp (no rev arpa, =Southern California College)
+207.1.151.75    noping, no incoming smtp (h-207-1-151-75.netscape.com)
+</pre>
+  <hr />
+  An earlier version of the mail quota software on grex rejected
+  mail with SMTP error 452, which told the remote mail software to
+  try again later. (SMTP is described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc821.txt">RFC 821</a>.)
+  Some mail systems interpreted <em>later</em> to be a few seconds
+  later, which would cause endless problems on grex. We added a
+  bunch of systems to badsys to deal with this. We then noticed
+  that people whose mailboxes filled up didn't seem to appreciate
+  the fact we were holding mail off for them. So we have become
+  much more hard-assed. If someone's mailbox fills up, we now
+  generate an SMTP 552 error, which causes the remote mail software
+  to give up right away. End of problem.
+
+  <p>Here is a list of sites that had this problem:</p>
+
+  <ul>
+    <li>lists.xmission.com</li>
+
+    <li>sirius.ctr.columbia.edu</li>
+
+    <li>kira.intranet.org</li>
+
+    <li>biff.kiva.net</li>
+
+    <li>listserv.NoDak.edu</li>
+
+    <li>mailnfs0.tiac.net</li>
+
+    <li>suntan.tandem.com</li>
+
+    <li>geek-gw.ptw.com</li>
+
+    <li>inet-user-gw-1.us.oracle.com</li>
+  </ul>
+  <hr />
+  These sites used to have a problem, but it appears to be resolved
+  now.
+  <pre>
+charis.berean.org       resolved Nov 1996; thanks to chris@oz.kis.net
+kingcrab.informix.com   resolved Jan 1997; thanks to dgoebel@informix.com
+blueshift.com   resolved 18 Mar 1997; thanks to John Ingram &lt;john@blueshift.com&gt;
+netspace.org    resolved ?; thanks to bfisk@netspace.org
+</pre>
+  <hr />
+
+  <h3><a id="c2">c2.net - Community ConneXion</a></h3>We
+  don't receive mail from this site, apparently because it was
+  originating an endless stream of mail to a user on grex. This was
+  done 31 March 1997.
+  <hr />
+
+  <h3><a id="moneyworld">moneyworld.com -
+  Financial Connections, Inc</a></h3>
+
+  <h3>natureplus.com - NetAmerica USA</h3>We don't receive mail
+  from these sites, because they kept sending us spam to forward to
+  the rest of the internet, even after being asked not to do this.
+  Grex does not have the resources to act as any sort of mail relay
+  station, let alone one for spam.
+
+  <p>I don't belive that email to <a href=
+  "mailto:willie@MONEYWORLD.COM">Bob Williams</a> works. Perhaps
+  you can reach him at(206) 269-0846? Here's his address:</p>
+
+  <address>
+    2508 5th Ave, #104<br />
+    Seattle, WA 98121
+  </address>
+  <hr />
+
+  <h3><a id="cybermirror1">cybermirror1.com -
+  Cyber Promotions</a></h3>We don't receive mail from this site,
+  because something claiming to be an automatic mail response
+  system sent mail to MAILER-DAEMON@cyberspace.org on 2 August
+  1997. This mail address does not correspond to a human, and would
+  only be used on bounce messages generated by grex. It is a
+  serious flaw for an automatic mail response system to reply to a
+  bounce message that was most probably triggered by earlier mail
+  sent by the automatic mail response system.
+  <hr />
+
+  <h3><a id="msn">msn.com - Microsoft
+  Network</a></h3>Mail that is sent from Microsoft Network, appears
+  (to us) to orginate from a series of machine named
+  upsmot01.msn.com, upsmot02.msn.com, upsmot03.msn.com, etc.
+  Although these machines all implement <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>
+  path MTU discovery, they live behind a firewall that does not
+  pass any ICMP traffic through. Because of this, TCP connections
+  from these machines do not manage to pass complete e-Mail
+  messages to grex, and instead hang around consuming network
+  bandwith and computing resources on grex until they timeout. This
+  problem is explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.
+
+  <p>We contacted Microsoft on 17 April 1996, but were unsuccessful
+  in correcting the problem. To contact the people in charge of the
+  outbound SMTP gateways at Microsoft Network, send mail to
+  <a href="mailto:dwhipple@microsoft.com">David Whipple
+  &lt;dwhipple@microsoft.com&gt;</a> and <a href=
+  "mailto:postmaster@msn.com">postmaster@msn.com</a>, or write
+  to</p>
+
+  <address>
+    <br />
+    David Whipple<br />
+    One Microsoft Way<br />
+    Redmond, WA 98052-6399<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id="expedia">mx1.expedia.com - Microsoft
+  Corp.</a></h3>Mail that is sent from Microsoft expedia travel
+  services, appears (to us) to orginate from a series of machine
+  named mx1.expedia.com, etc. Although these machines all implement
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC
+  1191</a> path MTU discovery, they live behind a firewall that
+  does not pass any ICMP traffic through. Because of this, TCP
+  connections from these machines do not manage to pass complete
+  e-Mail messages to grex, and instead hang around consuming
+  network bandwith and computing resources on grex until they
+  timeout. This problem is explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.
+
+  <p>We contacted Microsoft on 21 March 1997, but were unsuccessful
+  in correcting the problem. To contact the people in charge of the
+  outbound SMTP gateways at Microsoft Network, send mail to
+  <a href="mailto:dwhipple@microsoft.com">David Whipple
+  &lt;dwhipple@microsoft.com&gt;</a> and <a href=
+  "mailto:postmaster@msn.com">postmaster@msn.com</a>, or write
+  to</p>
+
+  <address>
+    <br />
+    David Whipple<br />
+    One Microsoft Way<br />
+    Redmond, WA 98052-6399<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id="lyndar">lyndar.blr.novell.com - Novell,
+  Inc.</a></h3>The machine at IP address 137.97.54.190 appears to
+  implement <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>
+  path MTU discovery, but lives behind a firewall that does not
+  pass any ICMP traffic through. Because of this, TCP connections
+  from this machine do not manage to pass complete e-Mail messages
+  to grex, and instead hang around consuming network bandwith and
+  computing resources on grex until they timeout. This problem is
+  explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.
+
+  <p>This host, 137.65.2.254, also does not have a valid DNS
+  in-addr.arpa PTR record. This would not affect mail delivery, but
+  is a curious omission.</p>
+
+  <p>We sent a message on 19 March 1997 to <a href=
+  "mailto:postmaster@blr.novell.com">postmaster@blr.novell.com</a>
+  but were unsuccessful in getting any response. We also tried
+  contacting Sean Gilkes &lt;sgilkes@novell.com&gt;, Peter Dennis
+  Bartok &lt;Peter_Dennis_Bartok@Novell.DE&gt;, and Mark Richardson
+  &lt;mark_richardson@NOVELL.COM&gt; but these turned out to be
+  invalid addresses. Perhaps it would be worth sending paper mail
+  to:</p>
+
+  <address>
+    <br />
+    Novell GmbH<br />
+    Monschauer Str. 12<br />
+    D-40549 Duesseldorf<br />
+    Germany
+  </address>
+  <hr />
+
+  <h3><a id="dnscnacom">dns.cna.com - CNA
+  Insurance</a></h3>The machine dns.cna.com (159.10.4.25) appears
+  to implement <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>
+  path MTU discovery, but lives behind a firewall that does not
+  pass any ICMP traffic through. Because of this, TCP connections
+  from this machine do not manage to pass complete e-Mail messages
+  to grex, and instead hang around consuming network bandwith and
+  computing resources on grex until they timeout. This problem is
+  explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.
+
+  <p>We sent a message on 25 March 1997 to <a href=
+  "mailto:postmaster@sch1p116.cna.com">postmaster@sch1p116.cna.com</a>,
+  and <a href=
+  "mailto:root@sch1p116.cna.com">root@sch1p116.cna.com</a>, but
+  were unsuccessful in getting any response (as of 27 March 1997).
+  We also tried contacting David Hillman
+  &lt;david.hillman@cna.com&gt; with no more luck. In fact, David
+  Hillman &lt;david.hillman@cna.com&gt; turned out to be an invalid
+  mail address. Perhaps it would be worth sending paper mail
+  to:</p>
+
+  <address>
+    <br />
+    CNA Plaza<br />
+    Chicago, IL 60685<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id="kellogg">gateway.kellogg.com - Kellogg
+  Company</a></h3>The machine gateway.kellogg.com (198.108.149.2)
+  appears to implement <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>
+  path MTU discovery, but lives behind a firewall that does not
+  pass any ICMP traffic through. Because of this, TCP connections
+  from this machine do not manage to pass complete e-Mail messages
+  to grex, and instead hang around consuming network bandwith and
+  computing resources on grex until they timeout. This problem is
+  explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.
+
+  <p>We sent a message on 25 March 1997 to <a href=
+  "mailto:postmaster@gateway.kellogg.com">postmaster@gateway.kellogg.com</a>
+  but were unsuccessful in getting any response (as of 27 March
+  1997). We also tried contacting Dave Gibson
+  &lt;dave.gibson@kellogg.com&gt;, and Vinh Tran
+  &lt;vinh-chi.tran@kellogg.com&gt;, with no more luck. In fact,
+  Dave Gibson &lt;dave.gibson@kellogg.com&gt;, and Vinh Tran
+  &lt;vinh-chi.tran@kellogg.com&gt;, turned out to be invalid mail
+  addresses. Perhaps it would be worth sending paper mail to:</p>
+
+  <address>
+    <br />
+    Kellogg Company<br />
+    235 Porter Street<br />
+    Battle Creek, MI 49017<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id="didier">didier.ee.gatech.edu - Georgia
+  Institute of Technology</a></h3>The machine didier.ee.gatech.edu
+  appears to implement <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>
+  path MTU discovery, but lives behind a firewall that does not
+  pass any ICMP traffic through. Because of this, TCP connections
+  from this machine do not manage to pass complete e-Mail messages
+  to grex, and instead hang around consuming network bandwith and
+  computing resources on grex until they timeout. This problem is
+  explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.
+
+  <p>We sent a message to <a href=
+  "mailto:postmaster@ee.gatech.edu">postmaster@ee.gatech.edu</a> on
+  21 March 1997, but were unsuccessful in getting any response. It
+  may also be possible to contact the appropriate: people by
+  writing:</p>
+
+  <address>
+    <br />
+    Office of Computing Services<br />
+    258 Fourth Street, Rich Building<br />
+    Atlanta, GA 30332<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id=
+  "ukdemocracy">ivision.coloc.web.xara.net</a></h3>This host
+  retries right away when our mail returns a 400 class error. This
+  is wrong, and wastes CPU and network bandwidth on our end. The
+  retry rate should be more like once every 30 minutes, with some
+  sort of exponential backoff algorithm. We haven't contacted
+  xara.net yet, as of 14-Dec-1997.
+  <hr />
+
+  <h3><a id="gecom">ns3.ge.com - General Electric
+  Company.</a></h3>This host is generating a truely excessive
+  number of bounces. A lot of mail seems to be going to
+  sachinvt@cyberspace.org. This mail is apparently being sent from
+  &lt;Sachin.Thakur@gepex.ge.com&gt;. This has been going on for 7
+  days, since 4-Oct-1999, and is taking up a lot of our network
+  bandwidth. C'mon, guys, do you *really* need to do this?
+  <hr />
+
+  <h3><a id="jobserve">jobserve.com - Jobserve
+  Ltd.</a></h3>We don't accept mail from
+  nobody@deliver-5.tiptree.jobserve.com because, if it cannot be
+  delivered on grex, the bounce message can't be returned to the
+  originating agent.
+  <hr />
+
+  <h3><a id="usweb">jobs.usweb.com - USWeb
+  Corporation</a></h3>We don't accept mail from this system,
+  because the mailer at this site appears to be broken, and was
+  bombarding us with tons of mail for a non-existant address on 17
+  May 1997.
+  <hr />
+
+  <h3><a id="hotmail">hotmail.com - Hotmail Free
+  Email</a></h3>Mail that is sent from Hotmail, appears (to us) to
+  orginate from a series of machine named F5.hotmail.com,
+  F19.hotmail.com, F25.hotmail.com, etc.
+
+  <p>Although these machines all implement <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>
+  path MTU discovery, they live behind a firewall that does not
+  pass any ICMP traffic through. Because of this, TCP connections
+  from these machines do not manage to pass complete e-Mail
+  messages to grex, and instead hang around consuming network
+  bandwith and computing resources on grex until they timeout. This
+  problem is explicitly described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>,
+  and in that RFC, the authors recommend that such firewalls should
+  be modified to pass ICMP message Type 3 Code 4 messages.</p>
+
+  <p>We have informed Hotmail (<a href=
+  "mailto:postmaster@hotmail.com">postmaster@hotmail.com</a>) on 13
+  March 1997.</p>
+
+  <p>Some additional contact points, if you would like to contact
+  them, are <a href="mailto:joshin@HOTMAIL.COM">Joshua Goldsmith
+  &lt;joshin@HOTMAIL.COM&gt;</a>, at phone number (408) 222-7005
+  ext. 154., and <a href="mailto:jsmith@HOTMAIL.COM">Jack Smith
+  &lt;jsmith@HOTMAIL.COM&gt;</a>, at phone number (408)
+  222-7000.</p>
+
+  <address>
+    Javasoft<br />
+    1290 Oakmead Parkway<br />
+    Suite 218<br />
+    Sunnyvale, CA 94086<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id=
+  "wipsys">kmglmail.wipsys.wipsys.soft.net.</a></h3>We don't accept
+  mail from mailer-daemon@wipsys.soft.net if sent from this
+  address, because if it cannot be delivered on grex, it can't be
+  returned to wipsys.
+  <hr />
+
+  <h3><a id="mobiusloop">po*.wam.umd.edu -
+  *@mobius.loop</a></h3>We don't accept mail from
+  owner-rage-l@mobius.loop (or any other mobius.loop address)
+  because if it cannot be delivered on grex, it can't be returned
+  to knot.org.
+  <hr />
+
+  <h3><a id="datasys">mail.datasys.net - DSS
+  Online</a></h3>There appears to be a problem, perhaps temporary
+  in nature, that had resulted in multiple copies of a message with
+  message-ID 199609230951.FAA00296@mail.datasys.net being sent to
+  grex. This is very bad, and had filled up one person's mailbox.
+
+  <p>We have informed <a href=
+  "mailto:postmaster@mail.datasys.net">postmaster@mail.datasys.net</a>
+  on Wednesday, 25 September 1996 00:30 -400, but never received
+  any reply.</p>
+
+  <p>Some additional contact points, if you would like to contact
+  them, are <a href=
+  "mailto:administrator@MAIL.DATASYS.NET">administrator@MAIL.DATASYS.NET</a>,
+  at phone number (912) 241-0607.</p>
+
+  <address>
+    2300 Madison Highway<br />
+    Valdosta, GA 31603<br />
+    USA
+  </address>
+  <hr />
+
+  <h3><a id="unisys">bbmail1.unisys.com - Unisys
+  Corporation</a></h3>There is a mail loop between
+  sureshv@tulblr.unisys.com and sureshv@nether.net. Mail from
+  sureshv@tulblr.unisys.com is forwarded to grex as well as
+  nether.net. The result is that about 5-6 copies of every message
+  sent to sureshv@tulblr.unisys.com are shipped to grex, and the
+  last one comes with too many <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc822.txt">RFC 822</a>
+  "Received:" timestamps so is sent to postmaster@cyberspace.org
+  instead. We, the people who read postmaster mail on grex, really
+  don't want sureshv's private mail. We contacted both Informix and
+  Nether.net on 12 October 1997, but never received any response
+  (as of 16 January, 1997).
+
+  <p>To contact the people in charge at unisys, you might try
+  sending mail to <a href=
+  "mailto:CLIEBSAC@PO2.RSM.UNISYS.COM">Chris Liebsack</a>, the
+  technical and zone contact for unisys.com, or <a href=
+  "mailto:postmaster@unisys.com">postmaster@unisys.com</a> . It is
+  also possible to send US postal mail to</p>
+
+  <address>
+    <br />
+    Unisys Corporate Headquarters<br />
+    Blue Bell, PA 19424-0001<br />
+    U.S.A.
+  </address>
+
+  <p>To contact the people in charge at nether.net, you might try
+  sending mail to <a href="mailto:jared@CIC.NET">Jared Mauch</a>,
+  Jared Mauch also has a FAX telephone number, 313-998-6105. It is
+  also possible to send US postal mail to</p>
+
+  <address>
+    <br />
+    Nether Network<br />
+    3015 Whisperwood Dr. #261<br />
+    Ann Arbor, MI 48105<br />
+    USA
+  </address>
+
+  <p>Good luck. We received no response from these e-mail
+  addresses.</p>
+  <hr />
+
+  <h3><a id="seepz">seepz.tcs.co.in - ?</a></h3>We
+  don't accept mail from this system for user kanni@cyberspace.org
+  (or any other user). because the mailer at this site was
+  attempting to connect to us every few seconds to deliver mail,
+  and his mailbox was full. Reversa arpa does not work for this
+  host; we are not sure exactly what this host is for, or who uses
+  it. Also, this host is sending mail that claims to be from the
+  mailbox that filled up on grex; this seems like a really bad
+  thing.
+  <hr />
+
+  <h3><a id="delhi">delhi.tcs.co.in - ?</a></h3>We
+  don't accept mail from this system because the mailer at this
+  site was broken on 29 March 1998. The mail software on this
+  system generated a mail address consisted entirely of non-ascii
+  characters. When grex tried to send mail to this address, it got
+  these errors:
+  <pre>
+554 Infinite loop in ruleset 3, rule 12
+554 Infinite loop in ruleset 3, rule 12
+</pre>
+  <hr />
+
+  <h3><a id="pacbell">mail-gw.pacbell.net - Pacific
+  Bell Internet Services</a></h3>We don't accept mail from this
+  system because the mailer at this site has a defective anti-spam
+  rule. The intent of this rule appears to be to prevent this host
+  from being used to relay mail. Unfortunately, this rule is
+  implemented in the wrong place. Instead of rejecting mail
+  <em>before</em> it is accepted, it is accepted, queued, rejected,
+  and bounced. The bounce message is not delivered to the
+  originating host, which may be long gone, but instead to the
+  return path, which may be a completely different host, and point
+  to the mailbox of a user who is completely not associated with
+  the problem. Very bad.
+
+  <p>2 Mar 1998 - added to badsys.</p>
+  <hr />
+
+  <h3><a id="infophil">bali.infophil.com -
+  InfoPhil, Inc.</a></h3>We don't accept mail from this system
+  because this system keeps sending mail to several addresses on
+  grex despite our best efforts to remove those addresses from the
+  supposed <em>mailing list</em> sent from here. The mail that is
+  sent also appears to contain a large amount of commercial
+  content, sugggesting that this is actually thinly disguised
+  unsolicited commercial e-mail, or spam. We followed the
+  directions given to unsubscribe rbk@cyberspace.org on 16 Feb
+  1999, with no luck.
+
+  <p>6 Nov 1999 - added to badsys.</p>
+  <hr />
+
+  <h3><a id="dmshouston">dmshouston.net -
+  Networks On-Line</a></h3>We don't accept mail from this system
+  because the mailer at this site does not accept bounce messages
+  from grex. According to <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc821.txt">RFC 821</a> in
+  section 3.6 (page 14), when a mail rejection notice is generated,
+  the return path is supposed to be &lt;&gt;. However, when this
+  mail is returned to dmshouston.net, this mail is rejected with
+  the message
+  <pre>
+&gt;&gt;&gt; MAIL From:&lt;&gt;
+&lt;&lt;&lt; 501 bogus mail from
+554 &lt;ThoughtADay-owner@ThoughtADay.com&gt;... Remote protocol error
+</pre>This is bad.
+
+  <p>1 Oct 1998 - added to badsys.</p>
+  <hr />
+
+  <h3><a id="erosmail">qmail.erosmail.com - TropiX
+  Talent</a></h3>We don't accept mail from this system because the
+  mailer at this site had been sending mail to an invalid address
+  at grex for some time, and when we attempted to unsubscribe this
+  address, their web server went insane. Apparently, it went into
+  some sort of infinite redirect loop, and attempted to unsubscribe
+  kelvin@cyberspace.org a whole *bunch* of times. Each attempt
+  resulted in generating mail to kelvin. By the time we noticed,
+  and turned off the temporary alias, over one megabyte of
+  unsubscribe reports had been sent. Their mailer is still busy
+  attempting to send more such reports.
+
+  <p>Proper mailing list software notices when mail sent to invalid
+  addresses is rejected with "no such user", and proper web
+  software does not return redirect pages pointing to itself.</p>
+
+  <p>16 Feb 1999 - added to badsys.</p>
+  <hr />
+
+  <h3><a id="dlinc">alpha2.dlinc.com - D &amp; L
+  Online, Inc</a></h3>We don't accept mail from this system because
+  it sends mail as &lt;nobody@dlinc.com&gt;, and if a bounce
+  notification is sent to this address, the mailer for the
+  dlinc.com domain rejects this. According to <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc821.txt">RFC 821</a> in
+  section 3.6 (page 14), when a mail rejection notice is generated,
+  the return path is supposed to be &lt;&gt;. However, when this
+  mail is returned to alpha1.dlinc.com (the MX host for the
+  dlinc.com domain), this mail is rejected with the message
+  <pre>
+&gt;&gt;&gt; MAIL From:&lt;&gt;
+&lt;&lt;&lt; 550 &lt;&gt;... Sender address not in proper format
+554 &lt;nobody@dlinc.com&gt;... Remote protocol error
+</pre>This is bad. (Sending messages as nobody seems most dubious
+in the first place.)
+
+  <p>15 Mar 1999 - added to badsys.</p>
+  <hr />
+
+  <h3><a id="ietf">internet standards - some
+  pointers</a></h3>ICMP is an integral and necessary part of the
+  TCP/IP protocol stack. It is used for MTU path discovery, various
+  kinds of IP layer congestion control, TCP error returns, and
+  network diagnostic software. Without ICMP, some or all of these
+  will not work. Grex is unusual in that its internet connection
+  tends to fragment packets, which can cause problems with
+  non-compliant internet implementations or sites. Nevertheless, IP
+  fragmentation is, in fact, part of the standard, and sites that
+  can't handle IP fragmentation are not completely in compliance.
+
+  <p>For more information on internet host requirements, check out
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc1122.txt">RFC
+  1122</a> and <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1123.txt">RFC 1123</a>,
+  Requirements for Internet Hosts. For information on TCP, check
+  out <a href="http://www.ibiblio.org/pub/docs/rfc/rfc793.txt">RFC
+  793</a> and <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc964.txt">RFC 964</a>. For
+  information on ICMP, check out <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc792.txt">RFC 792</a> and
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc950.txt">RFC
+  950</a>. ICMP and TCP are layered on top of IP, which is
+  described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc791.txt">RFC 791</a>. For
+  information on path MTU discovery, check out <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1191.txt">RFC 1191</a>.
+  SMTP (the mail transport protocol used by grex for incoming mail)
+  is described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc821.txt">RFC 821</a> and
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc822.txt">RFC
+  822</a>. <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1435.txt">RFC 1435</a>
+  contains IESG advice on path MTU discovery. <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1858.txt">RFC 1858</a>
+  talks about security considerations for IP fragment filtering.
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc1470.txt">RFC
+  1470</a> contains a list of tools that can be used to debug
+  TCP/IP networks.</p>
+
+  <p>The IETF standards process is described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1796.txt">RFC 1796</a>
+  and <a href="http://www.ibiblio.org/pub/docs/rfc/rfc1818.txt">RFC
+  1818</a>. Some of the philosophy behind the internet can be found
+  in <a href="http://www.ibiblio.org/pub/docs/rfc/rfc722.txt">RFC
+  722</a>, <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc871.txt">RFC 871</a>,
+  <a href="http://www.ibiblio.org/pub/docs/rfc/rfc875.txt">RFC
+  875</a>, <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1118.txt">RFC 1118</a>,
+  and <a href="http://www.ibiblio.org/pub/docs/rfc/rfc1539.txt">RFC
+  1539</a>. When grex refuses mail for hosts described in this http
+  document, it is, in essence, implementing a greatly updated form
+  of the administrative denial of service described in <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc706.txt">RFC 706</a>.</p>
+
+  <p>There are many RFC's that deal with security issues. <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1244.txt">RFC 1244</a>
+  contains a general site security handbook. <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1636.txt">RFC 1636</a>
+  contains workshop notes on internet security.</p>
+
+  <p>For more general internet information, check out <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1206.txt">RFC 1206</a> -
+  new internet user, and <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1207.txt">RFC 1207</a> -
+  experienced internet user. <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1392.txt">RFC 1392</a>
+  contains an internet glossary. Finally, <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc1855.txt">RFC 1855</a>
+  contains a netiquette guide.</p>
+
+  <p>This is merely a starter list of relevant RFC's; for a
+  complete list of RFC's, check out <a href=
+  "http://www.ibiblio.org/pub/docs/rfc/rfc-by-title.txt/">the RFC
+  index file</a>.</p>
+  <hr />
+
+  <h3>Contact Information</h3>
+
+  <address>
+    <a href="http://www.cyberspace.org/">www.cyberspace.org</a> +
+    <a href=
+    "mailto:postmaster@cyberspace.org">postmaster@cyberspace.org</a>
+  </address>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: badsys.xhtml 1438 2014-03-23 16:39:04Z kentn $</span>
+</div>
+</body>
+</html>

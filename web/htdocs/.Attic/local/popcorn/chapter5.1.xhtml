@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:carl@cyberspace.org" />
+
+  <title>Unix File Handling</title>
+</head>
+
+<body>
+  <p>You may <a href="#start">start at the beginning</a> or jump to
+  the following topics:</p>
+
+  <ul>
+    <li><a href="#file">Files</a></li>
+
+    <li><a href="#ls">ls</a></li>
+
+    <li><a href="#wildcard">Wildcards</a></li>
+
+    <li><a href="#directory">Directories</a></li>
+
+    <li><a href="#cd">cd</a></li>
+
+    <li><a href="#pwd">pwd</a></li>
+
+    <li><a href="#cat">cat</a></li>
+
+    <li><a href="#more">more</a></li>
+
+    <li><a href="#less">less</a></li>
+
+    <li><a href="#rm">rm</a></li>
+
+    <li><a href="#mv">mv</a></li>
+
+    <li><a href="#edit">Editing</a></li>
+
+    <li><a href="#chmod">chmod</a></li>
+
+    <li><a href="#man">man</a></li>
+  </ul>
+  <pre>
+<a name="start" id="start"></a>
+Chapter 5.1
+Basic File Handling
+by Valerie Mates
+
+last revision 11/23/91
+
+---------------------------------------------------------------------
+This section of the manual talks about Unix commands to handle files.
+If you are using Picospan and you want to use these commands, you
+must either go to Unix, or type an exclamation mark before the command.
+You can go to Unix by typing "!csh" at a Picospan prompt.
+---------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------
+                   Navigating Files and Directories:
+---------------------------------------------------------------------
+<a name="file" id="file"></a>
+Files:
+What is a file?  It's a collection of information stored on the
+computer's disk drive.  A file can be a list of information,
+a mail message, a program.
+
+On Grex, every file has a name and an owner.  For example, as I
+write section 5.1 of this book, it's in a file called "chapter5.1".
+I log in to Grex as "popcorn", so "popcorn" is the owner of
+"chapter5.1".
+
+If you have an account on Grex, you already have some files of
+your own.  When you used the newuser program to open your account,
+the newuser program gave you some files.  Then, every time you
+joined a conference, Picospan created more files for you.
+If you've used the mail system, it probably gave you some files,
+too.
+---------------------------------------------------------------------
+<a name="ls" id="ls"></a>
+ls
+To get a list of your <a href=
+"#file">files</a>, type "ls".  (For all the commands in
+this section, use lower case, leave out the quotation marks, and
+press the Return or Enter key after you type them).  The "ls"
+command lists the names of your files.
+
+To get a "long listing" of your files, type "ls -l".  This lists
+the "file permissions" on the file, the number of "links" to the file,
+the owner of the file, the size of the file (in bytes), the last
+date and time the file was changed, and the name of the file.
+Later in this chapter, there's more about file permissions (see the
+section about "<a href=
+"#chmod">chmod</a>") but don't worry about them for now.
+
+Files that have names that start with a period, such as .cshrc or
+.login, are called "hidden" files.  When you use "ls" to list your
+files, hidden files are not listed.  If you want your listing
+to include hidden files too, type "ls -a".
+
+You can combine the options: "ls -al" gives you a long listing of
+all your files.
+
+---------------------------------------------------------------------
+<a name="wildcard" id="wildcard"></a>
+Wildcards:
+<a href=
+"#file">File</a> names are usually lower case letters of the alphabet,
+sometimes with underscores or periods.  There are some special
+characters that are almost never part of file names.
+
+One of these special characters is the question mark.  A question
+mark in a file name represents any character.  For example, the pattern
+"foo?" matches all the files in your <a href=
+"#directory">directory</a> that start with the
+letters "foo" and have one more letter.  "food" and "foot" match,
+but "fools" does not, because it has too many letters, and "foal"
+does not, because it doesn't start with "foo".
+
+Another special character is the asterisk.  An asterisk matches
+any number of characters.  "m*" matches all the files that start
+with the letter "m", no matter how long the file name is.
+"*d" matches all the files that end with the letter "d".
+"a*j*" matches all the files that start with the letter "a" and
+have a "j" in the middle.
+
+The question mark and asterisk are called "wildcard characters".
+
+---------------------------------------------------------------------
+<a name="directory" id="directory"></a>
+Directories:
+There are a lot of <a href=
+"#file">files</a> on Grex.  To keep things manageable,
+files are organized into groups called "directories".
+Everybody has their own directory, called a "home directory".
+Yours is called "/h1b/u/" plus your login ID.  Mine is called
+"/h1b/u/popcorn".
+
+A directory can contain files and other directories.  This makes
+a "tree" structure.  The top directory in the tree is called "/".
+The "/" directory contains some files and some directories, including
+a directory called "h1b".  The h1b directory contains a directory
+called "u", which is where everybody's home directory is.  Underneath
+"u" is "popcorn".  That's my home directory.  My home directory has
+files and directories in it, too.  The full name of the chapter5.1
+file is "/h1b/u/popcorn/chapter5.1".
+
+Names of directories are separated by slashes.
+
+You can use the "<a href=
+"#ls">ls</a>" command to list files in other directories than
+your own.  To list files in the root directory, use "ls /".
+To list files in the directory "/usr/spool/party/log", use
+"ls /usr/spool/party/log".  You can combine the -a and -l flags
+with the directory name, for example: "ls -al /h1b".
+
+The names of the directories above the file are called the "path
+name".  For example the path name for "chapter5.1" is
+"/h1b/u/popcorn/".
+
+Unix uses some special file names for directories.  A single period
+means "the current directory".  Two periods in a row means "the
+directory above the current directory".  That directory is sometimes
+called the "parent" directory.
+
+---------------------------------------------------------------------
+<a name="cd" id="cd"></a>
+cd
+When you log in, your home <a href=
+"#directory">directory</a> is your "current directory".
+You can "change directory" to another directory by using the "cd"
+command.
+
+For example, to change directory to the directory "/usr/spool/party/log",
+you would type "cd /usr/spool/party/log".
+
+You can always get back to your home directory by typing just "cd"
+without any directory name.
+
+Changing directories is a handy way to avoid typing long path
+names.  For example, if you wanted to look at the file
+"/usr/spool/party/log/0", you could call the file by its full
+name, or you could do "cd /usr/spool/party/log" and then call
+the file "0".
+
+---------------------------------------------------------------------
+<a name="pwd" id="pwd"></a>
+pwd
+To find out what <a href=
+"#directory">directory</a> you are in, type "pwd".  That stands
+for "print working directory".
+---------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------
+                        Looking at files:
+---------------------------------------------------------------------
+<a name="cat" id="cat"></a>
+cat
+To read a short text <a href=
+"#file">file</a>, type "cat " and the file name.
+For example, to look at your ".plan" file, type "cat .plan".
+
+The name "cat" is short for "concatenate".  You can look at
+several files, concatenated together, by typing "cat " and
+the file names, separated by spaces: "cat file1 file2 file3".
+
+You want to be slightly careful using "cat".  If you "cat" something
+that isn't a text file, for example a program file, your terminal
+may beep a lot, display strange characters, or lock up.
+
+When you cat a file, you can use control-S to pause the display
+and control-Q to re-start it.  You can press your interrupt key
+to abort out.
+
+---------------------------------------------------------------------
+<a name="more" id="more"></a>
+more
+You can look at a <a href=
+"#file">file</a> in page-by-page style by using a command
+called "more".  Type "more " plus the name of the file you want
+to see.  For example, to look at the party log for channel 0, type
+"more /usr/spool/party/log/0".
+
+When you use "more", you can press the space bar to see the next
+screenful.  You can press the Enter or Return key to see the next
+line of the file.  Or you can press the "q" key to quit in the middle.
+
+---------------------------------------------------------------------
+<a name="less" id="less"></a>
+less
+Another command to see a file in page-by-page style is called "less".
+It works a lot like "<a href=
+"#more">more</a>", but it's got more features.
+---------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------
+                       Changing your files:
+---------------------------------------------------------------------
+<a name="rm" id="rm"></a>
+rm
+To delete a <a href="#file">file</a>, type "rm " and the file name.
+
+Once you delete a file, it is gone.  There is no un-delete command.
+
+I like to use the command "rm -i", especially when I'm deleting lots
+of files with a single command.  The "-i" tells Unix to ask you
+"are you sure?" about each file, before deleting it.
+
+"rm" is short for the word "remove".
+
+---------------------------------------------------------------------
+<a name="mv" id="mv"></a>
+mv
+To move a <a href="#file">file</a> from one <a href=
+"#directory">directory</a> to another, use the command
+"mv old new".  For example, to move the file "chapter5.1" from
+my home directory to danr's directory, I could type
+"mv chapter5.1 /h1b/u/danr/chapter5.1".
+
+If you're not changing the file name, you can leave it out.
+So I could type "mv chapter5.1 /h1b/u/danr" to do the same thing.
+
+You can use "mv" to rename files.  For example, to rename the
+file "foo" to the new name "bar" in the same directory, type
+"mv foo bar".
+
+---------------------------------------------------------------------
+<a name="edit" id="edit"></a>
+editting
+To change what's in your <a href=
+"#file">files</a>, you can use a text editor.
+
+See Chapter 5.2 of this manual for information about changing
+the contents of your files.
+
+---------------------------------------------------------------------
+<a name="chmod" id="chmod"></a>
+chmod
+Every <a href="#file">file</a> and <a href=
+"#directory">directory</a> has an owner.  The owner decides who
+else can look at the file or directory.  When you do a "ls -l"
+command, Grex tells you who owns each file and who has permission
+to look at it.
+
+The listing looks like this:
+-rw-r--r--  1 popcorn      8904 Nov 24 00:52 chapter5.1
+
+The gobbledygook in the first ten characters tells you about the
+file permissions.  The first character is a dash, which means that
+this is a regular file.  Directories have the letter "d" in this
+column.  Other special file types have other letters there.
+
+The next nine characters are split into three groups of three.
+The first group of three tells what the owner can do with the file.
+The next group of three tells what the owner's "group" can do
+with the file.  The final group of three tells what anybody on the
+system can do with the file.
+
+In each group of three, there are three letters, "r" (for "read"),
+"w" (for "write"), and "x" (for "execute": running a program).
+If there is permission to read, write, or execute the file, the
+letter "r", "w" or "x" is displayed.  If there isn't permission,
+there's a dash instead of the letter.
+
+In the example above, the groups of three are "rw-", "r--" and "r--".
+The first group of three indicates that popcorn (the file owner) can
+read and write the file, but not execute it.  The second group of
+three says that popcorn's group can read the file, but not write
+or execute it.  The third group of three says that the world can
+read the file, but not write or execute it.
+
+To change file permissions, use the "chmod" command.  A "chmod"
+command has three parts: "who", plus or minus, and "what".
+"Who" can be "u", "g", or "o", for "user" (the file owner), "group",
+or "other" (everybody).  "What" can be "r", "w", or "x", for "read",
+"write" or "execute".  Plus or minus indicates whether you're adding
+or taking away permissions.
+
+Here's a command that says "let the world read a file named 'publicfile'":
+        chmod o +r publicfile
+
+Here's a command that says "for the file named 'privatefile', don't 
+let my group or the world read, write, or execute the file:
+       chmod go -rwx privatefile
+
+---------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------
+<a name="man" id="man"></a>
+You can get more more information about any of these commands, by
+typing "man " and the command name.  For example, for more
+information about the "ls" command, type "man ls".
+
+"man" is short for "manual page".
+---------------------------------------------------------------------
+</pre>
+</body>
+</html>

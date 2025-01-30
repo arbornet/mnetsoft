@@ -1,0 +1,16 @@
+                     Fronttalk Defines:  ISHORT
+
+Usage:  DEFINE ISHORT "<string>"
+
+The ISHORT define is a conference separator used to generate the lines for
+describing the status of each conference in "BROWSE SHORT".
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+  "%(B\nitem nresp header\n\n%)%3i %3n %h"
+
+Note that the string enclosed by the '%(B' conditional is printed only for
+the first conference printed out by BROWSE, so it becomes a header line.

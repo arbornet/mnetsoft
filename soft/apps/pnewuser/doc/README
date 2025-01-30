@@ -1,0 +1,37 @@
+This is pnewuser; a self-sevice account creation program.  This
+runs on grex.org and replaces the older 'newuser' program that ran
+on Grex until around 2010.
+
+This program is written in Perl, and requires the following CPAN
+modules, in addition to their dependencies.
+
+DateTime;
+Email::Valid;
+Filesys::Df;
+JSON;
+Mail::Alias;
+Tcl;
+Term::ReadLine;
+Text::Template::Preprocess;
+Text::Template;
+
+Also, it expects that the 'apg' (automatic password generator)
+program will be installed somewhere on the system, as well as the
+'figlet' program (for generating text CAPTCHAs).
+
+Most of the heavy lifting for actually adding the account is done
+by system utilities that are called from newuser.  This program
+uses privilege separation and a thin setuid wrapper around whatever
+the system provides to do its work.  All the processes needed for
+the run are created at the time the program is started, and if any
+of those fail, the entire thing aborts (instead of letting the user
+enter a bunch of data and *then* failing).
+
+While newuser can detect whether an account with a given login name
+exists at the time it runs, it is possible that collisions may
+occur; this is most often detected by the return code of the program
+that's doing the actual addition.  If that's the case, newuser will
+attempt to recover and retry (for instance, by asking for a different
+login name).  However, it's possible that those attempts may fail
+if, for instance, newuser cannot fork a new privilege separated
+process to invoke the system account creation program.

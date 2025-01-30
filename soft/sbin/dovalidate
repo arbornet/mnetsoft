@@ -1,0 +1,70 @@
+#!/usr/bin/env perl
+use warnings;
+use strict;
+
+# Defaults.
+my $CHECKED_GROUP = 'unknowns';
+my $VALIDATED_GROUP = 'people';
+my $VALIDATED_CLASS = 'validated';
+my $VALIDATED_SHELL = '/cyberspace/bin/newly-validated';
+my $checked_gid = getgrnam($CHECKED_GROUP);
+
+sub doexec {
+	my $pid = fork;
+	my $indir = shift;
+	my @argv = @_;
+
+	if ($pid < 0) {
+		die "fork failed: $!\n";
+	}
+	if ($pid == 0) {
+		exec($indir, @argv);
+	} else {
+		my $child = wait;
+		if ($child != $pid) { die "Some other child?!\n"; }
+		if ($? != 0) { die "Error in usermod: $!\n"; }
+	}
+}
+
+sub dovalidate {
+	my $user = shift;
+	doexec("/usr/sbin/usermod",
+	    "-g", $VALIDATED_GROUP,
+	    "-L", $VALIDATED_CLASS,
+	    "-s", $VALIDATED_SHELL,
+	    $user);
+}
+
+sub validate1 {
+	my $user = shift;
+	my @pw = getpwnam $user;
+	my $gid = $pw[3];
+
+	if (!$pw[0]) {
+		die "User $user unknown.\n";
+	}
+	if ($checked_gid != -1 && $gid != $checked_gid) {
+		die "Attempt to validate a non-unvalidated user: $user.\n";
+	}
+	dovalidate $user;
+}
+
+sub validate {
+	my @users = @_;
+	foreach my $user (@users) {
+		validate1 $user;
+	}
+}
+
+sub rebuild_active_incoming {
+	doexec("/cyberspace/sbin/rebuild-active-incoming");
+}
+
+validate @ARGV;
+rebuild_active_incoming;
+
+# Fix the permissions on /etc/group.
+# -rw-rw-r-- root/treasurer
+#my $groupgid = getgrnam('treasurer');
+#chmod 0664, '/etc/group';
+#chown 0, $groupgid, '/etc/group';

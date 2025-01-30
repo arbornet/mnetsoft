@@ -1,0 +1,130 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% conflist - webscript code to display and possibly modify .cflist
+% and to format and display public.txt or the confmenu.
+
+% select authenticated or anonymous url
+
+(
+<HTML>
+<HEAD>
+<TITLE>) bbsname ( Conference Menu</TITLE>\n)
+(S) flavor(meta)+ include
+(</HEAD>
+<BODY>
+) bbslogo (<h1>Conference Menu</h1>\n)
+
+() /doform xdef
+() /remainder xdef
+
+/cflist 1 cflist_array def
+id {
+  (*.cflist) writable /doform xdef
+} if
+
+doform {
+  (Click on the name of a conference to see the item menu for that conference,
+   or select the checkbox and use the button at the bottom to modify
+   your current list of conferences.<p>\n)
+} if
+id {(<a href=nextconf?csel=@0>Just start reading</a>.<br>)} if
+(<a href=begin>Go back to the opening screen</a>.<p>)
+
+% if there is a cflist, print out the contents.
+
+% if cflist is writable (even if non-existent) print maintenace form with a 
+% checkbox for each line.
+
+doform {( <form action="cfform">\n) + + + } if
+
+cflist length
+  {(<h2>Your Current List of Conferences</h2>)
+   1 /linenum xdef
+   cflist { /conf xstore
+     doform {(<INPUT TYPE=checkbox NAME="linenum" VALUE=)linenum(>\n)} if
+     (<a href=browse?conf=)conf(>)conf(</a><br>)
+     1 linenum + /linenum xstore
+   } forall
+  
+  % now put out radio buttons 
+  doform {
+    (<P>
+     <INPUT TYPE=radio NAME=movewhere VALUE=top CHECKED>Move selected conferences to the beginning<br>
+     <INPUT TYPE=radio NAME=movewhere VALUE=bottom>Move selected conferences to the end<br>
+     <INPUT TYPE=radio NAME=movewhere VALUE=remove>Remove selected conferences<br>
+     <P>
+     )} if
+  (<hr>\n)
+
+  } if
+
+% Now produce the standard list of conferences from public.txt or confmenu file
+
+/usepublic_txt constant {
+  (*public.txt) read /remainder xdef
+  0 /in_ul xdef % in_ul keeps track of whether we are inside a <ul>
+
+  {
+   remainder (\n) parse dup () eq {break} if /work_line xdef /remainder xdef 
+
+   work_line pt_confline sgrep {
+     aload /work_line xdef /conf xstore pop
+     (<li>)
+     doform {(<INPUT TYPE=checkbox NAME="csel" VALUE=)conf(>\n)} if
+     (<a href=browse?conf=) conf (>) conf quote (</a> -\n)
+     work_line quote
+   } {
+     work_line pt_headline sgrep {
+       1 get /work_line xdef
+       in_ul {0 /in_ul xdef (</ul>)} if     % exit </ul> if needed
+       (<h2>) work_line (</h2>)
+     } if
+   } ifelse
+  } loop
+} {
+  (*confmenu) read /remainder xdef
+  /in_ul 0 def
+
+  {
+    remainder (\n) parse exch /remainder xdef
+    dup ! {break} if
+
+    % skip comments
+    dup 0 1 substr (#) eq {pop continue} if
+
+    % parse apart the line
+    (:) clip /cname xdef
+    (:) clip /ctitle xdef /cdes xdef
+
+    cname {
+      % Format a conference name
+      in_ul ! {/in_ul 1 def (<ul>)} if  % enter <ul> if needed
+      (<li>)
+      doform {(<INPUT TYPE=checkbox NAME="csel" VALUE=)cname(>\n)} if
+      (<a href=browse?conf=)cname(>)ctitle(</a> - )cdes(\n)
+    } {
+      % Format a header line
+      in_ul {/in_ul 0 def (</ul>)} if   % exit </ul> if needed
+      (<h2>)ctitle(</h2>)cdes(\n)
+    } ifelse
+  } loop
+} ifelse
+
+in_ul {/in_ul 0 def (</ul>)} if
+
+% now put out radio buttons and submit/reset
+doform {
+  (<P>
+   <INPUT TYPE=radio NAME=addwhere VALUE=top>Add selected conferences
+    at the beginning of your Conference List<br>
+   <INPUT TYPE=radio NAME=addwhere VALUE=bottom CHECKED>Add selected 
+    conferences at the end of your conference list<br>
+   <P>
+   <INPUT TYPE=submit VALUE="Modify Your Current List">
+   <INPUT TYPE=reset VALUE="Reset Form">
+   </FORM>
+   )} if
+
+(
+</BODY></HTML>
+)

@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+import subprocess
+import sys
+maxlines = "50"
+for user in sys.argv[1:]:
+    p1 = subprocess.Popen(["/usr/bin/finger", user], stdout=subprocess.PIPE)
+    p2 = subprocess.call(["/usr/bin/sed", maxlines + 'q'], stdin=p1.stdout)

@@ -1,0 +1,43 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+/http_content_type (text/plain) store
+
+/usepublic_txt constant {
+    (*public.txt) read /remainder xdef
+
+  {
+   remainder (\n) parse dup () eq {break} if /work_line xdef /remainder xdef
+   work_line pt_confline sgrep              % test if a conference line
+   {
+     aload /work_line xdef		    % conference name
+           /conf xstore pop		    % conference description
+     (<CF NAME=")conf quote(">\n)work_line quote(\n</CF>\n)
+   }
+   { work_line pt_headline sgrep
+     {
+	1 get (<CAT NAME=")exch quote(">\n</CAT>\n)
+     } if
+   }
+   ifelse
+  } loop
+} {
+  (*confmenu) read /remainder xdef
+
+  {
+    remainder (\n) parse exch /remainder xdef
+    dup ! {break} if
+
+    % skip comments
+    dup 0 1 substr (#) eq {pop continue} if
+
+    % parse apart the line
+    (:) clip /cname xdef
+    (:) clip /ctitle xdef /cdes xdef
+
+    cname {
+      (<CF NAME=")cname quote(" TITLE=")ctitle quote(">\n)cdes quote(\n</CF>\n)
+    } {
+      (<CAT NAME=")ctitle quote(">\n)cdes quote(</CAT>\n)
+    } ifelse
+  } loop
+} ifelse

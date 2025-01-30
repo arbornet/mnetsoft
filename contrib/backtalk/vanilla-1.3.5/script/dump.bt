@@ -1,0 +1,5 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% dump - a web script to crash, burn, and die. This produces the desired dump.
+%
+dump

@@ -1,0 +1,20 @@
+                       Fronttalk Command:  FIXSEEN
+
+Usage:  FIXSEEN <item range>
+
+Mark all selected items as seen.  All currently existing responses will
+be marked seen, so they will not appear in a future "READ NEW".
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   FIX  13         - Mark item 13 seen.
+   FIX "blue"      - Mark items with the word "blue" in their titles seen.
+
+If you just say "FIXSEEN" the default is to mark all items if you are at
+the "Ok" prompt, or just the current item if you are at the "Respond or
+pass" prompt.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to mark it seen it.

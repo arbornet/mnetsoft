@@ -1,0 +1,10 @@
+                       Fronttalk Command:  SERVER
+
+Usage:  SERVER <server>                             ("Ok:" prompt only)
+
+Disconnect from the current server and connect to the designated server.
+You will usually have to login to gain full access to the new server.
+
+For a list of servers known to Fronttalk, do "DISPLAY SERVERS".
+
+Synonym:  CONNECT, SYSTEM, HOST

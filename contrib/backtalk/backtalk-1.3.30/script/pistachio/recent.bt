@@ -1,0 +1,59 @@
+% Backtalk Pistachio Interface -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% recent script
+%
+% This shows the last N postings.
+
+/dflt_recent_page constant !{/dflt_recent_page 50 defconstant} if
+
+/nrecent dup dflt_recent_page default def
+
+flavor(config.bt)+ include
+(lib/readpostlog) include
+
+/butsel 5 defconstant flavor(buttondef)+ include
+
+(
+<HTML>
+<HEAD>
+<TITLE>)bbsname( - Last )nrecent( Postings</TITLE>
+</HEAD>
+<BODY)body_tags(>
+)global_header
+(<H1>Last )nrecent( Postings to )bbsname(</H1>
+
+Goto <A HREF=begin>)entrance_button
+(</A> or <A HREF=help/recent>)help_button(</A>.
+<P>
+<FORM METHOD=post ACTION=recent>
+<INPUT TYPE=image NAME=recent )button( )clip pop `(
+Show last <INPUT TYPE=text NAME=nrecent VALUE=")nrecent(" SIZE=3> postings.
+</FORM>
+<P>
+)
+
+post_log_file !{
+  (Sorry, no posting log is maintained on this server\n)
+} {
+
+  `(<TABLE><TH></TH><TH>)Conf(</TH><TH COLSPAN=2>)Item(</TH><TH>)
+  Resp(</TH><TH>author</TH><TH>date</TH>\n)'
+
+  nrecent cvi -1 {
+    /pl_title xdef /pl_fn xdef /pl_id xdef /pl_resp xdef /pl_item xdef
+    /pl_conf xdef /pl_date xdef
+    (<TR><TD><A HREF="read?&conf=)pl_conf(&item=)pl_item(&rsel=)
+      pl_resp(-$&noskip&showforgotten=1&seeno=2">)button(</A>&nbsp;</TD><TD>)
+    pl_conf(</TD><TD>#)pl_item
+    (</TD><TD>\()pl_title dup length 40 gt {0 40 substr (...)} if
+    (\)</TD><TD ALIGN=right>)pl_resp dup!{pop}if(&nbsp;&nbsp;</TD><TD>)
+    pl_id ( \()pl_fn dup length 25 gt {0 25 substr (...)} if
+    (\)&nbsp;&nbsp;</TD><TD>)pl_date(</TD></TR>\n)
+  } for_postlogs
+
+  (</TABLE>)
+} ifelse
+
+global_footer
+(</BODY></HTML>
+)

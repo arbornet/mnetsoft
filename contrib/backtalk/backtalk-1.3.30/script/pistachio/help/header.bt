@@ -1,0 +1,21 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/pagetitle xdef
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+flavor(config)+ include
+
+(<HTML>
+<HEAD>
+<TITLE>Pistachio Backtalk Help: )pagetitle(</TITLE>
+<BASE HREF="http://)HTTP_HOST SCRIPT_NAME(/)flavor(help/">
+</HEAD>
+<BODY)body_tags(>
+)global_header
+(<H1>Pistachio Backtalk Help:<BR>)pagetitle(</H1>
+<HR>
+<STRONG>
+Read this first:  )hrefbegin(help/intro>Introduction to Pistachio Backtalk</A>
+</STRONG>
+<HR>
+)

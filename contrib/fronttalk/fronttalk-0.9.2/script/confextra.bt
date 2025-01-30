@@ -1,0 +1,31 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+/http_content_type (text/plain) store
+
+open_conf
+{(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+/getindex defined {
+  (<INDEX>\n)  (*index) read quote (</INDEX>\n)
+} if
+
+/getbull defined {
+  (<BULLETIN>\n)  (*bull) read quote (</BULLETIN>\n)
+} if
+
+/getwelcome defined {
+  (<WELCOME>\n)  (*welcome) read quote (</WELCOME>\n)
+} if
+
+/getulist defined {
+  (<ULIST>\n)  (*ulist) read quote (</ULIST>\n)
+} if
+
+/getglist defined {
+  (<GLIST>\n)  (*glist) read quote (</GLIST>\n)
+} if
+
+/getrc defined {
+  (<CONFRC>\n)  (*confrc) read quote (</CONFRC>\n)
+} if

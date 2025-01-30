@@ -1,0 +1,12 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: cp <existing-filename> <filename-of-new-copy>
+
+File name to be copied? "
+read named
+echo -n "
+Copies name? "
+read copy
+/bin/cp $named $copy

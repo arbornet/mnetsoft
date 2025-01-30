@@ -1,0 +1,39 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% spellpanel script
+%
+% This is the control panel for the spell checking popup.
+
+(<HTML>
+<HEAD>
+<SCRIPT Language="Javascript">
+<!--
+function selnew()
+{
+    var f= document.spanel;
+    var i= f.suggsel.selectedIndex;
+    f.word.value= (i < 1) ? '' : f.suggsel.options[i].text;
+}
+function exptxt()
+{
+    var o= parent.opener;
+    if (o == null) return;
+    o.document.resp.text.value= parent.txtframe.text;
+}
+//-->
+</SCRIPT>
+</HEAD>
+<BODY>
+<FORM NAME=spanel ACTION="#" onSubmit="parent.repl(spanel.word.value);return false">
+<INPUT TYPE=text NAME=word SIZE=20>
+<SELECT NAME=suggsel onChange="selnew();">
+<OPTION VALUE='' SELECTED>-- suggestions --</OPTION>
+</SELECT>
+<INPUT TYPE=submit VALUE="Replace" onClick="parent.repl(spanel.word.value);return false">
+<INPUT TYPE=submit VALUE="Ignore" onClick="parent.ign();return false">
+<INPUT TYPE=submit VALUE="Cancel" onClick="parent.close(); return false">
+<INPUT TYPE=submit VALUE="Done" onClick="exptxt(); parent.close(); return false">
+</FORM>
+</BODY>
+</HTML>
+)

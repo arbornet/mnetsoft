@@ -1,0 +1,3 @@
+#!/bin/sh
+/usr/local/bin/webalizer -Q "$@"
+kill -USR1 `cat /var/www/logs/httpd.pid`

@@ -1,0 +1,41 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+%
+% Set up the flavor interface.  This should be include after the /default_flav
+% /login and (optionally) the /flav variables have been set up.  It sets up the
+% three functions below to generate links into the backtalk flavor defined by
+% flav (or default_flav if flav is not defined).  These always return absolute
+% URLs.  We prefer anonymous URLs, if anoymous users can read stuff, unless
+% login is true.
+%
+% <conf> conf_link <url>
+%   URL for a conference
+%
+% <conf> <item> item_link <url>
+%   URL for an item
+%
+% <conf> <item> <rsel> resp_link <url>
+%    URL for a response or range of responses
+
+% Use default if we have no flavor defined
+/flav defined ! {/flav default_flav def} if
+
+% What is the base URL?
+/rss_url
+ `serverurl
+  sessions login ! allowanon and or { anon_url } { pw_url } ifelse
+  flav(/) ' def
+
+% Load the links.bt file function from the given flavor
+flav(/links)+ call
+
+/conf_link {
+   () () format_conf rss_url exch +
+} def
+
+/item_link {
+   () format_item rss_url exch +
+} def
+
+/resp_link {
+   format_resp rss_url exch +
+} def

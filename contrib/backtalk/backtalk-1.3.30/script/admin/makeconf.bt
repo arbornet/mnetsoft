@@ -1,0 +1,83 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% makeconf script
+%
+% This script displays the form for basic conference creation.  The handler
+% for this form is the "confutil" program.  After the conference has been
+% created in a default configuration, we toss people into the conference
+% edit page, so they can play with the configuration.
+%
+% Query Parameters (on entry):
+%   conf=	if defined, this is a guess at the conference to create.
+%   admhome=	URL of administrative menu
+% Query Parameters (on submission):
+%   conf=	the conference to create.
+%   loc=	the directory to store it under
+%   admhome=	URL of administrative menu
+%   go=1
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+/errmsg () def
+
+% generate guesses at the conference and directory name to create
+/conf defined ! {/conf () def} if
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/go defined conf and {
+   % create the conference
+   conf loc 1 new_conf dup {
+     /errmsg xdef
+   } {
+     % succeeded - jump to editconf page
+     clear
+     flavor(editconf)+ jump
+   } ifelse
+} {
+  /loc bbsdir def
+} ifelse
+
+(<HTML><TITLE>Backtalk Conference Creation</TITLE>
+<BODY BGCOLOR=FFFFFF>
+<H1>Backtalk Conference Creation</H2>
+This screen can be used to create a new conference.
+All conferences are created with some simple default settings.
+The next screen will allow you to change these.
+<P>
+)
+errmsg {
+  (<FONT COLOR=red>Error: )errmsg(</FONT><P>\n)
+} if
+(<FORM METHOD=post ACTION=makeconf>
+<INPUT TYPE=hidden SIZE=12 NAME=go VALUE=1>
+<INPUT TYPE=hidden SIZE=12 NAME=admhome VALUE=)admhome(>
+<STRONG>Conference Name:</STRONG> <BR>
+<INPUT TYPE=text SIZE=20 NAME=conf VALUE=")conf("><BR>
+This is the main internal name of the new conference.
+It is primarily used as the name of the conference directory,
+and in the name of the participation files for the conference.
+It is not necessarily either the name that is used for the conference on
+the menu of conferences, nor is it the only name people can type in to
+join the conference, though it should be one that makes sense to humans.
+The name must consist entirely of lower-case letters and digits, without
+spaces or other strange characters.
+<P>
+<STRONG>Conference Location:</STRONG> <BR>
+<INPUT TYPE=text SIZE=60 NAME=loc VALUE=")loc("> <BR>
+This is the parent directory in which the conference directory will
+be created.  The value shown is the default conference directory for
+your system.  Normally you should just use this value for all conferences.
+<P>
+<INPUT TYPE=submit VALUE="Create It">
+</FORM>
+</BODY></HTML>
+)

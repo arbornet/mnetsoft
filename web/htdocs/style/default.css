@@ -1,0 +1,388 @@
+  <hr class="a"></hr>
+/*
+	Design by Free CSS Templates
+	http://www.freecsstemplates.org
+	Released for free under a Creative Commons Attribution 2.5 License
+*/
+
+/* Basic */
+
+*
+{
+	margin: 0em;
+	padding: 0em;
+}
+
+h1,h2
+{
+}
+
+a
+{
+	/*color: #995500;*/
+	color: #2d4469;
+}
+
+body
+{
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 12pt;
+	background: #fff;
+/*olor: #665555;*/
+	color: #000000; /* black */
+}
+
+/* Outer */
+
+#outer
+{
+	margin: 0em auto 1em auto;
+	width: 100%;
+	background-color: #fff;
+}
+
+/* Header */
+
+#header
+{
+	padding: 1.5em 2em 1.5em 4em;
+        /* Sun Mar 27 12:42:48 EDT 2011: no graphic for header */
+	/*background: #566f99 url('images/a1_grex.jpg') top left repeat-x; */
+	/*background: #2E2017 url('images/a1_grex.jpg') top left repeat-x;*/
+	/*background: #85acf7 url('images/hidr.jpg') top left repeat-x;*/
+	color: #000000; /* black */
+}
+
+#header h1
+{
+	font-size: 2.0em;
+}
+
+#header h1, #header h2
+{
+	display: block;
+	width: 778px;
+	margin: 0em auto;
+}
+
+#header h1 a
+{
+	/*color: #fff;*/
+	/*color: #ccccff;*/
+	text-decoration: none;
+}
+
+#header h2
+{
+	/*color: #bbaa77; */
+	/*color: #ffff33; */
+	/*color: #ffffff; */
+        color: #443333;
+	font-size: 0.8em;
+}
+
+/* Menu */
+#menu
+{
+	font-family: "Arial", "Bitstream Vera Sans", sans-serif;
+	font-size: 12pt; 
+	/*padding: 1em 2em 1em 0em;*/
+	padding: 0.5em 2em 0.5em 0em; 
+	/*background: #2f6580 url('images/a2_grex.jpg') top left repeat-x;  */
+
+	/* background: #ccccff url('images/a2_grex.jpg') top left repeat-x; */
+	/*font-size: 0.9em;*/
+        font-size: 0.7em; 
+}
+
+ 
+#menu ul
+{
+        display: block;
+        width: 778px;
+        margin: 0em auto;
+        list-style: none;
+        padding-left: 2.5em;
+        /* Horizonal Rules (top and bottom) */
+        padding-top: 5px;
+        padding-bottom: 5px;
+	border: 1px solid #000;                     
+        border-right-color: #fff;
+        border-left-color: #fff;
+}
+ 
+ 
+#menu li
+{
+	display: inline;
+}
+
+#menu li a
+{
+	color: #38271C;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 0.25em 0.75em 0.25em 0.75em;
+}
+
+
+#menu li a:hover
+{
+	background: #566F99 url('../images/a4_grex.jpg') top left repeat-x;
+	color: #fff;
+}
+
+/* Content */
+
+#content
+{
+	width: 778px;
+	margin: 0em auto;
+}
+
+#content p
+{
+	margin-bottom: 1.5em;
+	text-align: justify;
+}
+
+#content h2,h3,h4,h5,h6
+{
+	color: #443333;
+	margin-bottom: 1em;
+}
+
+#content ul
+{
+	margin-bottom: 1.5em;
+	padding-left: 1em;
+}
+
+#content blockquote
+{
+	padding-left: 1em;
+	margin-bottom: 1.5em;
+	border-left: solid 7px #EFEECC;
+}
+
+#content blockquote p
+{
+	margin-bottom: 1em;
+}
+
+#content table
+{
+	margin-bottom: 1.5em;
+}
+
+#content table th
+{
+	text-align: left;
+	font-weight: bold;
+	padding: 0.5em;
+	color: #443333;
+}
+
+#content table td
+{
+	padding: 0.5em;
+}
+
+#content table tr.rowA
+{
+/*	background-color: #F6EECC; */
+	/*background-color: #a3b3c3; */
+	background-color: #c1cbdc;
+	color: inherit;
+}
+
+#content table tr.rowB
+{
+	background-color: #e1e3ea;
+	color: inherit;
+}
+
+#content table tr.rowC
+{
+	background-color: #eef0f3;
+	color: inherit;
+}
+
+/* Primary Content */
+
+#primaryContentContainer
+{
+	float: left;
+	margin-left: -17em;
+	width: 100%;
+}
+
+#primaryContent
+{
+	margin: 0em 0em 0em 16.5em;
+	padding: 1.5em;
+}
+
+#primaryContent h2, #primaryContent h3
+{
+	border-bottom: solid 2px #566f99;
+	/*border-bottom: solid 3px #efeecc; */
+	padding-bottom: 0.25em;
+	margin-bottom: 1.25em;
+}
+
+#primaryContent h2
+{
+	font-size: 1.7em;
+}
+
+#primaryContent h3
+{
+	font-size: 1.1em;
+}
+
+/* Secondary Content */
+
+#secondaryContent
+{
+	float: right;
+	width: 14em;
+	padding: 1.5em 2em 2em 2em;
+	font-size: 0.9em;
+}
+
+#secondaryContent h3
+{
+	/*background: #566f99 url('images/a4_grex.jpg') top left repeat-x; */
+	color: #fff;
+        background: #566f99 top left repeat-x; 
+        /*background: #c1cbdc top left repeat-x;*/
+	padding: 0.5em;
+	padding: 0.5em 0.5em 0.5em 1.0em;
+	position: relative;
+	left: -0.8em;
+	margin-right: -1.6em;
+	font-size: 1.0em;
+}
+
+/* horizontal rule type a (to match the menu width) */
+hr.a { border: none 0; 
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #efefef;
+	height: 2px;
+	text-align: left;
+        width: 778px;
+        margin: 0em auto;
+	}
+
+/* Color for the word "Grex" in the header */
+#grex
+{
+	color: #ffcc00;
+}
+
+/* Footer */
+
+#footer
+{
+	padding: 1.5em 2em 1.5em 2em;
+	text-align: center;
+	width: 778px;
+	margin: 0em auto;
+	border-top: solid 1px #efeecc;
+	font-size: 0.6em;
+}
+
+.clear
+{
+	clear: both;
+}
+
+
+
+/* original topnav example had menu to right side */
+#topnav{
+	display: block;
+	/*float: left;  */
+	/*margin: 7px 0 0 0; */
+	margin: 0 0 0 0;
+	padding: 0; 
+	list-style: none;
+	font-size: 14px;
+	font-weight: bold; 
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	color: #fff;
+	background: #2f6580 url('../images/a2_grex.jpg') top left repeat-x; 
+	}
+
+#topnav ul, #topnav li {
+	float: left; 
+	list-style: none; 
+	margin: 0;
+	padding: 0;
+	color: #fff;
+	}
+
+#topnav li a:link, #topnav li a:visited, #topnav li a:hover {
+	display: block;
+	margin: 0;
+	padding: 0.5em 2em 0.5em 2em; 
+	color: #fff;
+	background-color: #2f6580; 
+	background: #2f6580 url('../images/a2_grex.jpg') top left repeat-x; 
+	}
+
+#topnav ul ul li a:link, #topnav ul ul li a:visited {
+	border: none;
+	}
+
+/* topnav example was menu to right side */
+#topnav li.last a{
+	margin-right: 0; 
+        margin-left: 0;
+	}
+
+#topnav li a:hover, #topnav ul li.active a {
+        color:#fff; 
+	/*color: #000000;*/
+	background-color:#B2C629; 
+	background: #566F99 url('../images/a4_grex.jpg') top left repeat-x;
+	}
+	
+#topnav li li a:link, #topnav li li a:visited {
+	width:150px;
+	float:none;
+	margin:0;
+	/*padding:7px 10px; */
+	padding: 0.5em 2em 0.5em 2em;  
+	font-size:12px;
+	font-weight:normal;
+	}
+
+#topnav li ul {
+	z-index:9999;
+	position: absolute;
+	left: -999em;  
+	left: 0em;
+	height:auto;
+	width:170px;
+	border-left:1px solid #CCCCCC;
+	border-bottom:1px solid #CCCCCC;
+	}
+
+#topnav li ul a{ width: 140px; } 
+
+#topnav li ul ul{ margin: -32px 0 0 0; }
+
+#topnav li:hover ul ul{ left: -999em; }
+
+#topnav li:hover ul, #topnav li li:hover ul{ left:auto; }
+
+#topnav li:hover { position: static; } 
+
+#topnav li.last a {
+        margin-left:0;
+        margin-right:0;
+        }
+
+

@@ -1,0 +1,41 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part II: Compilation</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  <A HREF=install1.html>Part I: Configuration</A><BR>
+Next:  <A HREF=install3.html>Part III:  SQL Server Configuration</A>
+<HR>
+Once you've configured Backtalk, it's time to compile it.
+To do this, just run<P>
+<TABLE WIDTH=100% BORDER=1><TR><TD>
+&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<TT>make</TT><BR>
+&nbsp;
+</TD></TR></TABLE>
+<P>
+in the top-level distribution directory.
+<P>
+Make will compile the Backtalk interpreter and compiler,
+called <TT>backtalk</TT> and <TT>btc</TT>.
+If you are using Backtalk accounts, it will also build a set of user
+administration tools called
+<TT>makeacct</TT>, <TT>btpasswd</TT>, <TT>btvalid</TT>, <TT>btrmuser</TT>,
+and <TT>btmkuser</TT>.
+If you are using Unix accounts, it will build the <TT>partutil</TT> program.
+<P>
+If all is well, this should work without any errors or warnings.  If you
+get errors or warnings, please send the messages to us at
+<A HREF=mailto:backtalk@hvcn.org>backtalk@hvcn.org</A> so we can make sure they
+get fixed in the next release.
+<HR>
+Prev:  <A HREF=install1.html>Part I: Backtalk Configuration</A><BR>
+Next:  <A HREF=install3.html>Part III:  SQL Server Configuration</A>
+</BODY></HTML>

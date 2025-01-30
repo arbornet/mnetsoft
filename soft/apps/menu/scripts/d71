@@ -1,0 +1,9 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: telnet <site>
+
+Telnet to what site? "
+read site
+telnet $site

@@ -1,0 +1,28 @@
+                       Fronttalk Command:  BROWSE
+
+Usage:  BROWSE <item range>                             ("Ok:" prompt only)
+
+List all items in the given range.
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   BROWSE ALL        - All items not forgotten
+   BROWSE NEW        - Items with new responses.
+   BROWSE (joe)      - Items entered by login ID joe.
+   BROWSE "apples"   - Items with the word "apples" in the title.
+   BROWSE 14,22-31   - Item 14, and items 22 through 31.
+
+If you just say "BROWSE" the default is to do "BROWSE NEW".
+
+In addition to the flags described in "HELP RANGE" there are some additional
+flags that work only on the BROWSE command:
+
+   LONG     - Choose long format - the same as the item headers shown by READ
+   SHORT    - Choose short format - tabular with response counts.
+
+The default format is installation dependent.  The actual appearance of
+these formats depends on how the separators are defined (see "HELP ISEP"
+and "HELP ISHORT").  The output will be filtered through a pager (see
+"HELP PAGER").  The usual pager is "more" which will pause the display after
+each full screen.  Hit <space> to see the next screen.

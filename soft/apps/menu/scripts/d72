@@ -1,0 +1,13 @@
+#!/bin/sh
+#Authors- Marcus Watts, Michelangelo Giansiracusa
+
+echo ""
+echo "UNIX COMMAND:  sh -c 'IFS=\":\$IFS\"; for X in \$PATH; do ls -F \$X;"
+echo "               done | sed -n \"s/[@*]\$//p\" | sort -u | pr -4 -t | more'"
+echo ""
+echo ""
+echo "Listing programs in your path: $PATH"
+echo ""
+echo "Please be patient - this'll take a little while..."
+
+sh -c 'IFS=":$IFS"; for X in $PATH; do ls -F $X; done | sed -n "s/[@*]$//p" | sort -u | pr -4 -t | more'

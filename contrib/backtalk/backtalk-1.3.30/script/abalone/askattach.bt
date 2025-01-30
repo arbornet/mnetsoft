@@ -1,0 +1,143 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% askattach script
+%
+% This script prompts for an attachment, and is it's own handler
+%
+%  Queries from 'makeresp' include:
+%
+%   item= item number if posting response
+%   text= text of response/item
+%   texttype= type of response
+%   pseudo= user full name
+%   prevmax= previous max response number
+%   goto= page to goto after posting response
+%   isel,rsel,showforgotten,since= items being read
+%   nextnew, csel, conf= as usual
+%   slipattach= attachments from previous attempt to post this response
+%
+%  Queries from 'enteritem' include:
+%
+%   item= -1 to indicate this is new item, not new resp
+%   text= text of response/item
+%   texttype= type of response
+%   pseudo= user full name
+%   title= title of item
+%   nextnew, csel, conf= as usual
+%
+% Queries from 'askattach' include one of the above sets of inputs, plus
+%   aapost= defined to indicate this is from askattach
+%   atch= true if asked for another attachment
+%   baa_file= file to attach
+%   desc= description of attachment
+%   attachments= list of previous attachment handles
+
+/aapost defined {
+   baa_file {
+     % Need a open conference to make attachments
+     open_conf {(Conference )conf( does not exist) halt} if
+
+     % Convert temporary attachment into a real attachment
+     item -1 eq
+     {
+       % Item case: item number may not prove correct - but who cares?
+       /item maxitem 1 + def
+       baa_file desc 0 make_attach /baa_file xdef
+       /item -1 def
+     } {
+       % Response case: response number may not prove correct - but who cares?
+       baa_file desc prevmax cvi 1 + make_attach /baa_file xdef
+     } ifelse
+
+     % append to the attachment list
+     /attachments `attachments {attachments (,)} if baa_file' def
+   } if
+   atch cvi ! {
+     % No more attachments - goto response or item entry page
+    (<HTML><HEAD>
+    <SCRIPT Language="JavaScript">
+    <!--
+    function closewin() {
+	    opener.location='new)item -1 eq {(item)}{(resp)}ifelse
+	        (?text=)text cgiquote
+		(&texttype=)texttype cgiquote
+		/prevmax defined {(&prevmax=)prevmax cgiquote} if
+		(&pseudo=)pseudo cgiquote
+		(&attachments=)attachments cgiquote
+		title {(&title=)title cgiquote} if
+		/goto defined {(&goto=)goto cgiquote} if
+		(&conf=)conf cgiquote
+		(&csel=)csel cgiquote
+		/nextnew defined {(&nextnew=)nextnew} if
+		(&item=)item
+		isel {(&isel=)isel} if
+		rsel {(&rsel=)rsel} if
+		since {(&since=)since} if
+		showforgotten {(&showforgotten=)showforgotten} if
+		(';
+	    window.close();
+    }
+    -->
+    </SCRIPT>
+    </HEAD>
+    <BODY onLoad="closewin();">&nbsp;</BODY>
+    </HTML>\n)
+    halt
+   } if
+} {
+  /attachments () def
+} ifelse
+
+(<HTML>
+<HEAD>
+<SCRIPT Language="Javascript">
+<!--
+//-->
+</SCRIPT>
+</HEAD>
+<BODY>
+)
+/baa_file defined { baa_file get_attach ! {
+    pop /d xdef pop pop (Attached: )d quote(<P>\n)
+} if } if
+(<FORM NAME=f ACTION=")
+/inmain defined {(new)item -1 eq {(item)}{(resp)}ifelse}{(askattach)} ifelse
+(" METHOD=POST ENCTYPE="multipart/form-data">
+<INPUT TYPE=hidden NAME=aapost VALUE="1">
+<INPUT TYPE=hidden NAME=pseudo VALUE=")pseudo quote(">
+<INPUT TYPE=hidden NAME=texttype VALUE=")texttype quote(">
+<INPUT TYPE=hidden NAME=text VALUE=")text quote(">
+<INPUT TYPE=hidden NAME=conf VALUE=")conf quote(">
+<INPUT TYPE=hidden NAME=item VALUE=")item(">\n)
+title {(<INPUT TYPE=hidden NAME=title VALUE=")title quote(">\n)} if
+isel {(<INPUT TYPE=hidden NAME=isel VALUE=")isel quote(">\n)} if
+rsel {(<INPUT TYPE=hidden NAME=rsel VALUE=")rsel quote(">\n)} if
+/goto defined {(<INPUT TYPE=hidden NAME=goto VALUE=")goto quote(">\n)} if
+/prevmax defined {(<INPUT TYPE=hidden NAME=prevmax VALUE=")prevmax(">\n)} if
+since {(<INPUT TYPE=hidden NAME=since VALUE=")since(">\n)} if
+showforgotten {(<INPUT TYPE=hidden NAME=showforgotten VALUE=")showforgotten(">\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=")nextnew(">\n)} if
+(<INPUT TYPE=hidden NAME=attachments VALUE=")attachments quote(">
+<TABLE BORDER=0><TR><TD>
+File&nbsp;to&nbsp;Attach:</TD><TD><INPUT TYPE=file NAME=baa_file SIZE=35>
+</TD></TR>
+<TR><TD>
+Description:</TD><TD><INPUT TYPE=text NAME=desc SIZE=55>
+</TD></TR>
+<TR><TD>
+Attach&nbsp;Another?</TD><TD>
+<INPUT TYPE=radio NAME=atch VALUE=1>&nbsp;Yes&nbsp;&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=atch VALUE=0 CHECKED>&nbsp;No
+</TD></TR>
+<TD COLSPAN=2>
+</SELECT>
+<INPUT TYPE=submit VALUE="Continue">
+)
+/inmain defined !{
+(<INPUT TYPE=button VALUE="Cancel" onClick="window.close(); return false">\n)
+} if
+(</TD></TR></TABLE>
+</FORM>
+</BODY>
+</HTML>
+)

@@ -1,0 +1,13 @@
+                       Fronttalk Setting:  NAME
+
+Usage:  DISPLAY NAME
+        SET NAME
+
+Display/set your default name in the current conference.  This is the full
+name that will be attached to all the items and responses that you enter
+in this conference (unless you enter a response with the PSEUDONYM command).
+
+Note that you can have a different name in each conference.  Changing your
+name with the "SET NAME" command changes it only in the current conference.
+If you want to change your name in all conferences, then you have to do each
+conference separately.

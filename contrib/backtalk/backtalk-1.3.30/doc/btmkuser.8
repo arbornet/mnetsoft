@@ -1,0 +1,54 @@
+.\"	@(#)btmkuser.8	
+.\"
+.TH BTMKUSER 8 "Mar 26, 2000"
+.AT 3
+.SH NAME
+btmkuser \- create a Backtalk user account
+.SH SYNOPSIS
+.B btmkuser
+[-l login] [-p password] [-g group] [-n fullname] [-v] [-R regtime]
+.SH DESCRIPTION
+.I Btmkuser
+creates a user account for the Backtalk conferencing system.
+It can only be run by a superuser or from the Backtalk administration
+account (usually called 'backtalk').
+.PP
+The login, password, and fullname can be given on the command line with
+the
+.BR \-l ,
+.BR \-p ,
+and
+.B \-n 
+flags respectively.
+If they are not given, then they will be prompted for.
+It is recommended that the password
+.I not
+be given on the command line, since it could be seen by other users running
+.IR ps (1)
+or
+.IR w (1)
+commands.
+.PP
+The group name or group id number can be given can be given with the
+.B \-g
+flag.  If it is omitted it defaults to the 'user' group, group ID number 1.
+.PP
+Normally accounts are created in a validated state, immediately ready for use,
+but if the
+.B \-v
+flag is given, the account is created in an invalidated state.
+.PP
+Normally the current time will be recorded as the registration date for the
+new account.  However the
+.B \-R
+flag can be given with a unix time integer value to set random registration
+dates.  This is mainly intended for debugging.
+.PP
+Accounts can also be created with the web-based Backtalk program.
+.SH AUTHORS
+Jan Wolter and Steve Weiss
+(backtalk@hvcn.org)
+.SH "SEE ALSO"
+.IR btrmuser (8),
+.IR btpasswd (8),
+.IR btvalid (8)

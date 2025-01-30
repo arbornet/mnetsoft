@@ -1,0 +1,71 @@
+#!/bin/sh
+# sh shell script to manage .forward files
+# version 9/15/96 - Jan Wolter (janc@cyberspace.org)
+echo "This program will set up mail forwarding for you.  This means that"
+echo "all mail sent to $USER@cyberspace.org will be automatically passed on"
+echo "to some other address instead.  Note that forwarded mail will still"
+echo "pass through Grex.  Grex is very overburdened with mail, so to avoid"
+echo "delays in your mail delivery and avoid uselessly burdening Grex, you"
+echo "should try to get most people to send mail directly to your other mail"
+echo "address instead of having it forwarded through Grex.  Thanks."
+echo " "
+echo "This program supports only the commonest kinds of mail forwarding."
+echo "If you want to do fancy things, edit your .forward file manually."
+echo " "
+if test -e $HOME/.forward
+then
+	echo "Your mail is currently being forwarded to:"
+	/bin/cat $HOME/.forward
+	echo " "
+	echo "You can either stop your forwarding, change your forwarding, or"
+	echo "leave it unchanged."
+	echo " "
+	echo -n "Do you want to stop forwarding mail? "
+	read yn
+	if [ ${yn:-n} = "y" -o ${yn:-N} = "Y" ]
+	then
+		/bin/rm -f $HOME/.forward
+		echo " "
+		echo "Your mail forwarding has been turned off."
+		echo "Future messages sent to Grex will not be forwarded."
+		exit
+	fi
+	echo " "
+	echo -n "Do you want to change your forwarding address? "
+	read yn
+	if [ ${yn:-n} = "n" -o ${yn:-N} = "N" ]
+	then
+		echo " "
+		echo "Your mail forwarding not been changed."
+		exit
+	fi
+	/bin/rm -f $HOME/.forward
+else
+	echo "Your mail is current not being forwarded anywhere."
+	echo " "
+	echo -n "Would you like to set a forwarding address? "
+	read yn
+	if [ ${yn:-n} = "n" -o ${yn:-N} = "N" ]
+	then
+		echo " "
+		echo "Your mail forwarding not been changed."
+		exit
+	fi
+fi
+echo "Enter the Email address (like name@somewhere.com) to forward to:"
+echo -n "> "
+read forward
+if [ ${forward:-none} = "none" ]
+then
+	echo " "
+	echo "No address entered.  Forwarding turned off."
+	exit
+fi
+echo $forward > $HOME/.forward
+echo " "
+echo "Your mail will now be forwarded to:"
+/bin/cat $HOME/.forward
+echo " "
+echo "To test it, send mail to $USER@cyberspace.org and see if it shows up at"
+echo "your other email address.  Run this program again to change or remove"
+echo "your forwarding."

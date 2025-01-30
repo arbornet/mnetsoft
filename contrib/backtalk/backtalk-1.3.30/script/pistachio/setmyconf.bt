@@ -1,0 +1,95 @@
+% Backtalk Pistachio Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% setmyconf script
+%
+% Form handler for "myconfbg.bt" and "color.bt" which sets a variable in 
+% the users' per-conference notes.
+%
+% Query Parameters:
+%   conf=	conference name
+%   csel=	current list of conferences
+%   what=	what to change: bgcolor bgimage textcolor linkcolor
+%                               alinkcolor vlinkcolor highcolor
+%                               regbutton admbutton offbutton
+%                               bgimage
+%   color=	color selected from color table (for color options only)
+%   custom=	color typed in (if color= (custom))
+%   to=        button style or image to set (for button and bgimage options)
+%   nofavfirst=should favorites be listed first?
+%   bnewfirst= should brandnew items be listed first?
+%   bnewlast=  should brandnew items be listed last?
+%   reverse=   should items listed in reverse order?
+
+flavor(config)+ include
+flavor(openconf)+ stopped {
+   ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+pop % discard body line
+
+what (reset) eq {
+   /bodytags 0 set_conf_note
+   /regbutton 0 set_conf_note
+   /admbutton 0 set_conf_note
+   /offbutton 0 set_conf_note
+   /highcolor 0 set_conf_note
+   flavor(myconf)+ jump
+} if
+
+% Extract individual values from bodytags line
+bodytags {
+  /bodytags ( )bodytags+ def
+  bodytags << BGCOLOR="([^"]*)">> sgrep { aload /bgcolor xdef pop} if
+  bodytags << BACKGROUND="([^"]*)">> sgrep { aload /bgimage xdef pop} if
+  bodytags << TEXT="([^"]*)">> sgrep { aload /textcolor xdef pop} if
+  bodytags << LINK="([^"]*)">> sgrep { aload /linkcolor xdef pop} if
+  bodytags << VLINK="([^"]*)">> sgrep { aload /vlinkcolor xdef pop} if
+  bodytags << ALINK="([^"]*)">> sgrep { aload /alinkcolor xdef pop} if
+} if
+
+% convert "what" from a string to a literal name
+/what what cvn def
+
+what /bgcolor eq
+what /textcolor eq or
+what /highcolor eq or
+what /linkcolor eq or
+what /alinkcolor eq or
+what /vlinkcolor eq or {
+  color (custom) eq {/color custom def} if
+  color length 6 ne color <<[^0-9A-Fa-f]>> grep or color and {
+    /msg `(<STRONG>Illegal color value:</STRONG> `)color
+         ('.  It should be a 6-digit hexidecimal number, containing only digits and letters A through F.)' def
+  } {
+    what color def
+  } ifelse
+  /setbody 1 def
+} if
+
+what /bgimage eq
+{
+  what to def
+  /setbody 1 def
+} if
+
+/setbody defined {
+  /bodytags `
+    bgcolor {( BGCOLOR=")bgcolor(")} if
+    bgimage {( BACKGROUND=")bgimage(")} if
+    textcolor {( TEXT=")textcolor(")} if
+    linkcolor {( LINK=")linkcolor(")} if
+    vlinkcolor {( VLINK=")vlinkcolor(")} if
+    alinkcolor {( ALINK=")alinkcolor(")} if ' def
+  /bodytags bodytags set_conf_note
+} if
+
+what /regbutton eq
+what /admbutton eq or
+what /offbutton eq or {
+  what to set_conf_note
+} if
+
+what /highcolor eq {
+  /highcolor highcolor set_conf_note
+} if
+
+flavor(myconf)+ jump

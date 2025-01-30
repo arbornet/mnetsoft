@@ -1,0 +1,1465 @@
+Version 1.3.30 - Aug 10, 2009
+  - Fix abalone to not mark responses read immediately after posting them.
+
+Version 1.3.29 - May 9, 2006
+  - Fixed crash in abalone find screen when accessed from top link.
+  - Changes for compatibility with 64-bit AMD processors.
+  - Upgrade configure script to use libtool 1.5.22 and autoconf 2.59.
+  - Move inclusion of time.h and sys/time.h to common.h and make more portable.
+  - Fixed vararg related portability problems in crash screen generation.
+  - Fixed "make clean" target to clean regex directory too.
+
+Version 1.3.28 - Feb 8, 2006
+  - Fix abalone's peekconf.bt so peek works correctly.
+
+Version 1.3.27 - Nov 20, 2005
+  - Entrance link on abalone conference home page repaired.
+  - Fix bug caused by loadvar not popping handle when literal array is empty.
+
+Version 1.3.26 - Nov 9, 2005
+  - Fix another file descriptor exhaustion bug in dumpuser.
+
+Version 1.3.25 - Nov 3, 2005
+  - Fix bug in loading picospan style participation files with no participation
+    information.
+  - Fix failure of dumpuser to correctly skip participation files for deleted
+    conferences.
+  - Fix a bad dependency in src/Makefile.in.
+  - Fix file desriptor exhaustion problem in dumpuser.
+  - Fix creation of participation directories when we have a part dir.
+  - Don't terminate walks through users when we encounter a user without
+    a directory.
+  - Added script/lib/conflist.bt to provide standardized code for listing
+    all conferences.  Not using this in 1.3 - just for forward compatibility.
+  - Print something for dictionaries on stack when doing a dump.
+  - In abalone, cleaner display of users with no info.
+  - Add -m, -u and -v options to dumpuser to suppress some warning messages,
+    suppress the uid check, and to run verbose.
+  - Added some mtrace debugging hooks.
+
+Version 1.3.24 - Sep 29, 2005
+  - Add ability to generate robot exclusion metatags.
+  - Make loadvar and savevar fast when given an empty array.
+  - Dumpuser fixed to work on systems where httpd_id is not owner_id.
+  - Convert dumpattach to XML output format.
+
+Version 1.2.38 - Sep 26, 2005
+  - Big fix to sql ident_auth files fixing mixups between logins and
+      encrypted passwords.  How'd that bug survive so long?
+
+Version 1.3.23 - Jun 21, 2005
+  - Fix permission bug for attachments in private conferences.
+  - Fix bug in support for Berkeley DB 4.1.
+
+Version 1.3.22 - May 27, 2005
+  - Fix bug where we failed to make sql connections before attempting some 
+    user database queries.
+  - Sort codes of Abalone and Pistachio changed, making abalone the default
+    default interface.
+  - Delete old session cookies when trying to login anonymously from the
+    welcome page.
+
+Version 1.3.21 - May 26, 2005
+  - Fix a segmentation violation that occured when reading anonymously.
+  - Fix dumpuser to try harder to dump encrypted passwords.
+
+Version 1.3.20 - Mar 1, 2005
+  - Fix writing of new fields to tag files.
+
+Version 1.3.19 - Jan 26, 2005
+  - Single quotes quoted as &#39; instead of &apos; to make stupid IE happy.
+
+Version 1.3.18 - Jan 25, 2005
+  - Many fixes to date parsing.
+  - Fix problems with fav_sel when reading anonymously.
+  - Addition of 'dumpuser' program to generate full dump of the user database.
+  - Unification of (nearly) all tagfile reading/writing in new tag.c file.
+  - Quoting functions now quote single quotes as &apos;
+  - Reorganization and modularization of participation reading/writing code
+    with low-level code in partfile.c.
+  - Add locking to ulist/glist file processing.
+  - Addition of testdate test driver program.
+
+Version 1.3.17 - Nov 23, 2004
+  - Add 'publicflavors' variable, so we can make things like 'cinnamon'
+    usable on sites with 'allowanon' turned off.
+  - Teach abalone and pistachio to display RSS icons and autodiscovery links.
+  - Links in user posts now open in a new window by default.  Setting the
+    new linktonew variable to false makes them open in the same window.
+  - In abalone add clickable "bbsname > confname > item number" to bottom of
+    page, above response form.
+  - In abalone, move "slipped in post" warning further up on page, so that it
+    is more visible when long posts have slipped in.
+
+Version 1.2.37 - Nov 23, 2004
+  - Correction to documentation of htime function.
+  - Add syndication defines to config.bt.in to control display of RSS URIs in
+    all interfaces.
+  - Changes to search code that might fix crashes on some systems.
+
+Version 1.3.16 - Nov 10, 2004
+  - Teach configure script to sense Berkeley DB version 4 correctly.
+  - Fix compilation bug for Berkeley DB version 4.
+  - Fix mysteriously mangled line in udb.c.
+  - Fix spurious output of number '20' from email/welcome.bt script.
+  - Fix configure script's overenthusiastic inclusion of dbm libraries.
+
+Version 1.2.36 - Nov 10, 2004
+  - Add itime and htime functions mostly for RSS support.
+  - Include some missing includes for str.h (a portability fix).
+  - Correction to documentation of 'parse' command in language.html.
+  - Move link formatting macros into pistachio/links.bt and abalone/links.bt
+    for compatibility with the RSS interface.
+  - Rename log() function to logmsg() to avoid conflict with math library.
+  - Reset http_content_type and http_location to default before printing
+    a crash screen.
+
+Version 1.3.15 - Jul 7, 2004
+  - Fix bug in sess_file.c which caused session file to get huge when you
+    log out.  Didn't I fix this in 1.3.13?
+  - Fix script install script to also install email scripts.
+  - Fixed multi-line string literal in email.c.
+  - Fixes to improve handling of NULLs by sql interface.
+  - Delete long obsolete regular expression configuration stuff from
+    incl/config.h.in.
+  - Add some untested defines for supporting Berkeley DB 4.
+  - When the public/relogin script is automatically run after a session has
+    expired, pass it a CGI variable "oldscript" which gives the
+    flavor/scriptname of the script we tried to run.
+  - Modify public/relogin.bt and public/login.bt so that when a session
+    expires, the normal action is to continue the original query after the
+    user has re-logged in.  Also add a "read anonymously" button to the
+    relogin form, so people can opt out of logging back in.
+  - Add public/logout.bt script, and use that for logging out, so that if the
+    session is expired it doesn't force you to login so you can logout.
+    Modify pistachio and abalone to use public/logout.bt .
+  - Killsession now erases session cookies even if the session has expired
+    or if it is called from a public script.
+  - Removed extra "Add a Conference" button from admin/editmenu.bt.
+
+Version 1.2.35 - Jul 7, 2004
+  - Fix bug walking through selectors like "$-n" where "n" is the maximum item.
+  - Fix Makefile dependencies for mksql so it gets recompiled when it needs to
+    be.
+
+Version 1.2.34 - Jun 25, 2004
+  - Fix crash that occured with ident=tagfile when a didn't have an "id" file.
+
+Version 1.3.14 - Jun 2, 2004
+  - If OVERRIDE_HTTP_HOST is defined, use that instead of the HTTP_HOST value
+    from Apache.
+  - If DFLT_HTTP_HOST or DFLT_SCRIPT_NAME are defined, the backtalkurl and
+    severurl functions should respect them.
+
+Version 1.2.33 - Jun 2, 2004
+  - The 'chomp' function now deletes trailing CR characters as well as trailing
+    NL characters.
+
+Version 1.3.13 - Jan  2, 2004
+  - Fixed a problem in baai_hash.c for systems where off_t is a "long long"
+    instead of a "long".
+  - Fixed HTML error when abalone entrance page shows an inaccessable
+    conference.
+  - Fixed an ugly bug in sess_file.c, where an uninitialized variable made
+    the session file get very big.
+
+Version 1.2.32 - Jan 2, 2004
+  - Belatedly add documentation of newsession and killsession to language.html.
+
+Version 1.3.12 - Oct 30, 2003
+  - Fixed a memory management bug related to attachments that was causing
+    crashs while reading items in some installations.
+  - Fixed multi-line string literal in email.c
+
+Version 1.2.31 - Oct 30, 2003
+  - Fixed a bug in showopt that caused a crash on sites without spell
+    checkers.
+  - In src directory, 'make clean' removes .gdbinit.
+
+Version 1.3.11 - Oct 28, 2003
+  - Fixed bug in src/Makefile.in which caused it to fail to correctly install
+    backfile in many configurations.
+
+Version 1.2.30 - Oct 28, 2003
+  - Rewrite several Mysql queries so they don't use subqueries, because, well,
+    Mysql doesn't have subqueries.
+
+Version 1.2.29 - Sep 4, 2003
+  - Fixed yet another bug in the fav_sel function, this time relating to
+    isels with more than one range beyond the end of the participation file.
+  - Fixed 'Goto Conference...' command on abalone resign page.
+
+Version 1.3.10 - Sep 3, 2003
+  - Taught HTML scrubber to filter out any Javascript entities.  These
+    never worked anywhere except on Netscape, but they are yet another way
+    to introduce executable content into HTML text.
+
+Version 1.3.9 - Aug 6, 2003
+  - Added documentation of email_new, email_body, email_recip, email_send,
+    and email_close to script language reference manual.
+
+Version 1.2.28 - Aug 6, 2003
+  - Fixed a problem that may have been responsible for occasional
+    misidentifications of users seen on some systems.
+  - Added '#include <errnoh.>' to src/readcomp.c and src/adm_user.c.  It seems
+    that 'errno' is a macro on some systems.
+
+Version 1.3.8 - Jul 25, 2003
+  - Added --with-pwauth configure option, which is only used when you have
+    both --login=form and --auth=shadow.  It gives the path name of the
+    authenticator to run in that case.
+  - Fixed a compile error when used in that configuration.
+
+Version 1.2.27 - Jul 25, 2003
+  - Fixed crash in admin/showuser.bt that occured if you had useplan set.
+
+Version 1.2.26 - Jul 23, 2003
+  - Fixed erroneous marking of all accounts as 'invalidated' on unix systems
+    put '*' in as the passwd field in the public passwd file.
+
+Version 1.2.25 - Jul 17, 2003
+  - Fixed a small memory leak in useremail function.
+
+Version 1.3.7 - Jun 29, 2003
+  - If Backtalk is built with --with-sendmail option, then Backtalk can send
+    email.  The new constant canemail will be true, and the new functions
+    email_new, email_body, email_recipient, email_send, and email_close can
+    be used to compose and send email messages.  Fairly good MIME support
+    is included - we can do attachments and alternate text formats.
+  - If email is enabled, then when an account is created Backtalk runs the
+    script email/welcome.bt, which sends a "Welcome" message to the new
+    user.
+  - Rewrote session-id generation code formerly in sess_file.c and sess_sql.c.
+    It's now in entropy.c and there are two versions - one uses /dev/urandom,
+    the other uses MD5 and an entropy pool stored in etc/bt_entropy.  Session
+    IDs are lengthened from 13 to 24 characters, so the format of the session
+    files or SQL tables changes.   People upgrading a system using an SQL
+    session table will need to run "sqlinit sess" to rebuild the session
+    table.
+  - Fix segfault when /tmp/bt.rep cannot be created.
+  - Fix segfault when CONTENT_TYPE is not defined (mostly happens with
+    fronttalk).
+
+Version 1.2.24 - Jun 29, 2003
+  - When in direct_exec mode, toggle to running as user when accessing
+    participation files, .backtalk file, or any other file in the user's
+    home directory.  Kind of important for fronttalk.
+  - Configure script complains if you try --enable-exec with non-unix logins.
+  - Portability fix to btinstall.in script.
+
+Version 1.2.23 - Jun 22, 2003
+  - Fix bug in fav_sel that make "read 3" fail when the single name item was
+    not in the user's participation file.
+
+Version 1.2.22 - Jun 20, 2003
+  - Fix bad test syntax in Makefile.in
+
+Version 1.3.6 - Jun 17, 2003
+  - Fix some things so that --disable-attachments doesn't cause compilation
+    errors.
+
+Version 1.2.21 - Jun 17, 2003
+  - Partutil creates participation files with office info clipped off of full
+    name.
+  - Fixed small typo in script/public/newuser.bt
+  - Privacy button on newuser screen no longer loses state after error.
+    Default value corrected to be "all users".
+
+Version 1.3.5 - Jun 13, 2003
+  - Split confaccess.c out from ps_config.c, so pwauth compiles again.
+
+Version 1.3.4 - May 7, 2003
+  - Changed default setting of auto_recompile to 2.  This is probably a
+    better setting for most sites.
+  - Added email_fromaddr, email_fromname, and email_organization setting
+    to backtalk.conf file.
+  - Added --with-sendmail option to configure.
+  - Other email support is in here, but in a totally incomplete state.
+
+Version 1.2.20 - May  7, 2003
+  - Fixed compile error in src/udb.c when building with --login=form option.
+  - Fixed non-portable declaration of crypt in src/sess_file.c.
+  - More corrections to URLs printed by Makefile when build is complete.
+  - Fixed bug in handling of --aspell=/full/path configure option.
+  - Modified sess_file.c to avoid negative lseeks() which were giving me
+    inexplicable problems on one host.
+
+Version 1.3.3 - Apr 30, 2003
+  - Abalone and Pistachio gain tools to add/delete and edit attachments.
+  - Print warnings to cfadm users in various places if the secure and
+    saverep flags are not set to a safe setting.
+  - Teach edit_resp enough about attachments so that it doesn't crash on
+    resposnes with attachments.
+  - Fixed edit_resp in abalone and pistachio so that it no longer erases
+    parent response pointers.
+  - Fixed crash when displaying deleted attachments in Abalone.
+  - Added edit_attach built-in function to change description or type of
+    an attachment.
+  - Added reattach built-in function to add, replace or delete attachments
+    on a response.
+
+Version 1.2.19 - Apr 29, 2003
+  - Fixed wonky permissions on temp file during edit_resp and item_retitle.
+  - Fixed admin/reap confirm page so it doesn't croak deletions of really
+    large numbers of users.
+
+Version 1.2.18 - Apr 26, 2003
+  - For Yapp compatibility, tolerate ulist files with lines terminated by CRNL
+    instead of NL.
+  - btmkuser command now creates a .backtalk file for the user, with the
+    registration date included.  A command line switch is added to enable
+    setting random registration dates.
+  - dtime function now understands isolated years, like "2003".
+  - Blank "results per page" box on Admin "User List" page now stays blank.
+  - Bad user list display after deleting single user fixed.
+  - Fixed admin/reap script bug that made mass deletions fail if any accounts
+    were in authentication database but not identity database.
+  - Function userinfo's behavior on deleted or partly deleted accounts changed
+    substantially.
+  - New file src/partdir.c broken out of ps_part.c.
+
+Version 1.2.17 - Apr 13, 2003
+  - For Yapp compatibility, triple up comma at start of a line instead of
+    just doubling them Picospan-style.
+  - Fixed a bug with link to first item on abalone confhome page.
+
+Version 1.2.16 - Apr 9, 2003
+  - Fixed typo in src/Makefile.in
+  - Added empty script/lib/biolink.bt file for forwards compatibility.
+
+Version 1.2.15 - Apr 7, 2003
+  - Fixed links on bottom of welcome pages for sites with --login=form
+
+Version 1.3.2 - Apr 5, 2003
+  - Deleted --enable-debug configure option.  Instead we have runtime
+    variables 'saverep' and 'secure' set in config.bt.
+  - Added --enable-attachments configuration flag.
+  - Implemented attachment archive where attachments to responses can be
+    stored.  Added 'get_attach' and 'make_attach' functions.
+  - New system variables 'canattach' and 'attachments' added.  'Attachments' is
+    an input to post_item and post_resp, and an output from read_resp.
+  - 'kill_item' deletes attachments, as does 'erase_resp'.
+  - Pistachio and abalone scripts sets updated to support reading and posting
+    of attachments.
+  - Default timeout in config.bt set to seven minutes.  Would anyone really
+    want to wait longer that that for a web page?
+  - Support for multipart/form-data POST queries in cgi_query.c.
+  - Added cleanattach program, to erase dropped attachments.
+  - Added dumpattach program, a diagnostic tool.
+  - Total redesign of the way repeat files work.
+  - The config.bt script is now run *before* authenticating the user.
+  - Added mimename command and misc/mimename file for giving names to mime
+    types.
+  - cgiquote function quotes control characters.
+  - Dictionary dump code handles control characters in strings better.
+  - Broke vstr.c out of format.c and substantially rewrote it, making more
+    use of realloc() which is sometimes more efficient that malloc() and
+    memmove.  Want to use this in several other places.
+  - Broke debug.c out of main.c.
+  - Attempt to access pages anonymously when no anonymous reading is enabled
+    runs public/login.bt instead of public/welcome.bt when sessions are used.
+
+Version 1.2.14 - Apr 5, 2003
+  - Fixed bug in handling of control characters in jsquote.
+  - Fixed compilation error in hashfile.c when using native GDBM or Old DBM -
+    which hardly anyone ever did.
+  - Added src/sess_stupid.c for sites that put logins in cookies.  Yech.
+    Not tested.
+  - Some fixes to configure.in, mainly relating to SQL sites.
+
+Version 1.3.1 - Mar 14, 2003
+  - Support for linking to external bio page instead of backtalk bio page
+    in abalone interface.
+  - Added 'scriptname' system constant.
+
+Version 1.2.13 - Mar 13, 2003
+  - Fixed missing abalone jump table in case when no responses where shown.
+  - Fixed weird stack underflow crash that occurs when posting items.
+ 
+Version 1.3.0 - Mar 11, 2003
+  - Abalone much revised to use cascading style sheets.  css directory added
+    to distribution and install scripts modified to install it.
+  - Deleted vanilla flavor from the distribution, and made it a separately
+    distributed interface.
+  - Deleted src/adm.cgi from distribution (hasn't been used for a long time).
+
+Version 1.2.12 - Mar 11, 2003
+  - Fixed bug that caused backslashes to accumulate when parenthesis were used
+    in full names in Backtalk-style participation files.
+  - Added incl/localconfig.h
+  - Updated and expanded doc/auth.html.
+  - Removed some debug code from empty posting error message.
+
+Version 1.2.11 - Mar 8, 2003
+  - Fixed buffer overflow in session.c.
+  - Added auth_none.c for use with foreign login programs.
+  - Added AUTO_CREATE_DIR option to automatically create home directories if
+    they are missing.
+  - More portable use of ctype functions in format.c
+  - Actually got script/public/showopt.bt into the distribution file, where
+    it was supposed to have been since 1.2.2
+  - Refixed the compiler bug in adm_user.c that was supposed to have been
+    fixed in 1.2.10.
+
+Version 1.2.10 - Mar 5, 2003
+  - Expand out any HREF="conf:whatever" attributes in tags in HTML postings.
+  - Strip out all "onLoad" or "onClick" type attributre from tags in HTML
+    postings.
+  - Strip out any HREF="javascript:" type attributes from tags in HTML postings.
+  - Add to allowed tags list:  <AREA>, <COL>, <COLGROUP>, <DFN>, <LISTING>,
+    <MAP>, <MULTICOL>, <SPACER>, <TBODY>, <TFOOT>, <THEAD>, <VAR>
+  - No longer allow tag:  <EMBED>
+  - Delete all closing tags with no matching opening tag.
+  - Delete content of <SCRIPT>...</SCRIPT> tags.
+  - In Yapp_format mode, don't put <BR> on the ends of lines in <PRE> type
+    environments.
+  - In Yapp_format mode, always put a space after inserted <!-- strings.
+  - Unhtml converts &QUOT; to " mark.
+  - Unhtml treats <DIR> and <MENU> just like <UL>
+  - Clickify nntp: and telnet: URLs.
+  - Definition of filter macros format_conf, format_item, and format_resp
+    changed:  they now return only URL not whole <A> tag.
+  - Revised format.c to use tag table built at compile time.  This is in
+    src/tags.c with header incl/tagdefs.h being built from it at compile
+    time by src/mktagdefs.c.
+  - Support for Unix's without strncasecmp()
+  - Fixed crash in abalone when opening non-existant conference
+  - Fixed compiler errors in version 1.2.9 comp_func.c, adm_user.c, and
+    ps_post.c .
+  - Fixed segfault when an program crashes before system dictionary is
+    initialized.
+  - Fixed mishandling of post_log_file constant in version 1.2.9 scripts.
+
+Version 1.1.24 - Mar 5, 2003
+  - Fixed incorrect declaration of lmemcmp() in str.h.
+
+Version 1.2.9 - Mar 1, 2003
+  - Pistachio and abalone gain ability to display most recent responses on
+    begin page and/or on a separate page, if post_log_file is enabled.
+  - In abalone and pistachio, if you access a response via the peek script,
+    it doesn't necessarily mark the whole item read.  If the unread responses
+    before the response can be fit on the same screen, they are included and
+    things are marked read as usual.  If there are too many unread things
+    before it, then nothing is marked read.  Links to responses from the
+    recent response list work the same way.
+  - Miscellaneous small cosmetic changes to pistachio entrance page.
+  - Added 'post_log_file' system variable.  If defined, 'post_resp' and
+    'post_item' call user supplied 'resp_log_format' and 'item_log_format'
+    functions to generate lines to log.
+  - Created script/lib directory as repository for shared code.  Moved
+    userinfo.bt into it.
+  - New script/lib/postlog.bt provides definitions for typical
+    'resp_log_format' and 'item_log_format' functions.  And
+  - New script/lib/readpostlog.bt provides functions for parsing typical post
+    log formats.
+  - Fixed formatting of "unreadable conference" lines on Abalone begin page.
+  - Fixed some flakiness in opening home directory files for anonymous users.
+  - Updated doc/auth.html.
+
+Version 1.2.8 - Feb 26, 2003
+  - HTML responses now get automatic clickification of various conf: and
+    http: things, just like plain text responses do.
+  - Yapp compatibility fix:  learn to read conference acl files, which give
+    more flexibility in specifying conference read/write access.  (But not
+    nearly as much as I'd like.)
+  - Yapp compatibility fix:  6th line of conference config file in Yapp is used
+    for email addresses.  So if building with YAPP_COMPAT, put conference
+    title in seventh line instead of sixth.
+  - Yapp compatibility fix:  Modes in conference config files can be specified
+    by keyword instead of number.
+  - Added ident_yapp identity module.  This is for compatibility with Yapp
+    installations that do not use Unix accounts.  Supports case where user
+    home directories are owned by the httpd account instead of the cfadm
+    account.
+  - On pistachio item list page, changed "Current Items" to "Unforgotten
+    Items".
+  - Fixed a response counting bug in 'count_sel' that came up in some
+    situations.  Remember:  $ is infinity, not the last response.
+  - Fixed a bug in the abalone spell checking code for lazy HTML responses.
+  - Support for mixed-case login ids.
+  - newuser function upgraded to be able to create Yapp-style accounts.
+  - Various changes to accommodate possibility of email address being in the
+    identity database.  Added 'changeemail' and 'useremail' builtins, and
+    modified 'newuser' to save email addresses.
+  - Added 'tail' function to tail a file.
+  - Split 'maypost' variable into 'maypost' and 'mayresp' so permissions to
+    post items and responses can be separately controlled.
+  - Split 'userlist' variable into 'userlist' and 'grouplist' since with acls
+    some conferences have a glist but not a ulist, or vice versa.
+  - Added 'acl' file handle for acl file access.
+  - Added 'yapp_format' constant, which causes response formats to be handled
+    in a strange but web Yapp-compatible mode.
+  - Small performance enhancement to formatting of plain responses.
+  - Slightly improved parsing of HTML tags for unhtml and cleanhtml functions.
+  - Builtin 'in' function generalized to handle literals.
+
+Version 1.1.24 - Feb 26, 2003
+  - Fixed crash in ingrouplist function when there is no group file.
+
+Version 1.2.7 - Feb 17, 2003
+  - Abalone gets a rather nice spell checker.
+  - In abalone, status line messages clarify erase/edit/hide/unseen buttons on
+    mouse over.
+  - In abalone, pop up a confirmation box if a command is selected while there
+    is text in the response box.
+  - In abalone, pop boxes for 'Goto Conference..." and "View Responses..."
+    are generated directly from Javascript, so they come up faster, without
+    having to wait for an http request.  Other popups can be configured to do
+    this, but there is an upfront penalty, so it is only useful for commonly
+    used pop-ups.
+  - In abalone and pistachio, terms for 'unseen', 'erase' and 'hide' may now
+    be changed in the config.bt file.  More useful for abalone than pistachio.
+  - In abalone, preload values in resprange popup and make them autoclear
+    when clicked.
+  - Fixed bug with closing of abalone popups that manifested in Mac IE and
+    probably other browsers.
+  - Fixed bug in abalone where items were not in favorite-first order 
+    if you select an item from item list and then do "next item".
+  - Added 'jsquote' built-in function, to quote strings Javascript style.
+  - Added 'undefconstant' built-in function, to undefine constants.
+  - The 'spell_check' built-in function can now optionally return guesses at
+    the correct spelling of misspelled words.
+  - The 'spell_ignore' system variable was added.  It holds a comma-separated
+    list of words the spell checker should not consider misspelled.
+  - Fix cgiquote function to also quote ' and " signs.
+  - Made a start toward implementing an API interface to the Gnu aspell spell
+    checker.  Not yet functional.
+  - Fixed "Admin URL" printed by Makefile when building with --login=form
+    option.
+
+Version 1.2.6 - Jan 21, 2003
+  - Fixed bug in fav_sel function that mishandled $ signs which were not part
+    of a range in selectors.
+
+Version 1.1.23 - Jan 13, 2003
+  - Fixed grammar in public/welcome.bt
+  - Fixed unclosed comment in sess_file.c
+
+Version 1.2.5 - Dec 3, 2002
+  - In abalone and pistachio, fixed some bugs that caused pseudonyms to be
+    lost when a response slipped in.
+  - If reading item ranges like 0-$, ignore the 0 instead of crashing. 
+  - Fixed crash when favoring an item after doing a scroll in pistachio.
+  - Wrote much more of doc/format.html.
+  - Added HTTP_USER_AGENT and HTTP_REFERER to the no-script dump screen.
+
+Version 1.1.22 - Dec 3, 2002
+  - Fixed crash in vanilla when attempting to browse unreadable confernces.
+  - Fixed peek script so that peek:conf:3:-4 shows last four responses, as
+    it should.
+
+Version 1.2.4 - Oct 28, 2002
+  - Abalone gets option to turn off automatic submit on pulldown menus.  Opera
+    seems not to allow you to select nothing once you've clicked on a pulldown.
+  - Fix cgiquote function to also quote # signs.
+  - Crash screen includes version number.
+  - Fixed crash when anonymously reading conference list in vanilla.
+
+Version 1.1.21 - Oct 14, 2002
+  - Fixed "allowgraphics" switch, so that you really can disable images but
+    not HTML in a conference.
+
+Version 1.2.3 - Oct 5, 2002
+  - Pistachio and abalone gain favor/disfavor buttons on read page.
+  - Pistachio and abalone item lists include "favorite" tags and put favorite
+    items first.
+  - Pistachio and abalone read commands show favorite items first.
+  - Pistachio and abalone users can configure auto-favor for posting items
+    and responses.
+  - Pistachio and abalone allow users to set their own item titles.
+  - Read button on pistachio "item list" page now offers more item ordering
+    options.
+  - Default item ordering can be configured in pistachio on a per conference
+    basis.
+  - Pistachio config file now allows you to set background images, and
+    text and highlight colors.
+  - Fairwitnesses can now set background images and highlight colors for
+    their conferences in Pistachio.
+  - Pistachio gains option to allow users to set colors and buttons and
+    background images on a per-conference basis.
+  - Pistachio "next item" logic modified slightly, so that double-clicking
+    the button doesn't cause new responses from the next page to vanish.
+    Ditto for "read new" button.
+  - Internal links can use . or : as delimiters, like conf:general.3.34
+    or item:test:102.  This improves compatibility with various other
+    conferencing systems.
+  - Ability to read/write alternate participation files enabled and much
+    debugged.
+  - Partutil extended to handle participation extension files.
+  - Added favorite support in interpretor:  fav_sel function to move
+    favorites to front of an item selector and rfav and ifav variables to
+    control if items become favorites when responded to or posted to.
+  - Added jointomark function to interpretor.
+  - When running in hide_html mode, strip meta-characters out of all plain
+    text versions of responses, including both those entered as plain text
+    and those entered as HTML.  Some browsers generate them, and command-
+    line users don't want to see them.
+  - Configure script gains with-dmalloc option which build backtalk with
+    the dmalloc library for memory debugging.
+  - Added various cleanup routines used only for memory debugging.
+  - Open error file only if we crash, instead of on every run.
+  - Fixed bugs in loadvar/savevar that prevented them from working properly on
+    system variables.
+  - Fixed cgiquote function to also quote newlines.
+  - Fixed some missing dependencies in regex/Makefile.in and src/Makefile.in.
+  - Fixed 1.2.2 bug that broke detection of slipped in responses in abalone
+    and pistachio.
+  - Fixed 1.2.2 bug that stopped interfaces from showing you your last response
+    when you did a read new.
+  - Fixed Abalone bug where begin page occasionally showed the list of all
+    conferences instead of your list of hotlist conferences.
+  - Fixed crash in abalone preferences setting on systems with unix accounts.
+  - Fixed erroneous csels when entering an abalone conference by clicking on
+    it's name in the hotlist.
+  - Pistachio gets some anchor tags, not used for anything.
+  - Don't attempt to run partutil if executing directly.
+  - Give partutil an friendlier and more informative error message.
+  - Set default script timeout to a more conservative value.
+
+Version 1.1.20 - Oct 5, 2002
+  - More portable declaration of memchr() in snprintf.c
+
+Version 1.1.19 - Sep 20, 2002
+  - Fixed bug in checking access to glisted unix conferences.
+  - Correction to Unix install instructions.
+  - Configure script fixed for compatibility with SunOS 4 version of sh.
+  - Fixed memory leaks in read_text, ogrep, sgrep, undef and inlist functions.
+
+Version 1.2.2 - Sep 9, 2002
+  - Performance improvements to code for scanning in-memory copy of user's
+    participation file.
+  - Added 'serverurl' and 'backtalkurl' functions, to get URL of scripts
+    more accurately (especially with respect to deciding if we are under
+    http  or https).  Pistachio, abalone, vanilla, public and admin interfaces
+    modified to make proper use of these constructs.
+  - Abalone "Resign Conference" command gets pop confirmation box.
+  - Abalone gets "Goto Conference..." options on all pulldown menus.  These
+    prompt for the conference names in popup boxes.
+  - Abalone search page gains item range box.
+  - Abalone item list flags retired and linked items.  Multiple state icons
+    displayed for items with multiple settings.
+  - Abalone confhome page gets checkboxes on each listed item.  "Read new", 
+    "Read all", and "search" commands restrict to check items if any are
+    checked.  Versions of "forget" and "remember" that act on all checked
+    items added.
+  - Abalone read page gets response range command with popup box.  The respond
+    command on the pulldown now uses a popup to prompt for the response.
+  - Abalone gets fairwitness commands:  link, retire, unretire, freeze, thaw,
+    delete on confhome page.  retitle, retire, unretire, freeze, thaw, delete
+    on read page.  Can edit conference settings, change conference password,
+    and edit ulist.
+  - Abalone can change password from preferences screen.
+  - Abalone catches slipped in responses, allowing you to edit and repost, if
+    you like.
+  - Abalone gets help pages in most places.
+  - External location redirects used in various places in Abalone and Pistachio
+    to ensure that "reload" operations don't repeat operations.
+  - Added script/public/showopt.bt which allows the backtalk configuration to
+    be viewed over the web.
+  - Backtalk -r repeat function upgraded to handle arbitrarily long query
+    strings.
+  - Can read and write several alternate participation file formats - plain
+    old picospan, a new tag-based format, or a picospan file with a parallel
+    tag file to store extra fields in.  This gives us the capability to store
+    arbitrary per-user/per-conference and per-user/per-item settings.  However,
+    it is mostly disabled in this release, since the extensions have not been
+    fully tested.
+  - Added get_conf_note, get_item_note, set_conf_note, and set_item_note
+    commands to access extra particiption file fields.
+  - misc/Makefile.in becomes more careful about not clobbering installed copy
+    of backtalk.conf.
+
+Version 1.1.18 - Sep 9, 2002
+  - Fixed abalone's "Read All Conferences" command to work correctly on systems
+    with conference lists in public.txt files.
+  - Fixed abalone to not crash on password protected conferences.
+  - Fixed pistachio quoting bug with slipped in responses.
+  - Fixed abalone's loss of nextnew variable when posting.
+  - Fixed bug that caused Abalone to show wrong response when you view
+    hidden responses.
+  - Fixed infinite loop on unclosed <!-- HTML comments.
+
+Version 1.2.1 - Aug 25, 2002
+  - Small improvements to abalone's conference list and hotlist editing.
+  - Small bug fixes to admin tool for editing hotlists.
+  - Added dictionaries as a first class data type.
+  - Changed syntax of 'begin' function.
+  - Added 'dict' function.
+  - Internally, all dictionaries now use a true hash search instead of binary
+    search.
+  - 'length' function extended to work on dictionaries.
+  - 'get' function extended to work on dictionaries and strings.
+  - 'put' function extended to work on dictionaries, but not strings.  Making
+    it work on strings will require major revisions to the handling fo strings.
+  - Added 'cflist_array' function to load conference hotlist into an array.
+  - Parsing of .cflist moved from scripts into C code.
+  - Can now read .cflists with more than one conference per line (though we
+    never write them that way.
+  - Added 'known' function to test if variable is in a dictionary.
+  - added 'newbie' flag, which is set when a user joins a conference for the
+    very first time.  Darn, why didn't I call it 'virgin'?
+  - New blue color scheme for abalone (contributed by Tony Publinski).
+  - Can tolerate conference participation files with missing fairwitness and
+    time limit lines.
+  - getput.c file added to source.
+  - src/sysdict.c is now generated by src/mksysdict.c .
+  - Fixed bug in 'cvn' functions - literals it generated where searched for
+    in user dictionaries before system dictionary.
+  - Broke token deallocation functions out from src/stack.c to src/free.c .
+  - Added ps_cflist.c file.
+  - Added first draft of doc/format.html.
+  - cgiquote also quotes question mark characters.
+  - Normalized indenting of C source.
+  - Miscellaneous small updates to doc/glossary.html.
+
+Version 1.1.17 - Aug 25, 2002
+  - Fixed memory management bug in removeuser.
+  - Deleted an accidentally leftover debug command in pistachio/openconf.bt.
+  - Spell checking for item entry fixed in pistachio.
+
+Version 1.1.16 - Aug 23, 2002
+  - Fixed abalone so it no longer creates a participation file for every
+    conference listed on the begin page.
+  - Added 'snoop_conf' function to open conferences for snooping.
+  - Fixed a memory management bug in 'put' function.
+  - Fixed quoting of user names on pistachio participant page.
+  - Fixed order of head/title tags on pistachio read page.
+
+Version 1.2.0 - Aug 8, 2002
+  - Added support for Yapp 3.0 participation file directory (thanks go to
+    Tony Publinski for help with Yapp 3.0 file formats and testing).
+  - Added --with-yapp3 configuration option.
+  - Generalized support for public.txt files, allowing you to configure
+    regular expressions to parse your favorite local format.
+  - Added 'pathname' function to convert filehandles to full paths.
+  - Bio scripts use 'pathname' to construct paths to other user's .backtalk
+    and .plan files instead of doing it manually.
+
+Version 1.1.15 - Aug 8, 2002
+  - Fixed Newuser URL printed out by Makefile.
+  - Fixed crash when entering interfaces from welcome page when anonymous
+    reading is disabled.
+  - Fixed crash on abalone preferences screen.
+
+Version 1.1.14 - Jun 27, 2002
+  - Various tiny documentation fixes.
+
+Version 1.1.13 - Jun 26, 2002
+  - Fix configure scripts to accept URL with https: prefixes.
+  - In abalone, after jumping into the middle of the list of active conferencess
+    on the entrance page or the list of new items on the confhome page, then
+    the next conference and next item commands act just like a normal 'read
+    new'.  Previously the worked weirdly or not at all.
+  - Fix compile time error in showopt.c for people who oddly define YAPP_COMPAT
+    or PICOSPAN_COMPAT but not PARTUTIL.
+  - Abalone navigation pulldowns now have Javascript to make them automatically
+    execute without pushing the go buttton.
+
+Version 1.1.12 - Feb 12, 2002
+  - Words like 'Fairwitness' and 'Conference' now configurable in Abalone.
+  - Fixed bugs in permission checking for retitle, hide, erase.
+  - Fixed retitle to work on previously opened items.
+  - Fixed duplicate results to search when pattern matches both author name
+    and response text in pistachio and abalone.
+  - Some abalone scripts made more tolerant of missing parameters.
+
+Version 1.1.11 - Feb 6, 2002
+  - Added tutorial document.
+  - Updated location of Backtalk homepage in documentation.
+  - Fixed config script's failure to find cpp on some machines.
+  - Admin interface has a config setting to tell which regular interface to
+    jump into when you click on a conference name, breaking last dependency
+    on Pistachio.
+  - Small fixes to byte order detection code.
+  - Fixed a bad link on admin/editmenu.bt.
+
+Version 1.1.10 - Feb 2, 2002
+  - Implementated mysql support.
+  - Abalone gains ability to change user's conference names.
+  - Added 'sleep' function.
+  - Added 'check_partic' function.
+  - Finished implementation of sql session table option.
+  - Configure script does a better job of noticing if you specify a owner-id
+    or httpd-id that does not exist.
+  - 'Make install-binaries' creates cgidir if it doesn't already exist.
+  - Finished writing doc/auth.html guide to custom authentication systems.
+  - Fixed many bugs in SQL support.
+  - Fixed bug with quoting in edit pages for pistachio and abalone.
+  - Fixed bug that caused erase_resp to seg fault when censored log was
+    unwritable.
+  - Fixed pistachio/editform.bt to use explicitly non-wrapping textareas for
+    better behavior on IE.
+  - Fixed core dump in sqlinit.
+  - Rationalization of usage of CFLAGS, CPPFLAGS and LDFLAGS variables in 
+    src/Makefile.in
+  - Added WRAP=OFF to TEXTAREA tags when editing files.
+  - Added CSS stuff in headers of pages with TEXTAREAs to try to force
+    monospaced fonts in textareas.
+  - Added doc/admin-menu.html to distribution, which had been accidentally
+    omitted since it was written oh these many years ago.
+  - Improve lynx compatibility of html install documentation pages.
+  - Flag -session=form added as synonym for -session=cookie.
+
+Version 1.1.9 - Jan 17, 2002
+  - Bug fix to in_sel function, which wasn't returning a value when given a
+    non-numeric selector.
+  - conf_alias function clips names with newlines at the newline instead of
+    rejecting them.
+  - put command now grows array if you store a value past the end.
+  - Correct documentation of link_item command.
+
+Version 1.1.8 - Jan 2, 2002
+  - Pistachio item list includes name/id of item author.
+  - Added motd.html to file handle list.
+  - Pistachio's formatting of the /etc/motd file improved and support for the
+    bbs/motd.html file added.
+  - Added motd display stuff to abalone.
+  - Added locking to transaction logs.
+  - Retitle command strips leading spaces and fails on blank title.
+
+Version 1.1.7 - Nov 28, 2001
+  - Total reorganization of authentication database and identity database
+    code, putting code for each type of database in a separate file, so that
+    new database types can easily be added.
+  - The --auth= and --ident= configure flags now can be used to pull in
+    custom authentication and identification modules written by the installer.
+  - Elimination of dynamically loaded usradm and grpadm modules which used to
+    contain user and group creation and editing functions.  Dividing things
+    up by database type rather precluded dividing things up by operation type,
+    so this code is now always linked in.  So the whole -dynaload option,
+    which never made that much sense in the first place, makes even less now.
+  - SQL interface provided through sql_pgsql.c, sql_mysql.c, sql_msql.c etc.
+  - mksql program compiles SQL query templates from the sql/<server>
+    directories into sqlqry.c, which is compiled into various programs that
+    need to be able to do SQL queries.
+  - Support for optional SQL authentication databases provided by auth_sql.c
+    module, and support for SQL idnetity database through ident_sql.c module.
+  - Broke next_uid() out of udb.c into nextuid.c and added an alternate version
+    that uses SQL sequences instead of a file.  This is used if an SQL
+    identity database is used.
+  - Added sqlinit program for automatic creation of initial database tables.
+  - Added backtalk.conf configuration file for some runtime configuration
+    settings that don't make sense in config.bt because (1) some of the
+    programs that need them don't have a backtalk interpretor built in, and
+    (2) some of the data is sensitive and should not be stored in insecure
+    backtalk variables.  For now this is mainly SQL server configuration
+    information.
+  - Resumed work on the session ID code originally written for version 0.9.2.
+    Config flag --login=cookies compiles it in.  Added new system constant
+    sessions (true if we are using session), and expire_session which gives
+    number of seconds between requests before sessions expire.
+  - Pistachio, Abalone, and Vanilla gain logout buttons when built with
+    sessions.  Login links are also fixed.
+  - Scripts in the public directory no longer even try to authenticate the
+    user when they are run.  They are always run anonymously.
+  - The --disable-edituser flag can be invoked to build a system without
+    user editing.
+  - More appropriate menu options for anonymous users in Abalone.
+  - Dropped support for systems with neither stdarg.h nor varargs.h.  So much
+    of Backtalk requires ANSI C that it is hardly useful to bend over backwards
+    to support pre-ANSI C in this one instance, and it was starting to get in
+    the way.  We continue to support varargs.h, although doing so is likely a
+    waste of energy.
+  - Added Mark Martinec's portable snprintf() functions to the distribution,
+    and did some other fiddling so that we have vprintf(), vfprintf(),
+    snprintf(), vsnprint(), asprintf() and vasprintf() on all platforms.
+    However vsprintf(), asnprintf(), and vasnprintf() are not supported.
+  - Backtalk 'newgroup' command no longer takes list of members as an argument.
+    We never used this feature, and it was clumsy to implement in group
+    modules.
+  - Fixed 'More Matches' link in the admin/listusers.bt to correctly propagate
+    forward current search settings.
+  - Fixed some array overflow bugs in userinfo.bt.
+  - Fixed some stray characters printed by userinfo.bt when user has
+    no .backtalk file.
+  - Fixed error handling in admin/changeuser.bt script.
+  - Fixed various bugs in abalone's listing of hotlist conferences.
+  - For pistachio and abalone, if you view your own bio by clicking on a
+    login on a response, we default to not giving an edit form right away.
+    Instead you get the same display as other users, only with an edit button.
+  - Fixed 'quote' command to also convert " to &quot;
+  - Fixed / division command.
+  - If building with ID_GETUID and another ID_ option, -d switch on command
+    line forces use of getuid() to identify user.
+  - Improved parsing of public.txt files in pistachio, abalone, and vanilla.
+  - Added "forget" and "remember" commands to read page of abalone interface.
+    How did I forget forget?
+  - Opening the conference name '?' now gets you the default conference.
+  - Detect and configure for systems without random().
+  - Improved generation of salt for password encryption.
+  - Don't use 'userinfo.bt' file on systems with /useplan defined.
+  - Added "conf_dir" command which returns conference directory name without
+    opening conference.
+  - Backtalk interpretor gets -v flag, that causes it just to print out its
+    version and configuration.  The showopt built-in command does the same
+    thing.
+  - Added "last_in_conf" command that returns the time you were last in a
+    conference, if you ever were.  This is for deciding whether to display
+    bulletins and such.
+  - Added "cache_conflist" command which causes the conflist to be cached in
+    memory, for use on page with a lot of conference lookups.  Abalone and
+    pistachio modified to use this.
+  - Added "in" command to test if an array contains a given value.
+  - Conf_new command now also returns the number of unseen responses.
+  - Added file handles for .cfonce, .cfrc and for system and conference rc
+    and welcome files.
+  - Setting new global constant "editfrozen" enables hide, show, erase,
+    retitle and edit of responses in frozen items.
+
+Version 1.1.6 - Oct  1, 2001
+  - Fixed some minor compilation bugs.
+
+Version 1.1.5 - Jun 18, 2001
+  - Added missing help page for the pistachio participants page.
+  - Added lots more <BASE> directives to help out browsers that are bad at
+    following relative URLs.
+  - Added 'favicon' system variable.  Taught Backtalk to ignore requests for
+    scripts named 'favicon.ico' unless this variable is set.  If it is set
+    respond by sending the file whose path is given.
+  - Fixed crash when there are trailing slashes on the URL.  We ignore them.
+  - Fixed crash that occured when abalone attempted to read a non-existant
+    item.
+  - If the script name given refers to a directory, then execute the 'begin'
+    script in that directory.
+  - Added top-level 'begin' script which runs the begin script of whichever
+    interface best fits your browser.
+  - If a newline is given in an item title, convert it to a space instead of
+    crashing.
+  - Recognizes and properly flags Picospan "sync" items when rebuilding sum
+    files.  Backtalk doesn't do anything with these, but need to flag them
+    correctly for Picospan compatibility.
+  - Shorter, less obsequious crash screen and dump for bad script names.
+    These are too commonly the result of silly users and broken browsers to
+    give the full treatment.
+  - Fixed crash when you don't enter a pattern on pistachio/findform.
+  - Fixed crash on vanilla user search page.
+  - Added 'dumpsum' program to distribution.  This just generates a human
+    readable dump of a binary sum file.
+  - Added 'sumcheck' program to distribution.  This checks sum files against
+    the conference directory, and either reports or repairs errors.  Can also
+    generate new sum files.
+  - Fixed a compile time error when compiling without the SPELLCHECK option.
+ 
+Version 1.1.4 - Jan 24, 2001
+  - Added btinstall script as tool for installing separately distributed
+    interfaces.
+  - Fixed broken pistachio 'Edit User List' button.
+
+Version 1.0.9 - Jan 24, 2001
+  - Converted from shareware to GPL freeware.
+  - Fixed some bugs in scripts for the creation and use of passworded
+    conferences.
+  - Fixed open_conf function to set 'secret' variable correctly for conferences
+    that are both ulisted and passworded.
+  - Fixed a inconsistancy how pistachio/begin and pistachio/optform think
+    the summary option defaults when not defined.
+
+Version 1.1.3 - Jan 21, 2001
+  - Added minimal spell checking into pistachio 'preview' pages.  I'd like to
+    improve this later.
+  - Added 'spellcheck' function, 'canspell' constant, and 'spell_lang'
+    system variable.
+  - Added --with-ispell configure option.
+  - Revised the way logo images are defined, allowing two different image
+    definitions.
+  - Fixed lack of stickiness of --with-picospan and --with-yapp configure
+    options.
+  - Fixed site name error in public/newuser.bt script.
+
+Version 1.0.8 - Jan 21, 2001
+  - Fixed a bug that could cause the last tag in an HTML response to disappear.
+  - HTML sanitizer now insists that <TABLE> <TR> and <TD> tags be properly
+    nested and properly closed.
+
+Version 1.1.2 - Jan 11, 2001
+  - Added support for group file, identifying administrators based on their
+    group assignment.  Added 'groups', 'ingroup', 'groupid', 'groupname' and
+    'dfltgroup' group info request commands and 'newgroup', 'newgroupmem',
+    'delgroup', 'delgroupmem' and 'changegroup' administrative commands.
+  - New 'newuser' built-in backtalk command obsoletes the makeacct program.
+    The 'makeacct' program is dropped from the distribution.
+  - New 'new_conf' and 'del_conf' built-in commands obsolete the 'confutil'
+    program.  The 'confutil' program is dropped from the distribution.
+  - Also dropped the 'linkconf' program which has been obsolete for a hundred
+    years or so.
+  - Account creation can now be done by members of the 'gradm' group,
+    even if we have ONLY_ADM_CREATE set.  Such accounts can be created only
+    in the groups the 'gradm' user is a member of (but not in group 'gradm').
+    Members of this group can also change passwords, and fullnames and
+    delete accounts which are in their primary group.
+  - Backtalk can now be built either as a single binary, or as a core binary
+    which doesn't have the more rarely used functions compiled in.  Instead
+    it loads these on demand from special shared library files.  Rolled stuff
+    from Gnu's libtool package into the distribution to support this
+    somewhat portably.
+  - Added userinfo.bt script on top level which allows the set of questions
+    asked of newuser to be customized from site to site.  Modified pistachio,
+    vanilla, and abalone bio.bt and changebio.bt scripts to use this too.
+  - Anonymous users can now always run any script in the 'public' script
+    directory, not just the 'welcome' script.
+  - New admin version of the newuser page allows creation of accounts in 
+    arbitrary groups.
+  - New admin version of user search page allows much more sophisticated
+    queries.
+  - New Admin user listing pages, with many new options, including mass
+    deletion of accounts selected by various criteria.
+  - Admin interface completely severed from pistachio interface.  Admin
+    pages have more cross links so 'back' button isn't needed as much.
+  - Added 'glist' file, which is like a conference ulist file, but lists
+    groups of users who can access the conference.  Added ability to edit
+    glist file to pistachio.  Add (*glist) file handle.
+  - Added newuseropen flag, which can be set in the configuration file to
+    control whether unauthenticated users are allowed to create themselves
+    accounts, and determine whether those accounts are validated.
+  - .cflist and dflt.cflist can contain (1) comment lines starting with
+    # signs which some interfaces may print as headings in your conference
+    hot list, (2) tag lines starting with (#:) which some interfaces may
+    use and placemarks in conferences hot lists and (3) conference names
+    like kids:barney or 121:barney, where the first part is a group name
+    or ID, and the second is a conference name.  The conference is only
+    "on the list" if you are in that group.
+  - Added anonymity, mayseealias, mayseefname flags which allow hiding of
+    user names from unauthenticated users, or from all users.  Modifications
+    to vanilla, pistachio, and abalone to support this reasonably cleanly.
+  - In pistachio, whether the 'item list' button lists all items or only
+    new items by default is now configurable both by the installer and
+    each user.
+  - New 'loginlen' command returns maximum number of char in login ids.
+  - New 'split' command slices a string into all of its words.
+  - The 'dont_sort' configuration option is moved to the system-level
+    config.bt file, and renamed 'many_users'.
+  - The 'dtime' command now takes things like 'beginning of last tuesday' or
+    'end of next tuesday' so that you can override the default past/future
+    start/end interpretation.  Also unqualified 'the beginning' or 'the end'
+    gives start and end of time.
+  - New 'chomp' command strips trailing newlines off a string (ala Perl).
+  - Added 'cgiquery' variable which returns original query string.
+  - Display date/time on crash screen.
+  - Fixed crashs in admin/editmenu.bt and admin/editalias scripts.
+  - Split user.c into user.c and userfunc.c
+  - Bug fixes to searching in vanilla.
+  - Minor fixes to preconditions in src/Makefile.
+  - Fixed bomb in 'unseen' link in abalone.
+  - Fix some warning messages that appear on machines with 64-bit OpenBSD
+    machines.
+
+Version 1.0.7 - Jan 11, 2001
+  - Fixed minor bug in code to recognizing retired items immediately after
+    a sum file has been deleted.
+  - Fixed some rarely exercised bugs in reading item status in view.bt and
+    edit.bt for all interfaces.
+  - Corrections to documentation for read_resp command.
+
+Version 1.0.6 - Jan  7, 2001
+  - Fixed several bugs in 'dtime' string-to-time conversion function.
+
+Version 1.0.5 - Dec 29, 2000
+  - Fixed a bomb that occured when peeking at a non-existant item.
+  - Fixed a memory allocation problem in caching of user information.
+
+Version 1.1.1 - Jun 26, 2000
+  - Printing of literals works differently now - instead of printing the name,
+    we print the value at print time.
+  - Fixed a bug in compile time optimization of ` ' concatination operators.
+  - Split printtoken.c out of print.c
+  - Fixes to pistachio "conf:general" kinds of references that got broken in
+    1.1.0.
+  - Many fixes and improvements to abalone.
+  - Pistachio searches can be restricted to a designated list of items.
+  - Pistachio item list page can list only new items, and this is default
+    instead of listing all items.
+  - Make the words "conference", "item", and "response" configurable to
+    different words (like "forum", "topic" and "posting") in pistachio.
+
+Version 1.0.4 - Jun 26, 2000
+  - Fixed various minor typos in pistachio.
+  - Fixed a bug in the formatting of pistachio help page headers.
+
+Version 1.1.0 - May 28, 2000
+  - Added 'abalone' interface flavor - not really done yet.
+  - Threw out old regular expression code.  Merged a version of Henry
+    Spencer's regular expression library into the distribution.
+  - Made compiled regular expressions into a first class data type.
+    Taught btc to compile them at compile time.
+  - Added 'ogrep', 'sgrep', and 'rgrep' functions.
+  - Added 'default' function.
+  - Eliminated ignore_case system variable.
+  - Added ignore case argument to replace and search functions.
+  - cvs function converts arrays now.  Behavior when converting times has
+    changed.
+  - ` and ' functions make a handy way for concatinating lots of stuff together
+    into one string.
+  - Implement firstin() and firstout() with strcspn() and strspn() when they
+    exist.
+  - New browser class -1 introduced for email address collection robots and
+    other annoyances.  peek.bt, welcome.bt, pistachio/bio.bt and vanilla/bio.bt
+    all decline to run for such things.
+  - Revised search page a bit to handle case independent regular expression
+    searches and report errors in bad regular expressions.
+  - Modified various scripts to take advantage of ` ' concatination operators.
+  - Include tools to make .gdbinit file in distribution.  Defines some handy
+    variables and commands for debugging backtalk.
+  - Split config.h into config.h and common.h.
+  - Don't create the error log file - if it doesn't exist, don't log errors.
+
+Version 1.0.3 - Jun 1, 2000
+  - Fixed typo in src/Makefile.in that caused a bit of excess compilation.
+  - Quote item titles in vanilla itemlist page.
+  - Fixed bug where fairwitnesses weren't allowed to hide responses when they
+    should have been allowed to.
+
+Version 1.0.2 - May 7, 2000
+  - Fixed bug where texttype selection gets reset to default after a response
+    failed because of a slipped in response.
+  - Fixed several obscure portability bugs in code used only on really old
+    Unixes.
+  - Don't trap SIGTERM even when signal trapping is turned on.  Http servers
+    send these all the time, and we should honor them.
+  - Don't create the error log file - if it doesn't exist, don't log errors.
+
+Version 1.0.1 - Apr 25, 2000
+  - Added 'cap' and 'caps' builtin functions.
+  - Can configure words for "fairwitness" and "item" in pistachio.
+  - Slight fixes and generalization to file access checking code.
+  - Added 'directory', 'firstdir', and 'nextdir' builtin functions.
+  - next_item function can be passed 'unseen' as a response selector.
+  - next_item and next_resp are more tolerant of garbled selector strings.
+    (in_sel still isn't).
+  - Backtalk comparision functions can now compare time data types.
+  - Fixed a genuine Y2K bug in routines that convert strings to dates.
+    This effected only the dates "yesterday", "today" and "tommorrow".
+  - .cfdir directories are only understood if built with real Unix accounts.
+    Backtalk accounts don't need them, and we gain a smidgeon of speed by
+    not allowing them.
+  - "selectuser" checks for existance of selected user.
+  - Added 'firstpartic' and 'lastpartic' functions to walk through a
+    a conference's list of participants.
+  - Default conference title is now capitalized version of conference name
+    instead of plain raw conference name.
+  - Added "parentresp" system variable - Backtalk can now read and post
+    responses with yapp-style parent pointers.
+  - Support for systems with index() instead of strchr().
+  - Support for systems with missing or broken memcmp().
+  - Support for systems without memset().
+  - Eliminated use of memcpy() in favor of memmove() to simplify portability.
+  - Bug fix to substitute strcasecmp() and strdup() functions.
+  - Welcome.bt and peek.bt read interface.bt files out of subdirectories of
+    script directory to get descriptions of installed interfaces.  New
+    peekconf.bt and peekresp.bt scripts in each flavor provide standardized
+    entry points for peek.  These changes allow interfaces to easily be
+    distributed as separate packages from Backtalk.
+  - Minor lynx compatibility fixes to welcome.bt script.
+  - Pistachio can now display summary of active items in hot list conferences
+    on entrance page.
+  - Pistachio now has a box on confhome page where you can type item numbers
+    to jump directly to them.
+  - Cleanup of formatting of item-list page in Pistachio.
+  - Display total number of items on confhome page.
+  - Pistachio gains read-unseen option.
+  - Pistachio games a mark-seen option.
+  - Pistachio has a command to list participants in a conference.
+  - Fixed a bug in Pistachio where extra stuff is deleted from your .cflist
+    when you resign from a conference.
+  - Conference names in Pistachio read pages now clickable to return to
+    confhome page (and to make them stand out a bit).
+  - Pistachio can display yapp-style parent pointers on response, but doesn't
+    let you set them.
+  - Fixed a Pistachio bug that broke the conference list on the hotlist
+    editting page for systems using public.txt conference lists.
+  - Some updates to browser capabilities database.
+
+Version 1.0.0 - Apr 11, 2000
+  - Autoconf support at last!
+  - Old system.h and config.h files replaced by autoconf generated config.h
+    file.
+  - Total rewrite of dbm file interface.  Added support for Berkeley DB
+    versions 1, 2 and 3.
+  - Replaced RANDOM define with NORANDOM, since essentially all Unixes today
+    have random().
+  - Replaced DIRENT define with autoconf compatible HAVE_DIRENT_H, etc.
+  - Improved portability of uid-swapping code, and broke it out into the
+    set_uid.c file.
+  - Names for defines controlling type of locking changed.
+  - Names for defines controlling type of hashed database files changed.
+  - Replaced defines like NOSTRSTR with autoconf compatible defines like
+    HAVE_STRSTR.
+  - Use tm2sec() function from Apache instead of mktime() for speed and
+    portability reasons.  Add tm2sec.c to distribution.
+  - Fixed vanilla to use new form of read_text function.
+  - Improved support for international alphabets in formatting routines.
+  - Support for systems without vprintf() or stdarg.h.  Added cmd_die.c file
+    to distribution.
+  - Pathname of file 'makeacct' shows after creating a new account passed as
+    CGI variable instead of extra-path info.
+  - Totally new installation manual
+  - Man pages for btmkuser, btrmuser, btpasswd, and btvalid.
+  - Portability and security enhancements to 'cgitest' script.
+  - Added 'allowanon' system variable which allows anonymous users to run only
+    the welcome script if it is set.  Eliminated welcome.html.  Welcome page
+    is now generated by Backtalk even if anonymous users are not allowed.
+  - Fixed bugs that made it impossible to set system constant from config.bt.
+    Can now set them with either defconstant or store.
+  - Configuration switches of author and fairwitness powers moved from
+    compile-time to run-time config file.
+  - Added author_erase and author_hide system constants to allow disabling
+    author's powers to erase and hide.
+  - Fixed bug that caused fullname changes to appear to lag in some
+    configurations.
+  - Added READABLE_PASSWD define for suexec compatiblity.
+  - Added response editing command 'edit_resp' and associated variables
+    'fw_edit', 'author_edit', 'mayedit' and 'editdate'.
+  - Added response editing support to pistachio scripts.
+  - Fixed erase_resp to erase and log both versions of responses when
+    HIDE_HTML is used.
+  - In pistachio, no borders on clickable logos.
+
+Version 0.9.13 - May 24, 1999
+  - Fixed bug that made it impossible to enter first item in fishbowl
+    conferences.
+  - When previewing, show pseudo name, not default conference alias.
+  - If /text_interface is defined, but HTML is turned off, don't show
+    HTML and plaintext versions of items and responses when previewing.
+
+Version 0.9.12 - Apr 19, 1999
+  - Many fixes to UD_DBM/SHARE_UPW options for backtalk and makeacct.
+  - Fixed password change functions for ndbm user databases.
+  - Added bozo filter option to pistachio.
+
+Version 0.9.11 - Apr 9, 1999
+  - Can set "global_header" macro in script/pistachio/config.bt to define a
+    standard header that appears on all page (for ad rotators, and such).
+  - Added appropriate </TR> </TD> and </TH> tags to all tables in all scripts.
+
+Version 0.9.10 - Apr 1, 1999
+  - Fairwitnesses can enable/disable images from pistachio confopt screen.
+  - Clickifier in "expand" function gets a bit better at finding ends of URLs.
+  - Added "allowgraphics" system variable, which controls whether <IMG> tags
+    are allowed in HTML responses.
+  - HTML <ABBR>, <Q>, <INS>, <DEL> and <SPAN> tags now allowed in postings.
+  - HTML <EMBED> tag no longer allowed in postings.
+  - The "open_conf" function checks that conference name is set.
+  - Do "make .gdbinit" in src directory for some useful gdb debugging tools.
+  - Constant "dflt_html" flag in config.bt gives default value of allow_html.
+
+Version 0.9.9 - Mar 23, 1999
+  - Fixed a pistachio bomb that occurred on the "unseen" button was hit when
+    frames were on.
+  - Fixed a type error that caused "read since" to bomb in pistachio.
+  - Fixed bomb that occurred on first join to conference with no items.
+  - Fixed bug that prevented built-in time variables from being set from
+    query strings.
+  - Fixed "roll" function to check that we aren't rolling more things than are
+    on the stack.
+  - Changed location redirect in welcome script to work around browsers who
+    guess authentication realms wrong.
+  - Loosened rules about conference directory names a bit.
+  - cvs function converts times to strings.
+
+Version 0.9.8 - Mar 11, 1999
+  - Added ability for fairwitnesses to set which items should be "new" to
+    newusers via the pistachio interface.
+  - Modified open_conf to use the "new_isel" and "new_since" fields out of
+    the conference settings file to decide which items should be new and
+    which items should be unseen.
+  - Added in_sel builtin function.
+  - Broke the external authentication module and "pwauth" out this
+    distribution and made it a separate package, distributed for free.
+    See http://www.wwnet.net/~janc/mod_auth_external.html.
+  - Rename http/test.cgi to misc/cgitest and deleted the lynxcgi patches.
+
+Version 0.9.7 - Mar 5, 1999
+  - Fairwitnesses can now turn HTML responses on/off in their conferences.
+  - Fixed 0.9.6 bug with newness of your own responses.
+  - Upgraded mod_auth_extern.c to support Apache 1.3 and fix small bugs.
+  - Fixed bug in logging IP addresses under UNIX_LASTLOG.
+  - Bug fixes to preview of HTML responses with aligned images.
+  - Eliminated "history" variable which is redundant with "blindfold".
+  - Fix REPEAT_FILE option to work when environment variables contain newlines.
+
+Version 0.9.6 - Feb 26, 1999
+  - Add support for HTML in postings, including "texttype" environment
+    variable and HTML_PICOSPAN compile option.
+  - Built HTML posting support into Pistachio interface.
+  - Modified handling of conferences with password by "open_conf".
+  - Taught Pistachio to understand conferences with passwords.
+  - Update admin tools to create conferences with passwords.
+  - Added Backtalk lastlog file support, with LASTLOG_FILE option.
+  - Added sort capability to user list function.
+  - TRAP_CRASH compile time option disables signal trapping.
+  - Added "replace" operator.
+  - Added "asort" operator.
+  - Introduced "time" data type, and repaired many year 2038 bugs.  Added
+    "cvt" function.
+  - Expanded functionality of "exec" command.
+  - Automated generation of button gifs, fixed some colors, added some styles.
+  - Added "unhtml" and "cleanhtml" functions.
+  - Added "preview" button to item and response post forms.
+  - Ignore white space on ends of lines in conflist file.
+  - Improve compatibility with Yapp 2.3.  If KEEP_ULIST defined, and in
+    conferences where the ulist is not used for security purposes, we add
+    the user into the ulist the first time he enters the conference, and
+    delete him if he resigns.  If CONF_LOG defined, do Yapp-style logging of
+    kill/link/retire/unretire/freeze/thaw actions in conference log file.
+  - Automatically create indexdir's if they don't exist.
+  - Fixed some misbehaviors of "forget" and improved Picospan compatibility.
+  - Fixed some memory management bugs in and around gdbm nextusr() routine.
+  - Fixed dbm version of user kill function.
+  - Fix vanilla not to offer to change passwords on systems with "nopwedit".
+  - Fix glitch that occasionally puts wrong button style on conf home page.
+  - Fix stupid bug to make error log files work.
+  - Delete "fw" built-in variable, whose purpose I could not remember or
+    imagine.
+  - Updated several help pages.
+
+Version 0.9.5 - Dec 1, 1998
+  - Some corrections to format.c, whose nature I don't remember.
+  - Strip leading and trailing spaces of conference names in .cflist files.
+  - Lynx browsers starting with version 2.7 assumed to have table support.
+  - Fixed error message from makeacct when you try to reuse a login name.
+  - Fixed AUTH_DBM to make it work.
+  - Searching no longer marks whole conference read - added "blindfold"
+    variable.
+  - Security upgrades to partutil.
+
+Version 0.9.4 - Feb 28, 1998
+  - In Pistachio, if a response slips in before your response, it warns you
+    and allows you a chance to edit your response before resubmitting it.
+  - Added expect_resp variable to support the slipped response detection.
+  - Added settable Conference Title stored in the conference config file,
+    loaded into the conftitle variable by openconf, displayed by pistachio and
+    vanilla as the name of a conference.
+  - If compiler can't write out entire binary because disk is full, it deletes
+    the whole binary file and bombs instead of leaving a partial one around.
+  - When posting items or responses, check for full disk errors and don't
+    post any part of the item or response if there isn't space for all of it.
+  - Don't crash when reading truncated participation files (as might be caused
+    by a full disk).  Instead keep as much information from it as is usable
+    and ignore the rest.
+  - When retitling items, don't delete temp file if we didn't have enough disk
+    space to copy it back.
+  - Improve system's tolerance of truncated sum files.  This is probably
+    imperfect, but sum files are unlikely to be truncated in a disk full
+    situation and should self-repair pretty fast.
+  - Interpreter now traps most fatal signals and attempts to print a crash
+    screen instead of just dumping core.  When debugging from the command line,
+    the -s option surpresses this.
+  - Fixed crashes caused by memory overflow in format routine.
+  - Fixed compiler bug writing values on little-endian machines.
+  - Fixed minor errors in installation manual. 
+  - Fixed problems with peek by adding BASE references to pages peek points to.
+  - Fixed a memory management bug in the "jump" command.
+
+Version 0.9.3 - Feb 2, 1998
+  - Moved default Pistachio button colors into pistachio/config.bt file.
+  - Made conference logo clickable - goes to location defined in imageURL.
+  - Fixed wrap function to set tabs a 8 columns, not at four.
+  - Fixed bug in compile-time optimization of cvi function.
+  - Fixed bug in welcome script that cause "read anonymous" not to work.
+  - Fixed incorrect use of "usepublic_txt" script in vanilla conflist script.
+  - Fixed several minor memory leaks.
+  - Improved format and politeness of crash screen.
+  - Crash screen now reports compilation error messages.
+  - Fixed compiler's handling of unbalanced { }'s.
+  - Fixed crashs caused by empty procedures in scripts.
+  - Added global_footer macro to pistachio/config.bt file.
+  - Fixed get_cookie()'s habit of clobbering HTTP_COOKIE variable.
+  - Fixed stack pointer problem in compile-time optimization of ifelse.
+  - Fixed some minor OpenBSD compatibility problems.
+
+Version 0.9.2 - Jan 6, 1998
+  - Added cookie and http header generation stuff, including "setcookie" and
+    "getcookie" commands, plus "http_header", "http_content_type",
+    "http_expires", and "http_location" system variables.
+  - Started adding some code for session-based authentication, but decided I
+    need to think more about it, so it's still there but it doesn't work.
+  - Fixed some portability problems for Solaris.
+  - Fixed bug that causes hidden responses not to be shown as hidden unless
+    they are the first response displayed.
+  - Fixed a bug in makeacct that caused it to create unvalidated accounts
+    incorrectly.
+  - Fixed some more errors in the installation manual.
+  - Fixed bug that made accounts unfingerable after the fullnames were changed.
+  - Added btmkuser, btrmuser, btpasswd, btvalid command-line user
+    user administration programs.
+  - Added ONLY_ADM_CREATE option, in which only cfadm can create accounts.
+  - Added cgiquote Backtalk command.
+  - Added confmenu database as a replacement for the public.txt file.
+  - Added confutil program for conference creation/deletion.
+  - Added admin pages to create conferences, change conference setting, and
+    edit the conference list and conference menu.
+  - Added a new improved hotlist editing page for pistachio.
+  - Added some missing pistachio help pages.
+  - Revised most pistachio pages to use relative links instead of absolute ones.
+  - Improved design of default welcome screen.
+  - Pistachio background color can be changed in pistachio/config.bt file.
+  - Pistachio resign command also deletes conference from your hotlist.
+  - Admin can list only un- or invalidated users from pistachio/users.bt
+  - Added timezone variable to modify behavior of ctime and dtime operator.
+  - Added ztime operator.
+  - Fixed bomb that occured when loadvar/savevar work on bound variables.
+  - Added timezone setting script.
+  - Fixed bug that allowed fairwitnesses to censor linked items.
+  - Added admin documentation for conf backups and unerasing responses.
+  - Fixed improper compile time optimzation of "and" and "or".
+  - Fixed it not to call partutil to permit a file unless it exists or we are
+    about to write to the file.
+
+Version 0.9.1 - Nov 10, 1997
+  - Addition of item index files to improve speed.
+  - Small bug fixes to pistachio/read.mkpanel script.
+  - Revised the way that source file names are tracked through compilation.
+  - Cleaned up some memory leaks.
+  - CLEANUP compile-time flag causes more careful memory deallocation.
+  - decomp gets -v flag for pretty-printing.
+  - print full execution stack backtrace on bombs.
+  - weird internal @include, @stopped and @chain functions eliminated.
+  - bug fixes to date string parsing.
+  - re-enabled input wrapping to cover for Microsoft IE bug.
+  - bomb screen prints all dictionaries, not just system dictionary.
+  - fix bug in "undef" on systems without memmove() that scrambled dictionaries.
+
+Version 0.9.0 - Oct 6, 1997:
+  - First version with compiler.
+  - Changes to dictionary structure.
+  - Addition of "defconstant", "xdefconstant", "constant", "call", "jump" and
+    "cvn" commands.
+  - Redefinition of "include", "chain" and "stopped" commands.
+  - Deletion of "defmacro", "macro" commands.
+  - Bug fixes in "validate" command (to make it work at all).
+  - Bug fixes in "date" command (fix "Yesterday" bug).
+  - Procedures stored internally as executable arrays rather than executable
+    strings.
+  - Addition of administration manual.
+
+Version 0.8.2
+  - First publicly released version
+
+This was preceeded by many unnumbered versions that form a great hazy blur
+in our memories.  Some highlights:
+
+12/ 8/96 - Read Since, and paging.
+11/12/96 - Color setting in Pistachio.
+10/17/96 - No-frames mode in Pistachio.
+ 9/11/96 - First installation co-existing with Picospan on Grex.
+ 7/21/96 - Retitling, resigning, user removal.
+ 6/14/96 - Item linking.
+ 5/15/96 - Account validation/invalidation.
+ 4/29/96 - Added file handles.
+ 4/ 9/96 - Password and full name change code.
+ 4/ 8/96 - Fairwitness powers.
+ 2/28/96 - Changed name from "WebSpan" to "Backtalk".
+ 2/25/96 - Changed name of "Godzilla" interface to "Pistachio".
+ 2/19/96 - Added tagfiles.
+ 2/16/96 - First version of "makeacct".
+ 2/11/96 - First production installation at HVCN.
+ 2/ 2/96 - Array datatypes.
+ 1/26/96 - Sum file generation.
+ 1/22/96 - Hiding, freezing, killing, retiring.
+ 1/18/96 - Partutil, User authentication added.
+ 1/12/96 - First version that could post responses.
+
+Backtalk had its roots in two programs developed by the authors
+independently.  Steve Weiss's WebSpan program, written in 1996, was a
+simple read-only web interface to Picospan conferences.  Jan Wolter's
+bbsread program was a slightly more complex text-based read-only
+interface to Picospan that was written in 1993.

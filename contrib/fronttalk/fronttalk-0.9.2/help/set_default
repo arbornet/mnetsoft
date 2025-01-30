@@ -1,0 +1,10 @@
+                       Fronttalk Setting:  DEFAULT
+
+Usage:  SET DEFAULT
+        SET NODEFAULT
+
+If this is set in the system RC file or in a user's .cfonce file, then
+when Fronttalk is joined, no conference will be joined initially.  You
+start out in "no conf" mode.  From there you can join a conference with
+the JOIN command.  I can't imagine why you'd want to do this.  It's here
+for Picospan compatiblity.

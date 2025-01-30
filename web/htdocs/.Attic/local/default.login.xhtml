@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:carl@cyberspace.org" />
+
+  <title>default .login</title>
+</head>
+
+<body>
+  <pre>
+
+# 
+# Say, fullname, this is your .login file.  You can put
+#  stuff here that you want executed each time you log in.
+#  You'll want to add alias commands to .cshrc, though.
+# 
+
+# This line sets your search path.  When you type a command, Grex looks in
+# the following locations for the command.  For example, when you type
+# "party", Grex looks first in /usr/local/bin, then in /usr/ucb, then in
+# /bin, and so on, for a program called "party".  As it happens, the "party"
+# program is located in /usr/local/bin, so Grex only looks there and then it
+# stops looking.
+set path=(/usr/local/bin /usr/ucb /bin /usr/bin /usr/games)
+
+# This tells Grex where to look for manual pages.
+setenv MANPATH '/usr/local/man:/usr/man'
+
+# This tells Grex what your favorite editor is.  Mine is vi.
+setenv EDITOR vi
+
+# You'll want to learn about the "chmod" command before this one makes
+# sense.  Basically, it automatically sets permissions on all new files
+# that you create so that nobody else can write to them.  Other people
+# *can* read and run them, however.
+umask 22
+
+# This tests to see if this is an interactive session or a program that is
+# logging in.  The following commands are only run if there's a real person
+# sitting at a keyboard.
+if ($?prompt) then
+
+#       These set my interrupt command to delete (^?), my kill character to
+#       control-X, and my erase character to ^H.
+#       Your interrupt character is what you use to break out of a program
+#       that is currently running.
+#       Your kill character does the same thing as backspacing everything
+#       on the current line that you are typing.
+#       Your erase character is what your backspace key sends.  ^H is
+#       backspace; ^? is delete.
+        stty intr ^? kill ^X erase ^H
+
+#       This runs a tset command, using the alias that was set up in the
+#       default .cshrc file.  (Your .cshrc file always runs before your
+#       .login file).
+#       I'm not clear on all the details, but basically, this line sets
+#       my terminal type to a vt100.  The ? before the vt100 means that
+#       Grex should ask you if you're really on a vt100; if you take it
+#       out, Grex will always assume you have a vt100.
+#       I'm guessing that the "dialup" section is used if you are running
+#       your .login file because you just dialed in, and the "su" section
+#       is used when you use the "su" command to connect in to this account.
+#       The $TERM is replaced by the type of terminal you are using, in
+#       my case vt100.  I *think* this command sets the environment variable
+#       called TERM to whatever terminal type you enter.
+        tset -m 'dialup:?vt100' -m 'su:?vt100' "$TERM"
+
+#       This sets the environment variable MESG to "mesg".  I'm not sure
+#       why we do this.
+        setenv MESG mesg
+
+#       This lets people write messages to your screen, using "write" and
+#       "chat" and "talk".  You can change it to "mesg n" if you don't want
+#       people using these programs to talk to you.
+        mesg y
+
+# Finally, this closes off the "if" statement above.
+
+endif
+</pre>
+</body>
+</html>

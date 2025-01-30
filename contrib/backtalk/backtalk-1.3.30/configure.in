@@ -1,0 +1,1709 @@
+dnl -- Process this with autoconf to produce a configure script for Backtalk.
+
+dnl -- Autoconf is carefully designed to encourage people to abide by Gnu
+dnl  - standards.  We go to considerable lengths here to subvert that effort.
+dnl  - Sorry, but Gnu's standards just don't fit our needs very well.
+
+dnl =================== BACKTALK MACRO DEFINITIONS =======================
+
+dnl -- BT_INIT()
+dnl  - This is called after the AC_INIT() function.  It uses a diversion to
+dnl  - insert some code at two points near the beginning of the configure.
+dnl  - The first just initializes the list of our options to an empty string.
+dnl  - Each call to BT_FLAG_TEST will insert another line here that will add
+dnl  - that function name to it.  The second inserts a argument preparsing
+dnl  - loop before the standard argument parsing loop.  This deletes all the
+dnl  - the options created by BT_FLAG_TEST() from the argument list, so that
+dnl  - autoconf never gets a chance to reject them.  In addition, since we
+dnl  - want various pathname options to be sticky, we reinsert the old values
+dnl  - into the argument list before any new values, thus turning the old
+dnl  - values into the default values.  What a kludge.
+
+AC_DEFUN(BT_INIT,
+[m4_divert_push([M4SH-INIT])dnl
+bt_extra_opt=
+m4_divert_pop([M4SH-INIT])dnl
+m4_divert_push([DEFAULTS])dnl
+bt_newopt=
+bt_cache_file=./config.cache
+for bt_opt do
+  case "$bt_opt" in
+changequote(, )dnl
+  -*=*) bt_opt_val=`echo "$bt_opt" | sed 's/[-_a-zA-Z0-9]*=//'`
+        bt_opt_nam=`echo "$bt_opt" | sed 's/^-*\([-_a-zA-Z0-9]*\)=.*$/\1/'` ;;
+  *)    bt_opt_val=yes
+        bt_opt_nam=`echo "$bt_opt" | sed 's/^-*//'` ;;
+changequote([, ])dnl
+  esac
+  for bt_cf in cache-file cache-fil cache-fi cache-f cache- \
+       cache cach cac ca c; do
+    if test "$bt_opt_nam" = "$bt_cf"; then
+      bt_cache_file="$bt_opt_val"
+      continue 2
+    fi
+  done
+  for bt_extra in $bt_extra_opt; do
+    if test "$bt_opt_nam" = "${bt_extra}"; then
+      bt_extra=`echo $bt_extra| sed 's/-/_/g'`
+      eval "${bt_extra}=${bt_opt_val}"
+      continue 2
+    fi
+  done
+  bt_newopt="${bt_newopt} ${bt_opt}"
+done
+dnl -- Yank sticky options out of cache file
+if test -f $bt_cache_file; then
+  eval `grep '^bt_cv_sticky_stuff=' $bt_cache_file`
+fi
+dnl -- Put sticky options before remaining standard autoconf options
+set x $bt_cv_sticky_stuff $bt_newopt
+shift
+m4_divert_pop([DEFAULTS])dnl
+])
+
+dnl -- BT_FLAG_TEST(FLAG, ACTION-IF-THERE [, ACTION-IF-NOT-THERE])
+dnl  - If the named flag was given as a command-line option, execute the
+dnl  - first set of commands, first setting the "flagval" variable to the
+dnl  - value the flag was set to if it was given as "--flag=value".  If the
+dnl  - flag was not given, execute the second set of commands.
+
+AC_DEFUN(BT_FLAG_TEST,
+[m4_divert_push([M4SH-INIT])dnl
+bt_extra_opt="$bt_extra_opt [$1]"
+m4_divert_pop([M4SH-INIT])dnl
+[#] Check whether --[$1] was given.
+if test "[${]patsubst([$1], -, _)+set}" = set; then
+  flagval=$patsubst([$1], -, _)
+  ifelse([$2], , :, [$2])
+ifelse([$3], , , [else
+    $3
+])dnl
+fi
+])
+
+dnl -- BT_ASK(VARIABLE,PROMPT)
+dnl  - Print the given prompt and read a line of input into the given sh
+dnl  - variable.
+
+AC_DEFUN(BT_ASK,
+[ echo
+  echo $ac_n "$2 $ac_c"
+  read $1
+])
+
+dnl -- BT_FLAG_DEFAULT(FLAG,DEFAULT_VALUE)
+dnl  - look for the named FLAG on the command line and set the variable
+dnl  - bt_cv_flag_FLAG.  If it isn't on the command line, try to get it from
+dnl  - the cache file.  If we can't get it from either place, default to the
+dnl  - given value.
+
+AC_DEFUN(BT_FLAG_DEFAULT,
+[ AC_MSG_CHECKING([for --$1 flag])
+  dnl -- first check command line for arg with value
+  BT_FLAG_TEST($1,
+  [ [bt_cv_flag_]patsubst([$1], -, _)[="$flagval"]
+  ], [
+    dnl -- if no arg, check cache file
+    AC_CACHE_VAL([bt_cv_flag_]patsubst([$1], -, _),
+      [bt_cv_flag_]patsubst([$1], -, _)[="yes"])
+  ])
+  if test ["$bt_cv_flag_]patsubst([$1], -, _)[" = "yes"]; then
+    dnl -- a flag without a value, or no flag and no cache value - so default
+    AC_MSG_RESULT([defaulting to $2])
+    [bt_cv_flag_]patsubst([$1], -, _)[=$2]
+  else
+    dnl -- got value from flag or cache - echo value
+    AC_MSG_RESULT([${bt_cv_flag_]patsubst([$1], -, _)[}])
+  fi
+])
+
+dnl -- BT_FLAG_ASK(FLAG, MSG, [TEST])
+dnl  - look for the named FLAG on the command line and set the variable
+dnl  - bt_cv_flag_FLAG.  If it isn't on the command line, try to get it from
+dnl  - the cache file.  If it isn't there, prompt the user with MSG asking
+dnl  - him to enter the value. TEST is a set of commands that checks if
+dnl  - a typed-in value is valid and executes a "break" if it is correct.
+
+AC_DEFUN(BT_FLAG_ASK,
+[ AC_MSG_CHECKING([for --$1 flag])
+  dnl -- first check command line for arg with value
+  BT_FLAG_TEST($1,
+  [ [bt_cv_flag_]patsubst([$1], -, _)[="$flagval"]
+  ], [
+    dnl -- if no arg, check cache file
+    AC_CACHE_VAL([bt_cv_flag_]patsubst([$1], -, _),
+      [bt_cv_flag_]patsubst([$1], -, _)[="yes"])
+  ])
+  if test ["$bt_cv_flag_]patsubst([$1], -, _)[" = "yes"]; then
+    dnl -- had a flag without a value, or no flag and no cache value - so ask
+    AC_MSG_RESULT([not given...])
+    while :
+    do
+      BT_ASK([bt_cv_flag_]patsubst([$1], -, _), [$2])
+      ifelse([$3], , [break], [$3])
+    done
+  else
+    dnl -- got value from flag or cache, echo the value
+    AC_MSG_RESULT([${bt_cv_flag_]patsubst([$1], -, _)[}])
+  fi
+])
+
+
+dnl -- BT_UID_ASK(FLAG, MSG)
+dnl  - Just like BT_FLAG_ASK, but expects that the value entered is a uid or
+dnl  - login name.  If it is numeric, it is accepted without further checking
+dnl  - and both bt_cv_flag_FLAG and bt_uid are set to that value. If it is a
+dnl  - string bt_cv_flag_FLAG is set to the value entered, and bt_uid is set
+dnl  - to the value of the uid associated with that login in /etc/passwd.
+
+AC_DEFUN(BT_UID_ASK,
+[ bt_uid=
+  BT_FLAG_ASK($1, $2,
+  [ case ["$bt_cv_flag_]patsubst([$1], -, _)[" in]
+  [[0-9]*)] break;;
+  [*) bt_uid=`eval $bt_uid_cmd1$bt_cv_flag_]patsubst([$1], -, _)[$bt_uid_cmd2 2>&]AC_FD_CC`
+     if test -z "${bt_uid}"; then
+       echo ["ERROR: Login id '$bt_cv_flag_]patsubst([$1], -, _)[' does not exist"]
+     else
+       break
+     fi;;
+  esac])
+  if test -z "$bt_uid"; then
+    case ["$bt_cv_flag_]patsubst([$1], -, _)[" in]
+    [[0-9]*) bt_uid=$bt_cv_flag_]patsubst([$1], -, _) ;;
+    [*) bt_uid=`eval $bt_uid_cmd1$bt_cv_flag_]patsubst([$1], -, _)[$bt_uid_cmd2 2>&]AC_FD_CC`
+        if test -z "${bt_uid}"; then
+           AC_MSG_ERROR([Login id '$bt_cv_flag_]patsubst([$1], -, _)[' does not exist])
+	fi ;;
+    esac
+  fi
+])
+
+
+dnl -- BT_GID_ASK(FLAG, MSG)
+dnl  - Just like BT_UID_ASK, but expects that the value entered is a gid or
+dnl  - group name.  If it is numeric, it is accepted without further checking
+dnl  - and both bt_cv_flag_FLAG and bt_gid are set to that value. If it is a
+dnl  - string bt_cv_flag_FLAG is set to the value entered, and bt_gid is set
+dnl  - to the value of the gid associated with that login in /etc/group.
+
+AC_DEFUN(BT_GID_ASK,
+[ bt_gid=
+  BT_FLAG_ASK($1, $2,
+  [ case ["$bt_cv_flag_]patsubst([$1], -, _)[" in]
+  [[0-9]*)] break;;
+  [*) bt_gid=`eval $bt_gid_cmd1$bt_cv_flag_]patsubst([$1], -, _)[$bt_gid_cmd2 2>&]AC_FD_CC`
+     if test -z "${bt_gid}"; then
+       echo ["ERROR: Group id '$bt_cv_flag_]patsubst([$1], -, _)[' does not exist"]
+     else
+       break
+     fi;;
+  esac])
+  if test -z "$bt_gid"; then
+    case ["$bt_cv_flag_]patsubst([$1], -, _)[" in]
+    [[0-9]*) bt_gid=$bt_cv_flag_]patsubst([$1], -, _) ;;
+    [*) bt_gid=`eval $bt_gid_cmd1$bt_cv_flag_]patsubst([$1], -, _)[$bt_gid_cmd2 2>&]AC_FD_CC`
+        if test -z "${bt_gid}"; then
+           AC_MSG_ERROR([Group id '$bt_cv_flag_]patsubst([$1], -, _)[' does not exist])
+	fi ;;
+    esac
+  fi
+])
+
+
+dnl -- BT_FUNC_FCNTL_LOCKING()
+dnl  - Check if the fcntl() function can be used for locking.  Execute the
+dnl  - appropriate set of commands.  Cache value bt_cv_func_fcntl_locking
+dnl  - is set to "yes" or "no" if we actually did the test, but not if we
+dnl  - guessed a value while cross compiling.
+
+AC_DEFUN(BT_FUNC_FCNTL_LOCKING,
+[ AC_MSG_CHECKING([whether fcntl locking seems to work])
+  AC_CACHE_VAL(bt_cv_func_fcntl_locking,
+  dnl -- Some versions of unix have fcntl.h, fcntl(), F_SETLKW, and F_RDLCK,
+  dnl  - but can't do fcntl locking - the calls always fail.  So we have to
+  dnl  - run the fool thing to check it.  We do trust the return code though.
+  dnl  - We do the test lock on "incl/backtalk.h" because we know that file
+  dnl  - exists.  We do a read lock because that is less likely to be messed
+  dnl  - up by wierd permissions on the file.
+  [ AC_TRY_RUN([
+#include <fcntl.h>
+#include <sys/file.h>
+main () {
+int fd; struct flock lk;
+if ((fd= open("incl/backtalk.h",O_RDONLY)) < 0) exit(1);
+lk.l_type= F_RDLCK; lk.l_whence= 0; lk.l_start= 0L; lk.l_len= 0L;
+exit (fcntl(fd,F_SETLKW,&lk)); }
+],
+    [ bt_cv_func_fcntl_locking=yes],
+    [ bt_cv_func_fcntl_locking=no],
+    [ AC_MSG_RESULT("guessing no")])
+  ])
+  if test ${bt_cv_func_fcntl_locking+set} = set; then
+    AC_MSG_RESULT($bt_cv_func_fcntl_locking)
+  fi
+])
+
+dnl -- BT_FUNC_MEMCMP()
+dnl  - Same as AT_FUNC_MEMCMP but just defines HAVE_MEMCMP if we have a good
+dnl  - memcmp() function instead of fiddling with LIBOBJS.
+
+AC_DEFUN(BT_FUNC_MEMCMP,
+[AC_CACHE_CHECK(for 8-bit clean memcmp, bt_cv_func_memcmp_clean,
+[AC_TRY_RUN([
+main()
+{
+  char c0 = 0x40, c1 = 0x80, c2 = 0x81;
+  exit(memcmp(&c0, &c2, 1) < 0 && memcmp(&c1, &c2, 1) < 0 ? 0 : 1);
+}
+], bt_cv_func_memcmp_clean=yes, bt_cv_func_memcmp_clean=no,
+bt_cv_func_memcmp_clean=no)])
+if test $bt_cv_func_memcmp_clean = yes; then
+  AC_DEFINE(HAVE_MEMCMP)
+fi
+])
+
+dnl ========================= INITIALIZATION ==============================
+
+dnl -- Check that "incl/backtalk.h" exists to ensure we are in the right dir.
+AC_INIT(incl/backtalk.h)
+
+BT_INIT()
+
+dnl -- Defines go in "incl/config.h"
+AC_CONFIG_HEADER(incl/config.h)
+
+dnl -- Set default value for --prefix flag
+AC_PREFIX_DEFAULT(/usr/local/backtalk)
+
+dnl -- A lot of non-standard output variables to export into makefiles
+AC_SUBST(bbsdir)
+AC_SUBST(userdir)
+AC_SUBST(scriptdir)
+AC_SUBST(libhttpdir)
+AC_SUBST(logdir)
+AC_SUBST(passwddir)
+AC_SUBST(etcdir)
+AC_SUBST(res_etcdir)
+AC_SUBST(res_logdir)
+AC_SUBST(cgidir)
+AC_SUBST(cgirel)
+AC_SUBST(cgisuffix)
+AC_SUBST(cgiurl)
+AC_SUBST(htmlurl)
+AC_SUBST(htmldir)
+AC_SUBST(binaries)
+AC_SUBST(auth_src)
+AC_SUBST(auth_hdr)
+AC_SUBST(auth_obj)
+AC_SUBST(ident_src)
+AC_SUBST(ident_obj)
+AC_SUBST(ident_hdr)
+AC_SUBST(grp_src)
+AC_SUBST(grp_obj)
+AC_SUBST(ses_src)
+AC_SUBST(ses_obj)
+AC_SUBST(sqlqry)
+AC_SUBST(sql_src)
+AC_SUBST(sql_obj)
+AC_SUBST(qry_src)
+AC_SUBST(qry_obj)
+AC_SUBST(baai_src)
+AC_SUBST(baai_obj)
+AC_SUBST(owner)
+AC_SUBST(owneruid)
+AC_SUBST(group)
+AC_SUBST(httpd)
+AC_SUBST(identtype)
+AC_SUBST(authtype)
+AC_SUBST(grouptype)
+AC_SUBST(nuidtype)
+AC_SUBST(logintype)
+AC_SUBST(sesstype)
+AC_SUBST(indextype)
+AC_SUBST(suexec)
+AC_SUBST(dynaload)
+AC_SUBST(attachments)
+AC_SUBST(LTCC)
+
+dnl -- The programs we always build
+binaries="btc makeconf decomp"
+
+dnl ============================ CHECK FLAGS ===============================
+
+dnl -- Replace autoconf's standard help message with our own.  This is another
+dnl  - kludge, since it leaves the configure script containing both the
+dnl  - Gnu standard help message and ours, with the Gnu message never being
+dnl  - printed.
+
+BT_FLAG_TEST(help,
+[cat << EOF
+changequote(, )dnl
+Usage: configure [options] [host]
+Options: [defaults in brackets after descriptions]
+Configuration:
+  --cache-file=FILE       cache test results in FILE
+  --help                  print this message
+  --no-create             do not create output files
+  --quiet, --silent       do not print \`checking...' messages
+  --version               print the version of autoconf that created configure
+Document Root and Cgi-bin Directory:
+  --htmldir=HTMLDIR       directory in which to install .html files.
+  --htmlurl=URL           URL of HTMLDIR.
+  --cgidir=CGIDIR         directory in which it install CGI programs.
+  --cgiurl=URL            URL of CGIDIR
+  --cgi-suffix=SUFFIX     suffix to append to CGI program names
+Backtalk Configuration:
+  --httpd-id=LOGIN        unix user-id that httpd runs CGI scripts as
+  --owner-id=OWNER        unix user-id that backtalk runs as
+  --owner-group=GROUP     unix group-id that backtalk runs as [group of OWNER]
+  --admin-group=GROUP     unix group-id that admin accounts will be in
+  --auth=[text|sql|db|dbm|passwd|shadow]
+                          type of user database to authenticate from [text]
+  --ident=[tagfile|authfile|text|sql|hash]
+			  type of db to keep other user info in [tagfile]
+  --group=[text|sql|unix] type of db to keep group info in
+  --login=[basic|form]    login with pop-up box or cookie-based form [basic]
+  --session=[text|sql|none]
+  			  type of db to keep session info in [none]
+  --lastlog=[backtalk|unix|none]
+                          select type of lastlog maintained [backtalk]
+  --with-picospan         keep conferences strictly picospan compatible
+  --with-yapp             keep conferences strictly yapp 2.3 compatible
+  --with-yapp3            keep conferences strictly yapp 3.0 compatible
+  --lock=[fcntl|flock|lockf|tmpfile|any]
+                          force use of a particular type of locking [any]
+  --disable-attachments   can users upload files and images for their postings
+  --disable-edituser      disable creation, deletion, editing of users
+  --enable-dynaload       enable on-demand loading of rarely used modules
+  --enable-exec           enable direct execution of backtalk from fronttalk
+  --disable-trap-crash    dump core on error instead of printing error screen
+  --with-suexec           install to work with suexec or cgiwrap
+  --with-sendmail         use sendmail program to send email
+  --with-aspell           use aspell program for spell checking
+  --with-ispell           use ispell program for spell checking
+  --with-pgsql            interface to PostgreSQL database server
+  --with-mysql            interface to MySQL database server
+  --with-msql             interface to mSQL database server
+  --with-oracle           interface to Oracle database server
+  --with-sybase           interface to Sybase database server
+  --with-dmalloc          build with the dmalloc memory debugging library
+Backtalk Directories:
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          [$ac_default_prefix]
+  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [same as prefix]
+  --bindir=DIR            user executables in DIR [EPREFIX/bin]
+  --sbindir=DIR           system admin executables in DIR [EPREFIX/sbin]
+  --libexecdir=DIR        program executables in DIR [EPREFIX/libexec]
+  --mandir=DIR            man documentation in DIR [PREFIX/man]
+  --etcdir=DIR            read-mostly data files in DIR [PREFIX/etc]
+  --bbsdir=DIR            conference files in DIR [PREFIX/bbs]
+  --userdir=USERDIR       user directories under USERDIR [PREFIX/user]
+  --userlevels=N          number of heirarchical levels under USERDIR [0]
+  --scriptdir=DIR         backtalk scripts under DIR [PREFIX/script]
+  --logdir=DIR        backtalk log files under DIR [PREFIX/log]
+  --passwddir=DIR         user passwd files under DIR [PREFIX/passwd]
+EOF
+changequote([, ])dnl
+exit  0
+])
+
+dnl -- Check for user directory levels flag, defaulting to zero
+
+BT_FLAG_DEFAULT(userlevels,0)
+case "$bt_cv_flag_userlevels" in
+0 | 1 | 2)
+  AC_DEFINE_UNQUOTED(USER_DIR_LEVEL, $bt_cv_flag_userlevels) ;;
+*)
+  AC_MSG_ERROR([Legal values for --userlevels flag are 0, 1 or 2]) ;;
+esac
+
+dnl -- Check that a valid value was given for --login, and default to "basic"
+dnl  - if no --login flag was given.
+
+BT_FLAG_DEFAULT(login,basic)
+logintype=$bt_cv_flag_login
+case "$logintype" in
+basic)
+  bt_dflt_sess=none ;;
+form|cookie) 
+  bt_dflt_sess=text
+  AC_DEFINE(ID_SESSION)
+  AC_DEFINE_UNQUOTED(SESSION_COOKIE,"backtalk.session") ;;
+*)
+  AC_MSG_ERROR([--login=${logintype} is not a legal option]) ;;
+esac
+
+dnl -- Defaults for various values that are effected by --auth=flag
+
+bt_dflt_ident="tagfile"
+bt_hash=any
+bt_dflt_attachments=yes
+bt_unix=
+
+dnl -- Check that a valid value was given for --auth, and default to "text"
+dnl  - if no --auth flag was given.
+
+BT_FLAG_DEFAULT(auth,text)
+authtype=$bt_cv_flag_auth
+auth_src="auth_${authtype}.c"
+auth_obj="auth_${authtype}.o"
+auth_hdr="auth_${authtype}.h"
+bt_dflt_grp=text
+bt_dflt_edituser=yes
+case "$authtype" in
+text)
+  bt_gid_cmd1='not needed';;
+db)
+  bt_hash=db
+  bt_gid_cmd1='not needed';;
+dbm)
+  bt_hash=ndbm
+  bt_gid_cmd1='not needed';;
+sql)
+  bt_need_sql=auth;
+  bt_dflt_grp=sql
+  bt_gid_cmd1='not needed';;
+passwd | shadow)
+  binaries="$binaries partutil"
+  AC_DEFINE(REAL_UID)
+  AC_DEFINE(REAL_GID)
+  AC_DEFINE(UNIX_ACCOUNTS)
+  if test $authtype = passwd; then
+    AC_DEFINE(SHADOW_NONE)
+  fi
+  bt_dflt_ident=authfile
+  bt_dflt_edituser=no
+  bt_dflt_grp=unix
+  bt_unix=1;;
+*) dnl -- custom authentication module
+  if test ! -f "src/$auth_src"; then
+    AC_MSG_ERROR([--auth=${authtype} given but src/${auth_src} not found])
+  fi
+  if test ! -f "incl/$auth_hdr"; then
+    AC_MSG_ERROR([--auth=${authtype} given but incl/${auth_hdr} not found])
+  fi
+  bt_gid_cmd1='not needed';;
+esac
+AC_DEFINE_UNQUOTED(AUTH_HDR,"$auth_hdr")
+
+dnl -- All of the authentication options currently offered through autoconf
+dnl  - require ID_REMOTE_USER to be defined
+
+AC_DEFINE(ID_REMOTE_USER)
+
+dnl -- Check for enable-edituser flag.  Defaults off for unix authentication,
+dnl  - on otherwise.  Can't be turned on for unix authentication.
+
+AC_ARG_ENABLE(edituser, ,[ edituser=$enableval ], [edituser=$bt_dflt_edituser])
+if test $edituser = 'yes'; then
+  if test "$bt_unix"; then
+    AC_MSG_ERROR([cannot --enable-edituser with --auth=${bt_cv_flag_auth}])
+  fi
+  AC_DEFINE(EDITUSER)
+  binaries="$binaries btpasswd btmkuser btrmuser btvalid"
+fi
+
+dnl -- Check that a valid value was given for --ident, and default to the
+dnl  - appropriate value if no flag was given.  If --auth is "shadow" or
+dnl  - "passwd", then --ident must be authfile.  Otherwise default to
+dnl  - "tagfile"
+
+BT_FLAG_DEFAULT(ident,$bt_dflt_ident)
+identtype=$bt_cv_flag_ident
+case "$identtype" in
+tagfile | text | hash | sql | yapp)
+  if test "$bt_unix"; then
+    AC_MSG_ERROR([only --ident=authfile is valid with --auth=${bt_cv_flag_auth}])
+  fi
+  if test "$identtype" = 'sql'; then
+    bt_need_sql=ident
+    bt_dflt_grp=sql
+  else
+    bt_dflt_grp=text
+  fi
+  ident_src="ident_${identtype}.c"
+  ident_obj="ident_${identtype}.o"
+  ident_hdr="ident_${identtype}.h" ;;
+authfile)
+  case "$authtype" in
+  db|dbm)
+    ident_src="ident_hash.c"
+    ident_obj="ident_hash.o"
+    ident_hdr="ident_hash.h" ;;
+  *)
+    ident_src="ident_${authtype}.c"
+    ident_obj="ident_${authtype}.o"
+    ident_hdr="ident_${authtype}.h" ;;
+  esac
+  AC_DEFINE(SHARE_AUTH_IDENT) ;;
+*) dnl -- custom ident module
+  ident_src="ident_${identtype}.c"
+  ident_obj="ident_${identtype}.o"
+  ident_hdr="ident_${identtype}.h"
+  if test ! -f "src/$ident_src"; then
+    AC_MSG_ERROR([--ident=${identtype} given but src/${ident_src} not found])
+  fi
+  if test ! -f "incl/$ident_hdr"; then
+    AC_MSG_ERROR([--ident=${identtype} given but incl/${ident_hdr} not found])
+  fi ;;
+esac
+AC_DEFINE_UNQUOTED(IDENT_HDR,"$ident_hdr")
+
+dnl -- Check that a valid value was given for --group, and default to the
+dnl  - appropriate value if no flag was given.
+
+BT_FLAG_DEFAULT(group,$bt_dflt_grp)
+grouptype=$bt_cv_flag_group
+grp_src="grp_${grouptype}.c"
+grp_obj="grp_${grouptype}.o"
+case "$grouptype" in
+text | sql)
+  if test "$bt_unix"; then
+    AC_MSG_ERROR([only --group=unix is valid with --auth=${bt_cv_flag_auth}])
+  fi
+  if test "$grouptype" = sql -a -z "$bt_need_sql"; then
+    bt_need_sql='group'
+  fi ;;
+unix)
+  if test -z $bt_unix; then
+    AC_MSG_ERROR([--group=unix is only valid with --auth=passwd or --auth=shadow])
+  fi ;;
+*) dnl -- custom group module
+  if test ! -f "src/$grp_src"; then
+    AC_MSG_ERROR([--ident=${grouptype} given but src/${grp_src} not found])
+  fi
+esac
+
+dnl -- Check that a valid value was given for --session, and default to the
+dnl  - appropriate value if no flag was given.
+
+BT_FLAG_DEFAULT(session,$bt_dflt_sess)
+sesstype=$bt_cv_flag_session
+case "$sesstype" in
+text | file)
+  if test "$logintype" = basic; then
+    AC_MSG_ERROR([--login=basic requres --session=none])
+  fi
+  ses_src="sess_file.c"
+  ses_obj="sess_file.o"
+  sesstype=file ;;
+none)
+  if test "$logintype" = cookie -o "$logintype" = form; then
+    AC_MSG_ERROR([only --session=none is not valid with --login=$logintype])
+  fi
+  ses_src="sess_none.c"
+  ses_obj="sess_none.o" ;;
+sql)
+  if test "$logintype" = basic; then
+    AC_MSG_ERROR([--login=basic requres --session=none])
+  fi
+  ses_src="sess_sql.c"
+  ses_obj="sess_sql.o"
+  if test -z "$bt_need_sql"; then
+    bt_need_sql='session'
+  fi ;;
+*) dnl -- custom session module
+  ses_src="sess_${sesstype}.c"
+  ses_obj="sess_${sesstype}.o"
+  if test ! -f "src/$ses_src"; then
+    AC_MSG_ERROR([--session=${sesstype} given but src/${ses_src} not found])
+  fi
+esac
+
+dnl -- Check that a valid value was given for --lastlog, and default to
+dnl  - "backtalk".  The "unix" option is normally only sensible with --auth
+dnl  - set to "passwd" or "shadow".
+
+BT_FLAG_DEFAULT(lastlog,backtalk)
+case "$bt_cv_flag_lastlog" in
+none)
+  bt_lastlog= ;;
+backtalk)
+  need_lastlog= ;;
+unix)
+  need_lastlog=1
+  AC_DEFINE(UNIX_LASTLOG)
+  if test -z "$bt_unix"; then
+    AC_MSG_WARN([normally --lastlog=unix only makes sense with --auth=passwd or --auth=shadow])
+  fi ;;
+*)
+  AC_MSG_ERROR([invalid value ${bt_cv_flag_lastlog} for --lastlog]) ;;
+esac
+
+dnl -- Check that a valid value was given for --lock, default to "any"
+
+BT_FLAG_DEFAULT(lock,any)
+case "$bt_cv_flag_lock" in
+fcntl | flock | lockf | tmpfile | any) ;;
+*) AC_MSG_ERROR([invalid value ${bt_cv_flag_lock} for --lock]) ;;
+esac
+
+dnl -- Check for --with-pwauth flag
+
+pwauth=
+AC_ARG_WITH(pwauth, ,[
+  pwauth=$withval
+  if test $withval = yes; then
+    AC_MSG_ERROR([A path name must be given on the --with-pwauth option])
+  fi
+  AC_DEFINE_UNQUOTED(PWAUTH_PATH,"$pwauth")
+])
+
+if test "x$pwauth" = 'x' -a "$authtype" = 'shadow' -a "$logintype" != 'basic'; then
+  AC_MSG_ERROR([--login=$logintype with --auth=shadow requires --with-pwauth])
+fi
+
+dnl -- Check for picospan or yapp compatibility flags
+
+compatible=
+picospan=no
+yapp=no
+yappthree=no
+AC_ARG_WITH(picospan, ,[
+  picospan=$withval
+  if test $withval = yes; then
+    AC_DEFINE(PICOSPAN_COMPAT)
+    compatible=picospan
+  fi
+])
+
+AC_ARG_WITH(yapp, ,[
+  yapp=$withval
+  if test $withval = yes; then
+    if test $compatible; then
+      AC_MSG_ERROR([Sorry, can't work with both picospan and yapp])
+    fi
+    AC_DEFINE(YAPP_COMPAT)
+    compatible=yapp
+  fi
+])
+
+AC_ARG_WITH(yapp3, ,[
+  yappthree=$withval
+  if test $withval = yes; then
+    if test $compatible; then
+      AC_MSG_ERROR([Sorry, can't work with both yapp3 and $compatible])
+    fi
+    AC_DEFINE(YAPP3_COMPAT)
+    compatible=yapp3
+  fi
+])
+
+dnl -- Check for with- flags for various SQL servers
+
+sql=
+sql_src=
+sql_obj=
+qry_src=
+qry_obj=
+sql_pgsql=no
+sql_mysql=no
+sql_msql=no
+sql_oracle=no
+sql_sybase=no
+if test $bt_need_sql; then
+  AC_ARG_WITH(pgsql, ,[
+    sql_pgsql=$withval
+    if test $withval = yes; then
+      AC_DEFINE(SQL_PGSQL)
+      sql=pgsql
+    fi
+  ])
+  AC_ARG_WITH(mysql, ,[
+    sql_mysql=$withval
+    if test $withval = yes; then
+      if test $sql; then
+	AC_MSG_ERROR([Sorry, can't support both mysql and $sql])
+      fi
+      AC_DEFINE(SQL_MYSQL)
+      sql=mysql
+    fi
+  ])
+  AC_ARG_WITH(msql, ,[
+    sql_msql=$withval
+    if test $withval = yes; then
+      if test $sql; then
+	AC_MSG_ERROR([Sorry, can't support both msql and $sql])
+      fi
+      AC_DEFINE(SQL_MSQL)
+      sql=msql
+    fi
+  ])
+  AC_ARG_WITH(oracle, ,[
+    sql_oracle=$withval
+    if test $withval = yes; then
+      if test $sql; then
+	AC_MSG_ERROR([Sorry, can't support both oracle and $sql])
+      fi
+      AC_DEFINE(SQL_ORACLE)
+      sql=oracle
+    fi
+  ])
+  AC_ARG_WITH(sybase, ,[
+    sql_sybase=$withval
+    if test $withval = yes; then
+      if test $sql; then
+	AC_MSG_ERROR([Sorry, can't support both sybase and $sql])
+      fi
+      AC_DEFINE(SQL_SYBASE)
+      sql=sybase
+    fi
+  ])
+
+  if test -z "$sql"; then
+    AC_MSG_ERROR([--$bt_need_sql=sql selected, but no sql server specified])
+  fi
+fi
+
+dnl -- Check for enable-attachments flag
+
+baai_src=
+baai_obj=
+baai_hash=
+AC_ARG_ENABLE(attachments, ,[ attachments=$enableval ], [attachments=yes])
+if test $attachments = 'yes'; then
+  if test "$sql"; then
+    AC_DEFINE(ATTACH_SQL)
+    baai_src="$srcdir/baai_sql.c";
+    baai_obj="baai_sql.o";
+    baai_sql=1
+  else
+    AC_DEFINE(ATTACH_HASH)
+    baai_src="$srcdir/baai_hash.c";
+    baai_obj="baai_hash.o";
+    baai_hash=1
+  fi
+  binaries="$binaries cleanattach"
+fi
+
+if test "$sql"; then
+  binaries="$binaries sqlinit"
+  sql_src="$srcdir/sql_$sql.c";
+  sql_obj="sql_$sql.o";
+  qry_src="$srcdir/sqlqry.c";
+  qry_obj="sqlqry.o";
+  sqlqry="../sql/$sql/types.sql"
+else
+  sql_src="$srcdir/sql_none.c";
+  sql_obj="sql_none.o";
+  sqlqry=
+fi
+
+dnl -- Which SQL query sets will we need?
+nuidtype=file
+if test "$authtype" = sql; then
+  if test "$identtype" = authfile; then
+    if test "$grouptype" = sql; then
+      sqlqry="$sqlqry ../sql/$sql/auth_ident_group.sql ../sql/$sql/nextuid.sql"
+      nuidtype=sql
+    else
+      sqlqry="$sqlqry ../sql/$sql/auth_ident.sql ../sql/$sql/nextuid.sql"
+      nuidtype=sql
+    fi
+  elif test "$identtype" = sql; then
+    sqlqry="$sqlqry ../sql/$sql/auth.sql ../sql/$sql/ident.sql ../sql/$sql/nextuid.sql"
+    nuidtype=sql
+  else
+    sqlqry="$sqlqry ../sql/$sql/auth.sql"
+  fi
+elif test "$identtype" = sql; then
+  sqlqry="$sqlqry ../sql/$sql/ident.sql ../sql/$sql/nextuid.sql"
+  nuidtype=sql
+fi
+if test "$grouptype" = sql -a \( "$authtype" != sql -o "$identtype" != authfile \); then
+  sqlqry="$sqlqry ../sql/$sql/group.sql"
+fi
+if test "$sesstype" = sql; then
+  sqlqry="$sqlqry ../sql/$sql/session.sql"
+fi
+if test $baai_sql; then
+  sqlqry="$sqlqry ../sql/$sql/baai.sql"
+fi
+
+dnl -- Check for with-aspell flag
+
+aspell=no
+AC_ARG_WITH(aspell, ,[aspell=$withval], [aspell=no])
+if test $aspell = 'yes'; then
+  AC_PATH_PROG(aspell_path,aspell,no)
+  if test $aspell_path = 'no'; then
+    AC_MSG_ERROR([got --with-aspell flag, but cannot find 'aspell' program.
+If aspell is installed do --with-aspell=/full/path/name/aspell])
+  fi
+  AC_DEFINE_UNQUOTED(ASPELL_PATH,"$aspell_path")
+elif test $aspell != 'no'; then
+  AC_DEFINE_UNQUOTED(ASPELL_PATH,"$aspell")
+fi
+
+dnl -- Check for with-ispell flag
+
+ispell=no
+AC_ARG_WITH(ispell, ,[ispell=$withval], [ispell=no])
+if test $ispell = 'yes'; then
+  if test $aspell = 'yes'; then
+    AC_MSG_ERROR([cannot use both --with-aspell flag and --with-ispell flag])
+  fi
+  AC_PATH_PROG(ispell_path,ispell,no)
+  if test $ispell_path = 'no'; then
+    AC_MSG_ERROR([got --with-ispell flag, but cannot find 'ispell' program.
+If ispell is installed do --with-ispell=/full/path/name/ispell])
+  fi
+  AC_DEFINE_UNQUOTED(IISPELL_PATH,"$ispell_path")
+elif test $ispell != 'no'; then
+  AC_DEFINE_UNQUOTED(IISPELL_PATH,"$ispell")
+fi
+
+dnl -- Check for with-sendmail flag
+
+sendmail=no
+AC_ARG_WITH(sendmail, ,[sendmail=$withval], [sendmail=no])
+if test $sendmail = 'yes'; then
+  AC_PATH_PROG(sendmail_path,sendmail,no,$PATH:/usr/sbin:/usr/lib)
+  if test $sendmail = 'no'; then
+    AC_MSG_ERROR([got --with-sendmail flag, but cannot find 'sendmail' program.
+If sendmail is installed do --with-sendmail=/full/path/name/sendmail])
+  fi
+  AC_DEFINE_UNQUOTED(SENDMAIL_PATH,"$sendmail_path")
+elif test $sendmail != 'no'; then
+  AC_DEFINE_UNQUOTED(SENDMAIL_PATH,"$sendmail")
+fi
+
+dnl -- Check for with-suexec flag
+
+AC_ARG_WITH(suexec, ,[suexec=$withval], [suexec=no])
+if test $suexec = 'yes'; then
+  AC_DEFINE(READABLE_PASSWD)
+fi
+
+dnl -- Check for with-dmalloc flag
+
+AC_CHECK_LIB(dmalloc,malloc)
+AC_ARG_WITH(dmalloc, ,[dmalloc=$withval], [dmalloc=no])
+if test $dmalloc = 'yes'; then
+  AC_DEFINE(DMALLOC)
+  if test "$ac_cv_lib_dmalloc_malloc" != yes; then
+    AC_MSG_ERROR([Got --with-dmalloc flag but cannot find dmalloc library])
+  fi
+fi
+
+dnl -- Check for enable-dynaload flag
+
+AC_ARG_ENABLE(dynaload, ,[ dynaload=$enableval ], [dynaload=no])
+if test $dynaload = 'yes'; then
+  AC_DEFINE(DYNALOAD)
+  binaries="backtalk-dyn lib_cnfadm.la $binaries"
+  LTCC="\$(LIBTOOL) \$(CC)"
+else
+  binaries="backtalk $binaries"
+  LTCC="\$(CC)"
+fi
+
+dnl -- Check for enable-exec flag
+
+AC_ARG_ENABLE(exec, ,[ directexec=$enableval ], [directexec=no])
+if test $directexec = 'yes'; then
+  if test -z $bt_unix; then
+     AC_MSG_ERROR([--enable-exec is only valid with --auth=passwd or --auth=shadow])
+  fi
+  AC_DEFINE(ID_GETUID)
+fi
+
+
+dnl -- Check for disable-trap-crash flag
+
+AC_ARG_ENABLE(trap_crash, ,[ trap_crash=$enableval ], [trap_crash=yes])
+if test $trap_crash = 'yes'; then
+  AC_DEFINE(TRAP_CRASH)
+fi
+
+dnl -- Save standard autoconf options that aren't normally cached into
+dnl  - cache file as sticky options.
+
+if test $compatible; then
+  bt_x="--with-$compatible "
+fi
+
+bt_cv_sticky_stuff="--prefix=$prefix \
+--exec-prefix=$exec_prefix \
+--bindir=$bindir \
+--sbindir=$sbindir \
+--libexecdir=$libexecdir \
+--mandir=$mandir \
+--with-suexec=$suexec \
+--with-ispell=$ispell \
+--with-aspell=$aspell \
+--with-yapp=$yapp \
+--with-yapp3=$yappthree \
+--with-picospan=$picospan \
+--with-pgsql=$sql_pgsql \
+--with-mysql=$sql_mysql \
+--with-msql=$sql_msql \
+--with-oracle=$sql_oracle \
+--with-sybase=$sql_sybase \
+--enable-dynaload=$dynaload \
+--enable-attachments=$attachments \
+--enable-exec=$directexec \
+--enable-edituser=$edituser \
+$bt_x\
+--enable-trap-crash=$trap_crash"
+
+dnl ==================== FIGURE OUT LOGIN/UID CONVERSION =====================
+
+dnl -- We are trying to figure out how to map login names to uid numbers and
+dnl  - group names to gid numbers.  Maybe it would be better to compile our
+dnl  - own little 'id' program that calls getpwnam() and getgrnam(), since
+dnl  - that works on all unixs.  But for now we do it the hard way.
+
+dnl -- See if we have a working Gnu-style 'id' command -- could use 'id -u'
+AC_CHECK_PROG(have_id, id, yes)
+if test "$have_id" = "yes"; then
+  AC_MSG_CHECKING([whether id works right])
+  bt_x=`id root 2>&AC_FD_CC | grep "uid=0(root)" 2>&AC_FD_CC`
+  if test "$bt_x"; then
+    bt_uid_cmd1='id '
+    [bt_uid_cmd2=" | sed 's/^.*uid=\([0-9]*\)(.*$/\1/'"]
+    AC_MSG_RESULT(yes)
+  else
+    AC_MSG_RESULT(no)
+  fi
+fi
+
+dnl -- See if we have a solaris style nismatch command
+if test -z "$bt_uid_cmd1" -o -z "$bt_gid_cmd1"; then
+  AC_CHECK_PROG(have_nismatch, nismatch, yes)
+  if test "$have_nismatch" = "yes"; then
+    if test -z "$bt_uid_cmd1"; then
+      AC_MSG_CHECKING([whether nismatch works for login lookups])
+      bt_x=`nismatch root passwd 2>&AC_FD_CC | grep "^root:" 2>&AC_FD_CC`
+      if test "$bt_x"; then
+        bt_uid_cmd1='nismatch '
+        [bt_uid_cmd2=" passwd | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+        AC_MSG_RESULT(yes)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+    if test -z "$bt_gid_cmd1"; then
+      AC_MSG_CHECKING([whether nismatch works for group lookups])
+      bt_x=`nismatch bin group 2>&AC_FD_CC | grep "^bin:" 2>&AC_FD_CC`
+      if test "$bt_x"; then
+        bt_gid_cmd1='nismatch '
+        [bt_gid_cmd2=" group | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+        AC_MSG_RESULT(yes)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+  fi
+fi
+
+dnl -- See if we have a NeXT-style nidump command
+if test -z "$bt_uid_cmd1" -o -z "$bt_gid_cmd1"; then
+  AC_CHECK_PROG(have_nidump, nidump, yes)
+  if test "$have_nidump" = "yes"; then
+    if test -z "$bt_uid_cmd1"; then
+      AC_MSG_CHECKING([whether nidump works for login lookups])
+      bt_x=`nidump passwd . 2>&AC_FD_CC | grep "^root:" 2>&AC_FD_CC`
+      if test "$bt_x"; then
+        bt_uid_cmd1="nidump passwd . | grep '^"
+        [bt_uid_cmd2=":' | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+        AC_MSG_RESULT(yes)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+    if test -z "$bt_gid_cmd1"; then
+      AC_MSG_CHECKING([whether nidump works for group lookups])
+      bt_x=`nidump group . 2>&AC_FD_CC | grep "^bin:" 2>&AC_FD_CC`
+      if test "$bt_x"; then
+        bt_gid_cmd1="nidump group . | grep '^"
+        [bt_gid_cmd2=":' | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+        AC_MSG_RESULT(yes)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+  fi
+fi
+
+dnl -- See if we have Yellow-Pages-style ypmatch command
+if test -z "$bt_uid_cmd1" -o -z "$bt_gid_cmd1"; then
+  AC_CHECK_PROG(have_ypmatch, ypmatch, yes)
+  if test "$have_ypmatch" = "yes"; then
+    if test -z "$bt_uid_cmd1"; then
+      AC_MSG_CHECKING([whether ypmatch works for login lookups])
+      bt_x=`ypmatch root passwd 2>&AC_FD_CC | grep "^root:" 2>&AC_FD_CC`
+      if test "$bt_x"; then
+        bt_uid_cmd1='ypmatch '
+        [bt_uid_cmd2=" passwd | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+        AC_MSG_RESULT(yes)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+    if test -z "$bt_gid_cmd1"; then
+      AC_MSG_CHECKING([whether ypmatch works for group lookups])
+      bt_x=`ypmatch bin group 2>&AC_FD_CC | grep "^bin:" 2>&AC_FD_CC`
+      if test "$bt_x"; then
+        bt_gid_cmd1='ypmatch '
+        [bt_gid_cmd2=" group | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+        AC_MSG_RESULT(yes)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+  fi
+fi
+
+dnl -- Otherwise, just look in the local /etc/passwd or /etc/group file
+if test -z "$bt_uid_cmd1"; then
+  bt_uid_cmd1="cat /etc/passwd | grep '^"
+  [bt_uid_cmd2=":' | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+fi
+
+if test -z "$bt_gid_cmd1"; then
+  bt_gid_cmd1="cat /etc/group | grep '^"
+  [bt_gid_cmd2=":' | sed 's/^[^:]*:[^:]*:\([-0-9]*\):.*$/\1/'"]
+fi
+
+dnl ========================== INTERACTIVE STUFF =============================
+
+dnl -- There are several configuration settings that we don't know how to
+dnl  - guess effectively.  So if these settings weren't set on the command
+dnl  - line, and aren't cached from a previous run, then we perform another
+dnl  - act of autoconf heresy and ask the user.
+
+BT_FLAG_ASK(htmldir,
+[  What is the full path name of the directory in which backtalk's
+  .html files should be installed?],
+[ case "$bt_cv_flag_htmldir" in
+/*) break;;
+*) echo "ERROR: Full pathname of HTML directory ${bt_cv_flag_htmldir} does not start with a slash"
+esac
+])
+htmldir=$bt_cv_flag_htmldir
+
+BT_FLAG_ASK(htmlurl,
+[  What is the full URL (starting with http://) of the
+  ${bt_cv_flag_htmldir} directory where .html files are installed?],
+[ case "$bt_cv_flag_htmlurl" in
+http://*) break;;
+https://*) break;;
+*) echo "ERROR: URL of HTML directory ${bt_cv_flag_htmlurl} does not start with 'http://'"
+esac
+])
+htmlurl=$bt_cv_flag_htmlurl
+
+BT_FLAG_ASK(cgidir,
+[  What is the full path name of the directory in which backtalk's
+  cgi programs should be installed?],
+[ case "$bt_cv_flag_cgidir" in
+/*) break;;
+*) echo "ERROR: Full pathname of CGI directory ${bt_cv_flag_cgidir} does not start with a slash"
+esac
+])
+cgidir=$bt_cv_flag_cgidir
+
+BT_FLAG_ASK(cgiurl,
+[  What is the full URL (starting with http://) of the
+  ${bt_cv_flag_cgidir} directory where cgi programs are installed?],
+[ case "$bt_cv_flag_cgiurl" in
+http://*) break;;
+https://*) break;;
+*) echo "ERROR: URL of CGI directory ${bt_cv_flag_cgiurl} does not start with 'http://'"
+esac
+])
+cgiurl=$bt_cv_flag_cgiurl
+
+BT_UID_ASK(httpd-id,
+[  What unix login ID or UID does your http daemon run as?])
+AC_DEFINE_UNQUOTED(SERVER_UID, $bt_uid)
+httpd=$bt_cv_flag_httpd_id
+if test "$bt_cv_flag_httpd_id" = 0; then
+  AC_MSG_WARN([Running your httpd as root is a really bad idea])
+fi
+
+BT_UID_ASK(owner-id,
+[  What unix login ID or UID should backtalk run as?])
+AC_DEFINE_UNQUOTED(CFADM_UID, $bt_uid)
+owneruid=$bt_uid
+owner=$bt_cv_flag_owner_id
+if test "$bt_cv_flag_owner_id" = 0; then
+  AC_MSG_WARN([Running backtalk as root is a really bad idea])
+fi
+
+if test $suexec = 'yes' -a $bt_cv_flag_owner_id != $bt_cv_flag_httpd_id; then
+  AC_MSG_ERROR([with --with-suexec the owner and httpd ids should be the same])
+fi
+
+if test "$grouptype" = unix; then
+  BT_GID_ASK(owner-group,
+  [  What unix group name or GID number should backtalk run as?])
+  AC_DEFINE_UNQUOTED(CF_GID,$bt_gid)
+  group=$bt_cv_flag_owner_group
+
+  BT_GID_ASK(admin-group,
+  [  What unix group name or GID number will administrative accounts be in?])
+  AC_DEFINE_UNQUOTED(CFADM_GID,$bt_gid)
+else
+  AC_DEFINE_UNQUOTED(CFADM_GID,0)
+  AC_DEFINE_UNQUOTED(CFADM_GROUP,"cfadm")
+  AC_DEFINE_UNQUOTED(USER_GID,1)
+  AC_DEFINE_UNQUOTED(USER_GROUP,"user")
+  AC_DEFINE_UNQUOTED(GRADM_GID,2)
+  AC_DEFINE_UNQUOTED(GRADM_GROUP,"gradm")
+fi
+
+BT_FLAG_DEFAULT(cgi-suffix,"")
+cgisuffix=$bt_cv_flag_cgi_suffix
+
+[cgihost=`echo $cgiurl | sed 's/^https*:\/\/\([^\/]*\)\/.*$/\1/'`]
+[cgirel=`echo $cgiurl | sed 's/^https*:\/\/[^\/]*\(\/.*\)$/\1/'`]
+AC_DEFINE_UNQUOTED(DFLT_HTTP_HOST, "$cgihost")
+AC_DEFINE_UNQUOTED(DFLT_SCRIPT_NAME, "$cgirel/backtalk$cgisuffix")
+
+dnl ======================== DIRECTORY STRUCTURE ==========================
+
+dnl -- temporarily set 'prefix' and 'exec_prefix' to their real values
+
+bt_prefix=$prefix
+if test "x$prefix" = xNONE; then
+  prefix=$ac_default_prefix
+fi
+
+bt_exec_prefix=$exec_prefix
+if test "x$exec_prefix" = xNONE; then
+  exec_prefix=$prefix
+fi
+
+dnl -- Various backtalk-specific directory flags
+
+BT_FLAG_DEFAULT(etcdir,'${prefix}/etc')
+etcdir=$bt_cv_flag_etcdir
+BT_FLAG_DEFAULT(bbsdir,'${prefix}/bbs')
+bbsdir=$bt_cv_flag_bbsdir
+BT_FLAG_DEFAULT(userdir,'${prefix}/user')
+userdir=$bt_cv_flag_userdir
+BT_FLAG_DEFAULT(scriptdir,'${prefix}/script')
+scriptdir=$bt_cv_flag_scriptdir
+BT_FLAG_DEFAULT(logdir,'${prefix}/log')
+logdir=$bt_cv_flag_logdir
+BT_FLAG_DEFAULT(passwddir,'${prefix}/passwd')
+passwddir=$bt_cv_flag_passwddir
+
+dnl -- copies of paths with all the ${prefix} stuff resolved out of them
+
+res_etcdir=`eval "echo $etcdir"`
+res_userdir=`eval "echo $userdir"`
+res_bbsdir=`eval "echo $bbsdir"`
+res_scriptdir=`eval "echo $scriptdir"`
+res_passwddir=`eval "echo $passwddir"`
+res_logdir=`eval "echo $logdir"`
+res_libexecdir=`eval "echo $libexecdir"`
+
+dnl -- Restore 'prefix' and 'exec_prefix'
+
+prefix=$bt_prefix
+exec_prefix=$bt_exec_prefix
+
+dnl -- Various file and directory defines
+
+AC_DEFINE_UNQUOTED(BT_COMPILER,"${res_libexecdir}/btc")
+AC_DEFINE_UNQUOTED(USER_DIR,"${res_userdir}/")
+AC_DEFINE_UNQUOTED(BBS_DIR,"${res_bbsdir}/")
+AC_DEFINE_UNQUOTED(SCRIPT_DIR,"${res_scriptdir}")
+AC_DEFINE_UNQUOTED(BROWSER_FILE,"${res_etcdir}/browser_list")
+AC_DEFINE_UNQUOTED(MIMENAME_FILE,"${res_etcdir}/mimename")
+AC_DEFINE_UNQUOTED(CONFIG_FILE,"${res_etcdir}/backtalk.conf")
+AC_DEFINE_UNQUOTED(SESSION_FILE,"${res_etcdir}/bt_session")
+AC_DEFINE_UNQUOTED(NOISE_FILE,"${res_etcdir}/bt_entropy")
+AC_DEFINE_UNQUOTED(LOG_FILE,"${res_logdir}/bt_trans.log")
+AC_DEFINE_UNQUOTED(ACCT_LOG_FILE,"${res_logdir}/bt_acct.log")
+AC_DEFINE_UNQUOTED(ERROR_FILE,"${res_logdir}/bt_crash.log")
+AC_DEFINE_UNQUOTED(NEXT_UID_FILE,"${res_etcdir}/bt_nextuid")
+AC_DEFINE_UNQUOTED(DYNALIB_DIR,"${res_libexecdir}/")
+if test "$grouptype" = text; then
+  AC_DEFINE_UNQUOTED(GROUP_FILE,"${res_etcdir}/bt_group")
+fi
+
+if test $bt_cv_flag_lastlog = 'backtalk'; then
+  AC_DEFINE_UNQUOTED(LASTLOG_FILE,"${res_etcdir}/bt_lastlog")
+fi
+
+if test "$identtype" = authfile; then
+  case "$authtype" in
+  text) AC_DEFINE_UNQUOTED(PASSWD_FILE,"${res_passwddir}/bt_passwd") ;;
+  db|dbm) AC_DEFINE_UNQUOTED(DBM_NAM_FILE,"${res_passwddir}/bt_passwd") ;;
+  passwd|shadow) AC_DEFINE_UNQUOTED(PARTUTIL,"${res_libexecdir}/partutil") ;;
+  sql) AC_DEFINE(NEXTUID_SQL) ;;
+  esac
+else
+  case "$authtype" in
+  text) AC_DEFINE_UNQUOTED(AUTH_FILE, "${res_passwddir}/bt_passwd") ;;
+  db|dbm) AC_DEFINE_UNQUOTED(AUTH_DBM, "${res_passwddir}/bt_passwd") ;;
+  esac
+  case "$identtype" in
+  text) AC_DEFINE_UNQUOTED(PASSWD_FILE,"${res_etcdir}/bt_user") ;;
+  hash) AC_DEFINE_UNQUOTED(DBM_NAM_FILE,"${res_etcdir}/bt_user") ;;
+  sql) AC_DEFINE(NEXTUID_SQL) ;;
+  esac
+fi
+
+dnl ============================= PROGRAMS ================================
+
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_INSTALL
+AC_LIBTOOL_DLOPEN
+AM_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+AC_PROG_RANLIB
+
+dnl ============================ LIBRARIES ===============================
+
+dnl -- Some systems need -lcrypt to get the crypt() function
+AC_CHECK_LIB(crypt, crypt)
+
+dnl -- Some systems have a better version of getpwnam() in -lshadow
+if test "$bt_unix"; then
+  AC_CHECK_LIB(shadow, getpwnam)
+fi
+
+dnl -- Check for PostgreSQL libraries
+if test "$sql" = pgsql; then
+  AC_CHECK_LIB(pq,PQconnectdb)
+  if test "$ac_cv_lib_pq_PQconnectdb" != yes; then
+    AC_MSG_ERROR([Cannot find libpq interface to PostgreSQL])
+  fi
+fi
+
+dnl -- Check for MySQL libraries
+if test "$sql" = mysql; then
+  AC_SEARCH_LIBS(socket,socket)
+  AC_SEARCH_LIBS(gethostbyname,nsl)
+  AC_CHECK_LIB(z,compress)
+  AC_CHECK_LIB(mysqlclient,mysql_init)
+  if test "$ac_cv_lib_mysqlclient_mysql_init" != yes; then
+    AC_MSG_ERROR([Cannot find MySQL mysqlclient library])
+  fi
+  AC_CHECK_HEADERS(mysql.h mysql/mysql.h, [
+    have_mysql_h=yes
+    break
+  ])
+  if test "$have_mysql_h" != yes; then
+    AC_MSG_ERROR([Cannot find mysql.h header file])
+  fi
+  AC_CHECK_LIB(mysqlclient,mysql_real_escape_string)
+fi
+
+dnl -- Check for mSQL libraries
+if test "$sql" = msql; then
+  AC_SEARCH_LIBS(socket,socket)
+  AC_SEARCH_LIBS(gethostbyname,nsl)
+  AC_CHECK_LIB(msql,msqlConnect)
+  if test "$ac_cv_lib_msql_msqlConnect" != yes; then
+    AC_MSG_ERROR([Cannot find libmsql interface to PostgreSQL])
+  fi
+fi
+
+dnl =========================== DYNALOADING ==============================
+
+if test "$dynaload"; then
+  AC_CHECK_LIB(dl, dlopen)
+  dnl does the compiler prefix global symbols with an underscore?
+  AC_MSG_CHECKING([for _ prefix in compiled symbols])
+  AC_CACHE_VAL(bt_cv_sys_symbol_underscore,
+  [bt_cv_sys_symbol_underscore=no
+  cat > conftest.$ac_ext <<EOF
+void nm_test_func(){}
+int main(){nm_test_func;return 0;}
+EOF
+  if AC_TRY_EVAL(ac_compile); then
+    # Now try to grab the symbols.
+    bt_nlist=conftest.nm
+    if AC_TRY_EVAL(NM conftest.$ac_objext \| eval "$lt_cv_sys_global_symbol_pipe" \> $bt_nlist) && test -s "$bt_nlist"; then
+      # See whether the symbols have a leading underscore.
+      if egrep '^. _nm_test_func' "$bt_nlist" >/dev/null; then
+        bt_cv_sys_symbol_underscore=yes
+      else
+        if egrep '^. nm_test_func ' "$bt_nlist" >/dev/null; then
+          :
+        else
+          echo "configure: cannot find nm_test_func in $bt_nlist" >&AC_FD_CC
+        fi
+      fi
+    else
+      echo "configure: cannot run $lt_cv_sys_global_symbol_pipe" >&AC_FD_CC
+    fi
+  else
+    echo "configure: failed program was:" >&AC_FD_CC
+    cat conftest.c >&AC_FD_CC
+  fi
+  rm -rf conftest*
+  ])
+  AC_MSG_RESULT($bt_cv_sys_symbol_underscore)
+
+  if test x"$bt_cv_sys_symbol_underscore" = xyes; then
+    if test x"$ac_cv_func_dlopen" = xyes ||
+      test x"$ac_cv_lib_dl_dlopen" = xyes ; then
+        AC_CACHE_CHECK([whether we have to add an underscore for dlsym],
+          bt_cv_need_uscore, [dnl
+          AC_TRY_RUN([
+#if HAVE_DLFCN_H
+#include <dlfcn.h>
+#endif
+
+#include <stdio.h>
+
+#ifdef RTLD_GLOBAL
+# define LTDL_GLOBAL    RTLD_GLOBAL
+#else
+# ifdef DL_GLOBAL
+#  define LTDL_GLOBAL   DL_GLOBAL
+# else
+#  define LTDL_GLOBAL   0
+# endif
+#endif
+
+/* We may have to define LTDL_LAZY_OR_NOW in the command line if we
+   find out it does not work in some platform. */
+#ifndef LTDL_LAZY_OR_NOW
+# ifdef RTLD_LAZY
+#  define LTDL_LAZY_OR_NOW      RTLD_LAZY
+# else
+#  ifdef DL_LAZY
+#   define LTDL_LAZY_OR_NOW     DL_LAZY
+#  else
+#   ifdef RTLD_NOW
+#    define LTDL_LAZY_OR_NOW    RTLD_NOW
+#   else
+#    ifdef DL_NOW
+#     define LTDL_LAZY_OR_NOW   DL_NOW
+#    else
+#     define LTDL_LAZY_OR_NOW   0
+#    endif
+#   endif
+#  endif
+# endif
+#endif
+
+fnord() { int i=42;}
+main() { void *self, *ptr1, *ptr2; self=dlopen(0,LTDL_GLOBAL|LTDL_LAZY_OR_NOW);
+    if(self) { ptr1=dlsym(self,"fnord"); ptr2=dlsym(self,"_fnord");
+               if(ptr1 && !ptr2) { dlclose(self); exit(0); } } exit(1); }
+],      bt_cv_need_uscore=no, bt_cv_need_uscore=yes,
+        bt_cv_need_uscore=cross
+)])
+    fi
+  fi
+  if test x"$bt_cv_need_uscore" = xyes; then
+    AC_DEFINE(NEED_USCORE, 1)
+  fi
+fi
+
+dnl =========================== HEADER FILES =============================
+
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h paths.h sys/file.h sys/time.h unistd.h)
+AC_CHECK_HEADERS(sys/param.h sys/mount.h sys/statvfs.h sys/vfs.h)
+
+if test "$need_lastlog"; then
+  AC_CHECK_HEADER(lastlog.h,,
+    [AC_MSG_ERROR([lastlog.h header not found - cannot do --lastlog=unix])])
+fi
+
+dnl -- Let's handle union waits a little more explicitly than the standard
+dnl  - AC_HEADER_SYS_WAIT macro lets us.  This is adapted from Gnu make.
+
+AC_CHECK_HEADERS(sys/wait.h)
+AC_MSG_CHECKING(for union wait)
+AC_CACHE_VAL(bt_cv_union_wait, [dnl
+AC_TRY_LINK([#include <sys/types.h>
+#include <sys/wait.h>],[union wait status; int pid; pid = wait (&status);
+#ifdef WEXITSTATUS
+/* Some POSIXoid systems have both the new-style macros and the old
+ * union wait type, and they do not work together.  If union wait
+ * conflicts with WEXITSTATUS et al, we don't want to use it at all.  */
+if (WEXITSTATUS (status) != 0) pid = -1;
+#ifdef WTERMSIG
+/* If we have WEXITSTATUS and WTERMSIG, just use them on ints.  */
+-- blow chunks here --
+#endif
+#endif
+],[bt_cv_union_wait=yes], [bt_cv_union_wait=no])])
+if test "$bt_cv_union_wait" = yes; then
+  AC_DEFINE(HAVE_UNION_WAIT)
+fi
+AC_MSG_RESULT($bt_cv_union_wait)
+
+dnl ========== TYPEDEFS, STRUCTURES, AND COMPILER CHARACTERISTICS ========
+
+AC_TYPE_UID_T
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_SIGNAL
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+AC_C_CONST
+AC_C_INLINE
+
+dnl ============================ DBM PACKAGES =============================
+
+dnl -- We only need hashing if we are using a hash file for the authentication
+dnl  - database (--auth=db or --auth=dbm) or if we are using it for the
+dnl  - secondary user database (--ident=hash) or if we are using it for the
+dnl  - attachment index.  Otherwise, skip all this.
+
+if test $bt_hash != any -o $bt_cv_flag_ident = hash -o "$baai_hash"; then
+
+  dnl -- Berkeley DB package - required for mod_auth_db
+
+  if test $bt_hash = any -o $bt_hash = db; then
+    dnl -- First check for Berkeley DB 3 or 4
+    AC_SEARCH_LIBS(db_create, db,
+    [ AC_DEFINE(HASH_DB)
+      bt_hash=db
+    ],[
+      dnl -- otherwise try Berkeley DB 1 or 2
+      dnl -- Look for the version 1 dbopen() function instead of the version 2
+      dnl  - db_open() function.  Version 2 libraries should have dbopen() for
+      dnl  - backwards compatibility.  Backtalk is smart enough to use
+      dnl  - db_open() if this really is a version 2 library.
+      AC_SEARCH_LIBS(dbopen, db,
+      [ AC_DEFINE(HASH_DB)
+        bt_hash=db
+      ],[
+        if test $bt_hash = db; then
+           AC_MSG_ERROR([--auth=db given, but no db library found])
+        fi
+      ])
+    ])
+  fi
+
+  dnl -- Gnu GDBM package via native interface - never required
+
+  if test $bt_hash = any; then
+    AC_CHECK_LIB(gdbm, gdbm_open,
+    [ AC_DEFINE(HASH_GDBM)
+      bt_hash=gdbm
+      LIBS="-lgdbm $LIBS"
+    ])
+  fi
+
+  dnl -- NDBM package - required for mod_auth_dbm
+
+  if test $bt_hash = any -o $bt_hash = ndbm; then
+    dnl -- There are a dizzying number of ndbm versions around.  Redhat 6.1
+    dnl  - actually has three different ones installed.  Our vain hope is to
+    dnl  - pick the same one Apache would pick, so we are compatible with
+    dnl  - mod_auth_dbm, but they are even more confused than we are.
+    AC_SEARCH_LIBS(dbm_open, dbm,
+     [AC_DEFINE(HASH_NDBM)
+      bt_hash=ndbm
+      ],
+     [AC_CHECK_LIB(db, dbm_open)
+      if test "$ac_cv_lib_db_dbm_open" = yes; then
+	AC_DEFINE(DB_EMULATES_NDBM)
+        AC_DEFINE(HASH_NDBM)
+        bt_hash=ndbm
+      else
+        AC_CHECK_LIB(gdbm, dbm_open)
+        if test "$ac_cv_lib_gdbm_dbm_open" = yes; then
+          AC_CHECK_HEADERS(gdbm/ndbm.h ndbm.h, [break])
+          AC_DEFINE(HASH_NDBM)
+          bt_hash=ndbm
+	else
+	  AC_CHECK_LIB(db1, dbm_open)
+	  if test "$ac_cv_lib_db1_dbm_open" = yes; then
+	    AC_CHECK_HEADERS(db1/ndbm.h ndbm.h, [break])
+	    AC_DEFINE(HASH_NDBM)
+            bt_hash=ndbm
+	  elif test $bt_hash = ndbm; then
+            AC_MSG_ERROR([--auth=dbm given, but no ndbm library found])
+	  fi
+	fi
+      fi
+    ])
+  fi
+
+  dnl - old DBM package - last gasp for the desparate
+
+  if test $bt_hash = any; then
+    dnl -- Both DB and GDBM include DBM emulation, but if they were here we
+    dnl  - would already have selected NDBM, so we don't check for them here.
+    AC_SEARCH_LIBS(dbminit, dbm,
+    [ AC_DEFINE(HASH_ODBM)
+      bt_hash=dbm
+    ], [
+      dnl -- Give it up - we have no hashing
+      AC_MSG_ERROR([--ident=hash given, but no dbm package found])
+    ])
+  fi
+
+else
+  bt_hash=none
+fi
+
+dnl ====================== CHECK LIBRARY FUNCTIONS =========================
+
+AC_PROG_GCC_TRADITIONAL
+BT_FUNC_MEMCMP
+AC_FUNC_STRFTIME
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(strchr strdup strerror strcasecmp strstr strspn random tzset)
+AC_CHECK_FUNCS(memmove memset setrlimit fgetpwent mkdir mktime gettimeofday)
+AC_CHECK_FUNCS(clock_gettime sysinfo)
+
+dnl -- Check if printf returns the size
+
+AC_CACHE_CHECK([whether fprintf returns size],
+  bt_cv_func_fprintf_returns_size,
+[ AC_TRY_RUN([#include <stdio.h>
+main() {
+FILE *fp;
+if ((fp= fopen("/dev/null","w")) == NULL) exit(1);
+exit(fprintf(fp,"a%dz",12) != 4);
+}],
+  [ bt_cv_func_fprintf_returns_size=yes],
+  [ bt_cv_func_fprintf_returns_size=no],
+  dnl -- there's no particular harm in assuming it doesn't when cross-compiling
+  [ bt_cv_func_fprintf_returns_size=no])
+])
+if test $bt_cv_func_fprintf_returns_size = yes; then
+  AC_DEFINE(FPRINTF_RETURNS_SIZE)
+fi
+
+dnl -- Check for snprintf() and friends
+AC_SEARCH_LIBS(snprintf, snprintf, [
+  AC_DEFINE(HAVE_SNPRINTF)
+])
+AC_CHECK_FUNCS(vsnprintf vasprintf)
+
+dnl -- Check for the htonl function, which needs the netinet/in.h header
+dnl  - or the machine/endian.h header and is quite likely a macro rather
+dnl  - than a function.
+AC_MSG_CHECKING(for htonl)
+AC_CACHE_VAL(bt_cv_func_htonl, [dnl
+AC_TRY_LINK([#include <sys/types.h>
+#include <netinet/in.h>
+#ifdef HAVE_MACHINE_ENDIAN_H
+#include <machine/endian.h>
+#endif],
+[unsigned long int x= htonl(1234);],[bt_cv_func_htonl=yes],
+[bt_cv_func_htonl=no])])
+if test "$bt_cv_func_htonl" = yes; then
+  AC_DEFINE(HAVE_HTONL)
+fi
+AC_MSG_RESULT($bt_cv_func_htonl)
+
+AC_CACHE_CHECK(for tm_gmtoff in struct tm, bt_cv_struct_tm_gmtoff,
+[AC_TRY_COMPILE(
+[#ifdef TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# ifdef TM_IN_SYS_TIME
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif],
+[struct tm temptm; temptm.tm_gmtoff = 0;],
+  bt_cv_struct_tm_gmtoff=yes, bt_cv_struct_tm_gmtoff=no)])
+if test $bt_cv_struct_tm_gmtoff = yes; then
+  AC_DEFINE(HAVE_TM_GMTOFF)
+fi
+
+dnl =============================== DEVICES ===============================
+
+dnl - check for /dev/urandom and relations
+
+AC_CACHE_CHECK(for /dev/urandom, bt_cv_have_dev_urandom,
+[if test -c /dev/urandom -a -r /dev/urandom; then
+  bt_cv_have_dev_urandom=yes; else ac_cv_have_dev_urandom=no; fi])
+if test "$bt_cv_have_dev_urandom" = yes; then
+  AC_DEFINE(HAVE_DEV_URANDOM)
+fi
+
+AC_CACHE_CHECK(for /dev/srandom, bt_cv_have_dev_srandom,
+[if test -c /dev/srandom -a -r /dev/srandom; then
+  bt_cv_have_dev_srandom=yes; else ac_cv_have_dev_srandom=no; fi])
+if test "$bt_cv_have_dev_srandom" = yes; then
+  AC_DEFINE(HAVE_DEV_SRANDOM)
+fi
+
+AC_CACHE_CHECK(for /dev/random, bt_cv_have_dev_random,
+[if test -c /dev/random -a -r /dev/random; then
+  bt_cv_have_dev_random=yes; else ac_cv_have_dev_random=no; fi])
+if test "$bt_cv_have_dev_random" = yes; then
+  AC_DEFINE(HAVE_DEV_RANDOM)
+fi
+
+dnl ============================ FILE LOCKING =============================
+
+bt_lock=$bt_cv_flag_lock
+
+dnl -- check if fcntl exists and works -- neither yapp nor picospan support
+dnl  - fcntl locking, so don't use it if we are in compatible mode.
+
+if test -z "$compatible"; then
+  if test $bt_lock = fcntl -o $bt_lock = any; then
+    if test $ac_cv_header_fcntl_h = yes; then
+      BT_FUNC_FCNTL_LOCKING()
+      bt_ok=${bt_cv_func_fcntl_locking-no}
+    else
+      bt_ok=no
+    fi
+    case "$bt_ok" in
+    yes)
+      AC_DEFINE(LOCK_FCNTL)
+      bt_lock=fcntl ;;
+    no) 
+      if test $bt_lock = fcntl; then
+        AC_MSG_ERROR([--lock=fcntl given, but fcntl locking doesn't seem to be available])
+      fi ;;
+    esac
+  fi
+fi
+
+dnl -- check if flock exists
+
+if test $bt_lock = flock -o $bt_lock = any; then
+  AC_CHECK_FUNC(flock,
+  [ AC_DEFINE(LOCK_FLOCK)
+    bt_lock=flock
+  ],
+  [ if test $bt_lock = flock; then
+      AC_MSG_ERROR([--lock=flock given, but no flock() function found])
+    fi
+  ])
+fi
+
+dnl -- check if lockf exists
+
+if test $bt_lock = lockf -o $bt_lock = any; then
+  AC_CHECK_FUNC(lockf,
+  [ AC_DEFINE(LOCK_LOCKF)
+    bt_lock=lockf
+  ],
+  [ if test $bt_lock = lockf; then
+      AC_MSG_ERROR([--lock=lockf given, but no lockf() function found])
+    fi
+  ])
+fi
+
+dnl -- if all else fails, file locking always works
+
+if test $bt_lock = tmpfile -o $bt_lock = any; then
+  AC_DEFINE(LOCK_FILE)
+  bt_lock=tmpfile
+fi
+
+dnl ======================== GENERATE OUTPUT FILES =========================
+
+AC_OUTPUT(Makefile src/Makefile misc/Makefile script/Makefile image/Makefile
+  css/Makefile bbs/Makefile regex/Makefile script/config.bt misc/btinstall)

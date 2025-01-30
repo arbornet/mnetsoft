@@ -1,0 +1,16 @@
+                     Fronttalk Defines:  TXTSEP
+
+Usage:  DEFINE TXTSEP "<string>"
+
+The TXTSEP define is an item separator used to display each line of each
+response during a READ.
+
+For full details on its format, see help pages on SEPARATORS, ITEMFUNC,
+ITEMCOND, and SEPDATE.
+
+The default value is:
+
+  "%(L%(F%7N:%)%X%L%)"
+
+This prints a line number if the NUMBERED flag was given, one space, and
+then the text of the line.

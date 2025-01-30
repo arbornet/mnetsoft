@@ -1,0 +1,21 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% itemop script
+%
+% Given 'conf' a conference name, 'isel' an item selector, and 'op' a backtalk
+% function that takes an item number from the 'item' variable as an operand,
+% run the op function for every selected item and jump to the confhome page.
+
+open_conf {(Conference ')conf(' does not exist\n) halt} if
+
+/isel defined {
+  {
+    isel maxitem next_int /item xstore /isel xstore
+    item 1 lt {break} if
+    op
+  } loop
+} if
+
+/http_location `backtalkurl(/)flavor(confhome?conf=)conf(&csel=)csel(&list=)list
+  /nextnew defined{(&nextnew=)nextnew}if '
+  store

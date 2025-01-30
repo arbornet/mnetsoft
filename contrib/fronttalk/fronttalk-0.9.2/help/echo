@@ -1,0 +1,13 @@
+             Fronttalk Commands:  ECHO, ECHOE, ECHOEN, ECHON
+
+Usage:  ECHO <message>                                  ("Ok:" prompt only)
+        ECHOE <message>
+        ECHOEN <message>
+        ECHON <message>
+
+These commands just print their arguments.  They are usually used in various
+startup script files, like .cfrc and .cfonce.
+
+The ECHO command prints the message to standard output, with a terminating
+newline.  ECHOE and ECHOEN print their output to standard error instead of
+standard output.  ECHOEN and ECHON omit the terminating newline.

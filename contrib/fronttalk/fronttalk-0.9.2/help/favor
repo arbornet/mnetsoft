@@ -1,0 +1,21 @@
+                       Fronttalk Command:  FAVOR
+
+Usage:  FAVOR <item range>
+
+Mark all selected items as favorites.  Favorite items will be listed first
+when you "BROWSE" or "READ" items in the conference.
+
+If you want to remove the "favorite" flag from an item, use the DISFAVOR
+command.
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   FAVOR 13         - Favor item 13.
+   FAVOR (joe)      - Favor items entered by login ID joe.
+
+If you just say "FAVOR" the default is to favor the current item.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to favor it.

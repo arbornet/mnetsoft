@@ -1,0 +1,13 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+UNIX: kill -9 <process-PID>
+"
+ps -u
+echo -n "
+Your process number to kill? "
+read process
+echo ""
+kill -9 $process
+

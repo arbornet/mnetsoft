@@ -1,0 +1,80 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% participants script
+%
+% This script lists participants in a conference.  It displays at most 50
+% users per screen.
+%
+% This script is it's own handler.
+%
+% Query Parameters:
+%    from=	if defined, start the scan after this login name.
+
+/maxperpage 50 defconstant
+
+flavor(config)+ include
+
+/butsel 4 defconstant flavor(buttondef)+ include
+
+/titl [(List of )bbsname( )/conftitle( )Conference cap( Participants)
+  /from defined {( continued)} if] def
+
+(<HTML><HEAD>
+<TITLE>)titl(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+)/metatags(</HEAD>
+)
+
+% open the conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+global_header
+(<H1>)titl(</H1>
+<TABLE><TH>login:</TH>)
+mayseefname {(<TH>full name:</TH>)} if
+(<TH>last read:</TH>\n)
+print
+
+% goto the first participant
+/from defined {from}{()} ifelse first_partic
+
+% loop through the rest of the users
+/i 0 def
+{ {break} if
+  /uname xdef
+  /lastin xdef
+  uname userinfo /status xdef pop pop /ufname xdef pop pop
+  status 0 ge {
+    (<TR><TD><A HREF="bio?login=)uname(">)uname(</A></TD>)
+    mayseefname {(<TD>&nbsp;)ufname quote(&nbsp;&nbsp;</TD>)} if
+    (<TD>)lastin ztime(</TD><TD>)
+    status { status 1 eq {( [u)} {( [i)} ifelse (nvalidated])} if
+    (</TD></TR>\n)
+    print
+    /i inc i maxperpage ge { break } if
+  } if
+  next_partic
+} loop
+
+(</TABLE><P>\n)
+
+i maxperpage lt {
+  (<EM>end of list</EM>)
+} {
+  (<A HREF="participants?from=)uname(&conf=)conf(&csel=)csel
+  (">More Participants</A>)
+} ifelse
+
+
+
+(
+<HR>
+Goto <A HREF="confhome?conf=)conf(&csel=)csel(">)confhome_button(</A> or
+<A HREF=begin>)entrance_button(</A> or <A HREF=help/participants>)
+help_button(</A>
+)
+global_footer
+(</BODY></HTML>
+)

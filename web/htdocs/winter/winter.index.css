@@ -1,0 +1,464 @@
+* {
+  border:  none;
+  margin:  0;
+  padding: 0;
+}
+
+body 
+{
+  color:       black;
+  font-family: "Trebuchet MS",Verdana,Sans-Serif;
+  font-size:   1em;
+  font-weight: normal;
+  text-align:  center;
+  width:       100%;
+}
+
+a 
+{
+  text-decoration: none;
+}
+
+a:link, a:visited 
+{
+  color: #3d5266; /* Very Dark Blue */ 
+}
+
+h1 
+{
+  margin-bottom: 1em;
+  font-weight:   normal;
+}
+
+ul li 
+{
+  list-style: none;
+}
+
+
+/*============================================================
+ Wrapper
+============================================================*/
+#wrap 
+{
+  text-align:       left;
+  width:            92%;
+  margin:           0 auto;
+  min-width:        700px;
+  border-top:       0 solid #99ccff; /* Blue */
+  background-color: #99ccff; /* Blue */          
+}
+
+#content 
+{
+  float:          left;
+  margin-top:     1em;
+  width:          77.6%;
+  background:     #d6ebff; /* LightBlue */
+  padding-bottom: 1em;
+}
+
+
+/*============================================================
+ Masthead
+============================================================*/
+#nav 
+{
+  float:   right;
+  display: inline;
+}
+
+#nav li 
+{
+  float:   left;
+  display: inline;
+}
+
+#nav a 
+{
+  float:          left;
+  display:        inline;
+  padding-bottom: 0.2em;
+  height:         1em;
+  font-weight:    bold;
+  font-size:      0.8em;
+  outline:        none;
+}
+
+#nav a:hover 
+{
+  border-bottom: 0.2em dotted white;
+}
+  
+#nav-about a 
+{
+  width:        3em;
+  margin-right: 2em;
+  color:        #d6ebff; /* Very Dark Blue */ 
+}
+
+#nav-support a 
+{
+  width:        4em;
+  margin-right: 2.5em;
+  color:        #d6ebff; /* Very Dark Blue */ 
+}
+
+#nav-faq a 
+{
+  width:        2em;
+  margin-right: 2em;
+  color:        #d6ebff; /* Very Dark Blue */ 
+}
+
+
+/*============================================================
+ Head
+============================================================*/
+#block1 
+{
+  position:   relative;
+  width:      100%;
+  height:     7em;
+  background: #3d5266; /* VeryDarkBlue     */ 
+  color:      #c2e0ff;
+}
+
+#block1 h1 
+{
+  position:    absolute;
+  top:         0.5em;
+  left:        0.5em;
+  height:      5em;
+  font-size:   2em;
+}
+
+#block1 p 
+{
+  position:    absolute;
+  top:         5em;
+  left:        1.5em;
+  width:       18em;
+  font-size:   0.8em;
+  line-height: 1em;
+  color:       #c2e0ff; /* Very Light Blue */
+}
+
+
+/*============================================================
+ Subhead
+============================================================*/
+#block2 
+{
+  position:   relative;
+  width:      100%;
+  height:     8.0em;
+  background: #3d5266; /* Very Dark Blue */
+}
+
+#block2 h2 
+{
+  font-size: 1.2em;
+  position:   absolute;
+  top:  30%;
+  width: 50%;
+  right: 2%;
+}
+
+#block2 h2 a 
+{
+  padding:     0 0 0 0;
+}
+
+#block2 h2 a em
+{
+   color:      #fff;
+   font-style: normal;
+}
+  
+#block2 h2 a:hover 
+{
+  background-position: 0px -69px;
+}
+
+#block2 h3 
+{
+  color:       #fff;  
+  position:   absolute;
+  top:  35%;
+  left: 2%;
+  width: 50%;
+  font-size:   0.8em;
+  font-weight: bold;
+}
+
+#block2 ul 
+{
+  position:   absolute;
+  top:  15%;
+  left: 18%;
+  width: 50%;
+}
+
+#block2 a 
+{
+  color: #eee8aa; /* PaleGoldenRod */ 
+}
+
+#block2 a:hover 
+{
+  color: white; /* White */
+}
+
+#block2 li 
+{
+  font-size:    0.8em;
+  font-weight:  normal;
+  line-height:  1.2em;
+  color:        #eed5b7; /* Bisque2 */ 
+}
+
+#vote
+{
+  position:   relative;
+  font-size:    0.8em;
+  width:      100%;
+  height:     1.8em;
+  color:      #3d5266; /* Very Dark Blue */
+  background:     #d6ebff; /* Light Blue */ 
+}
+
+#vote a 
+{
+  font-weight:  bold;
+  font-size:    0.8em;
+  color:     #32cd32; /* Lime Green (yuck) */ 
+}
+
+/*============================================================
+ Features
+============================================================*/
+#block3
+{
+  float:          left;
+  width:          100%;
+  padding-bottom: 1em;
+  margin-top:     0.2em;
+  background:     #d6ebff; /* Light Blue */ 
+}
+
+#block3 h3
+{
+    font-size: 1em;
+    color:     black;
+}
+
+#block3 p
+{
+    font-size: 0.8em;
+}
+
+#block3 .feature 
+{
+  float:   left;
+  display: inline;
+  width:   50%;
+  margin:  1em 0 0 0.5em;
+  clear:   none;
+}
+
+#block3 .news
+{
+  display: inline;
+  width:   45%;
+  float:   right;
+  margin:  0 0.2em;
+}
+
+#block3 .news b
+{
+  color:     #3d5266; /* Very Dark Blue  */ 
+  font-size: 1.2em;
+}
+
+#block3 .news strong
+{
+  color:       black;
+  font-weight: bold;
+}
+
+#block3 .date
+{
+  background: #99ccff; /* LightBlue */ 
+  width:      4em;
+  font-size: 0.8em;
+  text-align: center;
+}
+
+#block3 .announcement
+{
+  background:    #ffffff; /* White */ 
+  line-height:     1em;
+  padding-right: 0.1em;
+  text-align:    right;
+}
+
+#block3 .announcement:hover
+{
+  background: #d6ebff; /* LightBlue     */ 
+}
+
+#block3 .announcement a
+{
+  text-decoration: none;
+  color:           black;
+  font-size:       0.7em;
+  font-weight:     normal;
+}
+
+#block3 ul
+{
+  position: relative;
+  top:      0.5em;
+}
+
+#block3 a 
+{
+  color:       #3d5266; /* Very Dark Blue  */ 
+  font-weight: bold;
+  /*font-size: 1.2em;*/
+}
+
+#block3 a:hover 
+{
+  color: #000;
+}
+
+#block3 li 
+{
+  padding-left: 1em;
+  font-size:    0.8em;
+  line-height:  1.2em;
+}
+
+
+/*============================================================
+ Nav Right
+============================================================*/
+#nav-right
+{
+   float:      left;
+   margin:     1em 0 0.2em 0;
+   padding:    0 0 1em 0;
+   margin-left: 0.4%;
+   background: #3d5266; /* Very Dark Blue  */ 
+   width:      22%; 
+   max-width: 15em;
+}
+
+#nav-right h3
+{
+   padding:     0.5em 0 0 0.5em;
+   font-size:   0.8em;
+   font-weight: bold;
+   font-style:  normal;
+   color:       #99ccff; /* Blue */ 
+}
+
+
+#nav-right ul li 
+{
+  padding:     0.5em 0 0 1em;
+  font-size:   0.7em;
+  line-height: 1em;
+  color:       #fff;
+}
+  
+#nav-right ul li a 
+{
+  color: #f5f5dc; /* Beige */ 
+}
+
+#nav-right ul li a:hover 
+{
+  background-color: #d6ebff;
+  color:            #000; /* black */ 
+}
+
+
+/*============================================================
+ Support Block 
+============================================================*/
+#supportblock 
+{
+  clear:      both;
+  float:      left;
+  width:      100%;
+  text-align: center;
+}
+
+#supportblock p 
+{
+  margin: 0;
+}
+
+#supportblock b
+{
+  font-size: large;
+  color:     #3d5266; /* Very Dark Blue  */ 
+}
+
+#supportblock a 
+{
+  display:    block;
+  width:      100%;
+  padding:    15px 0;
+  background: #c2e0ff; /* LightBlue     */
+}
+
+#supportblock a:hover 
+{
+  background: #99ccff; /* Blue */
+}
+
+
+/*============================================================
+ Page Footer
+============================================================*/
+
+#footer 
+{
+  clear:      both;
+  width:      100%;
+  text-align: left;
+  border-top: 3px solid #c2e0ff; /* LightBlue */ 
+}
+
+#footer ul 
+{
+  float:     right;
+  font-size: 11px;
+}
+
+#footer li 
+{
+  float:        left;
+  padding-left: 1em;
+}
+
+#footer-about 
+{
+  padding-right: 1em;
+  border-right:  1px solid #ffc0cb; /* Pink */
+}
+
+#footer-contact
+{
+}
+
+#copyright 
+{
+  display:   inline;
+  font-size: 9px;
+  color:     #3d5266; /* Very Dark Blue  */
+}

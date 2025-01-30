@@ -1,0 +1,83 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% enter script
+%
+% This script displays a form allowing you to enter a new item in a conference.
+% The "enterpost.bt" script is the form handler for this.
+%
+% Query Parameters:
+%   conf=	name of conference to post to
+%   csel=	list of conferences to read (not used, just passed along)
+%   list=	confhome state (not used, just passed along)
+%   goto=	page to goto (read) or (confhome)
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+% page header
+(
+<HTML>
+<HEAD>
+<TITLE>)bbsname`(: Enter )AnItem( in the )'
+/conftitle `( )Conference(</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>\n)'
+(C) flavor(meta)+ include
+(</HEAD>\n)
+
+secret 2 eq /dunno defined ! and { [/conf /csel] flavor(confpass)+ jump } if
+
+global_header
+
+maypost ! {`(You cannot post to )Conference( )'conf(.) stop } if
+
+% get user options
+/rtype (text/plain) def
+/loaduser defined {
+  () /rtype loaduser pop
+} {
+  (*.backtalk) /rtype loadvar pop
+} ifelse
+
+id ! {
+  % Figure out a default alias for anonymous posters
+  anonposter /usrname pushuser ! { /alias xstore } if
+  alias ! {/alias (Anonymous User) store } if
+} if
+
+
+% Output form to post new item
+(<FORM METHOD=POST ACTION=enterpost>
+<INPUT NAME=conf TYPE=hidden VALUE=")conf(">
+<INPUT NAME=goto TYPE=hidden VALUE=")goto(">)
+csel {(<INPUT NAME=csel TYPE=hidden VALUE=")csel(">)} if
+(<TABLE BORDER=0><TR>
+<TD ALIGN=left>Use Pseudonym:</TD><TD><INPUT NAME=pseudo VALUE=")
+alias quote(">)
+id {( \()id(\)\n)} if
+/allowhtml dflt_html def (*settings) /allowhtml loadvar pop
+allowhtml {
+(</TD><TD>
+<SELECT NAME=texttype>
+<OPTION VALUE="text/plain">Plain Text
+<OPTION VALUE="text/html")rtype (text/html)eq {( SELECTED)} if (>Pure HTML
+<OPTION VALUE="text/html-blanks")rtype (text/html-blanks)eq {( SELECTED)} if (>lazy HTML
+</SELECT>
+)}{(<INPUT TYPE=hidden NAME=texttype VALUE="text/plain">
+)} ifelse
+(</TD></TR>
+<TR><TD>Subject:</TD><TD COLSPAN=2><INPUT NAME=title size=72></TD></TR>
+<TR><TD COLSPAN=3>
+Enter your text in the area below:<BR>
+<TEXTAREA NAME="text" ROWS=18 COLS=72 WRAP=HARD></TEXTAREA>
+<BR><INPUT TYPE=submit VALUE="Go ahead and enter this )Item(">
+</FORM></TD></TR></TABLE>
+)
+flavor(footer)+ chain

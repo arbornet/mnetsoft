@@ -1,0 +1,100 @@
+% Backtalk Bubblegum Interface -- (c) 2001, Jan Wolter, Steve Weiss
+%
+% itemop script
+%
+% Freeze, thaw, retire, unretire or kill an item.
+%
+% Query Parameters:
+%    conf=	current conference
+%    item=	item to operate on
+%    op=        One of the following operations:
+%                 F   Freeze
+%                 T   Thaw
+%                 R   Retire
+%                 U   Unretire
+%                 K   Unretire
+%     confirm=  If true, an item deletion has been approved.
+%
+%  Stuff passed through:
+%    csel=	selector for future conferences to read
+%    isel=	selector for items to read after this
+%    rsel=	response selector - (all) (new) (since) or numeric range
+%    noskip=	if true, display even items with no selected responses.
+%    since=	if rsel is (since) this gives date.
+%    showforgotten= show all, unforgotten, or forgotten items.
+
+% Get buttons
+flavor(buttondef)+ include
+
+% open conference and load lots of button definitions
+flavor(openconf)+ stopped {`Conference cap( )'conf( does not exist.\n) halt} if
+
+amfw ! {
+  (You must be a fairwitness to operate on this conference /n) halt
+} if
+
+op (F) eq {
+  1 freeze_item {(Cannot freeze item )item(.\n) halt} if
+  flavor(read)+ jump
+} if
+
+op (T) eq {
+  0 freeze_item {(Cannot thaw item )item(.\n) halt} if
+  flavor(read)+ jump
+} if
+
+op (R) eq {
+  1 retire_item {(Cannot retire item )item(.\n) halt} if
+  flavor(read)+ jump
+} if
+
+op (U) eq {
+  0 retire_item {(Cannot unretire item )item(.\n) halt} if
+  flavor(read)+ jump
+} if
+
+op (K) eq {
+  /confirm defined {
+    confirm cvi {
+      kill_item {(Cannot kill item )item(.\n) halt} if
+      (<HTML><HEAD><TITLE>)Item cap( Deleted</TITLE></HEAD>
+      <BODY )background(>
+      Item )item( deleted.
+      <P>\n)
+      % figure out if there is a next item
+      isel next_item {() () 0} {} ifelse /nitem xdef pop /nisel xdef
+      nitem {
+        (<A HREF="read?isel=)nisel(&conf=)conf(&csel=)csel
+        showforgotten {(&showforgotten=)showforgotten} if
+        noskip {(&noskip=)noskip} if
+        since {(&since=)since cvi} if
+        (&item=)nitem(&rsel=)rsel(">Next )Item cap(</A><BR>\n)
+      } if
+      (<A HREF="confhome?conf=)conf(&csel=)csel(">)Item cap( Menu</A>
+      </BODY></HTML>\n)
+    } {
+      flavor(read)+ jump
+    } ifelse
+  } {
+    (<HTML><HEAD><TITLE>)Item cap( Deletion Confirmation</TITLE></HEAD>
+    <BODY )background(>
+    Really Delete )Item cap( )item( from the )conftitle( Conference?<P>
+    <FORM ACTION=itemop METHOD=POST>
+    <INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+    <INPUT TYPE=hidden NAME=item VALUE=)item(>
+    <INPUT TYPE=hidden NAME=op VALUE=K>
+    <INPUT TYPE=hidden NAME=csel VALUE=)csel(>
+    <INPUT TYPE=hidden NAME=isel VALUE=)isel(>\n)
+    /showforgotten defined
+      {(<INPUT TYPE=hidden NAME=showforgotten VALUE=)showforgotten(>\n)} if
+    /noskip defined {(<INPUT TYPE=hidden NAME=noskip VALUE=)noskip(>\n)} if
+    /since defined {(<INPUT TYPE=hidden NAME=since VALUE=)since(>\n)} if
+    (<INPUT TYPE=radio NAME=confirm VALUE=0> No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE=radio NAME=confirm VALUE=1> Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <INPUT TYPE=submit VALUE="kill it">
+    </FORM></BODY></HTML>\n)
+  } ifelse
+  halt
+} if
+
+(Unknown operator: ')op('\n)

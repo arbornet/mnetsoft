@@ -1,0 +1,18 @@
+                        Fronttalk Defines:  CONFMSG
+
+Usage:  DEFINE CONFMSG "<string>"
+
+The CONFMSG define is used to generate the output from the "DISPLAY
+THISCONFERENCE" command.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "Conference: %d (%s)\n\
+    Server: %h (%H)\n\
+    Participation file: %p\n\
+    Conference type: %t (%D)\n\
+    %(i%i item%S\n\
+    First item %f, last %l%ENo items yet.%)"

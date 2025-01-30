@@ -1,0 +1,159 @@
+#!/usr/bin/env python
+
+import datetime
+import grp
+import os
+import posix
+import pwd
+import re
+import subprocess
+import sys
+import tempfile
+
+defaultlastreapfile = "/cyberspace/etc/reap/lastreap.txt"
+reapdir = "/cyberspace/etc/reap"
+masterlockfile = reapdir + '/master.lock'
+
+def geteditor():
+    if os.environ.has_key("VISUAL"):
+        return os.environ["VISUAL"]
+    elif os.environ.has_key("EDITOR"):
+        return os.environ["EDITOR"]
+    else:
+        return "/usr/bin/vi"
+
+def getshell():
+    if os.environ.has_key("SHELL"):
+        return os.environ["SHELL"]
+    u = pwd.getpwuid(os.getuid())
+    if u != None:
+        shell = u[-1]
+        if shell != None:
+            return shell
+    return "/bin/sh"
+
+def getpager():
+    if os.environ.has_key("PAGER"):
+        return os.environ["PAGER"]
+    return "/usr/bin/less"
+
+def cleanline(line):
+    c = re.compile("#.*")
+    l = c.sub('', line.strip()).strip()
+    return l
+
+def filterline(l):
+    return(l != "" and l.isdigit())
+
+def lastreap(lastreapfile = defaultlastreapfile):
+    lines = filter(filterline, [cleanline(l) for l in open(lastreapfile)])
+    if len(lines) > 1:
+        raise 'Reap file ' + lastreapfile + ' is mangled; more than one line'
+    lastreap = int(lines[0])
+    return lastreap
+
+def setlastreap(lastreap, lastreapfile = defaultlastreapfile):
+    timestamp = datetime.datetime.utcnow().isoformat()
+    header = "# Last reap file updated at " + timestamp
+    os.remove(lastreapfile)
+    f = open(lastreapfile, "w")
+    print >>f, header
+    print >>f, lastreap
+    f.close()
+    
+def nextreap(last):
+    ptknum = last
+    ptkfile = reapdir + '/ptk' + str(ptknum)
+    while os.path.exists(ptkfile):
+        ptknum = ptknum + 1
+        ptkfile = reapdir + '/ptk' + str(ptknum)
+        if ptknum - last > 100:
+            print "last reap file is hopelessly out of date; please fix"
+            raise SystemExit
+    return ptknum
+
+def masterlock():
+    if os.path.exists(masterlockfile):
+        print >>sys.stderr, "Master lock file " + masterlockfile + " exists."
+        print >>sys.stderr, "Check if another reap is running; if not, remove"
+        print >>sys.stderr, "this file and try again."
+        raise SystemExit
+    fd = os.open(masterlockfile, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
+    f = os.fdopen(fd, "w")
+    print >>f, os.getpid()
+    f.close()
+
+def cleanup(temp):
+    if os.path.exists(temp):
+        os.remove(temp)
+    os.remove(masterlockfile)
+
+def mkreaplist(temp):
+    o = open(temp, 'w')
+    subprocess.call("/cyberspace/sbin/reapcheck", stdout=o)
+
+def mkfingers(reapno, users):
+    o = open(reapdir + '/fingers/ptk' + str(reapno) + '.finger', 'w')
+    for user in users:
+        subprocess.call(['/cyberspace/etc/reap/reapfinger', user], stdout = o)
+    o.close()
+
+def dozap(ptkfile):
+    now = datetime.datetime.utcnow().isoformat()
+    user = posix.getlogin()
+    comment = 'Reap run at ' + now + ' by ' + user
+    i = open(ptkfile)
+    subprocess.call(['/cyberspace/sbin/zapuser', '-dirs', comment], stdin = i)
+    i.close()
+
+def checkfws():
+    p = subprocess.Popen(["/cyberspace/sbin/check_fws"], stdout = subprocess.PIPE)
+    subprocess.call(["/usr/bin/grep", "does not exist"], stdin = p.stdout)
+
+def checkgroups():
+    for group in grp.getgrall():
+        members = group[-1]
+        for member in members:
+            try:
+                if pwd.getpwnam(member) != None:
+                    continue
+                print member + " is in group " + group[0] + " and does not exist."
+            except:
+                print member + " is in group " + group[0] + " and does not exist."
+
+def yesno(prompt):
+    yn = raw_input(prompt + ' [N/y]: ').strip()
+    if yn == "":
+        return False
+    if yn[0] == 'Y' or yn[0] == 'y':
+        return True
+    return False
+
+def key(text):
+    print text
+    sys.stdin.readline()
+
+def doreap(ptkfile):
+    posix.umask(027)
+    last = lastreap()
+    next = nextreap(last)
+    temp = tempfile.mktemp('txt', 'reap', reapdir)
+    print "Checking for reaped fair witnesses; " + \
+        "look at output (if any) and fix manually...."
+    checkfws()
+    print "Done checking for reaped fair witnesses."
+    print "Checking groups for reaped users; " + \
+        "look at output (if any) and fix manually...."
+    checkgroups()
+    print "Done checking groups for reaped users."
+    print "Saving last reap number...."
+    setlastreap(next)
+    print "Done saving last reap number."
+    print "REAPING IS COMPLETE."
+    cleanup(temp)
+
+def main(argv):
+    doreap("ptk679")
+
+if __name__ == "__main__":
+    main(sys.argv)

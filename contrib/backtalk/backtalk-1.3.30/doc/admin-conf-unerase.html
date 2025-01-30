@@ -1,0 +1,105 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Unerasing Responses</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Unerasing Responses</H2>
+Version 1.3.30
+<P>
+&copy; 1998-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk includes an "erase" function that allows the author of a response
+or a fair-witness or a conference administrator to erase individual responses.
+If someone accidentally erases a response that shouldn't have been erased,
+it is normally possible to restore it.
+<P>
+When Backtalk erases a response, it deletes it from the item itself (actually
+overwriting it with other information).  If Backtalk was installed with
+<TT>CENSOR_LOG</TT> undefined, then there is no way to recover the erased
+response unless you can find it on a backup tape or in somebody's browser
+cache.
+<P>
+But if there is censor log (and we recommend keeping one),
+then a copy of the deleted response, together with a description of who
+censored it, will be stored in the log file.
+That way you can look at it to decide if it should really have been censored,
+and you can restore it.
+<P>
+If you look at the ``censored'' file (which is usually in the bbs directory
+where all the conference directories are).
+You'll entries that look like this:
+<PRE>
+   response martian:2:4 (berryman) censored by (janc) on Tue Jan  6 11:33:45 1998
+   ,T
+   Doctor O, Doctor O, Fly me off to Mars.
+   I want to know what Martians drink
+   and when they close the bars.
+   Why should I be paying cabs
+   and smashing my cars,
+   when Doctor Otto's rocket ship
+   could fly me to the stars?
+   ,E
+</PRE>
+The first line says that this was response four of item two in the ``martian''
+conference, that it was originally written by user ``berryman''
+and that it was censored by user ``janc'' on the given date.
+The text of the response follows, delimited by a ``<TT>,T</TT>'' in the
+begining and a ``<TT>,E</TT>'' at the end.
+<P>
+The easy way to restore it is to log into Backtalk as a conference
+administrator (usually the 'cfadm' account) and read the appropriate item.
+Next to it you should find an `Edit' button.  Click this to bring up a form
+into which you can paste the text from the censored log.
+<P>
+Alternately we can use a Unix text editor to edit the item file
+(see the <A HREF=admin-conf-itemedit.html>item editing guide</A>).
+Since this is response four,
+we'd look for the fifth ``<TT>,R</TT>'' line (the first one
+corresponds to the item text, which is response zero), we find that what is
+stored there looks like this:
+<PRE>
+   ,R0003
+   ,U23,berryman
+   ,APeter Berryman
+   ,D34b25ccb
+   ,T
+   janc Tue Jan  6 11:33:45 1998 Jan Wolter janc Tue Jan  6 11:33:45 1998 Jan 
+   janc Tue Jan  6 11:33:45 1998 Jan Wolter janc Tue Jan  6 11:33:45 1998 Jan 
+   janc Tue Jan  6 11:33:45 1998 Jan Wolter janc Tue Jan  6 11:
+   ,E
+</PRE>
+Here the original contents of the response have been overwritten by as many
+repetitions of the name of the person who censored it and the date at which
+it was censored as it takes to obliterate the original.
+Also, the number on the ``<TT>,R</TT>'' line has be changed to flag this as
+an erased response.
+<P>
+To restore the response manually, you need to do two things.
+<OL>
+<LI>
+In the item file, replace the text between the ``<TT>,T</TT>'' and the
+``<TT>,E</TT>'' with the original text out of the censored file.
+Leaave the ``<TT>,T</TT>'' and the ``<TT>,E</TT>'' alone.
+<LI>
+Also in the item file, change the ``<TT>,R0003</TT>''
+line to ``<TT>,R0000</TT>''.
+</OL>
+This, when you are done, the response should look like this:
+<PRE>
+   ,R0000
+   ,U23,berryman
+   ,APeter Berryman
+   ,D34b25ccb
+   ,T
+   Doctor O, Doctor O, Fly me off to Mars.
+   I want to know what Martians drink
+   and when they close the bars.
+   Why should I be paying cabs
+   and smashing my cars,
+   when Doctor Otto's rocket ship
+   could fly me to the stars?
+   ,E
+</PRE>
+If you read the item with Backtalk, the response should now be restored.
+</BODY></HTML>

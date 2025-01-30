@@ -1,0 +1,24 @@
+                          Fronttalk Separators:
+                 Conditionals Used in Item Separators
+
+For general information about separators see "HELP SEP".  This page just
+describes the conditional codes that can be used in item separators:
+
+   %(M   - true if item is linked.
+   %(V   - true if response is censored.
+   %(W   - true if response is scribbled.
+   %(Q   - true if item is a favorite.
+   %(X   - true if item is retired.
+   %(Y   - true if item is forgotten.
+   %(Z   - true if item is frozen.
+   %(S   - true if item is a party item (always false in Fronttalk).
+   %(N   - true if there are new responses to this item.
+   %(T   - true if form feeds should be printed ("READ FF" or "PRINT").
+   %(F   - true if response lines should be numbered ("READ NUMBERED").
+   %(D   - true if responses should be dated ("READ DATE").
+   %(U   - true if responses should have uid ("READ UID").
+   %(I   - in FIND commands, true if this is the first match in an item.
+   %(R   - in FIND commands, true if this is the first match in a response.
+   %(O   - true if item is different than it was last time %(O was tested.
+   %(B   - true the first time it is called.  (e.g., see "HELP DEF ISHORT")
+   %(L   - true if line exists, so %L will work. (e.g., see "HELP DEF FSEP")

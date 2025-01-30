@@ -1,0 +1,118 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editform script
+%
+% Generic file editing form.  Can be used to edit any of a variety of
+% different files.  The "editfile.bt" script is the form handler for this.
+%
+% Query Parameters:
+% Query Parameters:
+%   target=     which file to edit.  Possible values are:
+%                .cflist      - user's conference hot list
+%                dflt.cflist  - system default conference hot list
+%                ulist        - list of users for a closed conferencer
+%                login        - conference login screen
+%   conf=       which conference (for ulist and login only)
+%   csel=       current conference selector (not used, just passed along)
+%   goto=	if defined, script to execute when done
+%   errormsg=   message to display at top of screen
+
+flavor(config)+ include
+
+% header
+(<HTML><HEAD>
+<TITLE>Edit )target( File</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+</HEAD>\n)
+
+% open the conference, if one is specified
+conf {
+  flavor(openconf)+ stopped {
+    (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+} {
+  flavor(config)+ include
+  (<BODY )background(>\n)
+} ifelse
+
+global_header
+
+(<H1>Edit )target( File</H1>\n)
+
+% display an error message, if we have one
+/errmsg defined {
+  errmsg { (Edit failed: )errmsg(<P>\n)} if
+} if
+
+% conference list editing form
+target (.cflist) eq {
+  ((This page really stinks.  Will make a better one someday soon.)<P>\n)
+  (List names of )Conferences( you want on your hotlist.\n)
+  (<P>\nEnter one )Conference( name per line:\n<BR>)
+  /txt (*.cflist) read def
+  /fmt (ROWS=20 COLS=25) def
+} if
+
+% default conference list editing form
+target (dflt.cflist) eq {
+  amadm ! {(Cannot edit the default )Conference( list) stop} if 
+  (List names of )Conferences( you want on the default )Conference( hotlist.\n)
+  (This is used by all users who don't define their own )Conference( list.\n)
+  (<P>\nEnter one )Conference( name per line:\n<BR>)
+  /txt (*dflt.cflist) read def
+  /fmt (ROWS=20 COLS=25) def
+} if
+
+% closed conference user list
+target (ulist) eq {
+  amfw ! {(Cannot edit the user list) stop} if 
+  userlist ! {
+    (<STRONG>NOTE: This is an open )Conference(.  This user list will be\n)
+    (ignored unless and until the )Conference( is closed by the conference\n)+
+    (administrator.</STRONG><P>\n)+
+  } if
+  (List names of users who may )fishbowl{(post to)} {(access)} ifelse
+  ( the <EM>)conf(</EM> )Confernce(.\n<P>\nEnter one login name per line:\n<BR>)
+  /txt (*ulist) read def
+  /fmt (ROWS=20 COLS=)loginlen 1 + cvs + def
+} if
+
+% ascii login screen
+target (login) eq {
+  amfw ! {(Cannot edit the ascii login text) stop} if 
+  (Enter the ASCII login screen for the <EM>)conf(</EM> )Conference(.\n<BR>)
+  /txt (*login) read def
+  /fmt (ROWS=20 COLS=72) def
+} if
+
+% html login screen
+target (login.html) eq {
+  amfw ! {(Cannot edit the ascii login text) stop} if 
+  (Enter the HTML login screen for the <EM>)conf(</EM> )Conference(.\n<P>)
+  (Be careful to close all the HTML tags you open.\n<P>)
+  /login () def
+  (*settings) /login loadvar pop
+  /txt login def
+  /fmt (ROWS=20 COLS=72) def
+} if
+
+% the form
+(
+<FORM METHOD=POST ACTION=editfile>
+)
+conf {(<INPUT TYPE="hidden" NAME=conf VALUE=)conf(>)} if
+csel {(<INPUT TYPE="hidden" NAME=csel VALUE=)csel(>)} if
+/goto defined {(<INPUT TYPE="hidden" NAME=goto VALUE=)goto(>)} if
+(<INPUT TYPE="hidden" NAME=target VALUE=)target(>
+<TEXTAREA NAME=text WRAP=OFF )fmt(>)
+txt
+(</TEXTAREA><BR>
+<INPUT TYPE=submit VALUE="Change File">
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

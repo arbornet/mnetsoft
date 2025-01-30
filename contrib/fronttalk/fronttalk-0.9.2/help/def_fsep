@@ -1,0 +1,26 @@
+                  Fronttalk Defines:  FSEP and FTSEP
+
+Usage:  DEFINE FSEP "<string>"
+        DEFINE FTSEP "<string>"
+
+The FSEP and FTSEP defines are item separators used to display results from
+the FIND command.  FSEP is used for matches with the item text or response
+text.  FTSEP is used for matches with the item title.
+
+For full details on the format of item separators, see help pages on
+SEPARATORS, ITEMFUNC, ITEMCOND, and SEPDATE.
+
+The default value for FSEP is:
+
+  "%(Ritem %i response %r (%l)%(L:\n%)%)%(L%7N: %L%)"
+
+Note that the part in the "%(R" conditional is printed only if this result
+is in a different item/response than any previously printed result.  The
+part in the "%(L" conditional is matched only if the match was against a
+particular line of the response.  If we did "FIND (joe)" then we get matches
+against all responses entered by user 'joe', but not against any particular
+line.
+
+The default value for FTSEP is:
+
+  "item %i (%l) title:\n         %h"

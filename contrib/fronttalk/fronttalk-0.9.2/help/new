@@ -1,0 +1,14 @@
+                       Fronttalk Command:  NEW
+
+Usage: NEW                                  ("Respond or Pass?" prompt only)
+       NEW <response number>
+
+Stop reading items, just like QUIT, but do not mark the responses just
+displayed as "seen".  If no response number is given, then the item will
+be left as it was, so you will see the same responses again next time you do
+"READ NEW".  If a response number is given, that that response and all
+subsequent responses will be "new" the next time you read the conference, but
+all previous responses will not be new.
+
+The HOLD command also leaves responses marked unread, but goes on to read
+the next item instead of exiting to the "Ok:" prompt.

@@ -1,0 +1,61 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% linkform script
+%
+% Display a form for linking items from another conference into this
+% conference.  The actual linking is done by the "linkitem.bt" script.
+% Only fairwitnesses can do this.
+%
+% Query Parameters:
+%    conf=	conference to link into
+%    errmsg=    optional error message to display at top of screen
+%    lconf=     optional guess at conference to link from
+%    litem=     optional guess at item to link in
+
+flavor(config)+ include
+
+% page header
+(<HTML><HEAD>
+<TITLE>Link )Item cap( into )/conftitle( )Conference(</TITLE>
+)/metatags(</HEAD>
+)
+
+% open conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+secret 2 eq /dunno defined ! and {
+  [/conf /errmsg /lconf /litem] flavor(confpass)+ jump
+} if
+
+global_header
+
+`(<H1>Link )Item cap( into )'conftitle(</H1>
+)
+
+% warn off people without the proper access
+amfw ! {`(Only the )Fairwitness( can link )Items( into the )'
+        conftitle( )Conference(.\n)
+	stop} if
+
+% display any error message
+/errmsg defined {
+  errmsg { (Link failed: )errmsg(<P>\n)} if
+  } if
+
+% link form
+`(This form may be used to link )AnItem( from any other )Conference
+( into the )'conftitle`( )Conference(.
+<P>
+<FORM METHOD=POST ACTION=linkitem>
+<INPUT TYPE="hidden" NAME=conf VALUE=)'conf(>
+)Conference cap( name: <INPUT TYPE=text NAME=lconf SIZE=20)
+/lconf defined {( VALUE=)lconf( )} if
+(><BR>
+)Item cap( number: <INPUT TYPE=text NAME=litem SIZE=20)
+/litem defined {( VALUE=)litem( )} if
+(><BR>
+<INPUT TYPE=submit VALUE="Link )Item cap(">
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

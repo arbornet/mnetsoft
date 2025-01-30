@@ -1,0 +1,30 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+
+% Open a conference
+open_conf {
+  (Error: Could not open conference ')conf('.\n)
+  halt
+} if
+
+maypost ! {
+  (You cannot post to this conference.)
+  halt
+} if
+
+title ! { (Need a title.) halt } if
+
+text ! { (Need some text.) halt } if
+
+/texttype (text/html) store
+
+(lib/postlog) include
+
+post_item
+
+/rf defined { rf (yes) eq {
+  1 retire_item { (Retire Failed!) halt } if
+  1 freeze_item { (Freeze Failed!) halt } if
+} if } if
+
+/http_location `backtalkurl(/)flavor(begin?conf=)conf(&item=)item' store
+(Article posted.  If you see this message, you need a smarter browser.\n)

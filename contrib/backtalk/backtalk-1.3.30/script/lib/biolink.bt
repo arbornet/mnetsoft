@@ -1,0 +1,32 @@
+% Backtalk BioLink Script -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% This is used only if you want to have the links to user bios point to
+% somepage other than the Backtalk bio page.  This usually only happens
+% if you are using Backtalk with accounts created by some other application,
+% in which the other application probably has tools to display user
+% information, which you may want to use.
+%
+% You must define "extern_bio" in the top level config file for these
+% routines to be used.
+%
+% This file should define two Backtalk functions that return URL strings:
+%
+%    <login> extern_view_bio <url>
+%      given a login name, return a string with link to view bio for a user.
+%
+%    extern_edit_bio <url>
+%      A link to a page to edit the bio for the currently logged in user.
+%
+% The latter can be implemented as a variable instead of a function.
+
+/extern_bio constant {
+
+  /extern_view_bio {
+    % append the user's login name to the following URL:
+    (http://www.unixpapa.com/cgi-bin/uinfo?user=)
+    exch cgiquote +
+  } def
+
+  /extern_edit_bio (http://www.unixpapa.com/cgi-bin/editmyinfo) def
+
+} if

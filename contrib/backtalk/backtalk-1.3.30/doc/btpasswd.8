@@ -1,0 +1,31 @@
+.\"	@(#)btpasswd.8	
+.\"
+.TH BTPASSWD 8 "Mar 26, 2000"
+.AT 3
+.SH NAME
+btpasswd \- reset the password on a Backtalk user account
+.SH SYNOPSIS
+.B btpasswd
+username
+.SH DESCRIPTION
+.I Btpasswd
+resets the password on a Backtalk conferencing system account.
+It can only be run by a superuser or from the Backtalk administration
+account (usually called 'backtalk').
+Users should reset their own passwords from within Backtalk.
+.PP
+You will be prompted to enter the new password twice.
+You do not need to know the old password.
+.PP
+Resetting the password automatically sets it to a validated state.
+.PP
+Adminstrators can also reset passwords using the web-based Backtalk
+administration pages.
+.PP
+.SH AUTHORS
+Jan Wolter and Steve Weiss
+(backtalk@hvcn.org)
+.SH "SEE ALSO"
+.IR btmkuser (8),
+.IR btrmuser (8),
+.IR btvalid (8)

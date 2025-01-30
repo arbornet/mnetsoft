@@ -1,0 +1,9 @@
+                       Fronttalk Setting:  IGNOREEOF
+
+Usage:  SET IGNOREEOF
+        SET NOIGNOREEOF
+
+If IGNOREEOF is set, then a control-D typed at the OK prompt will not exit
+you from Fronttalk.
+
+If NOIGNOREEOF is set, it will.  This is the default.

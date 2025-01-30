@@ -1,0 +1,181 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2005, Jan Wolter
+%
+% Output Script - Atom 1.0 Version
+%
+% NOTES:
+%
+%   - Based on draft spec, but should be close to the final thing.
+%
+
+flavor(config)+ include
+
+
+% <categorylist> <prefix> do_categories ...
+%  Output some category statements for all categories in the given list.
+%  Category list is a comma-separated list of categories, each of which
+%  can be either just a category, or 'realm:category'.  Atom wants URIs
+%  instead of realm strings, and we have no way to translate those yet.
+%  So for now realms are ignored.
+/do_categories {
+   begin
+     /prefix xdef
+     /list xdef
+     {
+       list (,) parse exch /list xdef
+       dup ! {break} if
+       (:) clip quote exch
+       pop prefix(<category term=")3 2 roll(" />\n)
+     } loop
+   end
+} def
+
+
+% <fullnamevar> <emailvar> usrstr <string>
+%  Given a full name and an email address, make a standard email address
+%  including both.  Either both can be empty strings or undefined.
+
+/usrstr {
+   dict begin
+   dup defined {exec} {pop ()} ifelse /em xdef
+   dup defined {exec} {pop ()} ifelse /fn xdef
+   `
+   fn {
+        (<name>)fn quote(</name>)
+   } if
+   em {
+        (<email>)em quote(</email>)
+   } if
+   '
+} def
+
+
+/rss_start {
+  /http_content_type (application/atom+xml) store
+
+  (<?xml version="1.0" encoding="utf-8"?>
+)
+  print
+} def
+
+
+/rss_start_channel {
+
+  (<feed xmlns="http://purl.org/atom/ns#draft-ietf-atompub-format-09">
+  <title type="text">)rss_title quote(</title>
+  <link rel="alternate" href=")rss_link quote("/>>
+  <subtitle type="text">)rss_description quote(</subtitle>\n)
+
+  % No sign of an Atom language identifier
+  %/rss_language defined {
+  %  (  <language>)rss_language quote(</language>\n)
+  %} if
+
+  /rss_copyright defined {
+    (  <rights>)rss_copyright quote(</rights>\n)
+  } if
+
+  /rss_categories defined {
+    rss_categories (  ) do_categories
+  } if
+
+  /rss_managingeditor_name defined /rss_managingeditor_email defined or {
+    (  <author>)
+	/rss_managingeditor_name /rss_managingeditor_email usrstr
+	(</author>\n)
+  } if
+
+  % We could put the webmaster in as a <contributor>, but doesn't really
+  % make sense, so let's not.
+  %/rss_webmaster_name defined /rss_webmaster_email defined or {
+  %  (  <contributor>)/rss_webmaster_name /rss_webmaster_email usrstr
+  %    (</contributor>\n)
+  %} if
+
+  % Atom 1.0 offers us a choice of two different ways to specify images.
+  % <icon> is for something squarish, and <logo> is for something twice
+  % as wide as high.  If we know the image dimensions, we choose the best
+  % fit, otherwise we just use <icon>.
+  /rss_image_url defined {
+
+    /rss_image_width defined /rss_image_height defined and {
+      rss_image_height 3 * 2 / rss_image_width < { (logo) }{ (icon) } ifelse
+    } {
+      (icon)
+    } ifelse /imagetype xdef
+
+    (  <)imagetype(>)rss_image_url quote(</)imagetype(>\n)
+
+  } if
+
+  % The rss_lastbuilddate corresponds to the <updated> time.  We ignore
+  % rss_pubdate at the feed level.
+  /rss_lastbuilddate defined {
+    (  <updated>)rss_lastbuilddate itime(</updated>\n)
+  } if
+
+(  <generator>)`version(/) if_version' quote(</generator>
+)
+    print
+
+} def
+
+
+/rss_item {
+
+  (  <entry>\n)
+
+  /rss_title defined {
+    (    <title>)rss_title quote(</title>\n)
+  } if
+
+  /rss_link defined {
+    (    <link rel="alternate" href=")rss_link quote(" />\n)
+  } if
+
+  /rss_description defined {
+    (    <content>)rss_description quote(</content>\n)
+  } if
+
+  /rss_pubdate defined {
+    (    <published>)rss_pubdate itime(</published>\n)
+  } if
+
+  /rss_enclosure_url defined {
+    (    <link rel="enclosure" type=")rss_enclosure_type quote
+    		(" length=")rss_eclosure_length quote
+		(" href=")rss_enclosure_url quote(" />\n)
+  } if
+
+  /rss_guid defined {
+    (    <id>) rss_guid_permalink ! {(tag:)} if rss_guid quote(</guid>\n)
+  } if
+
+  % Maybe support this someday
+  %/rss_source defined {
+  %  (    <source>)rss_source quote(</source>\n)
+  %} if
+
+  /rss_author_name defined /rss_author_email defined or {
+    (    <author>)/rss_author_name /rss_author_email usrstr(</author>\n)
+  } if
+
+  /rss_categories defined {
+    rss_categories (    ) do_categories
+  } if
+
+  (  </entry>\n)
+
+  print
+
+  % There is no maximum number of items, so always return false
+  0
+} def
+
+
+/rss_end_channel {
+   (</feed>\n)
+} def
+
+
+/rss_end {
+} def

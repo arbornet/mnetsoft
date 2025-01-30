@@ -1,0 +1,137 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% optform script
+%
+% This generates a form for setting some user options in Pistachio.  The
+% "optset.bt" script is the handler for this.
+%
+% Query Parameters:
+%    login=	User whose options we are setting
+
+flavor(config)+ include
+
+% load help button
+/butsel 4 defconstant flavor(buttondef)+ include
+
+% page header
+(<HTML><HEAD>
+<TITLE>Set Options for )login(</TITLE></HEAD>
+<BODY)body_tags(>
+)global_header
+(<H1>Set Options for )login(</H1>
+)
+
+% warn off unauthorized users
+login id ne {
+  amadm {
+    login selectuser
+  } {
+    (Only )login( or an administrator can change )login('s options.
+    </BODY></HTML>\n)
+    stop
+  } ifelse
+} if
+
+% load current option values
+/frames 1 def
+/rpage 30 def
+/rtype (text/plain) def
+/confsummary 0 def
+/pistachio.recent dflt_recent_entrance def
+/dfltilist dflt_item_list def
+(*.backtalk) [/frames /rpage /rtype /confsummary /dfltilist /rfav /ifav
+  /pistachio.recent] loadvar pop
+
+(Goto <A HREF=begin>)entrance_button
+(</A> or for more information about these settings, press <A HREF=help/optform>)
+help_button(</A>
+<P><HR>
+<FORM METHOD=POST ACTION=optset>
+<INPUT TYPE=hidden NAME=login VALUE=)login(>
+)
+
+% frames option:
+(Use frames with browsers that support frames \(your current one does)
+browser 3 lt {(n't)} if (\):
+&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=frames VALUE=1) frames {( CHECKED)} if (> Yes
+&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=frames VALUE=0) frames ! {( CHECKED)} if (> No
+<P>
+)
+
+% conference summary option:
+(Show a summary of active items in hot list )Conferences( on entrance page:
+&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=confsummary VALUE=1) confsummary {( CHECKED)} if (> Yes
+&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=confsummary VALUE=0) confsummary ! {( CHECKED)} if (> No
+<P>
+)
+
+% post log option:
+post_log_file {
+(List this many of the most recently posted messages on the entrance page:
+&nbsp;&nbsp;
+<INPUT TYPE=text NAME=recent VALUE=")pistachio.recent(" SIZE=3>
+<P>
+)
+} if
+
+% page size option
+(Maximum number of )Responses( to show on a single page:
+<INPUT TYPE=text NAME=rpage SIZE=4 VALUE=)rpage(>
+<P>
+)
+
+% response type option
+(Default )Response( format:
+<SELECT NAME=rtype>
+<OPTION VALUE="text/plain">Plain Text
+<OPTION VALUE="text/html")rtype (text/html) eq {( SELECTED)}if(>Pure HTML
+<OPTION VALUE="text/html-blanks")rtype (text/html-blanks) eq {( SELECTED)}if(>lazy HTML
+</SELECT>
+<P>
+)
+
+% item list type option
+Item cap( list button initially brings up:
+<SELECT NAME=dfltilist>
+<OPTION VALUE="new">Only )Items( with new )Responses(
+<OPTION VALUE="current")dfltilist (current) eq {( SELECTED)}if
+(>All )Items( which have not been forgotten
+<OPTION VALUE="all")dfltilist (all) eq {( SELECTED)}if(>All )Items(
+</SELECT>
+<P>
+)
+
+% item favor options
+(When posting a new )Item(
+<SELECT NAME=newifav>
+<OPTION VALUE="0">That )Item( does not automatically become a favorite
+<OPTION VALUE="1")ifav 1 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until explicitly disfavored
+<OPTION VALUE="2")ifav 2 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until it is next read
+</SELECT>
+<P>
+)
+
+% response favor options
+(When posting a new )Response(
+<SELECT NAME=newrfav>
+<OPTION VALUE="0">That )Item( does not automatically become a favorite
+<OPTION VALUE="1")rfav 1 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until explicitly disfavored
+<OPTION VALUE="2")rfav 2 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until it is next read
+</SELECT>
+<P>
+)
+
+(<INPUT TYPE=submit VALUE="Change Settings">
+</FORM>
+<HR>)
+global_footer
+(</BODY></HTML>
+)

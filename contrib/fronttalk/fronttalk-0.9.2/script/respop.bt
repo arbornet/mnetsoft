@@ -1,0 +1,32 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+/http_content_type (text/plain) store
+
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+% Mark a response unseen
+op (U) eq {
+  resp item mark_unseen {(<ERROR MSG="Item )item( not found">\n) stop} if
+} if
+
+% Erase a response
+op (E) eq {
+  erase_resp /rc xdef
+  rc 2 eq {(<ERROR MSG="Item )item( response )resp( not found">\n) stop} if
+} if
+
+% Hide a response
+op (H) eq {
+  1 hide_resp /rc xdef
+  rc 2 eq {(<ERROR MSG="Item )item( response )resp( not found">\n) stop} if
+} if
+
+% Show a response
+op (S) eq {
+  0 hide_resp /rc xdef
+  rc 2 eq {(<ERROR MSG="Item )item( response )resp( not found">\n) stop} if
+} if
+
+(<OK>
+)

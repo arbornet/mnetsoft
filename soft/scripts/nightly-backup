@@ -1,0 +1,4 @@
+#!/bin/sh -
+level=`date +%j | awk '{l = $1 % 14; print (l > 9) ? 9 : l}'` 
+log=/var/log/dump.log
+exec /cyberspace/sbin/dobackups $level >> $log 2>&1

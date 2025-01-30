@@ -1,0 +1,26 @@
+                       Fronttalk Command:  ENTER
+
+Usage:  ENTER                                         ("Ok:" prompt only)
+
+Enter a new item into the currently selected conference.  You will first
+be prompted for the text of the item, and then for a short header.
+
+Text entry is usually done by the 'gate' text gatherer.  If this is being
+used, then the following commands will work if typed at the begining of a
+line during text entry:
+
+  :          Start up your default editor on the text.
+  :q         Cancel text entry.
+  :p         Print what you've typed so far.
+  :spell     Run spell checker on text.
+  :r <file>  Read a file into your text.
+  :help      Print help.
+  :clear     Erase text entered so far.
+
+The normal way to terminate entry of text is to type a dot (.) or a control-D
+at the beginning of a line.
+
+After you have entered the text, you will be prompted for a short subject
+line, which will be displayed in the header of the new item.
+
+Only the conference fairwitness can enter the first item in a conference.

@@ -1,0 +1,30 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+
+(<HTML>
+<HEAD>
+<TITLE>Search the )conf( Conference</TITLE>
+</HEAD>
+<BODY>
+<H1>Search the )conf( Conference</H1>
+<FORM ACTION=find>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+Search For: <INPUT TYPE=text NAME=pattern SIZE=60><P>
+<INPUT TYPE=radio NAME=mode VALUE=icase CHECKED> Ignore Case
+<INPUT TYPE=radio NAME=mode VALUE=exact> Exact Match
+<INPUT TYPE=radio NAME=mode VALUE=re> Regular Expression
+<P>
+Match Against:<BR>
+<INPUT TYPE=checkbox NAME=m_text CHECKED> Message Text<BR>
+<INPUT TYPE=checkbox NAME=m_title> Item Title<BR>)
+mayseefname {(<INPUT TYPE=checkbox NAME=m_fname> Author's Full Name<BR>\n)} if
+(<INPUT TYPE=checkbox NAME=m_login> Author's Login Name
+<P>
+<INPUT TYPE=submit VALUE=Search>
+</FORM>
+<P>
+Note:
+Searching a conference may take a bit longer than your average
+transaction.
+</BODY>
+)

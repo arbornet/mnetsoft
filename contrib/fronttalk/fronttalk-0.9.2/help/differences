@@ -1,0 +1,121 @@
+		Difference between Fronttalk and Picospan
+
+This help topic summarizes differences between Fronttalk and Picospan.  They
+are similar enough that Picospan users will find most things work the same,
+but Fronttalk does not attempt to clone Picospan exactly.  Major differences
+are listed below.
+
+Fronttalk extensions:
+---------------------
+
+ * On the Fronttalk command line or on the JOIN command you can give a
+   conference name like "hvcn:design" or "grex:agora" to indicate that
+   you want to join the given conference on the given system.
+
+ * If you attempt to connect to a remote system, you will generally be
+   asked for a login and password.  If the server supports anonymous
+   reading, you have the option of not logging in.
+
+ * The Fronttalk SERVER command connects you to a different Backtalk server.
+   "DISPLAY SERVERS" gives a list of servers known to Fronttalk.  "DISPLAY
+   THISSERVER" gives information about the current server.
+
+ * In Fronttalk, you can use the FAVOR command to mark items as favorites,
+   and these will be shown before other items, unless you read or browse
+   with the NOFAVFIRST flag.  There is also a DISFAVOR command.
+
+ * Fronttalk can retitle an item with the RETITLE command, which can be issued
+   either at the OK prompt or the "Respond or pass" prompt.
+
+ * Fronttalk users can set a private title on any item using the MYTITLE
+   command.
+
+ * In Fronttalk, if you connected to a system in anonymous reading mode,
+   without logging in, you can login later with the LOGIN command.
+
+ * Fronttalk uses "readline" to read commands.  This enables editing the
+   command line and accessing the command history with your arrow keys.
+
+ * The Fronttalk NEW and POSTPONE commands take an optional argument.  If
+   given, this is the response number which will be the first new response
+   the next time you read the item.  Fronttalk adds HOLD as a synonym for 
+   POSTPONE.
+
+ * Fronttalk adds an UNEXPURGATE command.  HIDE is a synonym for EXPURGATE.
+   SHOW is a synonym for UNHIDE.  ERASE is a synonym for SCRIBBLE.
+
+ * In Fronttalk, FORGET, REMEMBER, FREEZE, THAW, RETIRE, UNRETIRE, and KILL
+   can be given with arguments at the "Respond or Pass" prompt, just as they
+   can be at the OK prompt.  Without an argument they default to the current
+   item, of course.
+
+ * In Fronttalk, FORGET, REMEMBER, FREEZE, THAW, RETIRE, UNRETIRE, LINK, FIX,
+   and KILL can be given CONFIRM or NOCONFIRM flags.  If CONFIRM is set, each
+   selected item's header will be printed, and you'll be asked if you want
+   to operate on that item.  Confirm defaults on for the KILL command and
+   off for the rest.
+
+ * The FIND command also searchs text of item titles and can search for
+   responses by particular authors.
+
+ * In Fronttalk, item ranges on commands like READ, BROWSE, or FORGET can
+   include arguments like (joe,sue,fred) to select only items authored by
+   the listed users.
+
+Features implemented differently in Fronttalk:
+----------------------------------------------
+ * In Fronttalk, the NOFORGET flag doesn't make hidden responses visible, it
+   only makes retired and forgotten items visible.  Instead there is a
+   separate "SET NOHIDE" switch that makes hidden responses visible.  Also,
+   in Fronttalk, doing "ONLY 12" will display the text of response 12 even
+   if it is hidden.
+
+ * When the Fronttalk NEXT command hits the end of the conference list, it
+   does an automatic REWIND.
+
+ * In Picospan, the SET STAY flag effects all commands RESPOND, FORGET,
+   REMEMBER, FREEZE, THAW, RETIRE, and UNRETIRE.  In Fronttalk it effects
+   only the RESPOND command.  The SET MODESTAY flag effects the others and
+   defaults on instead of off.
+
+ * The Picospan "DISPLAY CONFERENCE" command is not supported in Fronttalk.
+   Use "DISPLAY THISCONFERENCE" instead.  In Fronttalk, "DISPLAY CONFERENCES"
+   is a synonym for Picospan's "HELP CONFERENCES".
+
+ * Fronttalk's parsing of dates in commands like "READ SINCE Jan 31"  is
+   different than Picospan.  It mostly accepts a broader range of date
+   syntax, but it may interpret some dates slightly differently.  In
+   particular "-1" means 24 hours ago, not the begining of yesterday.
+
+ * In Picospan the command "DEFINE name" counterintuitively undefines
+   the named object.  In Fronttalk it just prints the current definition,
+   if any.
+
+ * Separator syntax differs to some degree.  There are a number of Picospan
+   separators that Fronttalk doesn't implement, and there are a few additions
+   to the separators.  Some of the default separators are different as well.
+
+Picospan features not available in Fronttalk:
+---------------------------------------------
+
+ * Fronttalk does not yet allow you to join conferences as an observer.
+   The SET RESIGN command does not put you into observer mode (though it
+   does delete your participation file) and the SET JOIN command does not
+   exist.  You are not asked if you want to join or observe when joining
+   a conference for the first time.
+
+ * Fronttalk does not do party (synchronous) items or clusters.
+
+ * You cannot SET PASSWORD from Fronttalk.
+
+ * Commands like MAIL, CHAT, and WHO, which are just wrappers around Unix
+   commands are not included in Fronttalk.  They could be created as
+   aliases, but then they would run on the local machine, not the remote
+   machine.
+
+ * Fronttalk always operates in AUTOSAVE mode and will probably never
+   support NOAUTOSAVE MODE.  Thus SET AUTOSAVE is ignored and SET RELOAD,
+   SET SAVESEEN and SET NOAUTOSAVE are rejected.
+
+ * Fronttalk does not have a built-in text entry system.  An external program
+   like "gate" must be used.  Because of this, the EDALWAYS flag is always on.

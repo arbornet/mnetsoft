@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "style/default.css";
+  </style>
+
+  <title>SSH Information</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>SSH Information</a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+    <h2> What is SSH?</h2>
+
+    <p><tt>ssh</tt> (<strong>SSH</strong> client) is a program for logging
+    into a remote machine and for executing commands on a remote machine.
+    It is intended to replace <tt>telnet</tt>, <tt>rlogin</tt> and <tt>rsh</tt>,
+    and provide secure encrypted communications between two untrusted hosts
+    over an insecure network.  Since your personal computer is not directly
+    connected to our <q>Grex</q> server, the data you send us has to pass
+    through unknown computers handling Internet data traffic. These machines
+    have access and can read some of your transimitted data, if they choose.
+    Your passwords and login info, among other things, could be stolen and,
+    perhaps, used on other sites. SSH prevents all this by encrypting your
+    transmitted data making it nearly impossible to understand.</p>
+
+    <h2> How do I use SSH?</h2>
+
+    <p>You need to download a program that supports the SSH protocol.</p>
+
+    <p>Most computers running Unix or its variants (including Mac OS X)
+    already include an SSH client.  Simply open a terminal or xterm window
+    and type, "ssh your_login_name@grex.org".</p>
+
+    <p>You can download one such program for Microsoft Windows
+    <a href="http://the.earth.li/~sgtatham/putty/latest/x86/putty.exehere">
+    here</a>. After downloading it to your Windows "Desktop", double
+    click it to run. Our <q>Host Name</q> is: grex.org. Click the
+    <q>Open</q> button and wait a few seconds for <strong>PuTTY</strong>
+    to prompt you to accept our server's encryption key fingerprint.
+    <strong>If</strong> the key you see in the PuTTY window is the same as the
+    <a href="">key on our website</a> then click <q>Yes</q>. If you are
+    creating a new user account, type <tt>newuser</tt> and follow the
+    instructions provided. Else, type in your login and password.</p>
+
+    <h2>What is Telnet?</h2>
+
+    <p>Telnet programs are inherently insecure because they transmit
+    unencrypted and easily readable data. Do not type in personal
+    information (example: social security number) or financial data
+    (eg: bank account details, password for a bank website) when using
+    telnet. We no longer provide access via telnet.</p>
+
+    <h2>Getting a Free SSH/Telnet Program</h2>
+
+    <p>If you need to download and install an SSH program, the
+    following programs are the ones that we recommend.  
+    </p>
+
+    <dl>
+      <dt><strong>PuTTY</strong> (for all windows platforms)</dt>
+      <dd>PuTTY is a free implementation of Telnet and SSH for Win32
+      and Unix platforms, along with an xterm terminal emulator. It
+      supports scp and sftp. If you are using a version of PuTTY
+      earlier than 0.55, you should upgrade to 0.55. The latest
+      version of PuTTY can be found at the author's website:
+      <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/">http://www.chiark.greenend.org.uk/~sgtatham/putty/</a>.</dd>
+
+      <dt><strong>TeraTerm</strong></dt>
+      <dd>TeraTerm is another free Windows-based SSH and Telnet program.
+      More information can be found
+      <a href="http://ayera.com/teraterm/">here</a>.</dd>
+    </dl>
+  </div>
+
+</div>
+<div>
+  <span id="revision">$Id: ssh.xhtml 1444 2014-03-23 18:01:57Z kentn $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

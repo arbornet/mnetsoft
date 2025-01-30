@@ -1,0 +1,48 @@
+# This is an install script for a Backtalk Interface.  It is meant to be
+# invoked by the 'btinstall' command, not to be run independently.
+
+NAME=cinnamon
+
+# Make sure all the stuff btinstall is supposed to pass to us is here
+if test -z $DISTDIR; then
+  echo "DISTDIR not defined"
+  exit 1
+fi
+if test -z $SCRIPTDIR; then
+  echo "SCRIPTDIR not defined"
+  exit 1
+fi
+if test -z $IMAGEDIR; then
+  echo "IMAGEDIR not defined"
+  exit 1
+fi
+if test -z $OWNER; then
+  echo "OWNER not defined"
+  exit 1
+fi
+
+# Create and permit the script directory
+echo "Creating $NAME script directory"
+test ! -d $SCRIPTDIR/$NAME && mkdir $SCRIPTDIR/$NAME
+chmod 775 $SCRIPTDIR/$NAME
+test $CANCHOWN && chown $OWNER $SCRIPTDIR/$NAME
+
+# Copy scripts into script directory
+echo "Copying $NAME scripts"
+cp script/*.bt $SCRIPTDIR/$NAME
+chmod 644 $SCRIPTDIR/$NAME/*.bt
+if test $CANCHOWN; then
+  chown $OWNER $SCRIPTDIR/$NAME/*.bt
+fi
+rm -f $SCRIPTDIR/$NAME/*.bb
+
+# Copy over the images
+echo "Copying $NAME images"
+cp image/xml.gif image/xml.png image/atom.gif image/atom.png $IMAGEDIR
+chmod 644 $IMAGEDIR/xml.gif $IMAGEDIR/xml.png $IMAGEDIR/atom.gif $IMAGEDIR/atom.png
+if test $CANCHOWN; then
+  chown $OWNER $IMAGEDIR/xml.gif $IMAGEDIR/xml.png $IMAGEDIR/atom.gif $IMAGEDIR/atom.png
+fi
+
+echo "Done installing $NAME"
+exit 0

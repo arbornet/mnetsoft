@@ -1,0 +1,17 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+%
+% main RSS entry point script
+%
+% This redirects to one of the top-level RSS scripts depending on the
+% CGI arguments.
+%
+%   itemanon - if 'item' argument present.
+%   confanon - otherwise.
+%
+% Someday it will be possible to specify a user and get a personalized feed.
+
+item {
+   flavor(itemanon)+ jump
+} if
+
+flavor(confanon)+ jump

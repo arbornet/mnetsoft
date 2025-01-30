@@ -1,0 +1,19 @@
+#	$OpenBSD: shells,v 1.8 2009/02/14 17:06:40 sobrado Exp $
+#
+# list of acceptable shells for chpass(1).
+# ftpd(8) will not allow users to connect who are not using
+# one of these shells, unless the user is listed in /etc/ftpchroot.
+/bin/sh
+/bin/csh
+/bin/ksh
+/usr/local/bin/rc
+/usr/local/bin/scsh
+/cyberspace/bin/bbsh
+/cyberspace/bin/menu
+/usr/local/bin/bash
+/usr/local/bin/es
+/usr/local/bin/psh
+/usr/local/bin/sash
+/usr/local/bin/tcsh
+/usr/local/bin/zsh
+/usr/local/plan9/bin/rc

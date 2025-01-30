@@ -1,0 +1,102 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editform script
+%
+% Generic file editing form.  Can be used to edit any of a variety of
+% different files.  This is it's own form handler.
+%
+% Query Parameters:
+%   target=     which file to edit.  Possible values are:
+%                login        - conference login screen
+%		 login.html   - HTML conference login screen
+%   conf=       which conference
+%   goto=	if defined, script to execute when done
+%   errormsg=   message to display at top of screen
+%   newtext=    new contents of file
+%   admhome=    URL of administrative menu
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+% header
+(<HTML><HEAD>
+<TITLE>Edit )target( File</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+)
+
+open_conf {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+
+(<H1>Edit )target( File</H1>
+Goto <A HREF=)admhome(>admin menu</A><P>
+)
+
+/newtext defined {
+
+  target (login) eq {
+    newtext (*login) write
+  } if
+
+  target (login.html) eq {
+    /login newtext def
+    (*settings) /login savevar
+  } if
+
+  (admin/confopt) jump
+
+} if
+
+% display an error message, if we have one
+/errmsg defined {
+  errmsg { (Edit failed: )errmsg(<P>\n)} if
+} if
+
+% ascii login screen
+target (login) eq {
+  (Enter the ASCII login screen for the <EM>)conf(</EM> conference.\n<BR>)
+  /txt (*login) read def
+  /fmt (ROWS=20 COLS=72) def
+} if
+
+% html login screen
+target (login.html) eq {
+  (Enter the HTML login screen for the <EM>)conf(</EM> conference.\n<P>)
+  (Be careful to close all the HTML tags you open.\n<P>)
+  /login () def
+  (*settings) /login loadvar pop
+  /txt login def
+  /fmt (ROWS=20 COLS=72) def
+} if
+
+% the form
+(
+<FORM METHOD=POST ACTION=editscreen>
+<INPUT TYPE="hidden" NAME=admhome VALUE=)admhome(>
+<INPUT TYPE="hidden" NAME=conf VALUE=)conf(>\n)
+/goto defined {(<INPUT TYPE="hidden" NAME=goto VALUE=)goto(>)} if
+(<INPUT TYPE="hidden" NAME=target VALUE=)target(>
+<TEXTAREA NAME=newtext WRAP=OFF )fmt(>)
+txt
+(</TEXTAREA><BR>
+<INPUT TYPE=submit VALUE="Change File">
+</FORM>
+</BODY></HTML>
+)
+
+

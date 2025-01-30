@@ -1,0 +1,10 @@
+                   Fronttalk Display Value:  CONFERENCES
+
+Usage:  DISPLAY CONFERENCES
+
+Display a list of conferences on the current server.
+
+This list is not necessarily complete.  There can be unlisted conferences.
+
+Note that the Picospand "DISPLAY CONFERENCE" command is different for this.
+Use "DISPLAY THISCONFERENCE" in Fronttalk.

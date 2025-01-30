@@ -1,0 +1,144 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% read script
+%
+% Read all or part of an item.  This is the top-level script, which, if frames
+% are being used, just sets up the frames and loads "read.panel.bt" into one
+% and "read.text.bt" into the other.  If frames are not being used, it calls
+% "read.mkpanel.bt" and "read.mktext.bt" directly to form the page.
+%
+% Query Parameters:
+%    conf=	current conference
+%    csel=	selector for future conferences to read
+%    item=	item to read now, if zero start with first item in isel
+%    isel=	selector for items to read after this
+%    rsel=	response selector - (all) (new) (since) or numeric range
+%    tmprsel=   responses to actually show - (back) (fore) (first) (last) range
+%    at=        current response number - base for tmprsel
+%    noskip=	if true, display even items with no selected responses.
+%    since=	if rsel is (since) this gives date.
+%    showforgotten= show all, unforgotten, or forgotten items.
+%    slipped=   set to old resp text if displaying slipped in messages.
+%    sliptype=  set to old resp type if displaying slipped in messages.
+%    slipalias= set to old resp alias if displaying slipped in messages.
+%    sliphid=   defined if old resp hidden and displaying slipped in messages.
+%    seeno=     if 1, don't mark things seen.  If 2, mark only if none missed.
+
+flavor(config.bt)+ include
+
+% if item is 0, skip to first item in isel
+item ! {
+  open_conf {(Cannot access )Conference( ')conf(') halt} if
+  isel ! {/isel (1-$) store} if
+  isel ! {/isel (1-$) store} if
+  isel next_item {(No such item) halt} if
+  /item xstore pop /isel xstore
+} if
+
+% get frame and rpage settings = first set defaults, then load .backtalk
+/frames 1 def
+/rpage 30 def
+/rtype (text/plain) def
+/twitlist () def
+(*.backtalk) [/frames /rpage /rtype /timezone /twitlist] loadvar pop
+frames {/frames browser 3 ge def} if
+
+frames {
+  /urlarg [ (?isel=)isel cgiquote(&conf=)conf cgiquote(&csel=)csel
+	    /tmprsel defined {(&tmprsel=)tmprsel} if
+	    /at defined {(&at=)at} if
+	    /seeno defined {(&seeno=)seeno} if
+	    showforgotten {(&showforgotten=)showforgotten} if
+	    noskip {(&noskip=)noskip} if
+	    since {(&since=)since cvi} if
+	    (&item=)item(&rsel=)rsel ] def
+
+  % create top-level frames
+  open_conf pop % just to get the conference title - is it worth it?
+  (<HTML><HEAD><TITLE>)bbsname( - )conftitle( )Conference cap
+  ( - )Item cap( )item
+  (</TITLE>
+  <BASE HREF=")backtalkurl(/)flavor(read">\n)
+  use_rss_autodiscovery expose_rss_item and {
+    `(<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Responses
+    ( to )bbsname( )'conftitle`( )Item cap( #)'item(" HREF=")
+    anon_url(cinnamon?conf=)conf(&item=)item(">\n)
+  } if
+  /metatags(</HEAD>
+  <FRAMESET ROWS=")40 global_header_height +(,*" BORDER=0>
+  <FRAME SRC="read.panel)urlarg(" SCROLLING=NO NORESIZE MARGINHEIGHT=1>
+  <FRAME SRC="read.text)urlarg
+  /slipped defined {(&slipped=)slipped} if
+  (" NAME="rtext">
+  </FRAMESET></HTML>\n)
+  halt
+} if
+
+% No Frames version:
+
+% page header
+(<HTML><HEAD> 
+<BASE HREF=")backtalkurl(/)flavor(read">
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+<TITLE>)bbsname( )/conftitle
+`( )Conference cap( - )Item cap( )'item(</TITLE>\n)
+use_rss_autodiscovery expose_rss_item and {
+  `(<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Responses
+  ( to )bbsname( )'conftitle`( )Item cap( #)'item(" HREF=")
+  anon_url(cinnamon?conf=)conf(&item=)item(">\n)
+} if
+/metatags(</HEAD>\n)
+
+% open conference and load lots of button definitions
+flavor(openconf)+ stopped {`Conference cap( )'conf( does not exist.\n) halt} if
+% If a password is required, ask for it
+secret 2 eq /dunno defined ! and {
+  [/conf /item /csel /isel /rsel /tmprsel /noskip /since /showforgotten
+   /slipped] flavor(confpass)+ jump
+} if
+
+global_header
+
+/butsel 95 defconstant flavor(buttondef)+ include
+
+mayread {
+  % if we have tmprsel, it selects responses to actually show
+  /tmprsel defined
+    { tmprsel (back) eq
+      { at cvi rpage - dup 0 lt {pop 0} if cvs (-)+ at cvi 1 - cvs + }
+    { tmprsel (fore) eq
+      { at cvi 1 + cvs (-$) + }
+    { tmprsel (first) eq
+      { (0-) at cvi dup rpage gt {pop rpage} if 1 - cvs + }
+    { tmprsel (last) eq
+      { (-) rpage cvs + }
+    { tmprsel } ifelse } ifelse } ifelse } ifelse }
+    { rsel }
+  ifelse
+  % having constructed the rsel we are using, show open item, converting it
+  % to a numeric response selector
+  item this_item ! dup { exch /nrs xstore } if
+} if
+
+% Generate the control panel, saving it for reuse at the bottom of the screen
+[ exch flavor(read.mkpanel)+ include ] dup /panel xdef
+
+mayread ! /nrs defined ! or {
+  `(No )Item( )'item`( in )conf( )Conference(.\n)'
+  halt
+} if
+
+% generate the text body
+flavor(read.mktext)+ include
+
+% append a copy of the control panel
+panel
+
+% footer
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,117 @@
+% Backtalk Login Form -- (c) 2001, Jan Wolter, Steve Weiss
+%
+% login script
+%
+% This is a form/handler used for logging into backtalk installations
+% which are configured to use sessions.  If run without an "u" or "p"
+% argument, it generates a login form.  Otherwise it checks that the password
+% given in "p" is correct for the login "u".  If not, it redisplays the login
+% form.  If so, it redirects to whatever page is given in the "bounce" argument.
+% All pages generated are uncached.  If the "msg" variable is defined, it
+% gives a message to display at the front of the page.
+
+% Don't cache this page
+/http_no_cache 1 store
+
+/b defined ! {/b (Login) def} if
+
+/u defined /p defined and {
+  b (Login) eq {
+    % Have login and password.  Check them.
+
+    u p newsession ! {
+      % Successful Login - Do redirect
+      /http_location bounce store
+      halt
+    } if
+
+    % Bad Login - Redisplay login form
+    /msg (Login Incorrect.) def
+   } {
+     killsession
+     /http_location bounce store
+     halt
+  } ifelse
+
+} if
+
+% Display login form
+
+(<HTML><HEAD>
+<TITLE>Backtalk Login</TITLE>
+<BASE HREF=")backtalkurl(/public/login">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+)
+
+/msg defined {
+  msg(<P>)
+} if
+
+(Please enter your login and password.
+<FORM ACTION=login METHOD=post>
+)
+
+(<TABLE BORDER=1><TR><TD><TABLE>
+<TR><TD>Login:</TD>
+<TD COLSPAN=2><INPUT TYPE=text NAME=u )
+  /u defined {(VALUE=")u quote(" )}if(SIZE=20></TD></TR>
+<TR><TD>Password:</TD>
+<TD COLSPAN=2><INPUT TYPE=password NAME=p SIZE=20></TD></TR>)
+
+/bounce defined {
+  (<INPUT TYPE=hidden NAME=bounce VALUE=")bounce(">\n)
+} {
+  % Construct a list of all interface
+  [
+    (.) firstdir pop nextdir pop nextdir	% skip '.' and '..'
+    { dup ! {pop break} if
+      dup directory {
+        dup (/interface.bt)+ dup readable {
+	  [
+	  3 1 roll	% make the directory name the 0th element
+	  call		% execute interface.bt to load rest of description
+	  ]
+	} {
+	  pop pop	% discard directory with no interface.bt file
+	} ifelse
+      } {
+        pop		% discard non-directory
+      } ifelse
+      nextdir
+    } loop
+  ]
+  dup length /n xdef
+  n 0 eq {
+    (Ugh!  No interfaces installed!  This won't work!\n)
+  } {
+    % Sort interfaces by their sort codes
+    1 1 asort
+    % List the interfaces
+    (<TR><TD>Interface:</TD><TD>\n)
+    n 2 / /n xdef
+    exch
+    /i 0 def
+    {
+      /iface xdef
+      i n eq {(</TD><TD>)} if
+      (<INPUT TYPE=radio NAME=bounce VALUE=")serverurl
+      anon_url iface 0 get(/begin")
+      i 0 eq {( CHECKED)} if
+      (> )iface 2 get cap(<BR>\n)
+      /i inc
+    } forall
+    (</TD></TR>\n)
+  } ifelse
+} ifelse
+
+(<TR><TD COLSPAN=3 ALIGN=center><HR><INPUT TYPE=submit NAME=b VALUE=Login>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT TYPE=submit NAME=b VALUE="Read Anonymously">
+</TR></TR>
+</TABLE></TD></TR></TABLE></CENTER>
+</FORM>
+</BODY>
+</HTML>
+)

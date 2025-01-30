@@ -1,0 +1,70 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% confpass routine
+%
+% This script is called by other scripts when they failed to open the current
+% conference because no correct password was given.  It displays a form asking
+% for the conference password.  The page header, through the <BODY> line is
+% expected to be already on the stack, followed by a list of parameters that
+% should be passed through after the password has been entered.
+
+/args xdef
+
+flavor(buttondef)+ include
+
+(<H1>Password required to )
+mayread {(participate in)}{(access)} ifelse
+( )conf`( )Conference cap(</H1>
+
+<FORM ACTION=")'SCRIPT_NAME PATH_INFO(">
+)conf( )Conference( password:<BR>
+<INPUT NAME=cpass TYPE=password SIZE=20>
+<INPUT TYPE=submit VALUE="Submit Password">\n)
+[
+args {
+   dup defined {
+      (<INPUT TYPE=hidden NAME=")exch dup cvs exch(" VALUE=")exch exec(">\n)
+   } {
+      pop
+   } ifelse
+} forall
+]
+dup
+`(
+</FORM>
+<P>
+<FORM ACTION=")SCRIPT_NAME PATH_INFO(">)' exch
+(<INPUT TYPE=hidden NAME="dunno" VALUE="1">
+Don't know the password? )
+mayread {(You can still have read-only access to the )Conference(
+without it. )} if
+(Click this button:<BR>
+<INPUT TYPE=submit VALUE="Don't Know It!">
+)
+
+fwlist {
+  (<P>
+  To learn the password, contact )
+  fwlist (,) clip pop {(one of the )Fairwitnesses+}{(the )Fairwitness+} ifelse
+  (: )
+  fwlist
+  { (,) clip dup {
+      dup (<A HREF=bio?login=)exch+(>)+exch+(</A>\n)+ exch
+    } {
+      pop
+    } ifelse
+    dup
+  } while
+  pop
+} if
+
+(
+<P>
+<SMALL>
+\(Note: If you are getting this screen on every page of the )Conference(,
+try enabling cookies on your browser.\)</SMALL>
+</FORM>
+</BODY>
+</HTML>
+)
+halt

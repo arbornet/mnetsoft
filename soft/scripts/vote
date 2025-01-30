@@ -1,0 +1,11 @@
+#!/bin/sh
+PATH=/bin:/usr/bin
+export PATH
+echo "--------------------------------------------------------------------"
+echo "This terminal interface to Grex elections is no longer supported."
+echo "To view ballots and cast votes, please visit the URL"
+echo "  https://grex.org/cgi-bin/pw/voting-booth"
+echo "You can do this in any web browser, or from a Grex Unix shell prompt"
+echo "by running the lynx program."
+echo "--------------------------------------------------------------------"
+exit 0

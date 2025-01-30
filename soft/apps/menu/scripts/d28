@@ -1,0 +1,31 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+trap 2
+trap 'clear ; exit' 2
+echo ""
+echo "Party channels are:"
+echo ""
+ls -C /var/party/log
+echo ""
+echo -n "What party channel would you like to read? (example: 'party.log')"
+read channel
+if [ "$channel" = "" ]
+then
+	channel=party.log
+fi
+echo ""
+if [ -f /var/party/log/$channel ]
+then
+	echo ""
+	echo ""
+	echo "Reading channel: ($channel)  NOTE: Press your"
+	echo "INTERUPT character to quit."
+	echo ""
+	tail -f /var/party/log/$channel
+else
+	echo ""
+	echo -n "$channel: is not a valid party channel."
+	echo ""
+	sleep 2
+fi

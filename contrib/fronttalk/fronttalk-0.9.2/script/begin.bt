@@ -1,0 +1,35 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to login user and get general user information.
+% On backtalk servers configured to use basic authentication, no arguments
+% are passed in.  On backtalk servers configured to use form-based
+% authentication, we should pass in the login and password (the variable names
+% are slightly obscure to make life slightly harder for packet sniffers):
+%
+%   x1       the user's login name
+%   x2       the user's plain text password
+%
+% If the user does not pass in a login and password, or passes in an empty
+% login, then he will be reading anonymously.  If a login is successful, a
+% cookie is set with a session ID to use to access further pages.
+
+/http_content_type (text/plain) store
+sessions {
+  /x1 defined /x2 defined and {
+    x1 {
+      x1 x2 newsession {
+        (<ERROR MSG="Login Incorrect">\n) stop
+      } if
+    } if
+  } if
+} if
+(<CFLIST>
+)(*.cflist) read quote
+(</CFLIST>
+<CFONCE>
+)(*.cfonce) read quote
+(</CFONCE>
+<CFRC>
+)(*.cfrc) read quote
+(</CFRC>
+)

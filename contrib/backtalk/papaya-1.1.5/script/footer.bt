@@ -1,0 +1,40 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% footer script
+%
+% Generate the standard page footer, with links to return to the main menu.
+% and the Goto Conference box.
+
+(<HR>
+<TABLE WIDTH=100% BORDER=0>
+<TR><TD>
+)
+
+conf conftitle and {
+  (<A HREF="confhome?conf=)conf cgiquote(&csel=)csel("><IMG SRC=")
+  imghost(/)flavor(back.gif" BORDER=0>&nbsp;Return</A> to the )conftitle
+  `( )Conference(<P>\n)'
+} if
+
+(
+<A HREF="begin"><IMG SRC=")imghost(/)flavor
+(back.gif" BORDER=0>&nbsp;Return</A> to main menu
+)
+
+sessions { id {
+  (<P><A HREF=")backtalkurl(/public/logout">Logout</A> of Backtalk.\n)
+} if } if
+
+(</TD><TD ALIGN=right>
+<FORM METHOD="post" ACTION="confhome">
+Goto )Conference(: <INPUT TYPE=text NAME=conf SIZE=12>
+<INPUT TYPE=submit VALUE="Enter">
+</FORM>
+</TD></TR></TABLE>
+)
+
+
+global_footer
+(</BODY>
+</HTML>
+)

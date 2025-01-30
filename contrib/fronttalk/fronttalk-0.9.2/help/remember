@@ -1,0 +1,15 @@
+                       Fronttalk Command:  REMEMBER
+
+Usage:  REMEMBER <item range>
+
+Mark all selected items as not forgotten.
+
+For a full description of item ranges, do "HELP RANGE".  If you just say
+"REMEMBER" without arguments, the default is to remember the current item.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to remember it.  So to review
+all your forgotten items, you could do:
+
+   REMEMBER FORGOTTEN CONFIRM

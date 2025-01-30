@@ -1,0 +1,9 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: tel <userid>
+
+ID of person to send a telegram to: "
+read userid
+tel $userid

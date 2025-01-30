@@ -1,0 +1,263 @@
+#
+# This is the list of birthdays to put in the motd on Grex.
+# Please add more birthdays as you learn them!
+# Cron runs awk on the file "birthday.awk" (which reads this file) at
+# 12:00 each morning.
+#
+
+Jan 3 Happy Birthday Joel (devnull) Weber!
+Jan 5 Happy Birthday Freezeland (freida) Freida and Greg (phenix) Walters!
+Jan 6 Happy Birthday Wolf (wolfg676)!
+Jan 6 Happy Birthday Ross Gerard Bichler Kaplan!
+Jan 7 Happy Anniversary Twila (anderyn) and Bruce (bru) Price!
+Jan 7 Happy Birthday Jason (jasonb) Bishop!
+Jan 9 Happy Birthday to Chris (formerly mouse) Dailey,
+Jan 9 Kentn's son, and Sarah (michaela) Zamenski!
+Jan 11 Happy Birthday Ken (ken) Ascher, Joni Dale,
+Jan 11   Anne (mooncat) Perry and Sara (cosmos) Cook!
+Jan 14 Happy Birthday Ken (krj) Josenhans!
+Jan 15 Happy Birthday Nissa (snow)!
+Jan 16 Happy Birthday Rick (clees) Vermunt!
+Jan 16 Happy Birthday Blair Alan (blair) Bayha!
+Jan 20 Happy Birthday Peter (nestene) Riley!
+Jan 23 Happy Birthday Garima (garima) Sharma!
+Jan 26 Happy Birthday Andreas John (cicero) LoCicero!
+Jan 26 Happy Birthday Helge (cobra) Jorgensen!
+Jan 27 Happy Birthday Glenda (glenda) Andre!
+Jan 29 Happy Birthday George (formerly gromit) Gibbard!
+Jan 31 Happy Birthday Marla (formerly qt314)!
+
+Feb 3 Happy Birthday Vivian Doehne Halbany!
+Feb 3 Happy Birthday Romantic (romantic)!
+Feb 8 Happy Birthday Richard (bruin) Pirie!
+Feb 12 Happy Birthday Harley A. Hogg!
+Feb 13 Happy Birthday Mark (aruba) Conger!
+Feb 17 Happy Birthday Claire (formerly clairey) Arthurs!
+Feb 18 Happy Birthday Vanessa (font) Crum!
+Feb 20 Happy Birthday Craig (formerly general) Ludwiczak!
+Feb 21 Happy Birthday Christine (chanur) Bichler!
+Feb 23 Happy Birthday Dan (dang) Gryniewicz!
+Feb 24 Happy Birthday Jonathan (kingjon) Lovelace!
+Feb 25 Happy Birthday Lynne (lynne) Woodroofe!
+Feb 26 Happy Birthday Greg (gregc) Cronau!
+Feb 28 Happy Birthday Kae Anne (otter) Chappel!
+
+Mar 3 Happy Birthday Steve (scg) Gibbard and Emma (formerly yagi) Buchtel!
+Mar 3 Happy Birthday Luke (pez)!
+Mar 4 Happy Birthday Paul (brighn) Kershaw and Colleen Marie (giry) Fury!
+Mar 8 Happy Birthday to the former ivynymph (Amanda Jones)!
+Mar 9 Happy Birthday Valerie (formerly val) Szopko!
+Mar 10 Happy Birthday David Charles (formerly bushman) Henderson!
+Mar 12 Happy Birthday Damon (dea) Andre!
+Mar 13 Happy Birthday Audrey (headdoc) Bricker!
+Mar 16 Happy Birthday LeAnn (leann) Eriksson Guyton!
+Mar 18 Happy Birthday Jerry (formerly jerryb) Bricker!
+Mar 18 Happy Birthday Robert (formerly rlawson) Lawson!
+Mar 24 Happy Birthday Abby (abby) Conlin!
+Mar 26 Happy Birthday Mike (morel) Smerza!
+Mar 28 Happy Birthday Ben (blh) Helmke!
+
+Apr 1 Happy Birthday Griffin Rhys Parton!
+Apr 3 Happy Birthday Alan (stern) Stern!
+Apr 4 Happy Birthday Esther (formerly adania) Ahronheim!
+Apr 7 Happy Birthday Ravi Shankar!
+Apr 10 Happy Birthday Imade (nephi) Itup!
+Apr 14 Happy Birthday John (jmc) McKerrell!
+Apr 16 Happy Birthday Steve (srw) Weiss!
+Apr 18 Happy Birthday Ben (formerly tree) Jenkins!
+Apr 18 Happy Birthday Chris (it) Cochran!
+Apr 21 Happy Birthday Arabella's First Niece!
+Apr 21 Happy Birthday Cameron Joseph Sarrica!
+Apr 21 Happy Birthday Aaron (picard) Klinert!
+Apr 21 Happy Birthday Audrey (audrey) Chapman!
+Apr 23 Happy Birthday James (peacefrg) Edel!
+Apr 25 Happy Birthday Megan (eeyore) Heberlein!
+
+May 2 Happy Birthday Shanmuga (shammu) Priya!
+May 4 Happy Birthday Karen (formerly jingle) Dziegeleski!
+May 5 Feliz Cinco de Mayo!
+May 6 Happy Birthday John (jep) Perry!
+May 9 Happy Birthday Corey (laotzu) Rydholm!
+May 9 Happy Birthday Emily Rhiannon Riley!
+May 12 Happy Birthday STeve (steve) Andre!
+May 16 Happy Birthday Phoren (kavita) Maal!
+May 18 Happy Birthday Roderick Calvin (rodamala) Whitehead!
+May 20 Happy Birthday Meg (meg) Geddes!
+May 22 Happy Birthday Jeff (kaplan) Kaplan!
+May 23 Happy Birthday Anna (eskarina) Gustitus!
+May 24 Happy Birthday Bob Dylan!
+May 25 Happy Anniversary to Chris (iggy) and Marc (marcvh) VanHeyningen!
+May 28 Happy Birthday Scott (scott) Helmke!
+May 29 Happy Birthday Bruce (bhoward) Howard!
+May 29 Happy Birthday Jennifer (jiffer) Kriegel!
+May 31 Happy Birthday Greg (flem) Fleming!
+
+Jun 3 Happy Birthday Thomas (bookie) Roberts!
+Jun 4 Happy Birthday Denise (denise) Anderson!
+Jun 4 Srecan rodendan, Sindi (keesan)!
+Jun 6 Happy Birthday porky!
+Jun 6 Happy Birthday John Ellis Voorhes Perry III!
+Jun 6 Happy Birthday Todd (tod) Wilkinson!
+Jun 8 Happy Birthday Jodi Mahaney!
+Jun 8 Happy Birthday Bill (bmoran) Moran!
+Jun 9 Happy Anniversary Dave (davel) and Grace (gracel) Lovelace!
+Jun 9 Happy Birthday Megan (formerly freedom) Wyatt!
+Jun 10 Happy Anniversary Dan (dang) and Janette (nette) Gryniewicz!
+Jun 12 Happy Birthday to President George HW Bush!
+Jun 12 Happy Birthday Jeffrey (coyote)!
+Jun 14 Happy Birthday Erik (paladin) Conner!
+Jun 14 Happy Birthday Carlos Valdivia!
+Jun 15 Happy Birthday to krj's dad!
+Jun 16 Happy Birthday Eugene (ecl) Liedell!
+Jun 17 Happy Birthday Dalynne Park and Susan (formerly hope) Dundas!
+Jun 20 Happy Birthday Phil (formerly nikon) Thompson!
+Jun 20 Happy Birthday Angie (formerly buzby) Antkowiak!
+Jun 21 Happy Birthday Michelangelo (spooked) Giansiracusa!
+Jun 22 Happy Birthday Mary (maryeliz) Edwards!
+Jun 25 Happy Birthday Erinn (arianna) Streeter!
+Jun 26 Happy Birthday Misti (mta) Anslin and to Grex itself!
+
+Jul 1 Happy Birthday Katie (katie) Geddes!
+Jul 2 Happy Birthday Larry (lkt) Tucker!
+Jul 3 Happy Birthday Russ (power) Woodroofe!
+Jul 5 Happy Birthday Jeremy (saw) Gault
+Jul 6 Happy Birthday to President George W Bush!
+Jul 9 Happy Birthday Eitan Kaplan (Jeff Kaplan's nephew)!
+Jul 10 Happy Birthday Brian (bad) Dunkle!
+Jul 11 Happy Birthday Sara (swa) Watson Arthurs!
+Jul 12 Happy Birthday Paul Lovelace!
+Jul 13 Happy Birthday Mike (otaking) Griffin!
+Jul 14 Happy Birthday to President Gerald Ford!
+Jul 16 Happy Birthday Dan (danr) Romanchik!
+Jul 18 Happy Birthday Grex!  Grex opened to the public today in 1991.
+Jul 19 Happy Birthday Dr. (fuz) Fuzzy!
+Jul 21 Happy Birthday Miriam Halbany Doehne!
+Jul 23 Happy Birthday Jared (jared) Mauch!
+Jul 24 Happy Birthday Craig (craig@arbornet.org) Plesco!
+Jul 24 Happy Birthday Jim (jimj) Johnson!
+Jul 24 Happy Birthday Rick (ric) Root!
+Jul 25 Happy Birthday Erika (viper2) Hamby!
+Jul 26 Happy Birthday Kalinda Marie (sun) Walker!
+Jul 26 Happy Birthday Katy (kewy) Wortman!
+Jul 28 Happy Birthday Kevin (z0mbie) Brunell!
+
+Aug 4 Happy Birthday Trisha (beeswing) Patton!
+Aug 4 Happy Birthday Jack (formerly maniacal) Burdo!
+Aug 6 Happy Birthday TJ Rydholm!
+Aug 8 Happy Birthday susieque!
+Aug 11 Happy Birthday Mary Ellen (formerly mew) Wessels!
+Aug 14 Happy Birthday Marc (mju) Unangst!
+Aug 19 Happy Birthday to President Bill Clinton!
+Aug 19 Happy Birthday Amy (formerly glitter) Pawlak!
+Aug 20 Happy Anniversary to Dave (formerly dam) and Lucinda Martinelli!
+Aug 20 Happy Birthday to H. P. Lovecraft!
+Aug 21 Happy Birthday Joshua (mneme) Kronengld!
+Aug 22 Happy Birthday Staci (sea) Andre!
+Aug 23 Happy Birthday Adrick Haas!
+Aug 24 Happy Birthday Carson (carson) Rizor!
+Aug 26 Happy Birthday Anonymous (null)!
+Aug 28 Happy Anniversary Steve (steve) and Glenda (glenda) Andre!
+Aug 29 Happy Birthday to Teresa (creative) Thomas!
+Aug 31 Happy Birthday Grace (gracel) Lovelace!
+Aug 31 Happy Birthday Eric (ea) Abrams!
+
+Sep 2 Happy Birthday Steve (sno@arbornet.org) Opal!
+Sep 2 Happy Birthday David (davroz@arbornet.org) Rozian!
+Sep 2 Happy Birthday Jenna (formerly shade) Hirschman!
+Sep 3 Happy Birthday S. Lynne (slynne) Fremont!
+Sep 3 Happy Birthday Twila (anderyn) Oxley Price!
+Sep 4 Happy Birthday Cyklone!
+Sep 6 Happy 313th birthday to the Vampire Lestat (lestat)!
+Sep 7 Happy Birthday Matthew (matthew) Fulton!
+Sep 9 Happy Anniversary Mike (morel) Smerza and Nancy Keppelman!
+Sep 9 Happy Birthday cyberpnk!
+Sep 9 Happy Birthday Kenn (wolfmage) Capman!
+Sep 13 Happy Birthday Larry (polygon) Kestenbaum!
+Sep 14 Happy Birthday Emma (formerly mulder) Pontious!
+Sep 16 Happy Birthday Ethan (cb311) Cochran!
+Sep 16 Happy Birthday Michael (md) Delizia!
+Sep 17 Happy Birthday Jemmie (rogue) Wang!
+Sep 19 Happy Birthday Sylvia (bhelliom) Copeland!
+Sep 19 Happy Birthday Igor (iggy) Von Heiniken!
+Sep 19 Happy Birthday lowrider!
+Sep 19 Happy Birthday Olivia (livi) Mathews!
+Sep 21 Happy Birthday Anjul (anjul) Shrivastava!
+Sep 24 Happy Birthday Eric (ejkloos) Klooster!
+Sep 24 Happy Birthday Mona (monamoor) Moorman!
+Sep 30 Happy Birthday Klaus (n8nxf) Wolter!
+Sep 30 Happy Birthday Kari (formerly sweetpea) Cope!
+
+Oct 1 Happy Birthday to President Jimmy Carter!
+Oct 2 Happy Birthday Bhagirath (myindia) Lader
+Oct 3 Happy Birthday Amy L. (formerly alfee) Fee!
+Oct 3 Happy Birthday void!
+Oct 4 Happy Birthday Leeron (lk) Kopelman!
+Oct 5 Happy Birthday Dan (y) Earle!
+Oct 6 Happy Birthday to richard's nephew Owen!
+Oct 8 Happy Birthday Avi (avi) Pai!
+Oct 9 Happy Birthday Tom (arthur) Doehne!
+Oct 10 Happy Birthday Elizabeth (aliz) Antkowiak!
+Oct 12 Happy Birthday Hank (fungster) Fung!
+Oct 15 Happy Birthday Griz's Cat!
+Oct 17 Happy Birthday Indigo (indigo) Wolfe!
+Oct 19 Happy Birthday to Jishnu Nair (atticus's baby)!
+Oct 18 Happy Birthday Greg (formerly canis) Fry!
+Oct 22 Happy Birthday Manami (manami) Noelani Howard!
+Oct 22 Happy Birthday Joseph (formerly arkie) Wisdom!
+Oct 23 Happy Birthday Jeanne (furs@arbornet.org) Manigold!
+Oct 23 Happy Birthday Henry (shb7872@alpha.cc.oberlin.edu) Buchtel!
+Oct 28 Happy Birthday Richard (richard) Wallner!
+Oct 29 Happy Birthday Kate (formerly arania) Bluhm!
+Oct 30 Happy Birthday Mike Pelletier, Josh (formerly jdg/jdg00) Grosse,
+Oct 30    and Selena (formerly ladymoon) Barwens!
+Oct 30 Happy Birthday to Andy (frosh) Dunn!
+Oct 31 Happy Birthday Jennie (griz@intranet.org) Dailey!
+Oct 31 Happy Birthday Janette (nette) Herstein!
+
+Nov 1 Happy Birthday Dave (formerly kite) Parks!
+Nov 2 Happy Birthday Kris (weirding) Thomas!
+Nov 3 Happy Birthday Jeremy (fireball) Weiss!
+Nov 3 Happy Birthday Laura (beamer)!
+Nov 4 Happy Birthday Wendy (hematite) Bugosh!
+Nov 4 Happy Birthday Amy (madhattr) Smith!
+Nov 5 Happy Birthday Audrey (dolly) Deterding!
+Nov 6 Happy Birthday Robert (brown) Brown!
+Nov 8 Happy Birthday Leslie (wolfe) Wolfe!
+Nov 8 Happy Birthday Mike (mcnally) McNally!
+Nov 9 Happy Birthday Daniel (orinoco) Velleman!
+Nov 10 Happy Birtday United States Marine Corps!
+Nov 13 Happy Birthday Josh (jss@umich.edu) Simon!
+Nov 13 Happy Birthday Ryan (ryan) Antkowiak!
+Nov 13 Happy Birthday Dave (fubar) Marks!
+Nov 14 Happy Birthday Eric R. (other) Bassey!
+Nov 17 Happy Birthday Stephen (senna,etc) King!
+Nov 17 Happy Birthday Sarah (abbagirl) Packard!
+Nov 18 Happy Birthday Chad (fuzzball) Cope!
+Nov 19 Happy Birthday Rob (robh) Henderson!
+Nov 19 Happy Birthday Gerald (formerly gerund) Peck!
+Nov 21 Happy Birthday Jonathan (formerly kain) Baker!
+Nov 21 Happy Birthday Megan (winipooh,etc) Cochran!
+Nov 22 Happy Birthday Erin Fox!
+Nov 24 Happy Anniversary to Ethan (cb311) Cochran and Megan (winipooh) Cochran!
+Nov 26 Happy Birthday Tim (formerly tnt) Tyler!
+Nov 27 Happy Birthday Jim (omni) Reuter!
+Nov 28 Happy Birthday David (formerly biohazar) Ano!
+Nov 28 Happy Birthday to simcha's eldest kid!
+
+Dec 4 Happy Birthday Laurel (formerly mythago) Schippers!
+Dec 4 Happy Birthday Dave (davel) Lovelace!
+Dec 9 Happy Birthday Silvia Ruiz!
+Dec 10 Happy Birthday John (remmers) Remmers!
+Dec 13 Happy Birthday Tranced (llanarth) Balanced!
+Dec 14 Happy Anniversary John (remmers) and Mary (chelsea) Remmers!
+Dec 14 Happy Birthday Amy (formerly signet) Clarke!
+Dec 15 Happy Birthday Leslie (arabella) Smith!
+Dec 15 Happy Birthday Jeff (formerly soriac) Connor!
+Dec 16 Happy Birthday Carl (carl) Miller!
+Dec 21 Happy Birthday Marc (formerly shepherd) Bowden!
+Dec 22 Happy Birthday Nikki the Token Non-Grexer!
+Dec 24 Happy Birthday Sreeni (atticus)!
+Dec 25 Happy Birthday Mike (kornnut) Timm!
+Dec 27 Happy Birthday Jacki Bricker!
+Dec 28 Happy Birthday Kami (kami) Landy!
+Dec 30 Happy Birthday Morena (munkey) Vasquez!

@@ -1,0 +1,62 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Display an article.  This script is not called directly.  We should have
+% already called this_item to load in the item to display.
+
+(<h1 class=title>)title expand(</h1>
+<p class=author>)alias quote(</span><br>
+<p class=date>)
+
+editdate {
+  (originally posted: )date cdate(<br>\n)
+  (last updated: )editdate cdate
+} {
+  date cdate
+} ifelse
+(</span>\n)
+
+mayedit mayretitle or mayfreeze or mayretire or maykill or {
+  (<center>Edit:&nbsp;)
+  mayedit {
+    (&nbsp;<a href="edit_article?item=)item(&conf=)conf(">text</a>\n)
+  } if
+  mayretitle {
+    (&nbsp;<a href="edit_meta?item=)item(&conf=)conf(">titles</a>\n)
+  } if
+  mayfreeze {
+    frozen {
+      (&nbsp;<a href="thaw_article?item=)item(&conf=)conf(">thaw</a>\n)
+    } {
+      (&nbsp;<a href="freeze_article?item=)item(&conf=)conf(">freeze</a>\n)
+    } ifelse
+  } if
+  mayretire {
+    retired {
+      (&nbsp;<a href="unretire_article?item=)item(&conf=)conf(">unretire</a>\n)
+    } {
+      (&nbsp;<a href="retire_article?item=)item(&conf=)conf(">retire</a>\n)
+    } ifelse
+  } if
+  maykill {
+    (&nbsp;<a href="kill_article?item=)item(&conf=)conf(">kill</a>\n)
+  } if
+  (</center>)
+} if
+
+(<p>\n)
+1 read_text
+
+(<p>
+<center>)`(<a href="begin?show=all&item=)item confarg(">)'
+maxresp 0 gt {
+  (view )maxresp( reader comment)maxresp 1 ne {(s)} if(</a>)
+} {
+  mayresp {
+    (post your comments</a>)
+  }{
+    pop (No reader comments yet.<br>)
+    (<a href="#" onclick="poplogin(); return false">Login</a> to post one.)+
+  } ifelse
+} ifelse
+(</center>
+)

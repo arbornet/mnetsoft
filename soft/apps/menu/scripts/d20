@@ -1,0 +1,19 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+echo "
+UNIX: more <filename>"
+sleep 2
+echo "
+Listing Directory (`pwd`):
+"
+sleep 1
+ls -p | grep -v /\$ | menumore
+echo -n "
+File to view? "
+read view
+echo "
+Viewing $view
+"
+sleep 1
+more $view

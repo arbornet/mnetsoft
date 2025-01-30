@@ -1,0 +1,10 @@
+--- config.bt.dist	Tue Jun 17 17:14:53 2003
++++ config.bt	Tue Jun 17 17:29:42 2003
+@@ -32,6 +32,7 @@
+ %   /global_header_height 72 defconstant
+ 
+ /global_header {
++(<LINK REL="SHORTCUT ICON" HREF="/favicon.ico">\n)
+ } def
+ /global_header_height 0 defconstant
+ 

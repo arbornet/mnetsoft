@@ -1,0 +1,134 @@
+ABALONE STYLE SHEETS
+
+This directory contains a number of standard style sheets distributed with
+Abalone.  This file provides some hints for people who want to make their
+own.  A certain amount of weirdness here is because we are trying to support
+a lot of different browsers.  People writing style sheets for personal use
+may be able to get away with less.
+
+Most of the page content in Abalone is formatted in tables, so most of the
+styles are attached to the <TD> tags.  In many cases it would have been simpler
+to attach styles to the <TR> tags, since usually a whole row is formatted the
+same, but in Navigator 4, most settings on <TR> tags don't inherit into the
+embedded <TD> tags.  Since Navigator 4 is still around a lot, we try to
+accomodate it.
+
+We avoid changing the behavior of standard tags, like <H1> or <EM>.  This is
+because they may be used in HTML-style postings, and the authors of the
+postings will expect standard tags to work in standard ways.  So all the
+abalone-generated tags whose styles we want to manipulate have explicit
+class names, like <TD CLASS=mast>, and it is these classes that we redefine
+in the CSS file, using rules like:
+
+   td.mast {background: blue}
+
+The style sheets first define the style for "body".  This sets the text color
+and background color for the page.  Usually this will be seen just around the
+edges a bit, with only a small amount of text appearing.
+
+Next we define the link colors.  The link colors are defined by 'a:link',
+'a:active', 'a:visited'.  It is slightly useful to have visited links be a
+different color from unvisited ones.
+
+The standard templates use the same styles for links where ever they appear.
+It may not always be possible to choose one link color that works against
+all the different background colors you have.  In that case, you may want
+to add rules that define different link colors in some areas, like:
+
+  td.odd a:link {color: red}
+  td.odd a:active {color: blue}
+  td.odd a:visted {color: purple}
+
+These will apply only to links inside <TD CLASS=odd>.  In this way you can
+define different link colors for different parts of the document.
+
+Abalone's page layouts haven't been completely standardized, and the class
+names are not totally sensible, but basically the pages have the following
+elements:
+
+  Top Bar:  This is split in two parts.  The left part usually says "Hello".
+     The right part contains several static links that are the same on all
+     pages.  Separate styles are used for each half of this, although they
+     normally have the same background color.  They are 'td.hello' and
+     'td.tlinks'.
+
+  Mast:  This is a region directly below the top bar.  It is usually the
+     same color as the background, with the same font style.  It contains
+     the pull-down navigation menu and sometimes some text or titles.  The
+     'td.mast' style is used for this.
+     
+  Navigation Bar:  This appears only on some pages.  On the read page it
+     contains links like 'Sitename > Confname > Item Title'.  Sometimes it
+     contains other information.  It is traditionally the same style as the
+     'odd' table rows.  The 'td.navbar' style is used for this.
+
+  Column Header:  This contains either headers for the different columns of
+     a table, or a title for the page.  No icons ever appear in the column
+     headers, so this is about the only part that really works in a "light
+     text on dark background" style.  The format of this is controlled by
+     the 'td.colhead' style.
+
+  Section Header:  Under the column header, we usually have rows on alternating
+     background colors with occasion subheading rows inserted in a different
+     color.  These subheadings are the 'section headers'.  Their style is
+     controlled by 'td.sechead'.  'td.bigsechead' is a variation with large
+     bold text, but the same background color.  This is traditionally the same
+     color as the top bar, but there is no reason it has to be.
+
+  Odd and Even Rows:  Most of the actual content is set in rows of alternating
+     colors.  You'll want maximal readability in these.  Using dark backgrounds
+     tends to make the control icons hard to see (since they only come in
+     black and red).  The styles for these rows are 'td.odd' and 'td.even'.
+
+  Alert:  Certain error messages are set in rows done in this style.  They
+     aren't frequently seen.  Traditionally we used the same color as section
+     headers, but something different might be nice.
+
+These define the major sections of each page.  There are also a couple other
+styles used here and there.
+
+  .copyright:  copyright message at bottom of page.  Something small and
+     illegible is fine.
+
+  .small:  used in several places for smaller print.
+
+  .big:  used in several places for bigger print.
+
+  .bigbold:  used in several places for big bold-face print.
+
+There are a bunch more styles used primarily when displaying items.  Since this
+is the most important thing Backtalk does, we went to the extra trouble of
+having specific classes for these
+
+  .authfn:  Author's full name.  Usually small print, since it has to fit
+      in a narrow box.
+  .authid:  Author's login name.  Usually large print.
+  .itemtitle:  Title of item at top of page
+  .resphead:  'Response 7 of 8' kinds of messages at the top of each response.
+  .respnote:  Notes about response, like parent links or 'edited' messages.
+  .respdate:  Date of a response.  Usually small print.
+  .respstat:  Response status messages that take the place of the text, like
+      'erased' or 'hidden' messages.
+  .jumpin:   Used for the table of scrolling links to set the non-link which
+      shows the currently displayed range.
+  .jumpout:  Used for the table of scrolling links to set links to other
+      ranges.
+
+There are a couple accomodations for bad browsers here too.  We always set
+a 'font-family' explicitly when we set a 'font-size'.  Linux Netscape 4 won't
+do resizes otherwise.
+
+Macintosh IE by default uses a proportional font in textareas.  Responses
+entered in such such textareas have their line breaks in places that look
+weird when the response is displayed in a <PRE> format, as Backtalk does
+for "plain text" responses.  So we set the font for textareas to 'monospace'
+This seems to cause some browsers to use a very ugly font.  We need a better
+solution.
+
+The standard style sheets mostly specify font sizes by percentage.  This seems
+to the most consistant results across many browsers.  However, IE 3 doesn't
+do nested percentage scaling right, so we avoid nested scaling.
+
+To add a new style to the list of options on the Abalone preferences page,
+place the style sheet in the css/abalone directory and add it to the
+script/abalone/css.bt file.

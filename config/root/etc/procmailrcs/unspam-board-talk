@@ -1,0 +1,10 @@
+# $Id:$
+
+LOGFILE=/var/users/board/procmail.log
+
+:0
+* ^From:.*((cross|gelinas|kentn|tod|tsty|walkman)(@(cyberspace|grex.cyberspace|grex).org)?|crossd@gmail.com|knassen@umich.edu|tstytest@gmail.com)(>| \([^\)]+\))?$
+! crossd@gmail.com knassen@umich.edu tod tstytest@gmail.com walkman
+
+:0
+/dev/null

@@ -1,0 +1,13 @@
+                       Fronttalk Command:  LOGIN
+
+Usage:  LOGIN
+
+Some servers allow you to connect to them without requiring a login and
+password.  If you connect in this anonymous manner then you cannot post.
+You can read, but the server will not remember which material you have read,
+so everything will always be new.
+
+If you have connected to a server anonymously, and later decide you would
+like to login, then you can issue the LOGIN command.  You will be prompted
+for your login id and password, and if they are valid, you will be able
+to participate fully in the conference.

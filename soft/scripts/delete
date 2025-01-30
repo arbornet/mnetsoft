@@ -1,0 +1,6 @@
+#!/bin/sh
+# Shell script so we can create an "rm" command in FrontTalk and
+# run "rm -i" with it.
+# Also useful so users outside FrontTalk can say "delete filename"
+# instead of needing to know the more cryptic "rm" command.
+exec rm -i "$@"

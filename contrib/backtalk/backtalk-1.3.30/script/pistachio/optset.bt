@@ -1,0 +1,47 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% optset script
+%
+% This is the form handler for the "optform.bt" screen.  It sets various
+% user options.
+%
+% Query Parameters:
+%   login= 	 user whose options we are setting.
+%   frames= 	 new value of frames option.
+%   rpage=       new value of responses per page option.
+%   rtype=       new value of response type option.
+%   dfltilist=   new value of default ilist setting.
+%   confsummary= new value of conference summary option.
+%   recent=      new value of number of recent responses option.
+%   newrfav=     new value of response favor option.
+%   newifav=     new value of item favor option.
+
+login id ne {
+  amadm !  {
+    % warn off unauthorized users
+   (Only )login( or an administrator can change )login('s settings.)
+   stop
+ }{
+   % administrators can set other user's options
+   login selectuser
+ } ifelse
+} if
+
+% convert numeric paramters to integer form
+/frames frames cvi def
+/confsummary confsummary cvi def
+/rpage rpage cvi def
+rpage 0 eq {/rpage 30 def} if
+/rfav newrfav cvi def
+/ifav newifav cvi def
+post_log_file { /pistachio.recent recent cvi def } if
+
+% save new options
+(*.backtalk) [/frames /rpage /rtype /confsummary /dfltilist /rfav /ifav
+  post_log_file { /pistachio.recent } if
+  ] savevar
+
+% unselect user
+amadm {() selectuser} if
+
+flavor(bio)+ jump

@@ -1,0 +1,62 @@
+You've stumbled into Grex, wanderer, but you seem to be
+lost....
+
+Suddenly, right before you, a grizzled-looking hacker with
+long, scraggly hair and copious amounts of facial scruff
+materializes, seemingly from thin air.  He looks kind of
+like Richard Stallman, but younger and thinner.
+
+"So you want some help, eh?" he says, eying you up and down.
+"Well, they used to say that Unix helps those who help
+themselves, but things are a bit different around here, and
+besides, that was a long time ago."
+
+"Listen, you're logged into grex.org, which is a public
+access Unix and conferencing system.  But you're new, see?
+And we've had a lot of trouble with some new folks around
+here, so we've given you a special shell that severely
+restricts what you can do on our machine.  This isn't
+permanent, you can request higher access, and we'll gladly
+give it to you if you aren't trying to break us; this is
+just to prevent abuse in the short term.
+
+"In particular, you can only run the following Unix
+commands:
+
+	bbs
+        cat
+	clear
+	help    (what you're reading right now)
+	fortune
+	lc	(this is the same as ls for these purposes)
+	ls
+	man
+	party
+        passwd
+        pg      (sort of like more)
+	ps
+	pwd
+	who
+
+"Also, you can leave by typing any of exit, quit, bye,
+logout or logoff.
+
+"Some of these commands don't do quite what you're expecting
+them to do, but others are very familiar.  There are also
+some surprises, so be careful.  You can try to hack the
+shell if you like, but we don't think you'll get very far."
+
+"Oh, and if you want to access a *real* shell, then you need
+to get validated or verified.  The easiest thing to do is
+just type, 'validate' back at the prompt and follow the
+instructions.  If you get stuck, send email to help@grex.org
+and we'll see about getting you set up.  Make sure you include
+your Grex login name!  Good luck, kid.
+
+"Oh, and one last thing, if you don't run Unix or Linux,
+here's a quarter for you: go get yourself a better
+computer."
+
+With that, he disappears into a fog of line printer chaf and
+IBM 1403 ribbons and a coredump from the CMD JSYS leaving
+you alone and back at...

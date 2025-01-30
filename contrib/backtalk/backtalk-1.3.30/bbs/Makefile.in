@@ -1,0 +1,51 @@
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+hdrdir= @srcdir@/../incl
+VPATH= @srcdir@
+
+INSTALL= @INSTALL@
+
+prefix= @prefix@
+bbsdir= @bbsdir@
+owner= @owner@
+identtype= @identtype@
+attachments= @attachments@
+
+binaries:
+
+install: install-bbs
+
+install-bbs:
+	../install-sh -d -o $(owner) -m 755 $(bbsdir)
+	../install-sh -d -o $(owner) -m 755 $(bbsdir)/general
+	../install-sh -d -o $(owner) -m 755 $(bbsdir)/general/indexdir
+	../install-sh -d -o $(owner) -m 755 $(bbsdir)/test
+	../install-sh -d -o $(owner) -m 755 $(bbsdir)/test/indexdir
+	$(INSTALL) -o $(owner) -m 644 conflist $(bbsdir)
+	$(INSTALL) -o $(owner) -m 644 confmenu $(bbsdir)
+	$(INSTALL) -o $(owner) -m 644 dflt.cflist $(bbsdir)
+	$(INSTALL) -o $(owner) -m 644 public.txt $(bbsdir)
+	$(INSTALL) -o $(owner) -m 644 general/config $(bbsdir)/general/config
+	$(INSTALL) -o $(owner) -m 644 general/login $(bbsdir)/general/login
+	$(INSTALL) -o $(owner) -m 644 test/config $(bbsdir)/test/config
+	$(INSTALL) -o $(owner) -m 644 test/login $(bbsdir)/test/login
+	cat /dev/null > $(bbsdir)/censored
+	chown $(owner) $(bbsdir)/censored
+	chmod 600 $(bbsdir)/censored
+	@if test $(identtype) = 'sql' -a $(attachments) = yes; then \
+	  echo ../src/sqlinit baai; \
+	  ../src/sqlinit baai; \
+	fi
+	@if test $(identtype) = 'yapp3'; then \
+	  echo "../install-sh -d -o $(owner) -m 700 $(bbsdir)/part"; \
+	  ../install-sh -d -o $(owner) -m 700 $(bbsdir)/part; \
+	fi
+	@if test $(attachments) = yes; then \
+	  echo "../install-sh -d -o $(owner) -m 755 $(bbsdir)/attach"; \
+	  ../install-sh -d -o $(owner) -m 755 $(bbsdir)/attach; \
+	  echo "../install-sh -d -o $(owner) -m 755 $(bbsdir)/attach/tmp"; \
+	  ../install-sh -d -o $(owner) -m 755 $(bbsdir)/attach/tmp; \
+	fi
+
+clean:

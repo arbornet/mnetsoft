@@ -1,0 +1,17 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% vanilla/forget - forgets/remembers the item and goes to do a "goto"
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+fitem cvi /fitm xdef
+
+fitm rem {remember_item} {forget_item} ifelse {
+  (Backtalk error: could not )
+  rem {(remember)} {(forget)} ifelse 
+  ( item ) fitm ( in the ) conf (conference.\n) halt} if
+
+(Item ) fitm ( in the ) conf ( conference has been )
+rem {(remembered)} {(forgotten)} ifelse
+(.<hr>\n)
+
+flavor goto + jump

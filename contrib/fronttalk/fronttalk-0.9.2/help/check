@@ -1,0 +1,19 @@
+                       Fronttalk Command:  CHECK
+
+Usage:  CHECK                                           ("Ok:" prompt only)
+        CHECK <conference> ...
+
+Check for activity in some conferences.  In the first form, the list of
+conferences to be checked is taken from your hotlist on the current server.
+In the second form, the conferences to check are listed on the command line.
+
+For each conference, the number of "newresponse" and "brandnew" items will
+be given.  If your current conference is on the list, it will be marked with
+an arrow.
+
+Currently there is a different hotlist on each server, stored in a file
+named .cflist.  You'd be able to use the "CHANGE LIST" command to edit it
+if Fronttalk supported that command yet.
+
+Currently you cannot use conference names of the form <server>:<conference>
+on this command.

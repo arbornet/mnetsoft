@@ -1,0 +1,11 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+#Modification(s)
+#Execute program by using 'eval' --mic (Dec. 26, 1998)
+
+echo -n "
+What Unix program would you like to run? "
+read program
+echo ""
+eval $program

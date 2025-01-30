@@ -1,0 +1,37 @@
+#/bin/sh
+#
+# Do a backup to the /cyberspace/backups directory.
+#
+# $Id: dobackups 1266 2012-01-25 20:08:16Z cross $
+#
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+IFS=" "
+export PATH IFS
+
+filesystems="wd0a wd0d wd0e wd0f wd0g wd0h wd0i wd0j wd0k wd0l wd0m wd0n wd0o"
+
+root=/cyberspace/backups
+dir=$root/dump/`date '+%Y/%m%d'`
+dev=/dev/sd4d
+level=${1:-0}
+options="${level}uaf"
+
+if ! mount | grep $dev > /dev/null
+then
+	fsck -p $dev > /dev/null || exit 1
+	mount $dev $root || exit 1
+fi
+chmod 700 $root
+
+test -d $dir || mkdir -p $dir
+chmod 700 $dir
+
+for fs in $filesystems
+do
+	f=$dir/$fs.dump.$level.bz2
+	touch $f
+	chmod 600 $f
+	dump $options - /dev/r$fs | bzip2 > $f
+done
+umount $root

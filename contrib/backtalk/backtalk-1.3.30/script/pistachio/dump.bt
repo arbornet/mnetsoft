@@ -1,0 +1,7 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% dump script
+%
+% A web script to crash, burn, and die by attempting to execution a
+% non-existant command.  Used for debugging.
+dump

@@ -1,0 +1,28 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+num=`who | wc -l`
+echo "
+UNIX: write <userid>"
+sleep 2
+(echo "
+Login    Line     Date   Time$num users.
+--------------------------------------------------------------------"; who; echo "--------------------------------------------------------------------") | menumore
+echo -n "
+
+Who would you like to write to? "
+read userid
+echo "
+Write etiquette:
+---------------
+  * One person types at a time.
+  * The person you are writing to generally talks first.
+  * When they are done talking, they will type the letter 'o' on a blank line.
+    (this stands for 'over', to tell you that it is your turn to type)
+  * When you are done with your turn, type 'o' to tell the other person it 
+    is their turn to type.
+  * At the end of the conversation, type 'oo' for 'over and out', or 'oo?'
+    to ask 'Do you want to end this conversation now?'
+
+"
+write $userid

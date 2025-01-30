@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "style/default.css";
+  </style>
+
+  <title>Account Creation &amp; Connectivity on Grex</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>Connectivity and New Account Creation</a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+   <ol>
+   <li>You can connect to the <q>Grex</q> server and create a new 
+     account, or login with your existing loginID and password, using 
+     the following programs:
+      <ul>
+      <li><a href="#connect_browser">Internet Browser</a> - easy,
+        secure, with limited access to Grex services unless you have
+        Java (JRE) installed</li>
+      <li><a href="#connect_ssh">SSH</a> - easy, secure, complete; may
+        require extra configuration</li>
+   </ul></li>
+
+   <li>After UNIX account creation you need to validate your account -
+     this is an extra step designed to prevent abuse. Type:
+     <tt>validate</tt> and follow the instructions provided.</li>
+   </ol>
+   <hr />
+
+   <h2 id="connect_browser">Internet Web Browser Access</h2>
+     <p>Use our 
+     <a href="newuser/index.xhtml">web based account creation link</a> to 
+     create a new account. Note: our web based account creation
+     software is not ready at this time.  The link will take you to
+     instructions for using ssh to set up an account. </p>
+
+     <p>You can access the <q>Grex</q>
+     <a href="http://en.wikipedia.org/wiki/Bulletin_board_system"
+     class="external">BBS</a> by clicking on
+     <a href="https://grex.org/cgi-bin/backtalk">Backtalk</a> -
+     <strong>Agora</strong> is our frequently read conference
+     (forum).</p>
+
+     <p>If you want complete access to Grex using a web browser you 
+     need to <a href="trouble/installjre.xhtml">install Java</a>
+     (<acronym title="Java Runtime Environment">JRE</acronym> - Java
+     Runtime Environment). You can then access the Grex Unix shell by
+     clicking on the
+     <a href="https://grex.org/mindterm/applet.html">MindTerm applet link</a> 
+     within your browser - a Java applet (program) called
+     <a href="http://www.cryptzone.com/products/agmindterm/" 
+     class="external">MindTerm</a> is loaded by your web browser. This 
+     Java-applet is used by your browser to connect to our <q>Grex</q> 
+     server's SSH port. If it doesn't work, read our
+     <a href="trouble/troubleshoot.xhtml">troubleshooting Grex connectivity</a> page.</p>
+
+   <h2 id="connect_ssh">SSH Access</h2>
+    <p>SSH is a program for making secure connections to remote,
+    terminal-oriented services.  It encrypts the data sent between
+    it and a remote server (such as Grex), and is capable of
+    authenticating users using public key encryption.  Using SSH
+    in one form or another is the only way to get interactive access
+    to Grex's shell services.</p>
+
+    <ul>
+    <li>Windows 2000, Windows XP
+      <ol>
+      <li>A default Windows installation does not come with a free SSH
+        client program - a free program that does SSH 
+        can be found on Simon Tatham's
+        <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html"
+        class="external">PuTTY page</a>. Download this to your Desktop
+        and double click it to run.</li>
+
+      <li><tt class="menu">Host Name (or IP address)</tt> is 
+        <tt>grex.org</tt>. Click: <tt class="menu">Open</tt> to connect
+        to Grex.</li>
+      </ol>
+    </li>
+        
+    <li>Unix, Linux, and Mac OS X
+      <p>At a shell prompt, type:
+      <samp>
+        <tt>ssh newuser@grex.org</tt><br />
+        <tt>ssh jbrown@grex.org</tt>
+      </samp></p></li>
+
+    <li>Sample SSH output
+      <pre>
+        localhost&gt; ssh newuser@grex.org
+        The authenticity of host 'grex.org (216.86.77.194)' can't be established.
+        RSA key fingerprint is 75:cc:a7:b5:b8:6a:6a:cc:a6:71:20:8d:ed:df:62:72.
+        Are you sure you want to continue connecting (yes/no)?
+      </pre></li>
+    </ul>
+
+    <p>What you are seeing is a <strong>sample</strong> of the Grex server's
+    SSH key fingerprint. 
+<!--You can view our <a href="/sysinfo.shtml">current server fingerprint here</a>. -->
+    Make sure what you see within your SSH window matches our current 
+    server-fingerprint.</p>
+    
+    <p>Type <tt>yes</tt> and press <tt>Enter</tt>, if it matches. You 
+    will then be lead to SSH based, new user registration process.
+    Follow the instructions to create your new account.</p>
+
+   <h2 id="connect_telnet">Telnet Access</h2>
+    <ul>
+    <li>
+    <b>Telnet usage has been removed from Grex as of October 10, 2011
+    due to security issues.  We suggest you use SSH (see above). </b>
+    </li>
+    </ul>
+  </div>
+
+</div>
+
+<div id="footer">
+  <span id="revision">$Id: connect.xhtml 1448 2014-03-23 20:15:37Z kentn $</span>
+  <span id="feedback">We welcome your <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

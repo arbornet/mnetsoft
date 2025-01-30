@@ -1,0 +1,3 @@
+#!/bin/sh
+/usr/bin/awk -f /cyberspace/libexec/birthday.awk date="`date`" \
+	/cyberspace/etc/birthday.list > /cyberspace/etc/motd.birthday

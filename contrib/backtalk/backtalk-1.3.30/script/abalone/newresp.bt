@@ -1,0 +1,138 @@
+% Backtalk Abalone Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% newresp script
+%
+% A script to post a response to an item.  This is the form handler for the
+% response form in the respond.bt page.
+%
+% Query Parameters:
+%    text=	text of response to post
+%    texttype=  type of text ("text/html" or "text/plain")
+%    prevmax=   number of last response shown to user before posting
+%    pseudo=     name to post response under
+%    hidden=    true if user wanted response posted hidden
+%    goto=      read script to goto after posting response
+%    attachments= comma-sep list of attachment handles
+%
+%    conf=      current conference
+%    csel=      selector for future conferences to read
+%    nextnew=   defined if we are to skip to next conf with new responses
+%    item=      item to read now
+%    isel=      selector for items to read after this
+%    rsel=      response selector - (all) (new) (since) or numeric range
+%    since=     if rsel is (since) this gives date.
+%    showforgotten= show all, unforgotten, or forgotten items.
+
+(lib/postlog) include
+
+% Redirect spellchecks to appropriate script - only happens if Javascript off
+/spell defined {
+  (Sorry - the Abalone spell checker requires a Javascript-enabled browser.\n)
+  halt
+} if
+
+% Attachment handling for users with Javascript turned off
+canattach { /atch defined { atch (1) eq {
+  /slipattach defined
+  { 
+    /attachments slipattach def
+  } {
+    % User requested an attachment (or another attachment)
+    %  run askattach handle it
+    /inmain 1 def
+    flavor(askattach)+ jump
+  } ifelse
+} if } if } if
+
+% this might become a user-settable variable in the future.
+/noslip 1 defconstant
+
+flavor(openconf)+ stopped {(\n) halt} if
+
+% More attachment handling for users with Javascript off
+% Last attachment submitted needs to be indexed
+canattach {/aapost defined { baa_file {
+  baa_file desc prevmax cvi 1 + make_attach /baa_file xdef
+  /attachments `attachments {attachments (,)} if baa_file' def
+} if } if } if
+
+mayread ! {(The )conf( conference is not readable to you.) stop } if
+
+% conf, item, maxresp, and rsel should be set in query
+rsel item this_item {
+  (Due to an internal error, your message has not been posted.<br>\n\(conf = )
+  conf (, item = )item (, rsel = )rsel(\)\n)
+  stop
+} if
+pop
+
+mayresp ! {
+  (Because of improper permissions, your message has not been posted.<BR>)
+  id ! {
+    ((You have not been authenticated.))
+  } {
+    frozen {((This item is frozen.))}
+           {((This conference is read-only.))} ifelse
+  } ifelse
+  stop
+} if
+
+text () eq {
+  (Your message was empty, so there was nothing to post. Go back )
+  (and fill in the response area before pressing "post") stop
+} if
+
+pseudo {pseudo /alias xstore} if
+
+/allowhtml dflt_html def (*settings) [/allowhtml /allowgraphics] loadvar pop
+allowhtml ! /texttype defined ! or {
+   /texttype (text/plain) def
+} if
+
+%Netscape's auto text wrapping mades this unnecessary - but Internet Explorer
+%got it wrong, so here it is again
+texttype (text/plain) eq
+{
+   text 72 wrap /text xstore
+} if
+
+texttype (text/html-blanks) eq
+{
+   text (\r) () 0 replace (\n\n) (\n<P>\n) 0 replace /text xstore
+   /texttype (text/html) store
+} if
+
+% If we are trapping slipped responses, set the expected response number
+noslip {
+  /expect_resp prevmax cvi 1 + store
+} if
+
+% finished checking for errors, now we'll actually try to write the message
+
+post_resp /resp xstore
+
+resp 0 le {
+  resp {
+    % a response has slipped in - jump back to read page
+    /slipped text def
+  } {
+    (Your post failed due to an internal error.\n)
+    stop
+  } ifelse
+} if
+
+% show my response and any slipped ones.
+prevmax cvi 1 + cvs (-$) + /tmprsel xdef
+
+/http_location `backtalkurl(/)goto(?conf=)conf(&csel=)csel
+  (&nosee=1&item=)item(&isel=)isel(&rsel=)rsel(&tmprsel=)tmprsel
+  /nextnew defined{(&nextnew=)nextnew}if
+  /slipped defined {
+    (&slipped=)slipped cgiquote
+    (&sliptype=)texttype
+    (&slipalias=)alias cgiquote
+    attachments {(&slipattach=)attachments cgiquote} if
+  }if
+  since {(&since=)since}if
+  showforgotten {(&showforgotten=)showforgotten}if '
+  store

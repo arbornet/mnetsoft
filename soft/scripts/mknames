@@ -1,0 +1,13 @@
+#!/usr/bin/awk -f
+BEGIN {
+	FS=":"
+}
+{ a[$1]++ }
+END {
+	while (getline < "/etc/passwd") {
+		if ($1 in a) {
+			sub(/,.*/, "", $5)
+			printf "%s (%s)\n", $5, $1 | "sort -u"
+		}
+	}
+}

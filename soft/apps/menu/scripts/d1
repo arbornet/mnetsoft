@@ -1,0 +1,23 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+
+UNIX: write -c help
+
+Write etiquette:
+---------------
+  * One person types at a time.
+  * The person you are writing to generally talks first.
+  * When they are done talking, they will type the letter 'o' on a blank line.
+    (this stands for 'over', to tell you that it is your turn to type)
+  * When you are done with your turn, type 'o' to tell the other person it is
+    their turn to type.
+  * At the end of the conversation, type 'oo' for 'over and out', or 'oo?' to
+    ask 'Do you want to end this conversation now?'
+
+Please wait for an answer.
+At the end of the conversation, use control-D to exit.
+
+"
+write -c help

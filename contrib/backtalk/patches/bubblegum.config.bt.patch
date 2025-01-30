@@ -1,0 +1,10 @@
+--- config.bt.dist	Tue Jun 17 17:13:02 2003
++++ config.bt	Tue Jun 17 17:14:00 2003
+@@ -56,6 +56,7 @@
+ %   } def
+ 
+ /global_header {
++(<LINK REL="SHORTCUT ICON" HREF="/favicon.ico">\n)
+ } def
+ 
+ % Global page footer:

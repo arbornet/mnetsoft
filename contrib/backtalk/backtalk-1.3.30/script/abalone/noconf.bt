@@ -1,0 +1,47 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% noconf script
+%
+% Tried to open a conference that doesn't exist.  Say so, but give a useful
+% menu of things to do.
+%
+%  conf=           conference name
+%  csel=           rest of list of conferences to visit (optional)
+%  nextnew=        if defined, skip conferences with no new responses
+
+flavor(config.bt)+include
+
+/abalone.menujump 0 def
+
+`Conference cap ( )conf( does not exist)' (S)
+[/conf /showforgotten /csel /nextnew /cpass /dunno]
+[/timezone /abalone.menujump] []
+flavor(header.bt)+include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+include
+
+(<TR><TD CLASS=mast>)Conference cap( `)conf quote(' does not exist.
+</TD><TD CLASS=mast VALIGN=bottom ALIGN=right>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=")csel(">\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+(<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>\n)
+csel {(<OPTION VALUE=nextconf>Goto Next )Conference cap+(</OPTION>\n)+} if
+(<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=edithot>Edit )Conference cap( Hotlist</OPTION>
+  <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR>
+</TABLE>
+</FORM>
+)
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,39 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Conference Backups and Restores</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Conference Backups and Restores</H2>
+Version 1.3.30
+<P>
+&copy; 1998-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+You should, of course, be backing up your whole system regularly,
+but if you are about to delete a conference, you might want to
+make a backup copy of it for your archives.
+<P>
+This is easy to do, because the entire conference lives in one directory.
+If you use <TT>tar</TT> or whatever other Unix tool you prefer to save
+a copy of that directory, you should be able to restore it any time in
+the future.
+<P>
+The location of that directory is installation dependent.
+Normally it will be found under a directory named "bbs" in Backtalk's home
+directory.
+The "conflist" file, which you can view with the "Edit Conference Aliases"
+command on the Administration home page, gives the exact location of each
+conference.
+<P>
+If you want to save a bit of storage space, there are a couple files in the
+conference directory that you don't need to save, since Backtalk will quite
+happily regenerate them if they get lost.  These are the '<TT>sum</TT>' file
+and the entire contents of the indexdir subdirectory.
+<P>
+To restore an archived conference, first restore the saved directory to some
+directory under the "bbs" directory (it need not have the same directory
+name it had originally).
+Next, use the "Edit Conference Aliases" administration
+page to create a conference alias for the new directory.
+Then use the "Edit Conference Menu" page to add it to the conference menu.
+</BODY></HTML>

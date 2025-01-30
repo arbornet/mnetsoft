@@ -1,0 +1,3 @@
+% Backtalk Gumdrop Interface - (c) 2003, Jan Wolter, Steve Weiss
+
+(bubblegum/version) chain

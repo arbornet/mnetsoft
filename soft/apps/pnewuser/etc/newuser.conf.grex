@@ -1,0 +1,95 @@
+# -+=Tcl=+-
+#
+# Newusr configuration recast in Tcl.  Most of these commands are
+# procedures (written in Tcl) that set state.  We then have a privilege
+# separated program that returns that state to requesting processes.
+#
+# $Id: newuser.conf.grex 1179 2011-10-24 07:13:27Z cross $
+#
+
+# Where mail goes.
+operator root
+
+#
+# Define storage devices; usually, we set quotes on all of these.
+#
+# First, user storage devices.
+userdev /a -quota -hard 1000 -soft 900 -ihard 1000 -isoft 900
+userdev /b -quota -hard 1000 -soft 900 -ihard 1000 -isoft 900
+userdev /c -quota -hard 1000 -soft 900 -ihard 1000 -isoft 900
+userdev /d -quota -hard 1000 -soft 900 -ihard 1000 -isoft 900
+# Next, temporary space devices.
+tmpdev /tmp -quota -hard 1000 -soft 900 -ihard 1000 -isoft 900
+# Finally, where mail goes.
+maildev /var/mail -quota -hard 500 -soft 400 -ihard 100 -isoft 90
+
+#
+# Use two-level hierarchical directories when creating the user's
+# Home directory.
+#
+proc mkuserpath {login} {
+	set tmp [string trim [string tolower $login]]
+	if { [string length $tmp] == 1 } { set tmp $tmp$tmp }
+	return [string index $tmp 0]/[string index $tmp 1]/$login
+}
+userpath mkuserpath
+
+# Acceptible ranges for UID's.
+uidrange 150000 10000000
+
+# The default group
+group unknowns
+
+# The default login class
+loginclass unvalidated
+
+# Check directories for uniqueness.
+checkdirs true
+
+# Maximum number of times a user can fail the CAPTCHA.
+maxauthtries 3
+
+# Where do we log?
+# log -syslog local0
+# log -file /var/log/newuser.log
+# log -prog /suid/newuser/nulogger
+log -file /tmp/newuser.log
+#log -prog /bin/cat
+
+# What shells we have defined for users.
+shell menu /usr/local/bin/menu -default
+shell bbs  /usr/local/bin/bbsh
+shell lynx /usr/bin/lynx
+shell csh  /bin/csh
+shell tcsh /usr/local/bin/tcsh
+shell ksh  /bin/ksh
+shell bash /usr/local/bin/bash
+shell zsh  /usr/local/bin/zsh
+shell bourne /bin/sh
+
+# What editors are available to users?
+editor pico  pico -default
+editor vi    vi
+editor vim   vim
+editor emacs emacs
+
+#
+lockdir /var/spool/newuser/lock
+emptydir /var/spool/newuser/empty
+
+#
+# We can restrict who we allow to add accounts; certain accounts
+# must be `authenticated.'
+#
+# Note: the `-share' flag means that non-restricted accounts can
+# be created as well.
+#
+restrict /var/spool/newuser/etc/passwd.restrict -share
+
+#
+# We restrict login names that appear in certain files (some of which
+# are mail-style aliases(5) files.
+#
+badnames -aliases /etc/mail/aliases \
+	-badnames /usr/local/etc/badnames \
+	-badpatterns /usr/local/etc/badpatterns

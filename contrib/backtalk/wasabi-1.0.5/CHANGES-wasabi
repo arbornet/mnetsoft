@@ -1,0 +1,27 @@
+Version 1.0.5 - June 11, 2007
+   - Fixed links to "new comments" in sidebar.
+   - Fixed mangling of text type when posting responses.
+
+Version 1.0.4 - Sep 21, 2005
+   - Support for atom autodiscovery.
+   - Support for robot exclusion headers.
+   - Explicitly put focus on popup login windows and, if possible, center
+     them over the parent window.
+
+Version 1.0.3 - Jun  24, 2005
+   - Support for anonymous posting of comments.
+
+Version 1.0.2 - May 5, 2005
+   - Fix bug where all comments have item author's name on them.
+   - Fix crash due to "newcomments" typo in sidebar.
+   - Use conference title instead of bbsname in most title lines.
+   - Add RSS autodiscovery links and RSS button display.
+   - Slight increase in pop-up login box size.
+
+Version 1.0.1 - Nov 10, 2004
+   - Add peekconf.bt and peekresp.bt scripts so this can be used with peek
+     interface.
+   - rename macros.bt to links.bt to conform with rss interface conventions.
+
+Version 1.0.0 - Jul 12, 2004
+   - Original release.

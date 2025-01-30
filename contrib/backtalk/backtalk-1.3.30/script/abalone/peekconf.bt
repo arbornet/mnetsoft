@@ -1,0 +1,9 @@
+% Backtalk Abablone Interface -- (c) 2000, Jan Wolter
+%
+% peekconf script
+%
+% This is the entry point when we do peek:<conf>.  The conference name is
+% passed in in the "conf" variable.
+
+/seeno 2 def
+(abalone/confhome) chain

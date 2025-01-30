@@ -1,0 +1,382 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% listusers script
+%
+% This script lists users.  The unsorted versions is designed to be usable,
+% if not necessarily fast, even on systems with huge numbers of users.  It
+% displays at most 50 users per screen.  The sorted version is likely to be
+% bad if you have tens of thousands of users, so the "many_users" constant
+% may be set true in the Pistachio config.bt file to disable this for all
+% but administrators.  It doesn't page, because the data is too likely to
+% change between hits.
+%
+% This script is it's own handler.
+%
+% Query Parameters:
+%    from=	if defined, start the scan after this login name.  Used only
+%               with unsorted listings.
+%    pattern=   show only users whose name or login contains this string.
+%		(if not defined, do no search, just give form)
+%		(if null, show all users)
+%    sort=      if undefined default to "no", otherwise:
+%               "no" - don't sort
+%               "login" - sort by login id
+%               "recent" - sort by last login time, most recent first
+%               "absent" - sort by last login time, least recent first
+%    grps=      comma separated list of group names
+%    valid=     comma separated list of 1 or more of the following.
+%               Default is (0,1,2).
+%               0 = validated users
+%               1 = unvalidated users
+%               2 = invalidated users
+%    details=   What to report
+%               0 = logins only
+%               1 = full details
+%               2 = email only
+%               3 = select for deletion
+%    timetype=  What time to search on
+%	 	A = last activity (login or registration)
+%		L = last login
+%		R = registration date
+%    after=     String defining earliest time
+%    before=    String defining latest time
+%    nologin=	List users who have never logged in?
+%    perpage=   Number of users to list per page
+%    admhome=   administrative home URL
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+/sort defined ! {/sort (no) def} if
+/timetype defined ! {/timetype (A) def} if
+/after defined ! {/after (beginning of time) def} if
+/before defined ! {/before (end of time) def} if
+/valid defined ! {/valid (0,1,2) def} if
+/grps defined ! {/grps () def} if
+/details dup defined {details cvi}{1}ifelse def
+/nologin /pattern defined
+  {dup defined {nologin cvi}{0}ifelse} {1} ifelse def
+/perpage dup defined
+  {perpage {perpage cvi}{999999999}ifelse}{50}ifelse def
+
+details 0 lt {/details 1 def} if
+details 3 gt {/details 1 def} if
+
+/titl (User List) /from defined {( (continued))+} if def
+
+% - tablerow -
+% Print a row of the table.  Input is in the variables uname,ufname,regdate,
+% laston,status
+
+/tablerow {
+  (<TR>)
+  nopwedit ! {
+    (<TD BGCOLOR=red><A HREF=edituser?uname=)uname
+    (&op=D&goto=admin/listusers)cgiq(>Delete</A></TD>)
+  } if
+  (<TD><A HREF="showuser?uname=)uname(&admhome=)admhome(">)uname(</A></TD><TD>)
+  ufname{ufname quote}{(&nbsp;)}ifelse(</TD><TD>)
+  regdate {regdate cvt ztime 4 30 substr}{(unknown)}ifelse (</TD><TD>)
+  laston {laston ztime 4 30 substr}{(unknown)}ifelse (</TD><TD ALIGN=center>)
+  nopwedit ! {
+    (<A HREF=edituser?uname=)uname(&op=)status{(V)}{(I)}ifelse
+    (&goto=admin/listusers&)cgiq(>)
+  } if
+  status { status 1 eq {(u)} {(i)} ifelse (nvalidated)}
+	 {(valid)} ifelse
+  nopwedit ! { (</A>) } if
+  (</TD></TR>\n)
+  print
+} def
+
+(<HTML><HEAD><TITLE>)titl(</TITLE></HEAD>
+<BODY BGCOLOR=white>
+<H1>)titl(</H1>
+Goto <A HREF=)admhome(>Administrative Menu</A>
+<P>
+)
+
+(<FORM METHOD=POST ACTION=listusers>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<TABLE BORDER=1>
+<TR><TD COLSPAN=2><B><FONT SIZE=+1>Users to List:</FONT></B></TD>
+<TD ROWSPAN=9 VALIGN=center><INPUT TYPE=submit VALUE="Do Scan"></TD></TR>
+<TR><TD>
+Login IDs or<BR>Full Names<BR>Containing:</TD><TD>
+<INPUT TYPE=text NAME=pattern SIZE=40)
+/pattern defined {( VALUE=)pattern}if
+(> <SMALL><BR>(Leave blank to list all users)</SMALL>
+</TD></TR>
+<TR><TD>Status:</TD>
+<TD>
+<INPUT TYPE=checkbox NAME=valid VALUE="0")
+(0) valid (,) inlist {( CHECKED)} if (>validated&nbsp;&nbsp;&nbsp;&nbsp;\n)
+(<INPUT TYPE=checkbox NAME=valid VALUE="1")
+(1) valid (,) inlist {( CHECKED)} if (>unvalidated&nbsp;&nbsp;&nbsp;&nbsp;\n)
+(<INPUT TYPE=checkbox NAME=valid VALUE="2")
+(2) valid (,) inlist {( CHECKED)} if (>invalidated</TD></TR>
+<TR><TD>Primary Group:</TD>
+<TD>)
+[groups] {
+  /g xdef
+  (<INPUT TYPE=checkbox NAME=grps VALUE=")g(")
+  grps {g grps (,) inlist {( CHECKED)} if}  if
+  (>)g(&nbsp;&nbsp;&nbsp;&nbsp;\n)
+} forall
+(</TD></TR>
+<TR><TD>Last Login/<BR>Registration:</TD>
+<TD><TABLE><TR><TD COLSPAN=3><INPUT TYPE=checkbox NAME=nologin VALUE=1 )
+nologin {( CHECKED)}if (> Never Logged In, or...</TD></TR>
+<TR><TD ROWSPAN=2><SELECT NAME=timetype>
+<OPTION VALUE=A)timetype (A) eq {( SELECTED)} if(>Last Active
+<OPTION VALUE=L)timetype (L) eq {( SELECTED)} if(>Last Logged In
+<OPTION VALUE=R)timetype (R) eq {( SELECTED)} if(>Registered
+</SELECT></TD>
+<TD>since</TD><TD><INPUT TYPE=text NAME=after SIZE=30 VALUE=")
+after quote("></TD></TR>
+<TR><TD>until</TD><TD><INPUT TYPE=text NAME=before SIZE=30 VALUE=")
+before quote("></TD></TR></TABLE></TD></TR>
+<TR><TD COLSPAN=2><B><FONT SIZE=+1>Format of Listing:</FONT></B></TD></TR>
+<TR><TD>Show:</TD><TD><SELECT NAME=details>
+<OPTION VALUE=1)details 1 eq{( SELECTED)}if
+(> Detailed Information and Edit Buttons
+<OPTION VALUE=0)details 0 eq{( SELECTED)}if(> Login IDs only
+<OPTION VALUE=2)details 2 eq{( SELECTED)}if(> Email Addresses only\n)
+nopwedit ! {
+  (<OPTION VALUE=3)details 3 eq{( SELECTED)}if(> Select for Deletion\n)
+} if
+(</SELECT></TD></TR>
+<TR><TD>Order of Results:</TD><TD>\n<SELECT NAME=sort>
+<OPTION VALUE="no") sort (no) eq {( SELECTED)} if
+(> Unsorted
+<OPTION VALUE="login") sort (login) eq {( SELECTED)} if
+(> Alphabetical Order by Login
+<OPTION VALUE="recent") sort (recent) eq {( SELECTED)} if
+(> Most Recently Active First
+<OPTION VALUE="absent") sort (absent) eq {( SELECTED)} if
+(> Least Recently Active First
+</SELECT>
+</TD></TR>
+<TR><TD>Results per Page:</TD><TD>
+<INPUT TYPE=text NAME=perpage VALUE=")perpage 999999999 ne {perpage} if
+(" SIZE=6>
+<SMALL>(For unsorted listings only.  Leave blank for no limit.)</SMALL>
+</TD></TR>
+</TABLE>
+</FORM><P>
+)
+
+/pattern defined {
+
+  /cgiq `(&pattern=)pattern cgiquote
+    /from defined {(&from=)from cgiquote} if
+    (&sort=)sort cgiquote(&grps=)grps cgiquote(&valid=)valid cvs cgiquote
+    (&details=)details cvs cgiquote(&perpage=)perpage(&nologin=)nologin
+    (&admhome=)admhome'
+    def
+
+  % set up for the search
+  pattern {
+    () pattern 1 search pop	% compile the search pattern
+    /checkpat {uname () 1 search -1 ne ufname () 1 search -1 ne or} def
+  } {
+    /checkpat 1 def
+  } ifelse
+
+  % Convert Group names to group IDs
+  /grpids () def
+  grps {
+    (,) parse
+    dup ! {break} if
+    groupid cvs grpids exch+ (,)+ /grpids xdef
+  } loop
+  pop
+
+  % Convert time strings to values
+  /tafter after 0 1 dtime dup cvi 0 eq {pop 1 cvt} if def
+  /tbefore before 0 0 dtime dup cvi 0 eq {pop time 99999 + cvt} if def
+  timetype (A) eq {/cmptm {laston {laston}{regdate cvt}ifelse} def} if
+  timetype (L) eq {/cmptm {laston} def} if
+  timetype (R) eq {/cmptm {regdate cvt} def} if
+  /timesok {cmptm dup tafter ge exch tbefore le and 
+  nologin laston ! and or} def
+
+  (<FONT SIZE=+1><B>)details 2 eq {(E-Mail Addresses)}{(Matches)}ifelse
+  ( Found:</B></FONT>\n)
+
+  {
+    % details == 3: Select for Deletion
+    (<BR><FORM ACTION=reap METHOD=post>\n)
+    (<INPUT TYPE=hidden NAME=goto VALUE=admin/listusers>\n)
+    (<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>\n)
+  } {
+    % details == 2: Email addresses
+    (<BR>\n)
+    /comma 0 def
+    /nomail () def
+    /nomailcomma 0 def
+  } {
+    % details == 1:  List full details
+    (<TABLE BORDER=1>) nopwedit ! {(<TH>&nbsp;</TH>\n)} if
+    (<TH>login</TH><TH>full name</TH>\n)
+    (<TH>registration date</TH><TH>last on</TH><TH>status</TH>)
+    print
+  } {
+    % details == 0: Logins only
+    (<BR>\n)
+    /comma 0 def
+  } 4 details select exec
+  
+  sort (no) eq {
+    % Unsorted case: print as we go
+
+    % goto the first user
+    /from defined {
+      from seekuser nextuser
+    }{
+      firstuser
+    } ifelse
+    
+    % loop through the rest of the users
+    /i 0 def
+    { dup ! {pop break} if
+      dup /uname xdef
+      userinfo /status xdef /laston xdef pop /ufname xdef /ugid xdef pop
+      status cvs valid (,) inlist ! {nextuser continue} if
+      grpids {ugid cvs grpids (,) inlist ! {nextuser continue} if } if
+      /regdate 0 def
+      uname selectuser (*.backtalk) /regdate loadvar pop
+      timesok ! {nextuser continue} if
+      checkpat {
+	/i inc
+
+	{
+	  % details == 3: reap
+          (<INPUT TYPE=checkbox NAME=ulist VALUE=")uname(")
+	  ugid {( CHECKED)}if(> )uname( - )ufname(<BR>\n) print
+        } {
+	  % details == 2: email addresses
+	  /email () def
+	  uname selectuser (*.backtalk) /email loadvar pop
+	  email {
+	    comma {(,\n)}{/comma 1 def}ifelse email
+	  } {
+	    /nomail nomail nomailcomma {(,\n)+}{/nomailcomma 1 def}ifelse
+	    uname+ def
+	  } ifelse
+	} {
+	  % details == 1: table
+	  tablerow
+	  i perpage ge { break } if
+	} {
+	  % details == 0: logins only
+	  comma {(,\n)}{/comma 1 def}ifelse uname
+	} 4 details select exec
+
+      } if
+      nextuser
+    } loop
+
+    () selectuser
+    
+    details 1 eq {
+      (</TABLE><P>\n)
+      i perpage lt {
+	(<EM>end of list</EM>)
+      } {
+	(<A HREF="listusers?from=)uname cgiquote(&pattern=)pattern cgiquote
+	(&sort=)sort cgiquote(&grps=)grps cgiquote(&valid=)valid cvs cgiquote
+    	(&details=)details cvs cgiquote(&perpage=)perpage(&admhome=)admhome
+	(&nologin=)nologin(">More Matches</A>)
+      } ifelse
+    } if
+
+  } {
+    % Sorted case:  Sort them all, then print the subset that fits
+
+    % Build an array of arrays containing the users
+    [
+    firstuser
+    {
+      dup ! {pop break} if
+      dup /uname xdef
+      userinfo /status xdef /laston xdef pop /ufname xdef /ugid xdef pop
+      status cvs valid (,) inlist ! {nextuser continue} if
+      grpids {ugid cvs grpids (,) inlist ! {nextuser continue} if } if
+      checkpat {
+	/regdate 0 def
+	/email () def
+	uname selectuser (*.backtalk) [/regdate /email] loadvar pop
+        timesok ! {nextuser continue} if
+	% [0=login 1=fullname 2=lastuse 3=regdate 4=laston 5=status 6=email]
+        [uname ufname laston{laston}{regdate cvt}ifelse
+	 regdate laston status email]
+      } if
+      nextuser
+    } loop
+    ]
+
+    % do the sort
+    sort (login)  eq { 0 1 } {
+    sort (recent) eq { 2 0 }
+                     { 2 1 } ifelse } ifelse
+    asort
+
+    % print them all out
+    {
+      aload /email xdef /status xdef /laston xdef /regdate xdef
+        pop /ufname xdef /uname xdef
+
+      {
+	% details == 3: reap
+	(<INPUT TYPE=checkbox NAME=ulist VALUE=")uname(" CHECKED> )uname
+	( - )ufname(<BR>\n) print
+      } {
+	% details == 2: email addresses
+	/email () def
+	uname selectuser (*.backtalk) /email loadvar pop
+	email {
+	  comma {(,\n)}{/comma 1 def}ifelse email
+	} {
+	  /nomail nomail nomailcomma {(,\n)+}{/nomailcomma 1 def}ifelse
+	  uname+ def
+	} ifelse
+      } {
+	% details == 1: table
+	tablerow
+      } {
+	% details == 0: logins only
+	comma {(,\n)}{/comma 1 def}ifelse uname
+      } 4 details select exec
+
+    } forall
+    details 1 eq {(</TABLE>\n)} if
+  } ifelse
+
+  details 2 eq {
+    nomail {
+      (<P><FONT SIZE=+1><B>No E-Mail Addresses for Users:</B></FONT><BR>\n)
+      nomail
+    } if
+  } if
+
+  details 3 eq {
+    (<INPUT TYPE=submit VALUE="Delete Checked Users"></FORM>\n)
+  } if
+
+} if
+
+(
+<P>
+Goto <A HREF=)admhome(>Administrative Menu</A>
+</BODY></HTML>
+)

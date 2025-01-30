@@ -1,0 +1,806 @@
+: # use perl
+        eval 'exec perl -S $0 "$@"'
+                if $runnning_under_some_shell;
+
+#
+# weblint - pick fluff off WWW pages (html).
+#
+# Copyright (C) 1994 Neil Bowers.  All rights reserved.
+#
+# See README for additional blurb.
+# Bugs, comments, suggestions welcome: neilb@khoros.unm.edu
+#
+$VERSION  = '1.005';
+($PROGRAM = $0) =~ s@.*/@@;
+$LEADER   = '$filename($.)';
+
+#------------------------------------------------------------------------
+# $usage - usage string displayed with the -U command-line switch
+#------------------------------------------------------------------------
+$usage=<<EofUsage;
+  $PROGRAM v$VERSION - pick fluff off web pages (HTML)
+      -d : disable specified warnings (multiple warnings separated by commas)
+      -e : enable specified warnings (multiple warnings separated by commas)
+      -R : recurse in directory, checking any .html files found
+      -s : give short warning messages (filename not printed)
+      -T : print the todo list for $PROGRAM
+      -U : display this usage message
+      -v : display version
+      -x : specify an HTML extension to include
+
+  To check one or more HTML files, run weblint thusly:
+      weblint foobar.html
+      weblint file1.html ... fileN.html
+
+  To recursively check any .html or .htm files within one or more directories:
+      weblint -R dir1 ... dirN
+
+  To include the netscape extensions:
+      weblint -x netscape file.html
+EofUsage
+# undef $opt_d, $opt_e, $opt_s, $opt_R, $opt_T, $opt_U, $opt_v, $opt_x;
+
+#------------------------------------------------------------------------
+# $todo - ToDo string displayed with the -T command-line switch
+#------------------------------------------------------------------------
+$todo=<<EofToDo;
+                        $PROGRAM v$VERSION - ToDo list
+
+	o	Verbose option to give longer warnings with example syntax.
+	o	Support for personal style checks.
+	o	better warning about TITLE, if no HEAD present.
+	o	build list of external links, for optional check at end.
+	o	option to check whether any file in a directory hierarchy
+		is not referenced.
+	o	Count number of links to and from each page.
+	o	Optionally check whether there are any links from a page.
+	o	Misuse of meta-characters, such as <, >, and ".
+		(Barry Bakalor <barry\@hal.com>)
+	o	Make the code more efficient.
+	o	Generalize the context checks.
+	o	check for http://foo.com/nar/tar.gz!
+	o	option to spell-check text
+		(Clay Webster <clay\@unipress.com>)
+	o	option to specify level of HTML (0, 1, or 2)
+	o	support the 'mixed-case' identifier.
+		(reported by Victor Parada <vparada\@inf.utfsm.cl>)
+	o	support <P> as a container, at least optionally.
+	o	option to understand server-side includes, e.g.:
+			<!inc srv "/Header.html">
+	o	write a regression testsuite!
+	o	catch:
+			& should be &amp;	&amp should be &amp;
+			" should be &quot;	&quot should be &quot;
+	o	option to specify whether messages go to stdout or stderr
+	o	bad-link check gets confused if given a path with directories
+		in it, such as foo/bar/fred.html (Barry Bakalor)
+	o	Use a DTD!
+EofToDo
+
+$pairElements = 'HTML|HEAD|BODY|TITLE|H1|H2|H3|H4|H5|H6|'.
+		'B|I|U|TT|STRONG|EM|CODE|KBD|VAR|DFN|CITE|SAMP|'.
+		'UL|OL|DL|MENU|DIR|FORM|SELECT|STRIKE|TEXTAREA|'.
+                'BLOCKQUOTE|ADDRESS|A|CODE|PRE';
+
+# expect to see these tags only once
+$onceOnlyRE = 'HTML|HEAD|BODY|TITLE';
+
+# expect these tags to have attributes
+# these are elements which have no required attributes, but we expect to
+# see at least one of the attributes
+$expectArgsRE = 'A';
+
+# these tags can only appear in the head element
+$headTagsRE = 'TITLE|NEXTID|LINK|BASE';
+
+# these tags are allowed to appear in the head element
+$okInHead = 'ISINDEX|TITLE|NEXTID|LINK|BASE|!--';
+
+# obsolete tags
+$obsoleteTags = 'PLAINTEXT|XMP|LISTING|COMMENT';
+
+# expect to see these at least once.
+@expectedTags = ('HTML', 'HEAD', 'TITLE', 'BODY');
+
+# elements which cannot be nested
+$nonNest = 'A';
+
+# elements which can only appear in a FORM element
+$formElements = 'INPUT|SELECT|TEXTAREA';
+
+#
+# This is a regular expression for all regular elements
+#
+$legalElements =
+   'A|ADDRESS|B|BASE|BLOCKQUOTE|BODY|BR|CITE|CODE|DD|DFN|DIR|DL|DT|EM|'.
+   'FORM|H1|H2|H3|H4|H5|H6|HEAD|HR|HTML|I|IMG|INPUT|ISINDEX|KBD|LI|'.
+   'LINK|MENU|META|NEXTID|OL|OPTION|P|PRE|SAMP|SELECT|STRIKE|STRONG|TEXTAREA|'.
+   'TITLE|TT|U|UL|VAR';
+
+# This table holds the valid attributes for elements
+# Where an element does not have an entry, this implies that the element
+# does not take any atttributes
+%validAttributes =
+   (
+   'A',        'NAME|HREF|REL|REV|URN|TITLE|METHODS',
+   'BASE',     'HREF',
+   'DL',       'COMPACT',
+   'FORM',     'ACTION|METHOD|ENCTYPE',
+   'HTML',     'VERSION',
+   'IMG',      'SRC|ALT|ALIGN|ISMAP',
+   'INPUT',    'TYPE|NAME|VALUE|SRC|CHECKED|SIZE|MAXLENGTH|ALIGN',
+   'LINK',     'HREF|REL|REV|URN|TITLE|METHODS',
+   'META',     'HTTP-EQUIV|NAME|CONTENT',
+   'NEXTID',   'N',
+   'OPTION',   'SELECTED|VALUE',
+   'PRE',      'WIDTH',
+   'SELECT',   'NAME|SIZE|MULTIPLE',
+   'TEXTAREA', 'NAME|ROWS|COLS',
+   'UL',       'COMPACT',
+   );
+
+%requiredAttributes =
+   (
+   'BASE',     'HREF',
+   'FORM',     'ACTION',
+   'IMG',      'SRC',
+   'LINK',     'HREF',
+   'NEXTID',   'N',
+   'SELECT',   'NAME',
+   'TEXTAREA', 'NAME|ROWS|COLS'
+   );
+
+require 'getopts.pl';
+require 'find.pl';
+
+die "$usage" unless @ARGV > 0;
+
+&ReadDefaults();
+&GetConfigFile();
+
+&Getopts('d:e:RsTUvx:') || die "use -U switch to display usage statement\n";
+die "$PROGRAM v$VERSION\n" if $opt_v;
+die "$usage"               if $opt_U;
+die "$todo"                if $opt_T;
+&AddExtension($opt_x)      if $opt_x;
+$LEADER = 'line $.'        if $opt_s;
+
+# -d to disable warnings
+if ($opt_d)
+{
+   for (split(/,/,$opt_d))
+   {
+      warn "$PROGRAM: unknown warning `$_'\n" unless defined $enabled{$_};
+      $enabled{$_} = 0;
+   }
+}
+
+# -e to enable warnings
+if ($opt_e)
+{
+   for (split(/,/,$opt_e))
+   {
+      warn "$PROGRAM: unknown warning `$_'\n" unless defined $enabled{$_};
+      $enabled{$_} = 1;
+      $enabled{'lower-case'} = 0 if $_ eq 'upper-case';
+      $enabled{'upper-case'} = 0 if $_ eq 'lower-case';
+      $enabled{'upper-case'} = $enabled{'lower-case'} = 0 if $_ eq 'mixed-case';
+   }
+}
+
+# -R switch, so use find on command-line arguments
+if ($opt_R)
+{
+   push(@ARGV, '.') if @ARGV == 0;
+   &find(shift(@ARGV)) while @ARGV > 0;
+   exit 0;
+}
+
+&WebLint(shift(@ARGV)) while @ARGV > 0;
+exit 0;
+
+#========================================================================
+# Function:	WebLint
+# Purpose:	This is the high-level interface to the checker.  It takes
+#		a file and checks for fluff.
+#========================================================================
+sub WebLint
+{
+   local($filename,$relpath) = @_;
+   local(@tags) = ();
+   local($tagRE) = ('');
+   local(@taglines) = ();
+   local(@orphans) = ();
+   local(@orphanlines) = ();
+   local(%seenPage);
+   local(%seenTag);
+   local(%whined);
+   local(*PAGE);
+   local($line) = ('');
+   local($id);
+   local($tag);
+   local($closing);
+   local($tail);
+   local(%args);
+   local($arg);
+   local($rest);
+   local($lastNonTag);
+   local(@notSeen);
+   local($seenMailtoLink) = (0);
+   local($matched);
+   local($matchedLine);
+   local($novalue);
+   local($heading);
+   local($headingLine);
+   local($_);
+
+
+   if ($filename eq '-')
+   {
+      *PAGE = *STDIN;
+      $filename = 'stdin';
+   }
+   else
+   {
+      return if defined $seenPage{$filename};
+      if (-d $filename)
+      {
+	 print "$PROGRAM: $filename is a directory.\n";
+	 return;
+      }
+      $seenPage{$filename}++;
+      open(PAGE,"<$filename") || do
+      {
+	 print "$PROGRAM: could not read file $filename: $!\n";
+	 return;
+      };
+      $filename = $relpath if defined $relpath;
+   }
+
+   undef $heading;
+
+ READLINE:
+   while (<PAGE>)
+   {
+      $line .= $_;
+      $line =~ s/\n/ /g;
+
+      while ($line =~ /</)
+      {
+	 $tail = $'; #'
+	 undef $lastNonTag;
+	 $lastNonTag = $` if $` !~ /^\s*$/;
+
+	 #--------------------------------------------------------
+	 #== SGML comment: <!-- ... blah blah ... -->
+	 #--------------------------------------------------------
+	 if ($tail =~ /^!--/)
+	 {
+	    # push lastNonTag onto word list for spell checking
+
+	    $ct = $';
+	    next READLINE unless $ct =~ /--\s*>/;
+	    $comment = $`;
+	    $line = $';
+
+	    # markup embedded in comment can confuse some (most? :-) browsers
+	    &whine('markup-in-comment') if $comment =~ /<\s*[^>]+>/;
+	    next;
+	 }
+
+	 next READLINE unless $tail =~ /^(\s*)([^>]+)>/;
+
+	 &whine('leading-whitespace', $2) if $1 ne '';
+
+         $id = $tag = $2;
+         $line = $';
+
+	 # push lastNonTag onto word list for spell checking
+
+         undef $tail;
+         undef $closing;
+         undef %args;
+
+         #-- <!DOCTYPE ... > is ignored for now.
+         next if $id =~ /^!doctype/i;
+
+         #--------------------------------------------------------
+         #== some seriously ugly code to handle attributes ...
+         #--------------------------------------------------------
+	 if ($tag =~ m|^(\S+)\s+(.*)|)
+         {
+            ($id,$tail) = ($1,$2);
+	    $tail =~ s/\n/ /g;
+
+            # check for odd number of quote characters
+            ($quotes = $tail) =~ s/[^"]//g;
+            &whine('odd-quotes', $tag) if length($quotes) % 2 == 1;
+
+	    $novalue = 0;
+	    $valid = $validAttributes{"\U$id"};
+	    while ($tail =~ /^\s*([^=\s]+)\s*=\s*(.*)$/
+		   # catch attributes like ISMAP for IMG, with no arg
+		   || ($tail =~ /^\s*(\S+)\s+(.*)/ && ($novalue = 1)))
+	    {
+	       $arg = "\U$1";
+	       $rest = $2;
+
+               &whine('unexpected-open', $tag) if $arg =~ /</;
+
+	       if ($arg !~ /^($valid)$/i && defined $legalElements{"\U$id"})
+	       {
+		  &whine('unknown-attribute', $id, $arg);
+	       }
+	       if ($novalue)
+	       {
+		  $args{$arg} = '';
+		  $tail = $rest;
+	       }
+	       elsif ($rest =~ /^"([^"]+)"(.*)$/ || $rest =~ /^(\S+)(.*)$/) #"
+               {
+                  $args{$arg} = $1;
+                  $tail = $2;
+               }
+               else
+               {
+                  $args{$arg} = $rest;
+                  $tail = '';
+               }
+            }
+	    &whine('unexpected-open', $tag) if $tail =~ /</;
+         }
+
+	 $closing = 0;
+         if ($id =~ m@^/@)
+         {
+            $id =~ s@^/@@;
+            $closing = 1;
+         }
+
+         #-- whine about unrecognized element, and do no more checks ----
+         if ($id !~ /^($legalElements)$/i)
+	 {
+            &whine('unknown-element', ($closing ? "/$id" : "$id"));
+	    next;
+	 }
+
+         if ($closing == 0 && defined $requiredAttributes{"\U$id"})
+         {
+	    @argkeys = keys %args;
+	    foreach $attr (split(/\|/,$requiredAttributes{"\U$id"}))
+	    {
+	       &whine('required-attribute', $attr, $id) unless defined $args{$attr};
+	    }
+         }
+         elsif ($closing == 0 && $id =~ /^($expectArgsRE)$/i)
+         {
+            &whine('expected-attribute',$id) unless defined %args;
+         }
+
+         #--------------------------------------------------------
+         #== check case of tags
+         #--------------------------------------------------------
+         &whine('upper-case', $id) if $id ne "\U$id";
+         &whine('lower-case', $id) if $id ne "\L$id";
+
+         $id = "\U$id";
+
+         #--------------------------------------------------------
+         #== if tag id is /foo, then strip slash, and mark as a closer
+         #--------------------------------------------------------
+         if ($closing)
+         {
+            if ($id eq 'A' && $lastNonTag =~ /^\s*here\s*$/i)
+            {
+               &whine('here-anchor');
+            }
+
+	    #-- end of HEAD, did we see a TITLE in the HEAD element? ----
+	    &whine('require-head') if $id eq 'HEAD' && !$seenTag{'TITLE'};
+
+	    #-- was there a <LINK REV=MADE HREF="mailto:.."> element in HEAD?
+	    &whine('mailto-link') if $id eq 'HEAD' && $seenMailtoLink == 0;
+         }
+         else
+         {
+            #--------------------------------------------------------
+            # do context checks.  Should really be a state machine.
+            #--------------------------------------------------------
+
+            if ($id eq 'A' && defined $args{'HREF'})
+            {
+	       $target = $args{'HREF'};
+               if ($target =~ /([^:]+):\/\/([^\/]+)(.*)$/
+		   || $target =~ /^(news|mailto):/
+		   || $target =~ /^\//)
+               {
+               }
+               else
+               {
+		  $target =~ s/#.*$//;
+		  if ($target !~ /^\s*$/ && ! -f $target && ! -d $target)
+		  {
+		     &whine('bad-link', $target);
+		  }
+               }
+            }
+
+            if ($id =~ /^H(\d)$/)
+	    {
+               if (defined $heading && $1 - $heading > 1)
+               {
+	          &whine('heading-order', $id, $heading, $headingLine);
+               }
+               $heading     = $1;
+               $headingLine = $.;
+	    }
+
+	    #-- check for mailto: LINK ------------------------------
+	    if ($id eq 'LINK' && $args{'REV'} =~ /^made$/i
+		&& $args{'HREF'} =~ /^mailto:/i)
+	    {
+	       $seenMailtoLink = 1;
+	    }
+
+            if ($id =~ /^($onceOnlyRE)$/)
+            {
+               &whine('once-only', $id, $seenTag{$id}) if $seenTag{$id};
+            }
+            $seenTag{$id} = $.;
+
+            &whine('body-no-head') if $id eq 'BODY' && !$seenTag{'HEAD'};
+
+            if ($id ne 'HTML' && $id ne '!DOCTYPE' && !$seenTag{'HTML'}
+                && !$whined{'outer-html'})
+            {
+               &whine('html-outer');
+               $whined{'outer-html'} = 1;
+            }
+
+	    #-- check for illegally nested elements ---------------------
+	    if ($id =~ /^($nonNest)$/ && $id =~ /^($tagRE)$/)
+	    {
+	       for ($i=$#tags; $tags[$i] ne $id; --$i)
+	       {}
+	       &whine('nested-element', $id, $taglines[$i]);
+	    }
+
+	    &whine('unknown-element', $id) unless $id =~ /^($legalElements)$/;
+
+	    #-- check for elements which can only appear in a FORM element
+	    if ($id =~ /^($formElements)$/ && 'FORM' !~ /^($tagRE)$/)
+	    {
+	       &whine('form-item', $id);
+	    }
+
+	    #-- check for elements which can only appear in a FORM element
+	    if ($id =~ 'OPTION' && 'SELECT' !~ /^($tagRE)$/)
+	    {
+	       &whine('select-option');
+	    }
+
+	    #--------------------------------------------------------
+	    # check for tags which can only appear in the HEAD element
+	    #--------------------------------------------------------
+	    if ($id =~ /^($headTagsRE)$/ && 'HEAD' !~ /^($tagRE)$/)
+	    {
+               &whine('head-element', $id);
+	    }
+
+	    if ($id !~ /^($okInHead)$/ && 'HEAD' =~ /^($tagRE)$/)
+	    {
+               &whine('non-head-element', $id);
+	    }
+
+	    #--------------------------------------------------------
+	    # DT and DD can only appear in definition list (<DL> .. </DL>
+	    #--------------------------------------------------------
+	    if (($id eq 'DT' || $id eq 'DD') && 'DL' !~ /^($tagRE)$/)
+	    {
+               &whine('defn-list-elements', $id);
+	    }
+
+	    #--------------------------------------------------------
+	    # LI can only appear in DIR, MENU, OL, UL
+	    #--------------------------------------------------------
+	    if ($id eq 'LI' && " @tags " !~ / (DIR|MENU|OL|UL) /)
+	    {
+               &whine('list-item');
+	    }
+
+	    #--------------------------------------------------------
+	    # check for tags which can only appear in the HEAD element
+	    #--------------------------------------------------------
+	    &whine('obsolete', $id) if $id =~ /^($obsoleteTags)$/;
+         }
+
+         #--------------------------------------------------------
+         #== was tag of type <TAG> ... </TAG>?
+         #== welcome to kludgeville, population seems to be on the increase!
+         #--------------------------------------------------------
+         if ($id =~ /^($pairElements)$/)
+         {
+            if ($closing && $tags[$#tags] eq $id)
+            {
+               $matched     = pop @tags;
+               $matchedLine = pop @taglines;
+
+	       #-- does top of stack match top of orphans stack? --------
+	       while (@orphans > 0 && @tags > 0
+		   && $orphans[$#orphans] eq $tags[$#tags])
+	       {
+		  &whine('element-overlap', $orphans[$#orphans],
+			 $orphanlines[$#orphanlines], $matched, $matchedLine);
+		  pop @orphans;
+		  pop @orphanlines;
+		  pop @tags;
+		  pop @taglines;
+	       }
+               $tagRE = join('|',@tags);
+            }
+            elsif ($closing && $tags[$#tags] ne $id)
+            {
+	       #-- closing tag does not match opening tag on top of stack
+	       if ($id =~ /^($tagRE)$/)
+	       {
+		  # If we saw </HTML>, </HEAD>, or </BODY>, then we try
+		  # and resolve anything inbetween on the tag stack
+		  if ($id =~ /^(HTML|HEAD|BODY)$/)
+		  {
+		     while ($tags[$#tags] ne $id)
+		     {
+			&whine('unclosed-element',pop @tags,pop @taglines);
+
+			#-- does top of stack match top of orphans stack? --
+			while (@orphans > 0 && @tags > 0
+			       && $orphans[$#orphans] eq $tags[$#tags])
+			{
+			   pop @orphans;
+			   pop @orphanlines;
+			   pop @tags;
+			   pop @taglines;
+			}
+		     }
+
+		     #-- pop off the HTML, HEAD, or BODY tag ------------
+		     pop @tags;
+		     pop @taglines;
+		     $tagRE = join('|',@tags);
+		  }
+		  else
+		  {
+		     #-- matched opening tag lower down on stack
+		     push(@orphans, $id);
+		     push(@orphanlines, $.);
+		  }
+	       }
+	       else
+	       {
+		  &whine('mis-match', $id);
+	       }
+            }
+            else
+            {
+               push(@tags,$id);
+               $tagRE = join('|',@tags);
+               push(@taglines,$.);
+            }
+         }
+
+         #--------------------------------------------------------
+         #== inline images (IMG) should have an ALT argument :-)
+         #--------------------------------------------------------
+         &whine('img-alt') if $id eq 'IMG' && !defined $args{'ALT'};
+
+      }
+      $lastNonTag = $line unless $line =~ /^\s*$/;
+   }
+   close PAGE;
+
+   while (@tags > 0)
+   {
+      $tag = shift(@tags);
+      $line = shift(@taglines);
+      &whine('unclosed-element', $tag, $line);
+   }
+
+   for (@expectedTags)
+   {
+      push(@notSeen,$_) unless $seenTag{$_};
+   }
+   printf("%sexpected tag(s) not seen: @notSeen\n",
+	  ($opt_s ? "" : "$filename(-): ")) if @notSeen > 0;
+}
+
+#========================================================================
+# Function:	whine
+# Purpose:	Give a standard format whine:
+#			filename(line #): <message>
+#               The associative array `enabled' is used as a gating
+#               function, to suppress or enable each warning.  Every
+#               warning has an associated identifier, which is used to
+#               refer to the warning, and as the index into the hash.
+#========================================================================
+sub whine
+{
+   local($id,@argv) = @_;
+
+
+   return unless $enabled{$id};
+   eval "print \"$LEADER: $message{$id}\n\"";
+}
+
+#========================================================================
+# Function:	GetConfigFile
+# Purpose:	Read user's configuration file, if such exists.
+#               If WEBLINTRC is set in user's environment, then read the
+#               file referenced, otherwise try for $HOME/.weblintrc.
+#========================================================================
+sub GetConfigFile
+{
+   local(*CONFIG);
+   local($filename);
+   local($arglist);
+
+
+   $filename = $ENV{'WEBLINTRC'} || "$ENV{'HOME'}/.weblintrc";
+   return unless -f $filename;
+
+   open(CONFIG,"< $filename") || do
+   {
+      print "Unable to read config file `$filename': $!\n";
+      return 0;
+   };
+
+   while (<CONFIG>)
+   {
+      s/#.*$//;
+      next if /^\s*$/;
+
+      #-- match keyword: process one or more argument -------------------
+      if (/^\s*(enable|disable|extension)\s+(.*)$/i)
+      {
+	 $keyword = "\U$1";
+	 $arglist = $2;
+	 while ($arglist =~ /^\s*(\S+)/)
+	 {
+	    $enabled{$1} = 1 if $keyword eq 'ENABLE';
+
+	    $enabled{$1} = 0 if $keyword eq 'DISABLE';
+
+	    &AddExtension($1) if $keyword eq 'EXTENSION';
+
+	    $arglist = $';
+	 }
+      }
+   }
+
+   close CONFIG;
+
+   1;
+}
+
+#========================================================================
+# Function:	AddExtension
+# Purpose:	Extend the HTML understood.  Currently supported extensions:
+#			netscape  - the netscape extensions proposed by
+#                                   Mosaic Communications, Inc.  See:
+#               http://mosaic.mcom.com/home/services_docs/html-extensions.html
+#========================================================================
+sub AddExtension
+{
+   local($extension) = @_;
+
+   if ("\L$extension" ne 'netscape')
+   {
+      warn "$PROGRAM: unknown extension `$extension' -- ignoring.\n";
+      return;
+   }
+
+   #---------------------------------------------------------------------
+   # netscape extensions
+   #---------------------------------------------------------------------
+
+   #-- new element attributes for existing elements ---------------------
+
+   &AddAttributes('ISINDEX',
+		  'PROMPT');
+   &AddAttributes('HR',
+		  'SIZE', 'SIZE', 'ALIGN', 'NOSHADE');
+   &AddAttributes('UL',
+		  'TYPE');
+   &AddAttributes('OL',
+		  'TYPE');
+   &AddAttributes('LI',
+		  'TYPE');
+   &AddAttributes('IMG',
+		  'WIDTH', 'HEIGHT', 'BORDER', 'VSPACE', 'HSPACE');
+   &AddAttributes('BR',
+		  'CLEAR');
+
+   #-- new elements -----------------------------------------------------
+   $legalElements .= 'NOBR|WBR|FONT|BASEFONT|CENTER';
+   $pairElements  .= '|CENTER|NOBR';
+   &AddAttributes('FONT',
+		  'SIZE');
+   &AddAttributes('BASEFONT',
+		  'SIZE');
+}
+
+sub AddAttributes
+{
+   local($element,@attributes) = @_;
+   local($attr);
+
+
+   $attr = join('|', @attributes);
+   if (defined $validAttributes{$element})
+   {
+      $validAttributes{$element} .= "|$attr";
+   }
+   else
+   {
+      $validAttributes{$element} = "$attr";
+   }
+}
+
+#========================================================================
+# Function:	wanted
+# Purpose:	This is called by &find() to determined whether a file
+#               is wanted.  We're looking for files, with the filename
+#               extension .html or .htm.
+#========================================================================
+sub wanted
+{
+   /\.(html|htm)$/ && -f $_ && &WebLint($_,$name);
+}
+
+#========================================================================
+# Function:	ReadDefaults
+# Purpose:	Read the built-in defaults.  These are stored at the end
+#               of the script, after the __END__, and read from the
+#               DATA filehandle.
+#========================================================================
+sub ReadDefaults
+{
+   while (<DATA>)
+   {
+      next if /^$/;
+      ($id,$default,$message) = m|^([^:]+):([^:]+):(.*)$|g;
+      $enabled{$id} = ($default eq 'ENABLE');
+      ($message{$id} = $3) =~ s/"/\\"/g;
+   }
+}
+
+__END__
+upper-case:DISABLE:tag <$argv[0]> is not in upper case.
+lower-case:DISABLE:tag <$argv[0]> is not in lower case.
+mixed-case:ENABLE:
+here-anchor:ENABLE:bad form to use `here' as an anchor!
+require-head:ENABLE:no <TITLE> in HEAD element.
+once-only:ENABLE:tag <$argv[0]> should only appear once.  I saw one on line $argv[1]!
+body-no-head:ENABLE:<BODY> but no <HEAD>.
+html-outer:ENABLE:outer tags should be <HTML> .. </HTML>.
+head-element:ENABLE:<$argv[0]> can only appear in the HEAD element.
+non-head-element:ENABLE:<$argv[0]> cannot appear in the HEAD element.
+list-item:ENABLE:<LI> can only appear in DIR, MENU, OL or UL elements.
+obsolete:ENABLE:<$argv[0]> is obsolete.
+mis-match:ENABLE:unmatched </$argv[0]> (no matching <$argv[0]> seen).
+img-alt:ENABLE:IMG does not have ALT text defined.
+nested-element:ENABLE:<$argv[0]> cannot be nested -- </$argv[0]> not yet seen for <$argv[0]> on line $argv[1].
+defn-list-elements:ENABLE:<$argv[0]> can only be used in definition list (<DL>..</DL>).
+form-item:ENABLE:<$argv[0]> can only appear in a FORM element.
+select-option:ENABLE:<OPTION> can only appear within a SELECT element.
+mailto-link:DISABLE:Did not see <LINK REV=MADE HREF="mailto:..."> in HEAD.
+element-overlap:ENABLE:</$argv[0]> on line $argv[1] seems to overlap <$argv[2]>, opened on line $argv[3].
+unclosed-element:ENABLE:No closing </$argv[0]> seen for <$argv[0]> on line $argv[1].
+markup-in-comment:ENABLE:Markup embedded in a comment can confuse some browsers.
+unknown-attribute:ENABLE:Unknown attribute "$argv[1]" for element <$argv[0]>.
+leading-whitespace:ENABLE:Should not have whitespace between "<" and "$argv[0]>".
+required-attribute:ENABLE:$argv[0] attribute is required for <$argv[1]>.
+unknown-element:ENABLE:unknown element <$argv[0]>.
+odd-quotes:ENABLE:odd number of quotes in element <$argv[0]>.
+heading-order:ENABLE:heading <$argv[0]> follows <H$argv[1]> on line $argv[2].
+bad-link:DISABLE:target for anchor "$argv[0]" not found.
+expected-attribute:ENABLE:expected an attribute for <$argv[0]>.
+unexpected-open:ENABLE:unexpected < in <$argv[0]> -- potentially unclosed element.

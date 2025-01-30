@@ -1,0 +1,8 @@
+                       Fronttalk Command:  WHO
+
+Usage:  WHO
+
+Display a list of users logged on to the local server.  It would be nice
+if there were a way to display lists of users connected to the remote server,
+but there isn't.  This is just an alias for the Unix "who" command included
+for Picospan compatibility.

@@ -1,0 +1,19 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+(lib/postlog) include
+
+/http_content_type (text/plain) store
+
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayresp ! {(<ERROR MSG="Cannot post to )conf quote( item )item(">\n) stop} if
+
+/texttype (text/plain) store
+/hidden 0 store
+/erased 0 store
+/expect_resp 0 store
+pseudo {/alias pseudo store} if
+
+post_resp
+
+(<OK N=)exch(>
+)

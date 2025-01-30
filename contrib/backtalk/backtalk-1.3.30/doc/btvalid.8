@@ -1,0 +1,49 @@
+.\"	@(#)btvalid.8	
+.\"
+.TH BTVALID 8 "Mar 26, 2000"
+.AT 3
+.SH NAME
+btvalid \- validate or invalidate a Backtalk account
+.SH SYNOPSIS
+.B btvalid
+username y|n
+.SH DESCRIPTION
+.I Btvalid
+validates or invalidates a Backtalk conferencing system account.
+It can only be run by a superuser or from the Backtalk administration
+account (usually called 'backtalk').
+.PP
+If the second argument is
+.B y
+then the account status is set to 'validated'.
+If the second argument is
+.B n
+then the account status is set to 'invalidated'.
+.PP
+It is also possible to validate or invalidate accounts through the
+web-based Backtalk administrative interface.
+.PP
+Only validated accounts can be used.
+Depending on your site's configuration,
+accounts may be created in either a validated or unvalidated state.
+Validated accounts may be used immediately.
+Unvalidated accounts cannot be used until
+some administrator has validated them,
+using either the
+.B btvalid
+command or the web-based administrative interface.
+.PP
+If an account is
+invalidated
+then it continues to exist, but can not be used unless it is once again
+validated.
+The system distinguishes between 'unvalidated' accounts and 'invalidated'
+accounts.  Both unusable, but the reasons are different.
+.PP
+.SH AUTHORS
+Jan Wolter and Steve Weiss
+(backtalk@hvcn.org)
+.SH "SEE ALSO"
+.IR btmkuser (8),
+.IR btrmuser (8),
+.IR btpasswd (8)

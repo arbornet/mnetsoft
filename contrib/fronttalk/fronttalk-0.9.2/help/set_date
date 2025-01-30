@@ -1,0 +1,7 @@
+                       Fronttalk Setting:  DATE
+
+Usage:  SET DATE
+        SET NODATE
+
+The DATE flag controls whether or not posting dates are printed in the headers
+of each item and response.  DATE is the default.

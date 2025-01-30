@@ -1,0 +1,3 @@
+% Current Bubblegum Version Number:
+
+/if_version (Bubblegum version 1.2.4) defconstant

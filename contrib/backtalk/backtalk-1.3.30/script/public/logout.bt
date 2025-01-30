@@ -1,0 +1,13 @@
+% Backtalk Logout Script -- (c) 2004, Jan Wolter
+%
+% This is used to perform logouts for systems with session IDs.  This has to
+% be a public script.  If a "goto" argument is passed in, show that page after
+% logout.  Otherwise show the default logout_url from the config file.
+
+killsession
+
+/goto defined {
+  /http_location goto store
+} {
+  /http_location logout_url store
+} ifelse

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Look up a noise in the party noise file.
+
+exec egrep -i -- "$@" /usr/local/etc/party/noisetab

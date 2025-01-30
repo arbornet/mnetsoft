@@ -1,0 +1,12 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+These games are available on Grex:
+"
+ls -C /usr/games
+echo -n "
+Name of game you would like to play: "
+read game
+echo ""
+$game

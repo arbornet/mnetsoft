@@ -1,0 +1,22 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% begin - webscript code to welcome user to vanilla flavor interface
+
+(
+<HTML>
+<HEAD>
+<TITLE>) bbsname ( Backtalk Vanilla Interface</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">\n)
+(S) flavor(meta)+ include
+(</HEAD>
+<BODY>
+) bbslogo (<h1>Backtalk Vanilla Interface</h1>
+
+If you are new to computer conferencing, please <A HREF=info>read
+the instructions</a>. <p>
+)
+sessions ! {
+  (This page is a good one to use as a "Bookmark" for doing conferencing
+at )bbsname(. <p>\n)} if
+
+flavor (begin.x) + chain

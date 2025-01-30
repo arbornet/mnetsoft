@@ -1,0 +1,77 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/butsel 6 defconstant flavor(buttondef)+ include
+Conference cap( Home Page)+ (pistachio/help/header) include
+
+(<H2>The )Conference cap( Home Page:</H2>
+
+Every Backtalk )Conference( has a home page which provides the basic commands
+for reading and posting to that )Conference(.  You can reach the )Conference(
+home page from the )hrefbegin(help/begin>entrance page</A> by selecting a
+)Conference( to read and you may return to it using the )confhome_button( on
+many other pages.
+<P>
+The )Conference( home page starts with a display of the )Conference( login file,
+which includes introductory text and images.  This can be changed by the
+)Fairwitness(.
+After this, it tells how many new )Items( and )Items( with new )Responses(
+there are in the )Conference(.
+
+<H2>Reading the )Conference cap(:</H2>
+
+If the )Conference( has any new material in it, you can read it simply by
+clicking the )readnew_button( button.
+This will put you into the )hrefbegin(help/read>read )Item( pages</A>.
+<P>
+If you know the )Item( numbers you want to see, just type them into the
+``Read )Item( numbers'' box.  You can type a single number, multiple numbers
+separated by spaces or commas, or ranges of numbers separated by dashes.
+A ``$'' may be used to indicate the last )Item(, so if you type ``$,4-6''
+you will be shown the last )Item(, followed by )Items( 4, 5 and 6.
+<P>
+There is a large collection of other )Item( reading commands available if
+you first press the )hrefbegin(help/browse>)itemlist_button(</A> button.
+<P>
+You can search the )Conference( for )Items( with particular words in their titles
+or )Response( text, or for postings by particular users, by using the
+button labeled ``)hrefbegin(help/findform>Search the )Conference(</A>.''
+
+<H2>Posting to a)AConference cap 1 100 substr(:</H2>
+
+To post )Responses( to )AnItem( you should first read the )Item(, as above, but
+you can post new )Items( directly from the )Conference( home page using the
+``)hrefbegin(help/enter>Enter a new )Item(</A>'' button.  When you enter
+)AnItem( or )AResponse(, your name will be set by default to the one shown on
+the)Conference( home page.  You can change this default name by typing in a new
+name, and pressing the adjacent ``change it'' button.
+
+<H2>Editting Your )Conference cap( Settings:</H2>
+
+You can edit your )Conference( settings by clicking on
+the button.  Currently this allows you to control the colors used for text
+and backgrounds, the button style, and the default order in which )Items(
+are read.
+
+<H2>Resigning from a)AConference cap 1 100 substr(:</H2>
+
+You join )AConference( automatically just by going to the )Conference
+( home page.  If you decide you never want to go there again, you can use the
+``resign from this )Conference('' button to do so.
+When you resign, the system will recover a little disk space by 
+forgetting which )Items( and )Responses( you have already seen.
+
+<H2>)Fairwitness cap( Commands:</H2>
+
+If you are )AFairwitness( in this )Conference
+(, you will be supplied with several
+additional bright red )Fairwitness( buttons.  There is a button for
+linking )Items( in from other )Conferences(, and if the )Conference( is closed,
+there is a button to edit the user list for the )Conference(.
+<P>
+There are also some important )Fairwitness( commands on the )hrefbegin
+(help/browse>)Item( list page</A>.)
+global_footer
+(</BODY></HTML>
+)

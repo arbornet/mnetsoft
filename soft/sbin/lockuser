@@ -1,0 +1,120 @@
+#!/usr/bin/perl
+
+
+# Program to lock a user's account and log who did it and why.
+# Written by Valerie Mates, 9/10/2001.
+
+# Name of the file that we log to:
+$logfile = "/var/log/lock.log";
+
+# Make sure that root is running this.
+# (A convenience only -- if a non-root ran this program, nothing would happen.)
+if ($< != 0) {
+   print "Sorry, must be root to run this program.\n";
+   exit;
+}
+
+# Figure out which user to lock:
+$user = $ARGV[0];
+if ($user eq "") {
+   print "User to lock: ";
+   $user = <STDIN>;
+   chomp($user);
+}
+
+# Validate what we can:
+if (length($user) < 1) {
+   print "Exiting...\n";
+   exit;
+}
+
+# Look up user's home directory, which has the nice side effect of
+# verifying that user exists:
+$homedir = `/cyberspace/bin/homedir $user`;
+chomp($homedir);
+if ((length($homedir) < 2) || ($homedir =~ 'not found')) {
+   print "Problem finding home directory ($homedir).  User not locked.\n";
+   exit;
+}
+print "Homedir is $homedir\n";
+
+# Look up user's membership status:
+if (!open(MEMBERS, "/cyberspace/bin/members|")) {
+   print "Could not run /cyberspace/bin/members command to check \n";
+   print "user's membership status.  Error $!\n";
+   print "Continuing anyway....\n\n";
+} else {
+   while(<MEMBERS>) {
+      chomp;
+      $members{$_} = 1;
+   }
+   close(MEMBERS);
+   if ($members{$user} == 1) {
+      print <<EOF;
+****
+**** NOTE: $user is a member of Grex. ****
+****
+EOF
+   }
+}
+
+# Ask for the reason why:
+print "Locking user $user.\n";
+print "Reason: ";
+$reason = <STDIN>;
+chomp($reason);
+
+# Verify that it's OK to go ahead:
+print qq{\nIs it OK to lock user "$user" for reason:\n};
+print qq{   "$reason" ? (n/y) };
+
+# Unless user said to continue, exit.
+$answer = <STDIN>;
+chomp($answer);
+if ($answer ne "y") {
+   print "Exiting....\n";
+   exit;
+}
+
+# Say what we're doing:
+print "Locking user $user....\n";
+
+# We lock by expiring the account
+system('/usr/sbin/usermod', '-e', 'Jan 2 1976', $user);
+
+# Shut down various backdoors, most of which don't actually apply to Grex
+system('/bin/rm', '-f', "$homedir/{.ssh,.rhosts,.shosts,.klogin}", "/etc/skey/$user");
+
+# Logs what we did, offer to depermit the homedir,
+if (!open(LOG, ">>$logfile")) {
+   print "Could not append to log file $logfile.  Error $!\n";
+   exit;
+}
+print LOG "" . localtime() . " $ENV{USER} [$user] $reason\n";
+close(LOG);
+
+# See if we should depermit the homedir.
+print <<EOF;
+Change permissions on $homedir to 000?
+      y = yes, $homedir only
+      n = no, don't change permissions
+      r = recursively change permissions
+EOF
+print "(y/n/r) ";
+$resp = <STDIN>;
+chomp($resp);
+if ($resp eq "n") {
+   print "Directory $homedir not changed.\n";
+} elsif ($resp eq "r") {
+   if (! -f "$homedir/oldperms") {
+      print "Recording old perms in $homedir/oldperms\n";
+      system "ls -l -d $homedir > $homedir/oldperms";
+   }
+   system "chmod -R 000 $homedir";
+} else {
+   if (! -f "$homedir/oldperms") {
+      print "Recording old perms in $homedir/oldperms\n";
+      system "ls -l -d $homedir > $homedir/oldperms";
+   }
+   system "chmod 000 $homedir";
+}

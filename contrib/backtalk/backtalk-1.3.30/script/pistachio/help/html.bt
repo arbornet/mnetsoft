@@ -1,0 +1,624 @@
+% Backtalk Pistachio Interface -- (c) 1999-2003, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+(Backtalk HTML Tags) (pistachio/help/header) include
+
+(<H2>Backtalk HTML Tags:</H2>
+
+If you enter Backtalk )Items( or )Responses( in "HTML" or "Lazy HTML" mode,
+you will be able to use a limited subset of the standard HTML formatting
+tags in your text.
+<P>
+This page gives a very brief description of some of the HTML tags most
+commonly used in Backtalk )Items( and )Responses(.
+It isn't really a very good HTML manual.
+There are many more complete
+<A HREF="http://directory.google.com/Top/Computers/Data_Formats/Markup_Languages/HTML/Tutorials/">
+HTML tutorials available on the web</A>,
+and lots of books are available.
+
+<H3>Spacing</H3>
+
+The first important thing to understand about HTML is that it always gets
+reformatted.  It doesn't matter what kinds of spaces and tabs and blank
+lines you type in - the browser treats all white space alike and reformats
+the lines to nice even lengths.
+Thus, the two inputs below, both give exactly the same output:
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD WIDTH=50%>
+<PRE>
+The safest general characterization of
+the European philosophical tradition
+is that it consists of a series of
+footnotes to Plato.</PRE>
+</TD><TD VALIGN=TOP>
+The safest general characterization of
+the European philosophical tradition
+is that it consists of a series of
+footnotes to Plato.
+</TD></TR><TR><TD>
+<PRE>
+The safest
+    general characterization       of the
+European philosophical
+
+tradition
+
+               is       that
+it consists of a series
+    of footnotes to Plato.</PRE>
+</TD><TD VALIGN=TOP>
+The safest
+    general characterization       of the
+European philosophical
+
+tradition
+
+               is       that
+it consists of a series
+    of footnotes to Plato.
+</TD></TR></TABLE>
+So, if you don't want your writings all formatted into one long
+paragraph, you need to insert some HTML tags to tell the browser
+where to insert line breaks and paragraph breaks.
+<P>
+The <TT>&lt;BR&gt;</TT> tag inserts a line break.
+<P>
+The <TT>&lt;P&gt;</TT> tag inserts a paragraph break.
+<P>
+For example:
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD WIDTH=50%>
+<PRE>
+The codish lays a thousand eggs,
+the homely hen lays one.
+
+The codfish never cackles
+To tell you what she's done.
+
+And so we scorn the codfish,
+While the humble hen we prize,
+
+Which only goes to show you
+That it pays to advertize.
+</PRE>
+</TD><TD VALIGN=TOP>
+The codish lays a thousand eggs,
+the homely hen lays one.
+
+The codfish never cackles
+To tell you what she's done.
+
+And so we scorn the codfish,
+While the humble hen we prize,
+
+Which only goes to show you
+That it pays to advertize.
+</TD></TR><TR><TD VALIGN=TOP>
+<PRE>
+The codish lays a thousand eggs,&lt;BR&gt;the
+homely hen lays one.&lt;P&gt;The codfish never
+cackles&lt;BR&gt;To tell you what she's done.
+&lt;P&gt;And so we scorn the codfish,&lt;BR&gt;While
+the humble hen we prize,&lt;P&gt;Which only
+goes to show you&lt;BR&gt;That it pays to
+advertize.
+</PRE>
+</TD><TD VALIGN=TOP>
+The codish lays a thousand eggs,<BR>the
+homely hen lays one.<P>The codfish never
+cackles<BR>To tell you what she's done.
+<P>And so we scorn the codfish,<BR>While
+the humble hen we prize,<P>Which only
+goes to show you<BR>That it pays to
+advertize.
+</TD></TR></TABLE>
+Backtalk's "Lazy HTML" setting helps a little with this by
+automatically converting any blank lines you enter into
+<TT>&lt;P&gt;</TT> tags.
+
+<H3>Funky Characters</H3>
+
+All HTML tags are enclosed by &lt; and &gt; characters, like
+the <TT>&lt;BR&gt;</TT> tag in the examples above.
+So those characters (and a few others) have special meanings
+in HTML text.
+Because of this, if you actually want them to appear in the 
+output you have to replace them with the following strange
+codes:
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD ALIGN=CENTER WIDTH=50%><TT>&amp;lt;</TT></TD><TD ALIGN=CENTER>&lt;</TD></TR>
+<TR><TD ALIGN=CENTER><TT>&amp;gt;</TT></TD><TD ALIGN=CENTER>&gt;</TD></TR>
+<TR><TD ALIGN=CENTER><TT>&amp;amp;</TT></TD><TD ALIGN=CENTER>&amp;</TD></TR>
+</TABLE>
+There are hundreds of similar codes, starting with ampersands
+and ending with semicolons, which can produce all sorts of
+interesting characters, but these three are the most commonly
+used ones.
+<P>
+Here's a couple examples.  In the first one, we forgot
+to replace the funky characters with funkier codes, so
+it thought <TT>&lt;OUCH&gt;</TT> was a tag, and didn't
+show it.
+The second example fixes this.
+(The ampersand in this example seems to work OK either way
+in most browsers).
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD WIDTH=50%>
+<PRE>
+"&lt;OUCH&gt;," said the man from AT&amp;T,
+dropping his silver hammer.
+</PRE>
+</TD><TD VALIGN=TOP>
+"<OUCH>," said the man from AT&T,
+dropping his silver hammer.
+</TD></TR><TR><TD VALIGN=TOP>
+<PRE>
+"&amp;lt;OUCH&amp;gt;," said the man from AT&amp;amp;T,
+dropping his silver hammer.
+</PRE>
+</TD><TD VALIGN=TOP>
+"&lt;OUCH&gt;," said the man from AT&amp;T,
+dropping his silver hammer.
+</TD></TR></TABLE>
+
+<H3>Fonts and Styles</H3>
+
+OK, we've got the annoying things out of the way, lets do some
+fun stuff.
+<P>
+If you want to set a word or two in <STRONG>bold face</STRONG>,
+you can insert a <TT>&lt;STRONG&gt;</TT> tag where you want it to
+start, and a <TT>&lt;/STRONG&gt;</TT> where you want it to end.
+Lots of tags have beginnings and endings like this, and the ending
+tag is always just the beginning tag with a slash in it.
+<P>
+Here are some examples of tags used to change the font and style of
+your type:
+<TABLE WIDTH=100% BORDER=1>
+<TH WIDTH=50%>you type:</TH><TH WIDTH=50%>people see:</TH>
+<TR><TD WIDTH=50%><TT>This is &lt;STRONG&gt;bold face&lt;/STRONG&gt; text</TT></TD>
+<TD WIDTH=50%>This is <STRONG>bold face</STRONG> text</TD></TR>
+<TR><TD><TT>This is &lt;EM&gt;emphasised&lt;/EM&gt; text</TT></TD>
+<TD>This is <EM>emphasised</EM> text</TD></TR>
+<TR><TD><TT>This text is
+&lt;EM&gt;&lt;STRONG&gt;bold and<BR>emphasized&lt;/STRONG&gt;&lt;/EM&gt;</TT></TD>
+<TD>This text is <EM><STRONG>bold and emphasized</STRONG></EM></TD></TR>
+<TR><TD><TT>This text is in a &lt;TT&gt;typewriter&lt;/TT&gt; font</TT></TD>
+<TD>This text is in a <TT>typewriter</TT> font</TD></TR>
+<TR><TD><TT>This text is &lt;U&gt;underlined&lt;/U&gt;.</TT></TD>
+<TD>This text is <U>underlined</U>.</TD></TR>
+<TR><TD><TT>This text is &lt;STRIKE&gt;stuck out&lt;/STRIKE&gt;.</TT></TD>
+<TD>This text is <STRIKE>struck out</STRIKE>.</TD></TR>
+<TR><TD><TT>This text is &lt;BIG&gt;big&lt;/BIG&gt;</TT></TD>
+<TD>This text is <BIG>big</BIG></TD></TR>
+<TR><TD><TT>This text is &lt;SMALL&gt;small&lt;/SMALL&gt;</TT></TD>
+<TD>This text is <SMALL>small</SMALL></TD></TR>
+<TR><TD><TT>This text is &lt;FONT SIZE=+1&gt;one size bigger&lt;/FONT&gt;</TT></TD>
+<TD>This text is <FONT SIZE=+1>one size bigger</FONT></TD></TR>
+<TR><TD><TT>This text is &lt;FONT SIZE=+2&gt;two sizes bigger&lt;/FONT&gt;</TT></TD>
+<TD>This text is <FONT SIZE=+2>two sizes bigger</FONT></TD></TR>
+<TR><TD><TT>This text is &lt;FONT SIZE=-1&gt;one size smaller&lt;/FONT&gt;</TT></TD>
+<TD>This text is <FONT SIZE=-1>one size smaller</FONT></TD></TR>
+<TR><TD><TT>This text is &lt;FONT SIZE=-2&gt;two sizes smaller&lt;/FONT&gt;</TT></TD>
+<TD>This text is <FONT SIZE=-2>two sizes smaller</FONT></TD></TR>
+<TR><TD><TT>E = m c&lt;SUP&gt;2&lt;/SUP&gt;</TT></TD>
+<TD>E = m c<SUP>2</SUP>
+<TR><TD><TT>x = x&lt;SUB&gt;1&lt;/SUB&gt; + x&lt;SUB&gt;2&lt;/SUB&gt;</TT></TD>
+<TD>x = x<SUB>1</SUB> + x<SUB>2</SUB></TD></TR>
+<TR><TD><TT>This text is &lt;FONT COLOR=RED&gt;red&lt;/FONT&gt;,
+<BR>&lt;FONT COLOR=WHITE&gt;white&lt;/FONT&gt;, and
+<BR>&lt;FONT COLOR=BLUE&gt;blue&lt;/FONT&gt;!</TT></TD>
+<TD>This text is <FONT COLOR=RED>red</FONT>,
+<FONT COLOR=WHITE>white</FONT>, and
+<FONT COLOR=BLUE>blue</FONT>!</TT></TD></TR>
+<TR><TD><TT>This is &lt;STRONG&gt;&lt;FONT SIZE=+2 COLOR=GREEN&gt;big
+bold green&lt;/FONT&gt;&lt;/STRONG&gt; text.</TT></TD>
+<TD>This is <STRONG><FONT SIZE=+2 COLOR=GREEN>big bold green</FONT></STRONG>
+text.</TD></TR>
+</TABLE>
+One caution:  Changing the font color is a little dangerous
+in Backtalk, because you don't know what background color it is being
+displayed against.  White text on a white background is invisible.
+A )Response( that looks great to you might look bad to other people, since
+different interfaces use different background colors for different usersy
+
+<H3>Lists and Quotations</H3>
+
+HTML has several sets of tags that can be used to build up
+nice list structures.  Here are some examples:
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD WIDTH=50% VALIGN=TOP>
+<PRE>
+In &lt;EM&gt;Roving Commission: My Early
+Life&lt;/EM&gt; Sir Winston Churchill said,
+&lt;BLOCKQUOTE&gt;
+It is a good thing for an uneducated man
+to read books of quotations.  Bartlett's
+&lt;EM&gt;Familiar Quotations&lt;/EM&gt;
+is an admirable work and I studied it
+intently.
+&lt;/BLOCKQUOTE&gt;
+This is, of course, quoted in
+Bartlett's &lt;EM&gt;Familiar Quotations&lt;/EM&gt;.
+</PRE>
+</TD><TD VALIGN=TOP>
+In <EM>Roving Commission: My Early Life</EM>
+Sir Winston Churchill said,
+<BLOCKQUOTE>
+It is a good thing for an uneducated man to read books of
+quotations.  Bartlett's <EM>Familiar Quotations</EM>
+is an admirable work and I studied it intently.
+</BLOCKQUOTE>
+This is, of course, quoted in Bartlett's <EM>Familiar
+Quotations</EM>.
+</TD></TR><TR><TD>
+<PRE>
+There are three things every
+person should do:
+&lt;OL&gt;
+&lt;LI&gt; Travel with a penguin (or at least
+a medium-sized giraffe).
+&lt;LI&gt; Make love in a tree
+(or at least on a wind-swept roof top).
+&lt;LI&gt; Eat ice cream in the artic (or at
+least curry in Calcutta).
+&lt;/OL&gt;
+Everything else is optional.
+</PRE>
+</TD><TD VALIGN=TOP>
+There are three things every
+person should do:
+<OL>
+<LI> Travel with a penguin (or at least
+a medium-sized giraffe).
+<LI> Make love in a tree
+(or at least on a wind-swept roof top).
+<LI> Eat ice cream in the artic (or at
+least curry in Calcutta).
+</OL>
+Everything else is optional.
+</TD></TR><TR><TD>
+<PRE>
+Things to pack for your trip to
+New Zealand:
+&lt;UL&gt;
+&lt;LI&gt; silly hats
+&lt;LI&gt; kazoos
+     &lt;UL&gt;
+     &lt;LI&gt; red ones
+     &lt;LI&gt; blue ones
+     &lt;/UL&gt;
+&lt;LI&gt; bicycle pumps
+&lt;/UL&gt;
+</PRE>
+</TD><TD VALIGN=TOP>
+Things to pack for your trip to
+New Zealand:
+<UL>
+<LI> silly hats
+<LI> kazoos
+     <UL>
+     <LI> red ones
+     <LI> blue ones
+     </UL>
+<LI> bicycle pumps
+</UL>
+</TD></TR><TR><TD>
+<PRE>
+Here is a list of definitions:
+&lt;DL&gt;
+&lt;DT&gt; kazoo
+&lt;DD&gt; a wind-blown noise-maker
+&lt;DT&gt; kalamazoo
+&lt;DD&gt; a town in Michigan with two more
+     syllables than a wind-blown noise maker.
+&lt;/DL&gt;
+</PRE>
+</TD><TD VALIGN=TOP>
+Here is a list of definitions:
+<DL>
+<DT> kazoo
+<DD> a wind-blown noise-maker
+<DT> kalamazoo
+<DD> a town in Michigan with two more syllables
+     than a wind-blown noise maker.
+</DL>
+</TD></TR></TABLE>
+
+<H3>Pictures</H3>
+
+You can include images in your text with the IMG tag.
+The images have to be stored someplace on the Web,
+and must have URLs.
+<P>
+Note that some )Conferences( may have images disabled, so this tag won't
+work in )Items( or )Responses( entered there.
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD WIDTH=50% VALIGN=TOP>
+<PRE>
+&lt;IMG SRC=")imghost(/backtalk.jpg"&gt;
+&lt;BR&gt;
+The Backtalk image, shown above, is from a book
+of traditional regional coustumes of Germany.
+</PRE>
+</TD><TD VALIGN=TOP>
+<IMG SRC=")imghost(/backtalk.jpg">
+<BR>
+The Backtalk image, shown above, is from a book
+of traditional regional coustumes of Germany.
+</TD></TR></TABLE>
+
+<H3>Links</H3>
+
+You can put clickable links into your text too:
+<TABLE WIDTH=100% BORDER=1>
+<TH>you type:</TH><TH>people see:</TH>
+<TR><TD WIDTH=50% VALIGN=TOP>
+<PRE>
+The
+&lt;A HREF="http://www.unixpapa.com/backtalk/"&gt;
+Backtalk home page&lt;/A&gt;
+always has the latest Backtalk news on it.
+</PRE>
+</TD><TD VALIGN=TOP>
+The
+<A HREF="http://www.unixpapa.com/backtalk/">
+Backtalk home page</A>
+always has the latest Backtalk news on it.
+</TD></TR></TABLE>
+<P>
+Backtalk supports a small extension to standard HTML.
+It allows it's special internal links to be used inside links.
+So if you enter <TT>&lt;A&nbsp;HREF="conf:mars"&gt;</TT>, then
+Backtalk will convert the URL into a link to the "mars" conference
+home page.
+
+<H3>Other Tags</H3>
+
+The following other HTML tags may also be used in Backtalk
+)Responses(.  I haven't documented them here, because I'm
+tired of typing, but any decent HTML reference book or
+web page will tell you more about them.
+
+<TABLE BORDER=1>
+<TR><TD VALIGN=TOP>
+<TT>
+&lt;TABLE&gt;<BR>
+&lt;TH&gt;<BR>
+&lt;TR&gt;<BR>
+&lt;TD&gt;<BR>
+&lt;CAPTION&gt;<BR>
+&lt;THEAD&gt;<BR>
+&lt;TBODY&gt;<BR>
+&lt;TFOOT&gt;<BR>
+&lt;COLGROUP&gt;<BR>
+&lt;COL&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to generate tables (like this one).
+This is pretty useful, but more complex that I want to describe in this
+little page.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;ABBR&gt;<BR>
+&lt;ACRONYM&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format abbreviations, like <ABBR>HTML</ABBR>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;CITE&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format <CITE>citations</CITE>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;Q&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format <Q>quoted text</Q>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;DEL&gt;<BR>
+&lt;INS&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format <DEL>deleted</DEL> and <INS>inserted</INS> text.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;DFN&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format <DFN>definitions</DFN>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;CODE&gt;<BR>
+&lt;LISTING&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format program fragments.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;VAR&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format <VAR>variable_names</VAR>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;KBD&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to format <KBD>keyboard input</KBD>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;H1&gt;<BR>
+&lt;H2&gt;<BR>
+&lt;H3&gt;<BR>
+&lt;H4&gt;<BR>
+&lt;H5&gt;<BR>
+&lt;H6&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Various levels of section headings, like those marking
+the sections of this document.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;DIR&gt;<BR>
+&lt;MENU&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Directory and Menu listings, but most browsers treat them
+exactly like <TT>&lt;UL&gt;</TT>.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;PRE&gt;<BR>
+&lt;SAMP&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Preserve line breaks, and display in fixed-width font.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;XMP&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Similar to <TT>&lt;PRE&gt;</TT>, but tags aren't expanded inside.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;SPACER&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Make space. Netscape only.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;DIV&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Logical block creation.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;NOBR&gt;<BR>
+&lt;WBR&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+<TT>&lt;NOBR&gt;</TT> make a section of text that
+doesn't get wrapped, except where you put a
+<TT>&lt;WBR&gt;</TT> tag.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;BDO&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to make text go right to left instead of left to right.
+This is needed in some foreign languages, but, so far as I know,
+doesn't work in any major browser.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;AREA&gt;<BR>
+&lt;MAP&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Used to define image maps.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;MULTICOL&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Multi-column output.  Older versions of Netscape only.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;BANNER&gt;<BR>
+&lt;MARQUEE&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Banners and scrolling marquees.  Internet Explorer only.
+</TD></TR><TR><TD VALIGN=TOP>
+<TT>
+&lt;CENTER&gt;
+</TT>
+</TD><TD VALIGN=TOP>
+Center a block of text.
+</TD></TR></TABLE>
+
+<H3>Prohibited Tags</H3>
+
+Lots of perfectly good HTML tags aren't allowed in Backtalk
+)Responses(.  Mostly they are tags that would mess up the rest
+of the page.  Some are just too rarely supported by browsers.
+The <TT>&lt;HR&gt;</TT> tag is banned because we use horizontal
+rules to separate )Responses(, so we don't want people using
+them inside )Responses(.
+<P>
+If you try to use any of these in a
+Backtalk )Response(, they just get stripped out.
+<P>
+Basically, all tags except those listed above are disallowed.
+Some of the ones that aren't allowed are listed below:
+<BLOCKQUOTE>
+<TT>
+&lt;!-- --&gt;<BR>
+&lt;!DOCTYPE&gt;<BR>
+&lt;APPLET&gt;<BR>
+&lt;AUDIOSCOPE&gt;<BR>
+&lt;BASE&gt;<BR>
+&lt;BASEFONT&gt;<BR>
+&lt;BGSOUND&gt;<BR>
+&lt;BLACKFACE&gt;<BR>
+&lt;BLINK&gt;<BR>
+&lt;BODY&gt;<BR>
+&lt;BQ&gt;<BR>
+&lt;BUTTON&gt;<BR>
+&lt;COMMENT&gt;<BR>
+&lt;EMBED&gt;<BR>
+&lt;FIELDSET&gt;<BR>
+&lt;FN&gt;<BR>
+&lt;FORM&gt;<BR>
+&lt;FRAME&gt;<BR>
+&lt;FRAMESET&gt;<BR>
+&lt;HEAD&gt;<BR>
+&lt;HR&gt;<BR>
+&lt;HTML&gt;<BR>
+&lt;IFRAME&gt;<BR>
+&lt;ILAYER&gt;<BR>
+&lt;INPUT&gt;<BR>
+&lt;ISINDEX&gt;<BR>
+&lt;KEYGEN&gt;<BR>
+&lt;LABEL&gt;<BR>
+&lt;LAYER&gt;<BR>
+&lt;LEGEND&gt;<BR>
+&lt;LINK&gt;<BR>
+&lt;META&gt;<BR>
+&lt;NOEMBED&gt;<BR>
+&lt;NOFRAMES&gt;<BR>
+&lt;NOSCRIPT&gt;<BR>
+&lt;OBJECT&gt;<BR>
+&lt;OPTGROUP&gt;<BR>
+&lt;OPTION&gt;<BR>
+&lt;PARAM&gt;<BR>
+&lt;PLAINTEXT&gt;<BR>
+&lt;SELECT&gt;<BR>
+&lt;SCRIPT&gt;<BR>
+&lt;SPAN&gt;<BR>
+&lt;STYLE&gt;<BR>
+&lt;TEXTAREA&gt;<BR>
+&lt;TITLE&gt;<BR>
+</TT>
+</BLOCKQUOTE>
+
+Futhermore, certain attributes are also automatically stripped out of Backtalk
+response.   Event handler attributes like
+<TT>ONCLICK</TT>, <TT>ONMOUSEOVER</TT>, <TT>ONLOAD</TT>, and such are all
+banned.  The <TT>HREF</TT> attribute is deleted if it's value starts with
+"<TT>javascript:</TT>".  This is all to prevent user's responses from running
+JavaScript code in other user's browsers.
+)
+global_footer
+(</BODY></HTML>
+)

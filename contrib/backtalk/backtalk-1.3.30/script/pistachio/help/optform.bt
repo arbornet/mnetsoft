@@ -1,0 +1,134 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+(Option Setting Page) (pistachio/help/header) include
+
+(<H2>The Option Setting Page:</H2>
+
+This page allows you to set a variety of options that influence the way
+The Pistachio Interface will work for you.
+You set the option by manipulating the various controls, and then
+clicking on the ``Change Settings'' box.
+<P>
+It is reachable from the ``)hrefbegin(help/bio>Personal Information Page</A>''
+which is reachable from the ``)hrefbegin(help/begin>Entrance Page</A>.''
+
+<H2>The ``Use Frames'' Switch:</H2>
+
+Some browsers have the capability to divide the display into separate
+sub-windows called ``frames''.  Pistachio can use this feature to set up
+a non-scrolling control panel on the top of the )hrefbegin
+(/help/read>read )Item(</A> page.
+<P>
+Unfortunately, frames are rather awkwardly implemented even on the browsers
+that have them, so that they tend to slow things down considerably.
+Thus, even if you have a browser that is capable of using frames, you may
+prefer not to use them.
+By default, this switch is on, and Pistachio will use frames on browsers
+that understand frames, but if you turn it off, Pistachio will never use
+frames.
+<P>
+)
+browser 3 ge
+  {(Your current browser does seem to be capable of using frames.)}
+  {(Sadly, your current browser does not appear to be capable of
+   using frames, so this option won't matter to you at all.)}
+ifelse
+(
+
+<H2>The ``Active )Item cap( Summary'' Switch:</H2>
+
+Pistachio can display a list of your hot list )Conferences(, with the numbers
+of new )Items( and )Responses( in them on the entrance page.  If you want this
+to come up immediately whenever you visit the entrance page, set this option.
+If it is not set, you can get the same list by clicking a button on the
+entrance page.  If you have a long hot list, generating the summary might
+be slow, so this option might be better left off.
+
+)
+
+post_log_file {
+(<H2>The ``Recently Posted Messages'' Setting:</H2>
+
+Pistachio can display a list of the most recently posted )Items( and )Responses(
+on the entrance page.  If this is enabled, it shows the )dflt_recent_entrance(
+latest postings by default.  You can change the number displayed from the
+options page.  If you don't want a list of recent postings, set the
+number to zero.
+
+)
+} if
+
+
+(<H2>The ``Maximum Number of )Responses cap('' Setting:</H2>
+
+When you read a very long )Item(, you may not want backtalk to send the whole
+)Item( at once.  Thus you can set the maximum number of )Responses( to an )Item(
+that will be sent at once.  If there are more )Responses( than this available,
+then you be given a button to fetch the next bunch.
+<P>
+If you don't want to limit the number of )Responses(, just set this to a large
+value, maybe a thousand or so.
+
+<H2>The ``Default )Response cap( Format'' Setting</H2>
+
+When you enter )Items( and )Responses( in Backtalk, you can usually enter them
+in one of three different formats.
+You can always select which one you want to use when you are doing the posting,
+but this option lets you select which will be the default.
+<P>
+The options are:
+<UL>
+<LI><STRONG>Plain Text</STRONG>
+    <P>
+    The )Item( will be displayed pretty much just as it was when you typed
+    it in, in a fixed width font with the spacing unaltered.
+    <P>
+    The only change that will be made to your text is that certain
+    types of strings, like URLs and cross-references to other )Conferences(,
+    )Items(, and )Responses(,  will be automatically made clickable.
+<P>
+<LI><STRONG>HTML</STRONG>
+    <P>
+    Your )Item( text will be treated as HTML text.
+    HTML is the standard markup language used to create web pages.
+    HTML text is automatically formatted by the reader's browser, usually
+    in a proportional font.
+    <P>
+    You can use some <A HREF=html>HTML tags</A> in your )Response( to control
+    spacing, formatting, text size and style, to include images,
+    and to create links.
+<P>
+<LI><STRONG>Lazy HTML</STRONG>
+    <P>
+    Normally in HTML you need to enter a <TT>&lt;P&gt;</TT> tag every
+    time you want to leave a blank line.
+    The "lazy HTML" option is just like the "HTML" option,
+    but it automatically converts blank lines to <TT>&lt;P&gt;</TT> tags.
+    This is intended to allow you to forget that you are entering HTML
+    text, and still have it come out reasonable looking.
+</UL>
+
+<H2>The ``Auto-Favor'' Settings</H2>
+
+Backtalk allows you to mark items as ``favorites''.  These )Items( are
+shown to you first when you read the )Conference(, and are listed first
+in the )Item( list.  Most commonly )AnItem( become a favorite because
+you clicked a button to make it so.  However, you can also set options
+so that )Items( automatically become permanent or temporary favorites
+when you post them or respond to them.
+<P>
+Permanent favorite )Items( behave just as if you had explicitly set
+them as favorites.  They remain favorites until you explicitly disfavor
+them.  By default, when you enter a new )Item( it becomes a permanent
+favorite.
+<P>
+Temporary favorite )Items( remain favorites only until the next time
+you read some part of the )Item(.  After that, it reverts back to being
+a non-favorite.  By default, when you respond to )AnItem(, it becomes
+a temporary favorite.
+)
+global_footer
+(</BODY></HTML>
+)

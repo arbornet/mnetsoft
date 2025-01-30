@@ -1,0 +1,7 @@
+#!/bin/sh
+for user
+do
+	/usr/sbin/usermod -g verified -G people -L '' $user
+done
+#chmod 664 /etc/group
+#chgrp treasurer /etc/group

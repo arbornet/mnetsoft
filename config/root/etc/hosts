@@ -1,0 +1,15 @@
+#	$OpenBSD: hosts,v 1.12 2009/03/10 00:42:13 deraadt Exp $
+#
+# Host Database
+#
+# RFC 1918 specifies that these networks are "internal".
+# 10.0.0.0      10.255.255.255
+# 172.16.0.0    172.31.255.255
+# 192.168.0.0   192.168.255.255
+#
+::1		localhost localhost.grex.org localhost.cyberspace.org
+127.0.0.1	localhost localhost.grex.org localhost.cyberspace.org
+#
+#216.86.77.194	grex.org grex grex.grex.org smtp.grex.org svn.grex.org grex.cyberspace.org smtp.cyberspace.org
+#162.202.67.158	grex.org grex grex.grex.org smtp.grex.org svn.grex.org grex.cyberspace.org smtp.cyberspace.org
+75.61.90.157	grex.org grex grex.grex.org smtp.grex.org svn.grex.org grex.cyberspace.org smtp.cyberspace.org

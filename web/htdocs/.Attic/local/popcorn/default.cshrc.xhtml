@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:carl@cyberspace.org" />
+
+  <title>default .cshrc</title>
+</head>
+
+<body>
+  <pre>
+
+#
+# the commands in this file are executed each time you
+#  invoke another c shell.  You'll want to put stuff in
+#  this file that relates to the C shell's settings,
+#  that isn't passed on in the environment.
+#  (That is, stty and setenv commands should go in .login,
+#  but alias commands here.)
+#
+if ($?prompt) then
+# The above "if" means that stuff in this if statement will only be executed
+#  for interactive shells, that is, shells where a person is sitting at a
+#  keyboard, not shells where a program is logging in and running unattended.
+
+#       Remember the previous 200 commands I typed.  If I type "!-100"
+#       repeat the command I typed 100 commands ago.  If I type "!xyz"
+#       repeat the last command I typed that started with "xyz".
+        set history=200
+
+#       Create an alias so I can type "hi" to run the "history" command.
+#       The "history" command lists all the previous commands that I've
+#       typed that Grex can remember; the previous line told Grex to
+#       remember 200 of these commands.
+        alias hi history
+
+#       I'm not totally sure, but I think this alias is used to build
+#       programs at low priority.  For example, you would type "go foo"
+#       to build a program called "foo".  The "nice" says to run at low
+#       priority.  The "&gt;&amp;errors" says to write all error messages to a file
+#       called "errors" in the current directory.  The "&amp;" at the end says
+#       to work on this in the background: in other words, Grex keeps
+#       working on running this command while you get your command line
+#       prompt back and can type other commands.
+        alias go "nice +20 make -k \!* &gt;&amp;errors &amp;"
+
+#       This one seems to do a "wait", ring the bell four times, then
+#       display the file "errors" (from the previous command?) on your screen.
+        alias wai "wait;echo '';cat errors"
+
+#       This one is simple.  It creates an alias called "so" for "source".
+#       You'd use the command "source" to run a file of commands, like a
+#       batch file or a shell script.
+        alias so source
+
+#       This is a duplicate of an earlier command.
+        alias hi history
+
+#       This creates an alias for the tset command.  The "\!*" is replaced
+#       by whatever parameters you type for the tset command.  For example,
+#       if you typed "tset foo bar baz" this command would turn it into
+#       "/usr/ucb/tset -s foo bar baz &gt;...."
+#       The $$ is replaced by the process ID of your current process.
+#       This gives you a unique file name in the /tmp directory, in a
+#       format like /tmp/ts.13854
+#       When you type "tset", this creates a temporary file of commands
+#       in the /tmp directory, runs the temporary file, and deletes it.
+        alias tset '/usr/ucb/tset -s \!* &gt;/tmp/ts.$$ ; source /tmp/ts.$$ ; rm /tmp/ts.$$'
+
+
+#And, finally, this is the matching "end" to the "if" above.
+endif
+</pre>
+</body>
+</html>

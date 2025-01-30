@@ -1,0 +1,459 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% confhome script
+%
+% List all items.
+%
+%  conf=           conference name
+%  csel=           rest of list of conferences to visit (optional)
+%  nextnew=        if defined, skip conferences with no new responses
+%  cpass=          password for conference to join (optional)
+%  dunno=          defined if we don't know password for conference
+%  list=	   What to list: "all", "current", "new", "forgotten"
+
+flavor(config.bt)+include
+
+/list defined ! { id {(new)}{(current)} ifelse /list xdef } if
+/fw_opts () def
+/rf_opts () def
+
+/abalone.menujump 0 def
+
+% <history> <pagetitle> pageheader
+/pageheader {
+  /login () def /bgcolor () def /textcolor () def
+  exch /hist xdef
+  (C)
+  [/conf /showforgotten /csel /nextnew /cpass /dunno]
+  [/timezone /abalone.menujump]
+  [/login /bgcolor /textcolor]
+  flavor(header.bt)+include
+  /jpop_gotoconf 1 defconstant	% others are too rarely used
+  flavor(java_gopop)+include
+  hist length {
+    (<TR><TD CLASS=even COLSPAN=2>\n)hist(</TD></TR>\n)
+  } if
+  conf {
+    % display the conference login screen, prefering the html version
+    login {
+      /login `(&nbsp;<BR>)login(<BR>)' def
+    } {
+      /login `(<PRE>\n\n)conf_login expand(</PRE>\n)' def
+    } ifelse
+    (<TR STYLE=")bgcolor {( background: #)bgcolor} if
+    ("><TD STYLE=")textcolor {(color: #)textcolor(;)} if(" COLSPAN=2>)
+    login
+    (</TD></TR><TR><TD CLASS=mast>\n)
+
+    % Display list of moderators
+    /n 0 def
+    ` fwlist
+    {
+      (, ) parse /fwid xdef
+      fwid ! {break} if
+      /n inc
+      ` n 1 gt {(,\n)} if
+        (<A HREF=")
+	/extern_bio constant { 
+	  fwid extern_view_bio
+	} { 
+	  (bio?login=)fwid cgiquote
+	} ifelse (">)
+        fwid userinfo pop pop pop 3 1 roll pop pop
+	dup {nopwedit {(,) clip exch pop} if} {pop fwid} ifelse
+	quote (</A>) '
+       exch
+    } loop
+    (\n) '
+    `n 1 eq {Fairwitness}{Fairwitnesses} ifelse cap (: )' exch
+    n 0 eq {pop (<EM>none</EM>)} if
+    alias { (<BR>\nYour Handle: <A HREF="confname?conf=)conf
+    csel{(&csel=)csel}if
+    /nextnew defined {(&nextnew=)nextnew}if
+    (">)alias quote(</A>\n) } if
+  } {
+    (<TR><TD CLASS=mast><SPAN CLASS=big>No More Conferences</SPAN>\n)
+  } ifelse
+  % Pulldown command menu
+  (</TD><TD CLASS=mast VALIGN=bottom ALIGN=right>
+  <FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+  <INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=")csel(">\n)} if
+  rsel {(<INPUT TYPE=hidden NAME=rsel VALUE=")rsel(">\n)} if
+  list {(<INPUT TYPE=hidden NAME=list VALUE=")list(">\n)} if
+  /nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+  cpass {(<INPUT TYPE=hidden NAME=cpass VALUE=)cpass(>\n)} if
+  /dunno defined {(<INPUT TYPE=hidden NAME=dunno VALUE=)dunno(>\n)} if
+  (<SELECT NAME=command)
+  abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+  (>\n)
+  conf {
+    /viewnewpostings
+    (<OPTION VALUE=readallitem)id!{( SELECTED)}if
+    (>View All )Responses cap(</OPTION>
+    <OPTION VALUE=enteritem>Enter a New )Item cap+(</OPTION>\n)+
+    /rf_opts
+    csel {(<OPTION VALUE=nextconf>Goto Next )Conference cap+(</OPTION>\n)+} if
+    id {
+      (<OPTION VALUE="@1resign">Resign from this )Conference cap+
+      (...</OPTION>\n)+
+      (<OPTION VALUE=confname>Change Name in this )Conference cap+
+      (</OPTION>\n)+
+    } if
+    (<OPTION VALUE=findconf>Search This )Conference cap+(</OPTION>\n)+
+  } if
+  (<OPTION VALUE=entrance>Goto Entrance</OPTION>
+  <OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+  <OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+  id {(<OPTION VALUE=edithot>Edit )Conference cap( Hotlist</OPTION>
+    <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+    sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+  } if
+  (<OPTION VALUE=@0help:confhome>Help...</OPTION>\n)
+  amfw {
+    (<OPTION VALUE="@1linkin">* Link an )Item cap( Into this )Conference cap
+    (...</OPTION>\n)
+    /fw_opts
+    (<OPTION VALUE=confopt>* Change )Conference cap( Options</OPTION>\n)
+  } if
+  (</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+  </TD></TR>
+  </TABLE>\n)
+} def
+
+/no_more_confs {
+  ] bbsname quote pageheader
+  (</BODY></HTML>\n)
+  halt
+} def
+
+[
+conf ! {no_more_confs} if
+{
+  flavor(openconf)+ stopped
+  {
+    (<BR>\n)
+    /skip 1 def
+    /conf () store
+  } {
+    mayread ! secret 2 ne /dunno defined or and
+    {
+      (You do not have access to the ')conf(' )Conference(.<BR>\n)
+      /skip 1 def
+      /conf () store
+    } {
+      % get number of new responses (nnr) and number of new items (nni)
+      conf_new pop 3 copy /nnr xdef /nni xdef /nit xdef + exch pop
+      ! /nextnew defined and dup /skip xdef {
+        (No new responses in the '<A HREF=confhome?conf=)conf(>)conf
+	(</A>' )Conference(.<BR>\n)
+      } if
+    } ifelse
+  } ifelse
+
+  % if skip was set, above and we have more conferences, go on to them
+  skip /nextnew defined and {
+    csel {
+      % skip to the next conference
+      close_conf
+      csel next_conf /conf xstore /csel xstore
+      % erase any password given for the last conference
+      /dunno undef /cpass () store
+      conf {continue} if
+    } if
+    % otherwise...
+    no_more_confs
+  } {
+    % read this conference
+    conf {break} {halt} ifelse
+  } ifelse
+} loop
+] `bbsname ( ) conftitle ( )Conference cap' quote pageheader
+
+% Do some password checking here
+secret 2 eq /dunno defined ! and {
+  (</FORM>)
+  [/conf /csel /nextnew] flavor(confpass)+ jump
+} if
+
+% If we still haven't got read access, say goodbye
+mayread ! {
+  (</FORM>You do not have access to the ``)conf(</A>'' conference.
+  </BODY></HTML>\n)
+  halt
+} if
+
+list (all) eq {/showforgotten 1 def} if
+list (forgotten) eq {/showforgotten 2 def} if
+
+% Some check mark images
+`(<IMG SRC=")imghost(/)flavor
+ (uncheck.gif" BORDER=0 HEIGHT=10 WIDTH=10 ALT="[ ]">)' /uncheck xdef
+`(<IMG SRC=")imghost(/)flavor
+ (check.gif" BORDER=0 HEIGHT=10 WIDTH=10 ALT="[X]">)' /check xdef
+/myarg `(&conf=)conf(&csel=)csel
+  /nextnew defined {(&nextnew=)nextnew} if
+  /cpass defined {(&cpass=)cpass} if
+  /dunno defined {(&dunno=)dunno} if
+  (">)uncheck(</A>)' def
+
+(<P><TABLE WIDTH=100% BORDER=0 CELLPADDING=0>
+<TR><TD CLASS=mast>Listing of:</TD>
+<TD CLASS=mast ALIGN=center>)
+list (new) eq {check} {(<A HREF="confhome?list=new)myarg} ifelse
+(&nbsp;New&nbsp;)Items cap(</TD>
+<TD CLASS=mast ALIGN=center>)
+list (current) eq {check}{(<A HREF="confhome?list=current)myarg} ifelse
+(&nbsp;Unforgotten&nbsp;)Items cap(</TD>
+<TD CLASS=mast ALIGN=center>)
+list (all) eq {check}{(<A HREF="confhome?list=all)myarg} ifelse
+(&nbsp;All&nbsp;)Items cap(</TD>
+<TD CLASS=mast ALIGN=center>)
+list (forgotten) eq {check}{(<A HREF="confhome?list=forgotten)myarg} ifelse
+(&nbsp;Forgotten&nbsp;)Items cap(</TD>
+</TABLE>
+)
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR>
+<TD CLASS=navbar COLSPAN=7>)
+use_rss_icon expose_rss_conf and {
+  (<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD>)
+  (<A HREF="begin">)bbsname(</A> &gt; )conftitle
+  (</TD>\n<TD ALIGN=right><A CLASS=rss TITLE="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference cap(" HREF=")
+  anon_url(cinnamon?conf=)conf(">RSS</A></TD></TR></TABLE>\n)
+} {
+  (<A HREF="begin">)bbsname(</A> &gt; )conftitle
+} ifelse
+(</TD></TR>
+<TR>
+<TD CLASS=colhead>&nbsp;</TD>
+<TD CLASS=colhead ALIGN=CENTER>#</TD>
+<TD CLASS=colhead>)Item cap(</TD>
+<TD CLASS=colhead>Author</TD>
+<TD CLASS=colhead>)Responses cap(</TD>
+<TD CLASS=colhead>New</TD>
+<TD CLASS=colhead NOWRAP>Last )Response cap(</TD>
+</TR>
+)
+
+mark (1-$) 1 fav_sel (,) jointomark /isel xstore	% selector for all items
+0 /cnt xdef		% initialize count of items
+0 /newcnt xdef		% initialize count of new items
+0 /frozecnt xdef	% initialize count of frozen items
+0 /forgotcnt xdef	% initialize count of forgotten items
+0 /retirecnt xdef	% initialize count of retired items
+0 /linkedcnt xdef	% initialize count of linked items
+0 /favcnt xdef		% initialize count of favorite items
+0 /tmpfavcnt xdef	% initialize count of temp favorite items
+0 /odd xdef
+
+
+% begin loop for each item 
+{
+  % get the next item
+  isel next_item
+  {
+    break	% next_item failed - no more items
+  }{
+    this_item
+    {
+      break	% this_item failed - shouldn't happen
+    }{
+      % save new item selector
+      pop /isel xstore 
+
+      % Count new responses - skip non-new ones if only showing new stuff
+      /nnew maxresp id {maxread -} {1 +} ifelse def
+      list (new) eq nnew ! and {continue} if
+
+      % Read the item text
+      (0) read_item {pop (</TABLE></TT><B>Internal error "read_item") halt} if
+
+      /class odd {(odd)}{(even)}ifelse def
+      (<TR>\n)
+      /odd 1 odd - def
+      (<TD CLASS=)class(>)
+      /flag 0 def
+      /fav item /fav get_item_note def
+
+      nnew {
+	(<IMG SRC=")imghost(/)flavor(new.gif" HEIGHT=13 WIDTH=13>)
+	/newcnt inc
+	/flag 1 def
+      } if
+      fav 1 eq {
+	flag {(&nbsp;)} if
+	(<IMG SRC=")imghost(/)flavor(fav.gif" HEIGHT=13 WIDTH=13>)
+	/favcnt inc
+	/flag 1 def
+      } if
+      fav 2 eq {
+	flag {(&nbsp;)} if
+	(<IMG SRC=")imghost(/)flavor(tmpfav.gif" HEIGHT=13 WIDTH=13>)
+	/tmpfavcnt inc
+	/flag 1 def
+      } if
+      retired {
+	flag {(&nbsp;)} if
+	(<IMG SRC=")imghost(/)flavor(retire.gif" HEIGHT=13 WIDTH=13>)
+	/retirecnt inc
+	/flag 1 def
+      } if
+      forgotten {
+	flag {(&nbsp;)} if
+	(<IMG SRC=")imghost(/)flavor(forgot.gif" HEIGHT=13 WIDTH=13>)
+	/forgotcnt inc
+	/flag 1 def
+      } if
+      frozen {
+	flag {(&nbsp;)} if
+	(<IMG SRC=")imghost(/)flavor(froze.gif" HEIGHT=14 WIDTH=13>)
+	/frozecnt inc
+	/flag 1 def
+      } if
+      linked {
+	flag {(&nbsp;)} if
+	(<IMG SRC=")imghost(/)flavor(linked.gif" HEIGHT=13 WIDTH=13>)
+	/linkedcnt inc
+	/flag 1 def
+      } if
+      flag ! { (&nbsp;) } if
+      (</TD>\n)
+
+      % print item number
+      (<TD CLASS=)class( ALIGN=RIGHT VALIGN=TOP><SPAN CLASS=big>)item
+      (</SPAN></TD>\n)
+
+      % print item title
+      (<TD CLASS=)class( VALIGN=TOP><INPUT TYPE=checkbox NAME=isel VALUE=)item
+      (> <A CLASS=big HREF="read?conf=)conf(&csel=)csel
+      (&isel=)item(,)isel(&rsel=)nnew{(new)}{(all)}ifelse(&noskip=1">)
+      item /mytitle get_item_note dup ! {pop title} if quote
+      (</A></SPAN></TD>\n)
+
+      % print author
+      (<TD CLASS=)class( VALIGN=TOP><A CLASS=big HREF=")
+       /extern_bio constant { 
+         authorid extern_view_bio
+       } { 
+         (bio?login=)authorid cgiquote
+       } ifelse
+       (">)authorid cap(</A></TD>\n)
+
+      % print total number of responses
+      (<TD CLASS=)class( ALIGN=RIGHT VALIGN=TOP><SPAN CLASS=big>)maxresp 1 +
+      (&nbsp;</SPAN></TD>\n)
+
+      % print total number of new responses
+      (<TD CLASS=)class( ALIGN=RIGHT VALIGN=TOP><SPAN CLASS=big>)
+      nnew(&nbsp;</SPAN></TD>\n)
+
+      % print last response date
+      /tm lastdate ctime def
+      (<TD CLASS=)class( VALIGN=TOP>)
+      tm 4 6 substr(, )tm 20 4 substr( @ )tm 11 5 substr(</TD>\n)
+      (</TR>\n)
+
+      % update count
+      /cnt inc
+    } ifelse
+  } ifelse
+} loop
+
+newcnt {
+    % If we have new postings, include the view-new option on the menu
+    /viewnewpostings
+      `(<OPTION VALUE=readnewitem)id{( SELECTED)}if
+       (>View New )Responses cap(\n)'
+      def
+} if
+
+cnt ! {
+  (<TR><TD CLASS=even COLSPAN=7 ALIGN=CENTER><SPAN CLASS=bigbold>No )
+  list (new) eq {(New)} if
+  list (current) eq {(Unforgotten)} if
+  list (forgotten) eq {(Forgotten)} if
+  ( )Items cap(</SPAN></TD></TR>\n)
+} if
+
+(</TABLE>
+</FORM>
+)
+
+% display key
+newcnt frozecnt forgotcnt retirecnt favcnt tmpfavcnt or or or or or {
+  (<P><SPAN CLASS=big>Key:&nbsp;&nbsp;&nbsp;)
+  newcnt {
+    (<IMG SRC=")imghost(/)flavor(new.gif" HEIGHT=13 WIDTH=13>)
+    (&nbsp;=&nbsp;New&nbsp;&nbsp;&nbsp;\n)
+  } if
+  favcnt {
+    (<IMG SRC=")imghost(/)flavor(fav.gif" HEIGHT=13 WIDTH=13>)
+    (&nbsp;=&nbsp;Favorite&nbsp;&nbsp;&nbsp;\n)
+  } if
+  tmpfavcnt {
+    (<IMG SRC=")imghost(/)flavor(tmpfav.gif" HEIGHT=13 WIDTH=13>)
+    (&nbsp;=&nbsp;Temp&nbsp;Favorite&nbsp;&nbsp;&nbsp;\n)
+  } if
+  forgotcnt {
+    (<IMG SRC=")imghost(/)flavor(forgot.gif" HEIGHT=13 WIDTH=13>)
+    (&nbsp;=&nbsp;Forgotten&nbsp;&nbsp;&nbsp;\n)
+  } if
+  retirecnt {
+    (<IMG SRC=")imghost(/)flavor(retire.gif" HEIGHT=13 WIDTH=13>)
+    (&nbsp;=&nbsp;Retired&nbsp;&nbsp;&nbsp;\n)
+  } if
+  frozecnt {
+    (<IMG SRC=")imghost(/)flavor(froze.gif" HEIGHT=14 WIDTH=13>)
+    (&nbsp;=&nbsp;Frozen&nbsp;&nbsp;&nbsp;\n)
+  } if
+  linkedcnt {
+    (<IMG SRC=")imghost(/)flavor
+    (linked.gif" HEIGHT=13 WIDTH=13>&nbsp;=&nbsp;Linked\n)
+  } if
+  (</SPAN>\n)
+} if
+
+% Add user options to menu to manipulate selected items
+/rf_opts ()
+    cnt favcnt gt {
+      (<OPTION VALUE=favorall>Favor Selected )Items cap+(</OPTION>\n)++
+    } if
+    favcnt tmpfavcnt + 0 gt {
+      (<OPTION VALUE=disfavorall>Disfavor  Selected )Items cap+(</OPTION>\n)++
+    } if
+    cnt forgotcnt gt {
+      (<OPTION VALUE=forgetall>Forget Selected )Items cap+(</OPTION>\n)++
+    } if
+    forgotcnt 0 gt {
+      (<OPTION VALUE=rememberall>Remember Selected )Items cap+(</OPTION>\n)++
+    } if
+  def
+
+% Add fairwitness options to menu to manipulate selected items
+/fw_opts ()
+  amfw {
+    cnt frozecnt gt {
+      (<OPTION VALUE=freezeall>* Freeze Selected )Items cap+(</OPTION>\n)++
+    } if
+    frozecnt 0 gt {
+      (<OPTION VALUE=thawall>* Thaw Selected )Items cap+(</OPTION>\n)++
+    } if
+    cnt retirecnt gt {
+      (<OPTION VALUE=retireall>* Retire Selected )Items cap+(</OPTION>\n)++
+    } if
+    retirecnt 0 gt {
+      (<OPTION VALUE=unretireall>* Unretire Selected )Items cap+(</OPTION>\n)++
+    } if
+    cnt 0 gt {
+      (<OPTION VALUE="@1killall">* Delete Selected )Items cap+(...</OPTION>\n)++
+    } if
+  } if
+  def
+
+% Page footer
+global_footer
+(</BODY></HTML>
+)

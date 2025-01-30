@@ -1,0 +1,83 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+flavor(config.bt)+ include
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+Conference cap( Search Page)+ (pistachio/help/header) include
+
+(<H2>The )Conference cap( Search Page:</H2>
+
+This page allows you to search the )Conference( for particular words or phrases,
+or for postings by particular users.
+Note that searchs are done while you wait, so this can be a bit slow in
+large )Conferences(.
+
+<H2>What to Search for:</H2>
+
+The top part of the form lets you enter the text you want to search for.
+You type the text into the box, and then select one of the three pattern
+types listed below the box:
+
+<H3>Ignore Case</H3>
+Selecting this indicates that you don't insist that the matching text be
+capitalized the same way that you typed it.
+Thus, if your pattern were ``nextstep'', it would match against
+``Nextstep'' or ``NeXTStep'' as well.
+
+<H3>Exact Match</H3>
+By contrast, if you select ``Exact Match,'' only strings that are capitalized
+exactly the way you typed them will be found.
+
+<H3>Regular Expression</H3>
+You can also indicate that your pattern is a regular expression, written in
+the standard Unix form.
+Regular expressions are a way of describing more general things to look for,
+but the syntax can be a bit obscure.
+For example the regular expression ``\$ ?[0-9,]*'' would search for strings of
+numeric digits (and possibly commas) preceeded by an optional space and a
+dollar sign.  In other words it would find all prices entered in the
+)Conference(.
+Sorry, we're not going to go into a detail explanation here.
+
+<H2>What to Search Through:</H2>
+
+The next part of the form allows you to select what parts of the )Conference(
+to search through.  You can check off more than one of these.
+
+<H3>Message Text</H3>
+This searchs the text of all the )Items( and )Responses( in the )Conference(.
+You use it when you are looking for something that was said.
+
+<H3>)Item cap( Title</H3>
+This searchs the titles of the )Items(.  This can be a quick way to
+find particular )Items( in the )Conference(.
+
+<H3>Author's Full Name</H3>
+This searchs the author names posted at the head of each )Response(.
+This, and the next option, are good ways to find everything a particular
+person has posted to the )Conference(.
+
+<H3>Author's Login Name</H3>
+This searchs just the author login names.
+
+<H2>)Items cap( to Search In:</H2>
+
+By default, we search through every )Item( in the )Conference(, but if you want
+to search through just one )Item( or just a few )Items(, you can enter their
+numbers in the ``In )Items cap('' box on the form.
+<P>
+By default the box says ``1-$''
+which means ``from )Item( 1 through the last )Item(.''
+If you want to search only )Item( 16, change the contents of the box to ``16''.
+If you want to search )Items( 4, 8 and 12, enter ``4,8,12''.
+)Items cap( will be searched in the order they are listed in this box.
+
+<H2>Do the Search:</H2>
+To execute the search, hit the ``Search'' button.
+You will be shown a list of the )Items( and )Responses( that match your query.
+To view the hits, click on their numbers.
+)
+global_footer
+(</BODY></HTML>
+)

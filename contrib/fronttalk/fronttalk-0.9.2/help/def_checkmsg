@@ -1,0 +1,20 @@
+                        Fronttalk Defines:  CHECKMSG
+
+Usage:  DEFINE CHECKMSG "<string>"
+
+The CHECKMSG define is used to generate the output from the CHECK command.
+It called once with the 1x flag set to generate a header line, and then
+once for each conference with the 2x flag to generate a line describing that
+conference.
+
+Actually, the Fronttalk CHECK command currently ignores this completely.
+Oops.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(1x\nnew resp items  conference\n%)\
+   %(2x%(k--%E  %)%(B>%E %)%4r %4b %s%(B  (where you currently are!)%)%)"
+

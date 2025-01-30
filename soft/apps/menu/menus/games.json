@@ -1,0 +1,9 @@
+{
+    "title":"*** GAME MENU ***",
+    "entries": [
+        {"key":"T", "exec":"@/scripts/d34", "desc":"Test your TERMCAP"},
+        {"key":"C", "exec":"@/scripts/d36", "desc":"Change your TERMCAP"},
+        {"key":"P", "exec":"@/scripts/d46", "desc":"Play a Game"},
+        {"key":"E", "exit":true, "desc":"Exit this menu"}
+    ]
+}

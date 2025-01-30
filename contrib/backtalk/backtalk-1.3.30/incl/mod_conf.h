@@ -1,0 +1,11 @@
+void func_hide_resp(void);
+void func_erase_resp(void);
+void func_freeze_item(void);
+void func_retire_item(void);
+void func_kill_item(void);
+void func_retitle_item(void);
+void func_edit_resp(void);
+void func_reattach(void);
+void func_link_item(void);
+void func_new_conf(void);
+void func_del_conf(void);

@@ -1,0 +1,29 @@
+                       Fronttalk Command:  RESPOND
+
+Usage: RESPOND                            ("Respond or Pass?" prompt only)
+
+Enter a new response into the item currently begin read.  Use this if you
+have something to say on the topic of the current item.  If you want to start
+a new topic, use the ENTER command to start a new item instead.
+
+Text entry is usually done by the 'gate' text gatherer.  If this is being
+used, then the following commands will work if typed at the begining of a
+line during text entry:
+
+  :          Start up your default editor on the text.
+  :q         Cancel text entry.
+  :p         Print what you've typed so far.
+  :spell     Run spell checker on text.
+  :r <file>  Read a file into your text.
+  :help      Print help.
+  :clear     Erase text entered so far.
+
+The normal way to terminate entry of text is to type a dot (.) or a control-D
+at the beginning of a line.
+
+You cannot respond to frozen items.
+
+You will be warned if other responses were posted while you were composing
+your response.
+
+To post a name under an alias, use the PSEUDONYM command.

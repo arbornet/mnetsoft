@@ -1,0 +1,428 @@
+% Backtalk UserInfo Script -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% User Information Configuration File
+%
+% Backtalk allows users to enter various information about themselves that
+% may be viewed by other users or by system administrators.  This information
+% is asked for when the user creates an account and may be editted by users
+% later.
+% 
+% Exactly what information to ask for is going to vary a lot from site to site,
+% so this configuration file let's you define it all in one place.
+%
+% The table below can be editted to describe what you want to ask for, and
+% how you want to ask for it.
+%
+% Users will aways be asked for login, password, and fullname.  If there are
+% any fields specified below, they will also be asked if that information
+% should be kept private from other users.
+%
+% Each row of the table contains information about one data field to ask for:
+%
+%   Column 1:  Description
+%      This is the text displayed to the user to describe the field.
+%   Column 2:  Internal Name
+%	This is the name used for the field internally.  It should be all
+%	lower case letters, distinct from any others.  Some names won't work
+%	because they are used for other things.  You may want to play it safe
+%	by using names like (xxhometown).
+%   Column 3:  Flags
+%	This indicates special treatment of the field.  Possible flags are
+%       one of:
+%	  (T) - Ordinary text.  No special treatment.
+%	  (N) - Pure number.  Not much special treatment.
+%         (E) - An email address - do simple syntax checks, make clickable.
+%	  (U) - A url - do simple syntax checks, make clickable.
+%	plus a possible (R) if a value must be given for the field when first
+%	signing up for an account.
+%    Column 4:  Type
+%	This indicates the type of input field to use for the field.  Possible
+%	values are:
+%	  (TEXT) - One-line text box.  Next field is number of columns of the
+%            input box. (You can type more than that into it though.)
+%	  (TEXTAREA) - Multiple-line text box.  Next fields are columns and
+%            rows.  (You can type more than that into it though.)
+%	  (SELECT) - Pull-down list.  The rest of the columns are possible
+%	     values/labels pairs.
+%	  (RADIO) - Array of radio boxes.  The next value gives the number
+%	     of columns in the array.  The rest of the columns are value/label
+%	     pairs.
+%	  (CHECKBOX) - Array of check boxes.  The next value gives the number
+%	     of columns in the array.  The rest of the columns are value/label
+%	     pairs.
+%
+% A field named 'email' gets some special handling on the very rare
+% installations where email addresses get stored in the identity database.
+% In that case the values of those fields are taken from the identity database
+% instead of from the .backtalk file.
+
+% Description		Internal Name	Flags	Type		Size
+
+/UserInfo [
+
+ [(E-mail Address)	(email)		(ER)	(TEXT)		50 	]
+
+ [(Telephone Number)	(telephone)	(T)	(TEXT)		30	]
+
+%[(Mailing Address)	(maddr)		(T)	(TEXTAREA)	50 4	]
+
+ [(Date of Birth)	(birth)		(T)	(TEXT)		30	]
+
+ [(Sex)			(sex)		(T)	(RADIO)		3
+ 	(F) (Female)   (M) (Male)   ( ) (None of your business) ]
+
+ [(Other Information)	(bio)		(T)	(TEXTAREA)	72 8	]
+
+ [(Home Page URL)	(url)		(U)	(TEXT)		72	]
+
+] def
+
+
+% The rest of this file should not be editted unless you know what you are
+% about.
+
+% <user> getinfo -
+% This function is called to load the current settings from a user's .backtalk
+% file.  <User> is a login name.  If we just want to get the current user
+% (or whatever user 'selectuser' has been called on), then user can be given
+% as ().  Variables with names corresponding to the internal names are set to
+% the appropriate values.  The /regdate and /privacy values are also set.  If
+% the file can't be accessed, default values are loaded for everything.
+
+/getinfo {
+
+  /gi_user xdef
+
+  % figure out a handle to read the file by
+  (*.backtalk) gi_user pathname /gi_file xdef
+
+  % initialize default values (all blank) and build an array of literal names
+  [ /regdate /privacy /timezone
+  /regdate 0 def
+  /privacy 0 def
+  UserInfo {
+    /gi_uirow xdef
+
+    % get variable name
+    gi_uirow 1 get
+
+    % If email address is in user database, take it from there instead
+    dup (email) eq {
+      gi_user useremail dup {
+	% set value and do not include /email in list of vars to load
+        /email xdef pop continue
+      } if
+      pop
+    } if
+
+    % set default value
+    cvn dup gi_uirow 2 get (N) 0 search 0 ge {0}{()} ifelse   def
+  } forall
+  ]
+  /gi_uirow undef
+  /gi_user undef
+
+  % load those settings
+  gi_file readable {
+    gi_file exch loadvar pop
+    /privacy privacy cvi def
+  } {
+    pop
+  } ifelse
+
+  /gi_file undef
+
+} def
+
+
+% <string> value_of <value>
+% Takes the string as a variable name and returns it's value, if it is defined,
+% or () otherwise.
+
+/value_of {cvn dup defined {exec} {pop ()} ifelse} def
+
+% <betweencontrols> <afterlabels> <type> promptinfo ...
+% Generate input widgets for all the user information.  The first argument
+% is a procedure to run between controls.  It might be {(<P>)} or {(<HR>)} or
+% {(</TD></TR><TR><TD>)} or something more complex.  The second argument is
+% a procedure to run between each control's label and it's input box.  If it
+% is (), then a ': ' will be displayed before most controls, but ':<BR>' will
+% be displayed before textareas and arrays of checkboxes or radioboxes.  You
+% should already have called 'getinfo' if you want the old values displayed
+% in the boxes.  If <type> is () it does all fields.  If it is (R) it does
+% only required fields.  If it is (O) it does only optional fields
+
+/promptinfo {
+
+  dict begin
+
+  /typ xdef
+  /aft xdef
+  /bet xdef
+
+  /first 1 def
+
+  UserInfo {
+    /uirow xdef
+
+    % skip lines not matching our type flag.
+    typ {
+      uirow 2 get (R) 0 search 0 ge {
+        typ (R) ne {continue} if
+      } {
+        typ (R) eq {continue} if
+      } ifelse
+    } if
+
+    % control separator
+    first {/first 0 def} {bet exec} ifelse
+
+    % label
+    (<STRONG>)uirow 0 get(</STRONG>)
+
+    % after label
+    aft () ne {
+      aft exec
+    } {
+      uirow 3 get (TEXTAREA,CHECKBOX,RADIO) (,) inlist
+        {(:<BR>\n)} {(:\n)} ifelse
+    } ifelse
+
+    % generate control
+    uirow 3 get
+    dup (TEXT) eq { pop
+      (<INPUT TYPE=text NAME=)uirow 1 get dup
+      ( VALUE=")exch value_of quote(" SIZE=)uirow 4 get(>\n)
+    } {
+    dup (TEXTAREA) eq { pop
+      (<TEXTAREA NAME=)uirow 1 get
+      ( ROWS=)uirow 5 get( COLS=)uirow 4 get(>)
+      uirow 1 get value_of quote(</TEXTAREA>\n)
+    } {
+    dup (SELECT) eq { pop
+      (<SELECT NAME=)uirow 1 get(>\n)
+      /val uirow 1 get value_of def
+      4 2 uirow length {
+	/i xdef
+	(<OPTION VALUE=")uirow i get quote(")
+	uirow i get val eq {( SELECTED)} if (>)
+	uirow i 1 + get(\n)
+      } for
+      (</SELECT>\n)
+    } {
+    dup (CHECKBOX) eq { pop
+      (<TABLE><TR><TD>\n)
+      /ncol uirow 4 get def
+      /col 0 def
+      /val uirow 1 get value_of def
+      5 2 uirow length 1 - {
+        /i xdef
+	col 0 eq {(<TR>)} if
+	/col inc
+	(<TD><INPUT TYPE=checkbox NAME=)uirow 1 get
+	( VALUE=")uirow i get quote(")
+	uirow i get val (,) inlist {( CHECKED)} if (>&nbsp;)
+	uirow i 1 + get(&nbsp;&nbsp;&nbsp;&nbsp;</TD>\n)
+	col ncol eq {(</TR>\n) /col 0 def} if
+      } for
+      (</TABLE>\n)
+    } {
+    dup (RADIO) eq { pop
+      (<TABLE><TR><TD>\n)
+      /ncol uirow 4 get def
+      /col 0 def
+      /val uirow 1 get value_of def
+      5 2 uirow length 1 - {
+        /i xdef
+	col 0 eq {(<TR>)} if
+	/col inc
+	(<TD><INPUT TYPE=radio NAME=)uirow 1 get
+	( VALUE=")uirow i get quote(")
+	uirow i get val eq {( CHECKED)} if (>&nbsp;)
+	uirow i 1 + get(&nbsp;&nbsp;&nbsp;&nbsp;</TD>\n)
+	col ncol eq {(</TR>\n) /col 0 def} if
+      } for
+      (</TABLE>\n)
+    } if
+    } ifelse
+    } ifelse
+    } ifelse
+    } ifelse
+  } forall
+
+  end
+
+} def
+
+
+% <betweenlines> <afterlabels> showinfo ...
+% Display all the user information.  The first argument is a procedure to run
+% between information lines.  It might be {(<P>)} or {(<HR>)} or
+% {(</TD></TR><TR><TR>)} or something more complex.  The second argument is a
+% procedure to run between each line's label and value.  If it is (),
+% then a ': ' will be displayed before most values, but ':<BR>' will be
+% displayed before textareas.  You should already have called 'getinfo' to
+% load in the values to display.
+
+/showinfo {
+
+  dict begin
+
+  /aft xdef
+  /bet xdef
+
+  /first 1 def
+
+  UserInfo {
+    /uirow xdef
+
+    /value uirow 1 get value_of def
+    value ! value ( ) eq or {continue} if
+
+    % control separator
+    first {/first 0 def} {bet exec} ifelse
+
+    % label
+    (<STRONG>)uirow 0 get(</STRONG>)
+
+    % after label
+    aft () ne {
+      aft exec
+    } {
+      uirow 3 get (TEXTAREA) eq {(:<BR>\n)} {(:\n)} ifelse
+    } ifelse
+
+    % display info
+    uirow 3 get
+    dup (TEXT) eq 1 index (TEXTAREA) eq or { pop
+      % text case
+      uirow 2 get dup (E) 0 search 0 ge {
+	% email addresses
+        pop (<A HREF="mailto:)value quote(">)value quote(</A>\n)
+      } {
+        (U) 0 search 0 ge {
+	  % urls
+          (<A HREF=")value quote(">)value quote(</A>\n)
+	} {
+	  % anything else
+          value quote dup () eq {(&nbsp;)} if (\n)
+	} ifelse
+      } ifelse
+    } {
+    dup (SELECT) eq { pop
+      4 2 uirow length {
+	/i xdef
+	uirow i get value eq {uirow i 1 + get(\n) break} if } for
+      (&nbsp;)
+    } {
+    dup (CHECKBOX) eq { pop
+      (<TABLE><TR><TD>\n)
+      /comma 0 def
+      5 2 uirow length 1 - {
+	/i xdef
+	uirow i get value (,) inlist eq {
+	  comma {(, )}{/comma 1 def} ifelse
+	  uirow i 1 + get(\n)
+	} if
+      } for
+      (&nbsp;)
+    } {
+    dup (RADIO) eq { pop
+      5 2 uirow length 1 - {
+        /i xdef
+	uirow i get value eq {uirow i 1 + get(\n) break} if
+      } for
+      (&nbsp;)
+    } if
+    } ifelse
+    } ifelse
+    } ifelse
+  } forall
+
+  end
+
+} def
+
+
+% - infovars ...
+% This pushs literals for each information fields.  If any checkbox or radio
+% variables are not defined, it defines them to ( ).
+
+/infovars {
+
+  UserInfo {
+    /iv_uirow xdef
+    iv_uirow 1 get cvn
+    % Checkboxes don't send false variables. Default them all to ( )
+    iv_uirow 3 get (CHECKBOX,RADIO) (,) inlist {
+      dup dup defined ! {( ) def} {pop} ifelse
+    } if
+  } forall
+  /iv_uirow undef
+
+} def
+
+% - saveinfo -
+% This function is called to save the current variable values into a user's
+% .backtalk file.  We always save to the current user's file, unless another
+% user has been selected with 'selectuser'.  The privacy value is also saved.
+% If a variable named 'email' is in the list, we call changeemail on it.
+
+/saveinfo {
+
+  % set privacy to 0 if not defined.
+  /privacy defined ! {/privacy 0 store} if
+  /si_vars [ /privacy infovars ] def
+  /email si_vars in { email changeemail pop} if
+
+  % build list of variable names
+  (*.backtalk) si_vars savevar
+  /si_vars undef
+
+} def
+
+
+% - checkinfo <error> 1
+% - checkinfo 0
+% This function is called to do sanity checks on inputs.  Data should already
+% be in the appropriate variable.  If everything is OK, return 0, otherwise
+% return an error message and a 1.
+
+/checkinfo {
+
+  dict begin
+  /err () def
+
+  UserInfo {
+    /uirow xdef
+    uirow 2 get /flag xdef
+    flag (R) 0 search 0 ge {
+      uirow 1 get value_of () eq {
+        /err `err (No value given for ) uirow 0 get (\n)' def
+        continue
+      } if
+    } if
+    uirow 1 get value_of ! {continue} if
+    flag (N) 0 search 0 ge {
+      uirow 1 get value_of <<^[0-9]+$>> grep ! {
+        /err err uirow 0 get ( is not a number\n)++ def
+      } if
+      continue
+    } if
+    flag (E) 0 search 0 ge {
+      uirow 1 get value_of <<^.+@.+\..+$>> grep ! {
+        /err err uirow 0 get ( doesn't look like an email address\n)++ def
+      } if
+      continue
+    } if
+    flag (U) 0 search 0 ge {
+      uirow 1 get value_of <<^http://.+$>> grep ! {
+        /err err uirow 0 get ( should begin with 'http://'\n)++ def
+      } if
+      continue
+    } if
+  } forall
+  err {err 1} {0} ifelse
+
+  end
+} def

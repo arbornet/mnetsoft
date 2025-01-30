@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# gloria.update
+#
+#   Updates the gloria.plans database to current timestamps on
+#   all users .plan files.
+#
+# June 10, 1995 David Martinelli <dam@cyberspace.org>
+#
+# files in package:
+# gloria - the shell script users run.
+# gloria.plans - list of .plan files and timestamps created by gloria.update
+# gloria.update - this is a system event to update the gloria.plans database.
+# $HOME/.gloria_time - the timestamp of the last time gloria was run.
+#
+# sources of information/inspiration used in creating this script:
+#    Valerie Mates <popcorn@cyberspace.org>
+#    STeve Andre <steve@cyberspace.org> 
+# thanks for your help!
+#
+# Known bugs:
+#   finds ALL .plan files in the /home partition, including ones in
+#   users subdirectories.  So, if those are modified, you will see
+#   that also.
+
+#set gloriadir to the location of the gloria script file
+gloriadir=/usr/local/bin
+
+#set gloria_database to the name of the gloria database file
+gloria_database=/usr/local/lib/gloria.plans
+
+#set gloriabin to the location of the system executables
+#uses find, mv, sort, rm
+gloriabin=/usr/local/bin
+ 
+#sets the working directory to /tmp, unless the $tempdir var is set
+if [ -z "$tempdir" ]
+then
+  gloriatmp=/tmp
+else
+  gloriatmp=$tempdir
+fi
+
+# if the data file we are going to append exists, delete it.
+# it should not be there yet and could cause problems if it is.
+if [ -f $gloriatmp/gloria.plans.unsorted ]
+then
+  $gloriabin/rm $gloriatmp/gloria.plans.unsorted
+fi
+
+# gather the names of users with .plan files, and their timestamps.
+# the timestamp is the number of seconds since 1/1/1970, 00:00:00.
+for planfile in `$gloriabin/locate /home/\*/.plan`
+do
+  $gloriabin/find $planfile -maxdepth 0 -printf "%h %T@\n" 2>&- \
+    >> $gloriatmp/gloria.plans.unsorted
+done
+
+# sort the output, ordered newest to oldest .plan file
+$gloriabin/sort -b -r -n +1 $gloriatmp/gloria.plans.unsorted \
+                -o $gloriatmp/gloria.plans 
+
+$gloriabin/mv $gloriatmp/gloria.plans $gloria_database
+
+$gloriabin/rm $gloriatmp/gloria.plans.unsorted

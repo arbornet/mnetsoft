@@ -1,0 +1,8 @@
+% Backtalk Vanilla Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% peekconf script
+%
+% This is the entry point when we do peek:<conf>.  The conference name is
+% passed in in the "conf" variable.
+
+(vanilla/browse) chain

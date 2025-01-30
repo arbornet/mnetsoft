@@ -1,0 +1,22 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+If you're not sure what channel, just press Enter.
+
+Join what party channel? "
+read channel
+if [ "$channel" = "" ]
+then
+	echo ""
+	echo "Starting party on channel: (party)."
+	echo ""
+	party start=party
+	echo ""
+else
+	echo ""
+	echo "Starting party on channel: ($channel)."
+	echo ""
+	party start=$channel
+	echo ""
+fi

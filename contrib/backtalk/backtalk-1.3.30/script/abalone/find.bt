@@ -1,0 +1,233 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% find script
+%
+% This script generates a form for searching a conference for various things.
+% It is it's own form handler.
+%
+% Query Paramters:
+%    conf=      name of the conference we are searching (may be omitted)
+%    isel=      list of the items we are searching (may be omitted)
+%    csel=      list of conference (not used, just passed along)
+% If doing a search also pass:
+%    pattern=   pattern to search for
+%    mode=      either "exact" for string search
+%                      "re" for regular expression search
+%    icase      defined if matching should be case insensitive
+%    m_text     defined if we should search message texts
+%    m_fname    defined if we should search Author's full names
+%    m_title    defined if we should search item titles
+%    m_login    defined if we should search author's login names
+
+flavor(config.bt)+include
+
+/abalone.menujump 0 def
+
+% various default settings of form
+/icase dup defined def
+/pattern dup () default def
+/mode dup (exact) default def
+/exact_check mode (exact) eq {( CHECKED)}{()} ifelse def
+/re_check mode (re) eq {( CHECKED)}{()} ifelse def
+/icase_check icase {( CHECKED)}{()} ifelse def
+/m_text_check /m_text pattern ! default {( CHECKED)}{()} ifelse def
+/m_fname_check /m_fname 0 default {( CHECKED)}{()} ifelse def
+/m_title_check /m_title 0 default {( CHECKED)}{()} ifelse def
+/m_login_check /m_login 0 default {( CHECKED)}{()} ifelse def
+
+% open the conference, if one was given
+conf {
+  flavor(openconf)+ stopped
+    { (Error: )exch(.)++ /err xdef } if
+} {
+  pattern { /err `(Error: No )Conference( specified.)' def } if
+} ifelse
+
+Conference cap( Search)+ (C)
+[/conf /err /csel]
+[/abalone.menujump] []
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+(<TR><TD CLASS=mast>&nbsp;</TD><TD CLASS=mast ALIGN=right>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=edithot>Edit Your )Conference cap( Hotlist</OPTION>
+  <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(<OPTION VALUE="@0help:find">Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>
+)
+
+secret 2 eq /dunno defined ! and
+  { [/conf /csel] flavor(confpass)+ jump } if
+
+print
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=colhead COLSPAN=2>Search a )Conference cap(</TD></TR>
+<TR><TD CLASS=odd>
+<FORM METHOD=post ACTION=find>\n)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+Conference cap(:</TD>
+<TD CLASS=odd><INPUT TYPE=text NAME=conf VALUE=)conf(></TD></TR>
+<TR><TD CLASS=even VALIGN=TOP>)Item cap( Range: </TD>
+<TD CLASS=even><INPUT TYPE=text NAME=isel VALUE=")isel{isel}{(1-$)}ifelse
+(" SIZE=40></TD></TR>
+<TR><TD CLASS=odd VALIGN=TOP>Search For:</TD>
+<TD CLASS=odd><INPUT TYPE=text NAME=pattern VALUE=")pattern quote(" SIZE=70><BR>
+<INPUT TYPE=radio NAME=mode VALUE=exact)exact_check(> Exact Match&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=mode VALUE=re)re_check(> Regular Expression<BR>
+<INPUT TYPE=checkbox NAME=icase)icase_check(> Ignore Case</TD></TR>
+<TR><TD CLASS=even VALIGN=TOP>Match Against:</TD>
+<TD CLASS=even>
+<TABLE CELLPADDING=0 CELLSPACING=0><TR><TD CLASS=even>
+<INPUT TYPE=checkbox NAME=m_text)m_text_check(> Message Text&nbsp;</TD>
+<TD CLASS=even>
+<INPUT TYPE=checkbox NAME=m_fname)m_fname_check(> Author's Full Name</TD>
+</TR><TR><TD CLASS=even>
+<INPUT TYPE=checkbox NAME=m_title)m_title_check(> )Item cap( Title</TD>
+<TD CLASS=even>
+<INPUT TYPE=checkbox NAME=m_login)m_login_check(> Author's Login Name</TD>
+</TR></TABLE></TD></TR>
+<TR><TD CLASS=odd>&nbsp;</TD>
+<TD CLASS=odd><TABLE BORDER=0>
+<TR><TD CLASS=odd><INPUT TYPE=submit VALUE=Search>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD CLASS=odd><SPAN CLASS=small><STRONG>Note:</STRONG>
+Searching a )Conference( may take a<BR>bit
+longer than your average transaction.</SPAN></STRONG></TD></TR></TABLE>
+</TR></TD>
+)
+
+pattern {
+  % if there is a shylist, load the unreg.bt header file
+  /shyfile constant {flavor(unreg)+ include} if
+
+  % compile the pattern, set up search macros
+  mode (re) eq
+  {
+    % compile a regular expression
+    pattern icase{(im)}{(m)}ifelse regex
+    { % bad regular expression
+      (Regular Expression Error: )exch+ /err xdef
+    } {
+      % good regular expression
+      /reg xdef
+    } ifelse
+    % define a match function
+    /match {reg grep} def
+  } {
+    % compile a plain text string
+    () pattern icase search pop
+    % define a match function
+    /match {() icase search 0 ge} def
+  }
+  ifelse
+} if
+
+/err defined {
+  (<TR><TD CLASS=alert COLSPAN=2>)err(</TD></TR>)
+} {
+  pattern {
+    % macro to print a successful match
+    /presp {
+      ihead ! {
+        (<LI> )Item cap( #)item(: )title(\n)
+        /ihead 1 def
+      } if
+      rhead ! {
+        (<UL>\n)
+        /rhead 1 def
+      } if
+      (<LI> <A HREF="read?conf=)conf(&csel=)csel(&item=)item(&rsel=)resp
+      (&noskip=1&showforgotten=2">)Response cap( #)resp(</A> by )authorname
+      ( \()authorid(\)\n)
+      /cnt inc
+      print
+    } def
+
+    (<TR><TD CLASS=bigsechead COLSPAN=2>Matches Found:</TD></TR>\n)
+    (<TR><TD CLASS=even COLSPAN=2>\n)
+
+    isel !{/isel (1-$) store} if
+    /rsel (all) store
+    /cnt 0 def
+    /blindfold 1 store		% don't "see" any of the items we read
+
+    { isel next_item {break} if
+      this_item {break} if
+      read_item {break} if
+      /nrs xdef
+      /isel xdef
+      /ihead 0 def
+      /rhead 0 def
+
+      % search title
+      /m_title defined {
+	title match {
+	  (<LI> <A HREF="read?conf=)conf(&item=)item(&rsel=all">)
+	  Item cap( #)item(</A>: )title (\n)
+	  /cnt inc
+	  /ihead 1 def
+	} if
+      } if
+
+      % search item body
+      /m_text defined /m_fname defined /m_login defined or or {
+	{
+	  /pm 1 def
+
+	  % compare login name
+	  /m_login defined {
+	    authorid mode (re) eq {match} {pattern eq} ifelse {
+	      presp
+	      /pm 0 def
+	    } if
+	  } if
+
+	  % search full name
+	  /m_fname defined pm and {
+	    authorname match {
+	      presp
+	      /pm 0 def
+	    } if
+	  } if
+
+	  % search response text
+	  /m_text defined erased ! and pm and {
+	    /shyfile constant {raw_text} {0 read_text} ifelse match { presp } if
+	  } if
+
+	  % find next response
+	  nrs next_resp {break} if 
+	  read_resp {pop break} if
+	  /nrs xdef
+	} loop
+      } if
+
+      % close any sublist
+      rhead {(</UL>\n)} if
+
+    } loop
+    (</UL>\n)
+    cnt ! {(None\n)} if
+    (</TD></TR>\n)
+  } if
+} ifelse
+
+(</TABLE></FORM>
+)
+
+global_footer
+
+(</BODY></HTML>
+)

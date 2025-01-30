@@ -1,0 +1,407 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: Eggdrop and Other Programs not Welcome
+  on Grex</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1>NOTE: These notes are of historical value only!</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <p>Grex has changed radically since this note was first written.
+  It no longer runs on a Sun running SunOS, but rather on an x86
+  machine running an open source BSD-based operating system. However,
+  IRC bots (or bots of any kind) are still not allowed on Grex. Though
+  we have much better network connectivity now, we do not want to
+  upset our network provider or colocation service with malicious
+  activity originating from Grex, so we severely limit what services
+  users can run on Grex itself. Sorry, eggdrop and other bots are
+  still not allowed.</p>
+
+  <p><a href="index.xhtml">[index]</a></p>
+
+  <h4>Grex Staff Notes: Frequently Asked Questions about Eggdrop
+  and other Programs not Welcome on Grex</h4>
+
+  <p>We have had thousands of users asking about running IRC bots,
+  IRC clients, and bouncers on our system. <font
+  color="red"><strong>We are sorry to say that we do not and can
+  not support <tt>eggdrop</tt> or any other IRC bot or bouncer
+  here on Grex.</strong></font> We do allow IRC clients to be run,
+  but only by paying users, not for free. Since lots of people
+  seem to be confused and irate about this, we thought we'd write
+  a bit more about this policy.</p>
+
+  <h2>What are IRC Clients?</h2>
+  <p>IRC is the "Internet Relay Chat," a huge Internet-wide live chat
+  area. You can create "channels" on IRC where you can talk to other
+  people who also join the channel. Every line you type is seen by all
+  the other people in the channel, and you see every line they type. To
+  connect to the IRC, you need an IRC client, just like you need a web
+  browser to read the web. If your computer has a web connection, you
+  can run one there. Or you can connect to another computer, either
+  over the net or by dialing in, and run an IRC client there to connect
+  to the IRC.</p>
+
+  <p>Grex does <strong>not</strong> give non-paying users access to
+  the IRC. Grex has the "irc 2.8.2" client installed for the use of
+  our members. There are others that could be installed if our
+  members wanted, like <tt>BitchX</tt> or <tt>mIRC</tt>, but there
+  has been no demand for them. Occasionally people trying to get
+  around this restriction try to download and install their own
+  copies of IRC clients. This doesn't work. See below.</p>
+
+  <h2>What is Eggdrop?</h2>
+  <p><tt>Eggdrop</tt> is the most popular of
+  many so-called "IRC-bots". There is quite a bit of good
+  information about
+  <tt>eggdrop</tt> on the web. We obviously aren't
+  <tt>eggdrop</tt> experts, so if you really want to know a lot
+  about it, you may want to search elsewhere for info.</p>
+
+  <p><tt>Eggdrop</tt> is used with IRC. Computer programs can be
+  written that join IRC channels just like a human would through an
+  IRC client. Such programs, called "bots" or "robots," can
+  interact with people in various ways. Besides being cute, bots
+  can perform some useful functions, like holding channels open
+  when nobody is home, keeping them from being taken over by other
+  users, controlling what users can join the channel, providing
+  extra lag-free talk channels that aren't affected by net-splits,
+  allowing users to upload and download files, and linking between
+  different IRC networks. Lots of people who want to rule their own
+  channels want <tt>eggdrop</tt> bots. It's a useful and valuable
+  tool.</p>
+
+  <p><tt>Eggdrop</tt> needs to run on a Unix system, which isn't
+  hard to find (several excellent free Unix systems exist that can
+  be installed on most any PC). However, to gain the full benefit
+  of <tt>eggdrop</tt>, you need to be running it on a system that
+  is connected to the internet 24 hours a day, which isn't true for
+  most people's home computers. So lots of people are looking for
+  systems to run <tt>eggdrop</tt> on, and lots of people come
+  looking here at Grex. After lots of hard work, they eventually
+  discover that <tt>eggdrop</tt> won't work here. See below.</p>
+
+  <h2>What are Bouncers?</h2>
+  <p>Some people would like to be able to
+  connect to IRC without revealing their identities. One way to do
+  this would be to install a small program on a system like Grex
+  which just bounces their IRC connection. Then they point the IRC
+  client on their computer to the bouncer running on Grex, which
+  reflects the connection to an IRC server someplace else. Then it
+  looks to everyone on the IRC as if the connection is coming from
+  Grex, not from this person's own computer. You can even get
+  fancier, and chain together several bouncers, so your connection
+  goes through several places before hitting your destination,
+  making it even harder to trace. And this doesn't only work for
+  IRC, it works for almost any kind of net connection.</p>
+
+  <p>The most common bouncer is called <tt>bnc</tt> or
+  <tt>boun</tt> or <tt>bounce</tt>. There seem to be several
+  others, including <tt>datapipe</tt> and <tt>anonirc</tt>.</p>
+
+  <p>Since Grex accounts can be obtained without giving much (or
+  any) personal information, lots of people think Grex is a pretty
+  good place to put a bouncer. We currently have about half a dozen
+  different people try to install one every day. None of them work.
+  See below.</p>
+
+  <h2>What is Grex?</h2>
+  <p>Grex is a public access system supported
+  entirely by donations from its users. We have no corporate or
+  government funding. Although we have about 25,000 users, only
+  around 100 of them ever give us any money and most of them don't
+  give us much. All the staff work to maintain this system is done
+  by unpaid volunteers who do work here only because they enjoy
+  using this system and believe in our system's mission. We are not
+  wealthy, and our computer is not one any sane person would be
+  proud to own (you can take a look at it
+  <a href="http://www.unixpapa.com/grextech/pumpkin/">here</a>).</p>
+
+  <p>What is this mission that inspires people to donate money to
+  us and do work for us?</p>
+
+  <ul>
+    <li>First, we house a virtual community of users who come here
+    to talk to each other - to learn, to teach, to flirt, to laugh,
+    to share their ideas and opinions. Almost all of our support
+    comes from people who take part in that on-line community and
+    feel that it is an important enough part of their lives that
+    they want to help support it.</li>
+
+    <li>Second, we have a charitable mission: to provide free net
+    access to people who can not justify the expense of a
+    commercial internet account. We believe that it is important
+    that all people have access to the net, regardless of economic
+    status. Because there are many such people needing access and
+    because we have very limited resources, we can provide only the
+    most basic services:
+
+      <ul>
+        <li>We have a very good conferencing area, open to
+        all.</li>
+
+        <li>We have our own live chat area, open to all.</li>
+
+        <li>We provide free Email, but not POP or mailing
+        lists.</li>
+
+        <li>We provide access to a non-graphical web browser.</li>
+
+        <li>We provide free web pages space, but can't allow
+        graphics.</li>
+
+        <li>We provide full shell access for those interested in
+        learning Unix.</li>
+
+        <li>For members, we support IRC, but not IRC bots.</li>
+
+        <li>We provide incoming telnet and ftp service, but limit
+        outgoing service to members.</li>
+      </ul>
+    </li>
+  </ul><p>We'd love to be able to provide more free services, but
+  given how few resources we have, it's a miracle that we can do as
+  much as we do. We <em>have</em> to set some limits on services.</p>
+
+  <h2>Why doesn't Grex provide free IRC access?</h2>
+  <p>Our impression is that, second only to E-mail, IRC is the free
+  service most in demand on the net. We sometimes still question whether
+   offering E-mail was all that bright an idea. What we really want to
+   do is conferencing, but providing free E-mail consumes vastly more
+   of our computer resources and staff time than conferencing does. But
+   it really does seem to be a very worthwhile service for an awful lot
+   of people, so we're willing to keep it up, in spite of the
+   headaches.</p>
+
+  <p>Though IRC can certainly be a valuable service, we think it is
+  generally less valuable than E-mail is, and in our experience, it
+  generates at least as many administrative headaches as E-mail
+  does. We just don't see any way that we could stretch our
+  resources far enough to be able to deal with offering free IRC.
+  If we had another computer, another net connection, and a couple
+  full-time equivalents worth of skilled staff time from people who
+  really cared about IRC, we might be able to do it, but as it is,
+  the thought of all that extra work just makes us vaguely queasy.
+  Our plates are pretty full.</p>
+
+  <p>So we permit IRC access only to our validated, paying members.
+  That's a small group of people, who tend to be generous and
+  responsible people who cause us very few problems. In fact, very
+  few of them ever use IRC.</p>
+
+  <h2>Why doesn't Grex support eggdrop?</h2>
+  <p><tt>Eggdrop</tt> uses huge amounts of net bandwidth and cpu time.
+  This may not seem obvious at first glance. It would appear that a big
+  bloated mail program like <tt>pine</tt>, which we do allow, uses much
+  more. But a user runs <tt>pine</tt> only while he is connected to
+  Grex. Since we only allow about 80 users to be signed on at any given
+  time, we never have to deal with more than 80 pine processes running
+  at a time. But for an <tt>eggdrop</tt> bot to do it's job of
+  holding a channel open while the user is gone, it would have to run
+  24 hours a day, seven days a week. If we let all our users run
+  <tt>eggdrop</tt> we would have 25,000 <tt>eggdrop</tt>s running at
+  any given time. The fact that it runs all the time means that it
+  would add up to using vastly more computer resources than even big,
+  fat, ugly <tt>pine</tt>. There is no way we could share our
+  computer over 25,000 users if we let users run things like that.</p>
+
+  <p>Given the huge demand for <tt>eggdrop</tt>, if we permitted
+  people to run it from their free Grex accounts, our system would
+  be almost instantly completely overwhelmed with <tt>eggdrop</tt>
+  bots, and would be unusable for anything else. Having
+  <tt>eggdrops</tt> running on our system would not contribute to
+  our on-line community at all, and it does not seem to be such a
+  basic service that we need to offer it to everyone in the world
+  for free. Since <tt>eggdrop</tt> does not particularly serve our
+  mission, we can not justify allowing its use on Grex, even for
+  users who help us out by donating money.</p>
+
+  <h2>Why doesn't Grex support bouncers?</h2>
+  <p>Bouncers share the same basic problem that IRC bots have: they
+  need to run continuously. This is one stroke against them.</p>
+
+  <p>Grex is trying to provide valuable services to people, and the
+  social value of bouncers is somewhat questionable. It would be
+  easy to say that anyone trying to hide their identity is trying
+  to escape the consequences of their actions, and is thus immoral
+  scum. But we shouldn't forget that a person speaking out against
+  the immoral actions of their government might also want a way to
+  do so without paying the consequences their government deals out
+  to such people. In many cases, a degree of anonymity is a boon to
+  free speech. That is why we allow people to take out accounts on
+  our system without having to be validated. Our primary purpose is
+  to be a conferencing system, and we don't want to put any
+  obstacles in the way of speaking freely in our forums. It is true
+  that a small fraction of our users try to use this anonymity to
+  do harm to our system or to attack other people, but within the
+  limits of our own system, we have chosen to put up with that as
+  the price of allowing other people some legitimate anonymity.</p>
+
+  <p>However, we cannot make the same decision for the rest of the
+  systems on the internet. If we want to unleash anonymous people
+  on our own system, that's our right. Allowing people to use our
+  system to gain anonymous access to other people's systems is a
+  far more dubious enterprise. We suspect that if we did so, it
+  would be used far more for ill purposes than for good ones.</p>
+
+  <p>Of course, the most common reason people want bouncers is to
+  prevent other users from knocking them off the net by launching
+  denial of service attacks against their machines. With a bouncer
+  on Grex, the attack would be directed against Grex instead. No
+  thanks.</p>
+
+  <h2>How can I convince you to change your minds?</h2>
+  <p>Grex runs as
+  a democracy. All policies are ultimately determined by the
+  members with public discussions in the
+  <a href="/cgi-bin/backtalk/peek:coop">Grex Co-op Conference</a>. If
+  you think you can convince our members that you <em>should</em>
+  be able to run a free IRC client, <tt>eggdrop</tt>, or a bouncer
+  here, you are welcome to try. I don't think your chances of
+  success are good though - this is not a new issue.</p>
+
+  <h2>What if I just install the program myself?</h2>
+  <p>Every week, we
+  have three or four users try to compile and install
+  <tt>eggdrop</tt> or <tt>BitchX</tt> on Grex, and several dozen
+  trying to install bouncers. None have ever succeeded. Here's why:</p>
+
+  <ol>
+    <li>FTP transfers of programs as large as <tt>eggdrop</tt> or
+    <tt>BitchX</tt> slow down our net connection badly. When staff
+    members notice the net connection is slow they look for the
+    cause, and if they see it is an <tt>eggdrop</tt> ftp, they kill
+    it.</li>
+
+    <li>Compiling <tt>eggdrop</tt> or <tt>BitchX</tt> on a system
+    as slow as Grex takes a long time (maybe a hour) and slows the
+    system noticably all that time. Staff members tend to notice
+    and kill it.</li>
+
+    <li>Once you have your client, bot or bouncer compiled, you'll
+    find that it won't work. We have modified our kernel to prevent
+    non-members from making most kinds of outbound internet
+    connections, including all IRC connections. This is what stops
+    everyone cold. For information (with source) about the Grex
+    kernel blocks, see our <a href="blocks.xhtml">technical
+    notes on kernel blocks</a>.</li>
+
+    <li>If you got past that (nobody ever has), you'd still have to
+    get past the <tt>robocop</tt> daemon that kills all background
+    processes not associated with a logged in user. This means that
+    your <tt>eggdrop</tt> or bounce process will be automatically
+    killed shortly after you log off of Grex.</li>
+
+    <li>And if you got past that, you'd still have the fact that we
+    banned these things because running them slows down the system
+    too much. So the staff would presumably notice if you somehow
+    miraculously got the thing to work here.</li>
+  </ol><p>Normally, we wouldn't mind very much if you wanted to waste
+  your time in any activity as futile and hopeless as trying to
+  install <tt>eggdrop</tt> or an IRC client on Grex, but we get far
+  too many people doing this and futile attempts to build
+  <tt>eggdrop</tt> are consuming a significant fraction of our
+  scarce resources. So please don't even try. Bouncer programs, on
+  the other hand, are usually quite small, so you can build those
+  all you like, and we won't even care unless you somehow get it
+  working, in which case we will break it.</p>
+
+  <h2>Do you know of anyplace where I can run eggdrop?</h2><p>If there
+  was a public access system anywhere on the internet that was
+  deranged enough to allow random strangers to run
+  <tt>eggdrop</tt>, we'd be delighted to direct you there, but
+  we've never heard of such a place. We've seen a couple systems
+  try, but they all gave it up within a week. If you want to find a
+  place to run <tt>eggdrop</tt>, you'll either need to pay money
+  for the privilege (there is a list of places where you can run
+  <tt>eggdrop</tt> for a small fee
+  <a href="http://www.egghelp.org/shells.htm">here</a>), set up
+  your own system (also likely to cost money), or exercise some
+  inside connections.</p>
+
+  <h2>So what good is a shell account if you can't run eggdrop or
+  bouncers?</h2><p>Yes, this is really is a frequently asked question.
+  These days it seems that most people looking for "Unix shell
+  accounts" know only that it is something you need to run
+  <tt>eggdrop</tt>, and haven't the faintest idea what it is.</p>
+
+  <p>A "shell" is is the Unix name for a program whose primary
+  purpose is to let a user run other programs. It's the interface
+  that you use to tell the computer what to do. It normally starts
+  up automatically as soon as you sign on to the computer. If some
+  heathen ported "Microsoft Windows" or the MSDOS "Command.com"
+  program to Unix, then we'd probably call them shells. Most Unix
+  shells work by typing commands, but we have some menu based ones
+  that are easier for people new to Unix to use. The best known
+  Unix shells are "csh" and "sh", but there are dozens of different
+  ones around, including some restricted shells that let you do
+  only a few things. Grex's shells are unrestricted, but our
+  network connection is restricted.</p>
+
+  <p>Having a shell account generally means that you have the
+  access to do all sorts of things, not just a limited list. We
+  give out shell accounts because we believe in giving away lots of
+  access.</p>
+
+  <p>So what good is a shell account? I dunno. What good is a
+  computer? Grex offers a very large number of services, a few of
+  which are accessible through the web, but most of which are
+  accessible only through our shell accounts. Please do enjoy using
+  the services we provide, and good luck finding a server for your
+  IRC bot.</p>
+  </div>
+
+  <div id="history">
+  <h4>Document History:</h4>
+  <p>
+  Mar 9, 1998: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+  Initial revision.<br />
+
+  Aug 5, 1998: Steve Weiss (<a href="mailto:srw@cyberspace.org">srw</a>) -
+  Increased users to 25,000.<br />
+
+  Feb 4, 1999: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+  Replaced references to "<tt>kill_orphans</tt>" with "<tt>robocop</tt>".<br />
+
+  Feb 16, 1999: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+  Broaden discussion to talk more about IRC clients and bouncers too.
+  </p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: eggdrop.xhtml 1607 2017-05-31 16:16:21Z cross $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

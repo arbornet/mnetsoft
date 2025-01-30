@@ -1,0 +1,21 @@
+% FLAVOR DESCRIPTION FILE FOR VANILLA
+%
+%  This script is executed by the top-level welcome.bt script to get
+%  information about this interface flavor.  The order of these definitions
+%  is important.  Add new ones to the end.
+
+% (1) Sort code - when we list interfaces, how near the top of the list should
+%  it be?  Smaller numbers are nearer the top.  The smallest number will
+%  be the default.
+10
+
+% (2) Name of the interface.
+(vanilla)
+
+% (3) A brief description of the interface.
+(The vanilla interface is text-oriented, with very verbose command options.
+It is missing many features, but will work with most any browser,
+including non-graphical browsers.)
+
+% (4) Minimum Browser class recommended.
+0

@@ -1,0 +1,507 @@
+SHELL= /bin/sh
+
+top_builddir= ..
+src= @srcdir@
+hdr= @srcdir@/../incl
+VPATH= @srcdir@
+
+CC= @CC@
+INSTALL= @INSTALL@
+LIBTOOL= @LIBTOOL@
+LIB= @LIBS@
+CPPFLAGS= -I$(hdr) @CPPFLAGS@
+LDFLAGS= @LDFLAGS@
+CFLAGS= @CFLAGS@
+LTCC= @LTCC@
+LIBTOOL_DEPS= @LIBTOOL_DEPS@
+
+AUTH_SRC= @auth_src@
+AUTH_HDR= @auth_hdr@
+AUTH_OBJ= @auth_obj@
+IDENT_SRC= @ident_src@
+IDENT_HDR= @ident_hdr@
+IDENT_OBJ= @ident_obj@
+GRP_SRC= @grp_src@
+GRP_OBJ= @grp_obj@
+SES_SRC= @ses_src@
+SES_OBJ= @ses_obj@
+SQL_SRC= @sql_src@
+SQL_OBJ= @sql_obj@
+QRY_SRC= $(SQL_SRC) @qry_src@
+QRY_OBJ= $(SQL_OBJ) @qry_obj@
+SQLQRY= @sqlqry@
+BAAI_SRC= @baai_src@
+BAAI_OBJ= @baai_obj@
+
+BINARIES= @binaries@
+
+prefix= @prefix@
+exec_prefix= @exec_prefix@
+cgidir= @cgidir@
+cgisuffix= @cgisuffix@
+libexecdir= @libexecdir@
+bindir= @bindir@
+owner= @owner@
+group= @group@
+httpd= @httpd@
+authtype= @authtype@
+logintype= @logintype@
+grouptype= @grouptype@
+dynaload= @dynaload@
+attachments= @attachments@
+
+.c.o:
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
+
+binaries: $(BINARIES) .gdbinit
+
+BT_SRC= $(src)/builtin.c $(src)/dict.c $(src)/cgi_cookie.c \
+	$(src)/cgi_query.c $(src)/exec.c $(src)/math.c \
+	$(src)/stack.c $(src)/str.c $(src)/sel.c $(src)/tm2sec.c \
+	$(src)/user.c $(src)/userfunc.c $(src)/adm_user.c \
+	$(src)/search.c $(src)/array.c $(src)/file.c \
+	$(src)/format.c $(src)/group.c $(src)/http.c \
+	$(src)/main.c $(src)/sysdict.c $(src)/hashfile.c \
+	$(src)/browser.c $(src)/date.c $(src)/print.c \
+	$(src)/printtoken.c $(src)/byteorder.c $(src)/readcomp.c \
+	$(src)/regular.c $(src)/session.c $(src)/last_log.c \
+	$(src)/set_uid.c $(src)/token.c $(src)/dynaload.c \
+	$(src)/spell.c $(src)/adm_check.c $(src)/udb_check.c \
+	$(src)/snprintf.c $(src)/sqlutil.c $(src)/sysconfig.c $(src)/qry.c \
+	$(src)/showopt.c $(src)/hash.c $(src)/free.c $(src)/getput.c \
+	$(src)/log.c $(src)/tags.c $(src)/vstr.c $(src)/debug.c $(src)/baaf.c \
+	$(src)/baaf_core.c $(src)/mimetype.c $(src)/emailfunc.c \
+	$(src)/email.c $(src)email_sendmail.c $(src)/md5.c $(src)/entropy.c \
+	$(src)/confaccess.c $(src)/tag.c $(src)/readfile.c
+BT_OBJ= builtin.o dict.o cgi_cookie.o cgi_query.o exec.o math.o \
+	stack.o str.o sel.o tm2sec.o user.o userfunc.o adm_user.o \
+	search.o array.o file.o format.o http.o group.o \
+	main.o sysdict.o hashfile.o browser.o date.o print.o printtoken.o \
+	byteorder.o readcomp.o regular.o session.o last_log.o set_uid.o \
+	token.o dynaload.o spell.o adm_check.o udb_check.o snprintf.o \
+	sqlutil.o sysconfig.o qry.o showopt.o hash.o free.o getput.o log.o \
+	tags.o vstr.o debug.o baaf.o baaf_core.o mimetype.o emailfunc.o \
+	email.o email_sendmail.o md5.o entropy.o confaccess.o tag.o readfile.o
+
+PS_SRC= $(src)/ps_conflist.c $(src)/ps_config.c $(src)/ps_item.c \
+	$(src)/ps_part.c $(src)/ps_sum.c $(src)/lock.c $(src)/ps_cflist.c \
+	$(src)/ps_ulist.c $(src)/ps_post.c $(src)/ps_index.c $(src)/ps_acl.c \
+	$(src)/partdir.c $(src)/picospan.c $(src)/partfile.c
+PS_OBJ= ps_conflist.o ps_config.o ps_item.o ps_part.o ps_sum.o lock.o \
+	ps_cflist.o ps_ulist.o ps_post.o ps_index.o ps_acl.o partdir.o \
+	picospan.o partfile.o
+
+UDB_SRC= $(src)/udb.c $(src)/nextuid.c $(src)/$(AUTH_SRC) \
+	$(src)/$(IDENT_SRC) $(src)/$(GRP_SRC) $(QRY_SRC)
+UDB_OBJ= udb.o nextuid.o $(AUTH_OBJ) $(IDENT_OBJ) $(GRP_OBJ) $(QRY_OBJ)
+
+CORE_SRC= $(BT_SRC) $(PS_SRC) $(UDB_SRC) $(src)/$(SES_SRC) $(BAAI_SRC)
+CORE_OBJ= $(BT_OBJ) $(PS_OBJ) $(UDB_OBJ) $(SES_OBJ) $(BAAI_OBJ)
+
+LIBCNF_SRC= $(src)/mod_conf.c $(src)/adm_conf.c $(src)/ps_edit.c
+LIBCNF_OBJ= mod_conf.o adm_conf.o ps_edit.o
+LIBCNF_LOBJ= mod_conf.lo adm_conf.lo ps_edit.lo
+
+LIB_SRC= $(LIBGRP_SRC) $(LIBCNF_SRC)
+LIB_OBJ= $(LIBGRP_OBJ) $(LIBCNF_OBJ)
+
+FULL_SRC= $(CORE_SRC) $(LIB_SRC)
+FULL_OBJ= $(CORE_OBJ) $(LIB_OBJ)
+
+COMP_SRC= $(src)/comp_main.c $(src)/comp_util.c $(src)/comp_tok.c \
+	$(src)/comp_func.c $(src)/token.c
+COMP_OBJ= comp_main.o comp_util.o comp_tok.o \
+	comp_func.o token.o
+
+libtool: $(LIBTOOL_DEPS)
+	$(SHELL) ./config.status --recheck
+
+backtalk: $(FULL_OBJ)
+	$(CC) -o backtalk $(LDFLAGS) $(CFLAGS) $(FULL_OBJ) \
+	../regex/libregex.a $(LIB)
+
+backtalk-dyn: $(CORE_OBJ)
+	$(LTCC) -export-dynamic -o backtalk-dyn $(LDFLAGS) $(CFLAGS) \
+	$(CORE_OBJ) ../regex/libregex.a $(LIB)
+
+lib_grpadm.la: $(LIBGRP_LOBJ) version
+	$(LTCC) -release `./version` -avoid-version -module $(CFLAGS) \
+	-o lib_grpadm.la $(LIBGRP_LOBJ) -rpath $(libexecdir)
+
+lib_cnfadm.la: $(LIBCNF_LOBJ) version
+	$(LTCC) -release `./version` -avoid-version -module $(CFLAGS) \
+	-o lib_cnfadm.la $(LIBCNF_LOBJ) -rpath $(libexecdir)
+
+testformat: $(src)/format.c $(src)/tags.c str.o $(hdr)/tagdefs.h $(src)/vstr.o
+	$(CC) -o testformat $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -DTESTMAIN \
+	$(src)/format.c $(src)/tags.c str.o vstr.o $(LIB)
+
+testemail: $(src)/testemail.c email.o email_sendmail.o str.o vstr.o date.o \
+	sysconfig.o cmd_die.o
+	$(CC) -o testemail $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) \
+	$(src)/testemail.c email.o email_sendmail.o str.o vstr.o date.o \
+	sysconfig.o cmd_die.o
+
+testdate: $(src)/testdate.c date.o str.o cmd_die.o
+	$(CC) -o testdate $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) \
+	$(src)/testdate.c str.o date.o cmd_die.o
+
+dumpsum: $(src)/dumpsum.c
+	$(CC) -o dumpsum $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -DTESTMAIN \
+	$(src)/dumpsum.c $(LIB)
+
+sumcheck: $(src)/sumcheck.c
+	$(CC) -o sumcheck $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -DTESTMAIN \
+	$(src)/sumcheck.c $(LIB)
+
+partutil: partutil.o ps_conflist.o ps_config.o ps_acl.o str.o
+	$(CC) -o partutil $(LDFLAGS) $(CFLAGS) partutil.o ps_conflist.o \
+	ps_config.o str.o $(LIB)
+
+btc: $(COMP_OBJ) str.o sysdict.o byteorder.o hash.o free.o
+	$(CC) -o btc $(LDFLAGS) $(CFLAGS) $(COMP_OBJ) str.o sysdict.o \
+	byteorder.o hash.o free.o ../regex/libregex.a $(LIB)
+
+decomp: decomp.o printtoken.o readcomp.o sysdict-nf.o byteorder.o str.o
+	$(CC) -o decomp $(LDFLAGS) $(CFLAGS) decomp.o printtoken.o readcomp.o \
+	sysdict-nf.o byteorder.o str.o ../regex/libregex.a $(LIB)
+
+version:  version.c $(hdr)/version.h
+	$(CC) -o version $(CFLAGS) version.c
+
+admin: btmkuser btpasswd btrmuser btvalid dumpuser
+
+btmkuser: btmkuser.o udb_check.o adm_check.o hashfile.o str.o lock.o \
+	set_uid.o cmd_die.o group.o qry.o sqlutil.o sysconfig.o partdir.o \
+	tag.o readfile.o $(UDB_SRC)
+	$(CC) -o btmkuser $(LDFLAGS) $(CFLAGS) btmkuser.o udb_check.o \
+	adm_check.o hashfile.o str.o lock.o set_uid.o cmd_die.o group.o \
+	qry.o sqlutil.o sysconfig.o partdir.o tag.o readfile.o $(UDB_OBJ) $(LIB)
+
+btpasswd: btpasswd.o udb_check.o hashfile.o str.o lock.o set_uid.o cmd_die.o \
+	qry.o sqlutil.o sysconfig.o tag.o readfile.o $(UDB_SRC)
+	$(CC) -o btpasswd $(LDFLAGS) $(CFLAGS) btpasswd.o udb_check.o \
+	hashfile.o str.o lock.o set_uid.o cmd_die.o qry.o sqlutil.o \
+	sysconfig.o tag.o readfile.o $(UDB_OBJ) $(LIB)
+
+btvalid: btvalid.o udb_check.o hashfile.o str.o lock.o set_uid.o cmd_die.o \
+	qry.o sqlutil.o sysconfig.o tag.o readfile.o $(UDB_SRC)
+	$(CC) -o btvalid $(LDFLAGS) $(CFLAGS) btvalid.o udb_check.o \
+	hashfile.o str.o lock.o set_uid.o cmd_die.o qry.o sqlutil.o \
+	sysconfig.o tag.o readfile.o $(UDB_OBJ) $(LIB)
+
+btrmuser: btrmuser.o hashfile.o str.o set_uid.o lock.o cmd_die.o qry.o \
+	sqlutil.o sysconfig.o tag.o readfile.o $(UDB_SRC)
+	$(CC) -o btrmuser $(LDFLAGS) $(CFLAGS) btrmuser.o hashfile.o str.o \
+	set_uid.o lock.o cmd_die.o qry.o sqlutil.o sysconfig.o tag.o \
+	readfile.o $(UDB_OBJ) $(LIB)
+
+makeconf: makeconf.o adm_conf.o str.o
+	$(CC) -o makeconf $(LDFLAGS) $(CFLAGS) makeconf.o adm_conf.o str.o \
+	$(LIB)
+
+cleanattach: cleanattach.o cmd_die.o str.o baaf_core.o $(BAAI_OBJ) hashfile.o \
+	qry.o sqlutil.o sysconfig.o $(QRY_OBJ)
+	$(CC) -o cleanattach $(LDFLAGS) $(CFLAGS) cleanattach.o cmd_die.o \
+	str.o baaf_core.o $(BAAI_OBJ) hashfile.o qry.o sqlutil.o $(QRY_OBJ) \
+	sysconfig.o $(LIB)
+
+dumpattach: dumpattach.o cmd_die.o str.o baaf_core.o $(BAAI_OBJ) hashfile.o \
+	qry.o sqlutil.o sysconfig.o vstr.o $(QRY_OBJ)
+	$(CC) -o dumpattach $(LDFLAGS) $(CFLAGS) dumpattach.o cmd_die.o \
+	str.o baaf_core.o $(BAAI_OBJ) hashfile.o qry.o sqlutil.o $(QRY_OBJ) \
+	sysconfig.o vstr.o $(LIB)
+
+shy:  $(src)/shy.c
+	$(CC) -o shy $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(src)/shy.c
+
+dumpuser: dumpuser.o cmd_die.o str.o hashfile.o qry.o sqlutil.o sysconfig.o \
+	partfile.o tag.o readfile.o vstr.o lock.o hash.o $(UDB_OBJ) \
+	free.o last_log.o set_uid.o
+	$(CC) -o dumpuser $(LDFLAGS) $(CFLAGS) dumpuser.o cmd_die.o \
+	str.o hashfile.o qry.o sqlutil.o sysconfig.o partfile.o \
+	tag.o readfile.o vstr.o lock.o hash.o $(UDB_OBJ) free.o \
+	last_log.o set_uid.o $(LIB)
+
+datetest: $(src)/datetest.c date.o str.o
+	$(CC) -o datetest $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(src)/datetest.c \
+	date.o str.o
+
+dbtest: hashfile.c
+	$(CC) -o dbtest $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -DTEST hashfile.c \
+	$(LIB)
+
+all:	backtalk makeconf admin partutil cleanattach
+
+sysdict.c $(hdr)/sysdict.h: mksysdict
+	./mksysdict sysdict.c $(hdr)/sysdict.h
+
+$(src)/sqlqry.c: mksql $(SQLQRY)
+	./mksql $(SQLQRY) > $(src)/sqlqry.c
+
+mksysdict: $(src)/mksysdict.c hash.o free.o
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o mksysdict $(src)/mksysdict.c \
+	hash.o free.o $(LIB)
+
+mksql: $(src)/mksql.o
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o mksql $(src)/mksql.o $(LIB)
+
+$(hdr)/tagdefs.h: mktagdefs
+	./mktagdefs > $(hdr)/tagdefs.h
+
+mktagdefs: $(src)/mktagdefs.c $(src)/tags.c $(hdr)/tags.h
+	$(CC) $(CPPFLAGS) -DMK_TAGS $(CFLAGS) $(LDFLAGS) -o mktagdefs \
+	mktagdefs.c tags.c
+
+sqlinit: $(src)/sqlinit.c $(src)/sqlqry.c cmd_die.o qry.o sqlutil.o str.o \
+	sysconfig.o $(SQL_OBJ)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o sqlinit $(src)/sqlinit.c \
+	cmd_die.o qry.o sqlutil.o str.o sysconfig.o $(SQL_OBJ) $(LIB)
+
+mkgdbinit: $(src)/mkgdbinit.c sysdict-nf.o hash.o free.o cmd_die.o
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o mkgdbinit $(src)/mkgdbinit.c \
+	sysdict-nf.o hash.o free.o cmd_die.o $(LIB)
+
+.gdbinit: mkgdbinit gdbinit.tmpl
+	./mkgdbinit gdbinit.tmpl > .gdbinit
+
+# not all .h dependencies are listed here...only the more important ones
+# NOTE:  sysdict.h and config.h are very important.
+
+CONFIG_H= $(hdr)/config.h $(hdr)/version.h $(hdr)/localconfig.h
+COMMON_H= $(hdr)/common.h $(CONFIG_H)
+BACKTALK_H= $(hdr)/backtalk.h $(COMMON_H)
+BTDICT_H= $(hdr)/sysdict.h $(BACKTALK_H)
+DBM_H= $(hdr)/hashfile.h  $(COMMON_H)
+ADM_H= $(hdr)/adm.h $(DBM_H)
+COMP_H= $(hdr)/comp.h $(hdr)/comp_tok.h $(BACKTALK_H)
+AUTHIDENT_H= $(hdr)/authident.h $(COMMON_H) $(hdr)/$(AUTH_HDR) \
+	$(hdr)/$(IDENT_HDR)
+
+adm_cgi.o: $(src)/adm_cgi.c $(hdr)/adm_cgi.h $(ADM_H)
+adm_check.o: $(src)/adm_check.c $(hdr)/adm_check.h $(ADM_H)
+adm_user.o: $(src)/adm_user.c $(hdr)/adm_user.h $(BTDICT_H)
+array.o: $(src)/array.c $(hdr)/array.h $(BACKTALK_H)
+browser.o: $(src)/browser.c $(hdr)/browser.h $(BACKTALK_H)
+baaf.o: $(src)/baaf.c $(BACKTALK_H) $(hdr)/baaf.h
+baaf_core.o: $(src)/baaf_core.c $(BTDICT_H) $(hdr)/baaf_core.h
+baai_hash.o: $(src)/baai_hash.c $(BACKTALK_H) $(hdr)/baai.h
+baai_sql.o: $(src)/baai_sql.c $(BACKTALK_H) $(hdr)/baai.h
+btmkuser.o: $(src)/btmkuser.c $(BACKTALK_H) $(hdr)/lock.h $(hdr)/udb.h
+btpasswd.o: $(src)/btpasswd.c $(BACKTALK_H) $(hdr)/udb.h
+btrmuser.o: $(src)/btrmuser.c $(BACKTALK_H) $(hdr)/udb.h
+btvalid.o: $(src)/btvalid.c $(BACKTALK_H) $(hdr)/udb.h
+builtin.o: $(src)/builtin.c $(hdr)/builtin.h $(BTDICT_H)
+byteorder.o: $(src)/byteorder.c $(hdr)/byteorder.h
+cgi_cookie.o: $(src)/cgi_cookie.c  $(hdr)/cgi_cookie.h $(BACKTALK_H)
+cgi_query.o: $(src)/cgi_query.c  $(hdr)/cgi_query.h $(BACKTALK_H)
+cleanattach.o: $(src)/cleanattach.c $(COMMON_H)
+cmd_die.o: cmd_die.c $(COMMON_H)
+comp_main.o: $(src)/comp_main.c  $(COMP_H) $(hdr)/sysdict.h
+comp_func.o: $(src)/comp_func.c $(COMP_H) $(hdr)/sysdict.h
+comp_tok.o: $(src)/comp_tok.c $(COMP_H)
+comp_util.o: $(src)/comp_util.c $(hdr)/comp_util.h $(COMP_H)
+confaccess.o: $(src)/confaccess.c $(hdr)/confaccess.h $(BT_DICT_H)
+date.o: $(src)/date.c $(hdr)/date.h $(COMMON_H)
+debug.o: $(src)/debug.c $(hdr)/debug.h $(BACKTALK_H)
+decomp.o: $(src)/decomp.c $(BACKTALK_H)
+dict.o: $(src)/dict.c $(hdr)/dict.h $(BTDICT_H)
+dumpattach.o: $(src)/dumpattach.c $(COMMON_H)
+dumpuser.o: $(src)/dumpuser.c $(BACKTALK_H)
+dynaload.o: $(src)/dynaload.c $(hdr)/dynaload.h $(BACKTALK_H)
+email.o: $(src)/email.c $(hdr)/email.h $(COMMON_H)
+emailfunc.o: $(src)/emailfunc.c $(hdr)/emailfunc.h $(BACKTALK_H)
+email_sendmail.o: $(src)/email_sendmail.c $(hdr)/email.h $(COMMON_H)
+entropy.o: $(src)/entropy.c $(hdr)/entropy.h $(COMMON_H)
+exec.o: $(src)/exec.c $(hdr)/exec.h $(BTDICT_H)
+file.o: $(src)/file.c $(hdr)/file.h $(BTDICT_H)
+format.o: $(src)/format.c $(hdr)/tagdefs.h $(hdr)/format.h $(BTDICT_H)
+free.o: $(src)/free.c $(hdr)/free.h $(BACKTALK_H)
+getput.o: $(src)/getput.c $(hdr)/getput.h $(BACKTALK_H)
+group.o: $(src)/group.c $(hdr)/group.h $(BTDICT_H)
+hash.o: $(src)/hash.c $(hdr)/hash.h $(BACKTALK_H)
+hashfile.o: $(src)/hashfile.c $(DBM_H)
+http.o: $(src)/http.c $(hdr)/http.h $(BTDICT_H)
+last_log.o: $(src)/last_log.c $(hdr)/last_log.h $(BACKTALK_H)
+lock.o: $(src)/lock.c $(hdr)/lock.h $(BACKTALK_H)
+log.o: $(src)/log.c $(hdr)/log.h $(BACKTALK_H)
+main.o: $(src)/main.c $(BTDICT_H)
+makeconf.o: $(src)/makeconf.c $(COMMON_H)
+math.o: $(src)/math.c $(hdr)/math.h $(BACKTALK_H)
+md5.o: $(src)/md5.c $(hdr)/md5.h $(COMMON_H)
+memchk.o: $(src)/memchk.c $(COMMON_H)
+mimetype.o: $(src)/mimetype.c $(hdr)/mimetype.h $(BACKTALK_H)
+mksql.o: $(src)/mksql.c $(COMMON_H) $(hdr)/qry.h
+mksysdict.o: $(src)/mksysdict.c $(BACKTALK_H)
+nextuid.o: $(src)/nextuid.c $(hdr)/nextuid.h $(COMMON_H)
+partutil.o: $(src)/partutil.c $(hdr)/sysdict.h
+partdir.o: $(src)/partdir.c $(hdr)/partdir.h $(COMMON_H)
+partfile.o: $(src)/partfile.c $(hdr)/partfile.h $(BACKTALK_H)
+picospan.o: $(src)/picospan.c $(hdr)/conf.h $(BTDICT_H)
+print.o: $(src)/print.c $(hdr)/print.h $(BACKTALK_H)
+printtoken.o: $(src)/printtoken.c $(hdr)/printtoken.h $(BACKTALK_H)
+ps_acl.o: $(src)/ps_acl.c $(hdr)/ps_acl.h $(BACKTALK_H)
+ps_cflist.o: $(src)/ps_cflist.c $(hdr)/ps_cflist.h $(BTDICT_H)
+ps_config.o: $(src)/ps_config.c $(hdr)/ps_config.h $(BACKTALK_H)
+ps_conflist.o: $(src)/ps_conflist.c $(hdr)/ps_conflist.h $(BTDICT_H)
+ps_index.o: $(src)/ps_index.c $(hdr)/ps_index.h $(BTDICT_H)
+ps_item.o: $(src)/ps_item.c $(hdr)/ps_item.h $(BTDICT_H) $(hdr)/lock.h
+ps_part.o: $(src)/ps_part.c $(hdr)/ps_part.h $(BTDICT_H) $(hdr)/lock.h
+ps_post.o: $(src)/ps_post.c $(hdr)/ps_post.h $(BTDICT_H) $(hdr)/lock.h
+ps_sum.o: $(src)/ps_sum.c $(hdr)/ps_sum.h $(BTDICT_H) $(hdr)/lock.h
+ps_ulist.o: $(src)/ps_ulist.c $(hdr)/ps_ulist.h $(BTDICT_H)
+qry.o: $(src)/qry.c $(hdr)/qry.h $(COMMON_H)
+readcomp.o: $(src)/readcomp.c $(hdr)/readcomp.h $(BTDICT_H)
+readfile.o: $(src)/readfile.c $(hdr)/readfile.h $(COMMON_H)
+regular.o: $(src)/regular.c $(hdr)/regular.h $(BTDICT_H)
+sel.o: $(src)/sel.c $(hdr)/sel.h $(BACKTALK_H)
+session.o: $(src)/session.c $(hdr)/session.h $(BTDICT_H)
+set_uid.o: $(src)/set_uid.c $(hdr)/set_uid.h $(COMMON_H)
+showopt.o: $(src)/showopt.c $(hdr)/showopt.h $(AUTHIDENT_H)
+snprintf.o: $(src)/snprintf.c $(COMMON_H)
+spell.o: $(src)/spell.c $(hdr)/spell.h $(BTDICT_H)
+sql_none.o: $(src)/sql_none.c $(hdr)/sql.h $(COMMON_H)
+sql_msql.o: $(src)/sql_msql.c $(hdr)/sql.h $(COMMON_H)
+sql_mysql.o: $(src)/sql_mysql.c $(hdr)/sql.h $(COMMON_H)
+sql_oracle.o: $(src)/sql_oracle.c $(hdr)/sql.h $(COMMON_H)
+sql_pgsql.o: $(src)/sql_pgsql.c $(hdr)/sql.h $(COMMON_H)
+sql_sybase.o: $(src)/sql_sybase.c $(hdr)/sql.h $(COMMON_H)
+sqlqry.o: $(src)/sqlqry.c $(hdr)/sqlqry.h $(AUTHIDENT_H)
+sqlutil.o: $(src)/sqlutil.c $(hdr)/sqlutil.h $(COMMON_H)
+stack.o: $(src)/stack.c $(hdr)/stack.h $(BTDICT_H)
+str.o: $(src)/str.c $(hdr)/str.h $(BACKTALK_H)
+search.o: $(src)/search.c $(hdr)/search.h $(BTDICT_H)
+sysdict-nf.o: $(src)/sysdict.c $(BACKTALK_H)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -DNO_FUNCS -c sysdict.c -o sysdict-nf.o
+sysdict.o: $(src)/sysdict.c $(BACKTALK_H)
+sysconfig.o: $(src)/sysconfig.c $(COMMON_H)
+tag.o: $(src)/tag.c $(hdr)/tag.h $(COMMON_H)
+tm2sec.o: $(src)/tm2sec.c $(hdr)/tm2sec.h
+token.o: $(src)/token.c $(BACKTALK_H)
+udb.o: $(src)/udb.c $(hdr)/udb.h $(AUTHIDENT_H)
+udb_check.o: $(src)/udb_check.c $(hdr)/udb_check.h $(COMMON_H)
+user.o: $(src)/user.c $(hdr)/user.h $(BACKTALK_H)
+userfunc.o: $(src)/userfunc.c $(hdr)/userfunc.h $(BTDICT_H) $(hdr)/udb.h
+vstr.o: $(src)/vstr.c $(hdr)/vstr.h $(COMMON_H)
+
+# The authentication, identity, group and session modules
+$(AUTH_OBJ): $(src)/$(AUTH_SRC) $(AUTHIDENT_H)
+$(IDENT_OBJ): $(src)/$(IDENT_SRC) $(AUTHIDENT_H)
+$(GRP_OBJ): $(src)/$(GRP_SRC) $(hdr)/group.h $(COMMON_H)
+$(SES_OBJ): $(src)/$(SES_SRC) $(hdr)/sess.h $(BTDICT_H)
+
+# These are sometimes part of shared modules and may have to be rellocatable
+adm_conf.o adm_conf.lo: $(src)/adm_conf.c $(hdr)/adm_conf.h $(COMMON_H)
+	$(LTCC) $(CPPFLAGS) $(CFLAGS) -c $(src)/adm_conf.c
+mod_conf.o mod_conf.lo: $(src)/mod_conf.c $(hdr)/mod_conf.h $(BTDICT_H)
+	$(LTCC) $(CPPFLAGS) $(CFLAGS) -c $(src)/mod_conf.c
+ps_edit.o ps_edit.lo: $(src)/ps_edit.c $(hdr)/ps_edit.h $(hdr)/lock.h \
+	$(BTDICT_H)
+	$(LTCC) $(CPPFLAGS) $(CFLAGS) -c $(src)/ps_edit.c
+
+clean:
+	rm -f *.o *.lo *.la mksysdict $(hdr)/sysdict.h partutil backtalk \
+	testformat btc decomp btmkuser btpasswd sqlqry.c mksql \
+	btvalid btrmuser .gdbinit
+
+tags: $(SRC) $(src)/comp_main.c $(src)/comp_util.c $(src)/comp_tok.c
+	ctags -w $(COMP_SRC) $(src)/comp_main.c $(src)/comp_util.c \
+	$(src)/comp_tok.c
+
+install: install-binaries
+
+# Install backtalk programs as root
+install-binaries: install-binaries-owner install-binaries-httpd
+
+# Install backtalk programs owned by 'owner' and 'root'
+install-binaries-owner: $(BINARIES)
+	@if test $(dynaload) = yes; then \
+	    rm -f backtalk; \
+	    ln backtalk-dyn backtalk; \
+	fi
+	../install-sh -d -o $(owner) -m 755 $(cgidir)
+	@if test $(owner) = $(httpd); then \
+	    echo $(INSTALL) -o $(owner) -m 711 backtalk $(cgidir)/backtalk$(cgisuffix); \
+	    $(INSTALL) -o $(owner) -m 711 backtalk $(cgidir)/backtalk$(cgisuffix); \
+	elif test $(authtype) = 'passwd' -o $(authtype) = 'shadow'; then \
+	    echo $(INSTALL) -o $(owner) -g $(group) -m 6711 backtalk $(cgidir)/backtalk$(cgisuffix); \
+	    $(INSTALL) -o $(owner) -g $(group) -m 6711 backtalk $(cgidir)/backtalk$(cgisuffix); \
+	else \
+	    echo $(INSTALL) -o $(owner) -m 4711 backtalk $(cgidir)/backtalk$(cgisuffix); \
+	    $(INSTALL) -o $(owner) -m 4711 backtalk $(cgidir)/backtalk$(cgisuffix); \
+	fi
+	@if test $(attachments) = yes; then \
+	    echo rm -f $(cgidir)/backfile$(cgisuffix); \
+	    rm -f $(cgidir)/backfile$(cgisuffix); \
+	    echo ln $(cgidir)/backtalk$(cgisuffix) $(cgidir)/backfile$(cgisuffix); \
+	    ln $(cgidir)/backtalk$(cgisuffix) $(cgidir)/backfile$(cgisuffix); \
+	fi
+	@if test $(logintype) = basic; then \
+	  echo ../install-sh -d -o $(owner) -m 755 $(cgidir)/pw; \
+	  ../install-sh -d -o $(owner) -m 755 $(cgidir)/pw; \
+	  echo ../install-sh -d -o $(owner) -m 755 $(cgidir)/adm; \
+	  ../install-sh -d -o $(owner) -m 755 $(cgidir)/adm; \
+	  echo rm -f $(cgidir)/pw/backtalk$(cgisuffix); \
+	  rm -f $(cgidir)/pw/backtalk$(cgisuffix); \
+	  echo rm -f $(cgidir)/adm/backtalk$(cgisuffix); \
+	  rm -f $(cgidir)/adm/backtalk$(cgisuffix); \
+	  echo ln $(cgidir)/backtalk$(cgisuffix) $(cgidir)/adm/backtalk$(cgisuffix); \
+	  ln $(cgidir)/backtalk$(cgisuffix) $(cgidir)/adm/backtalk$(cgisuffix); \
+	  echo ln $(cgidir)/backtalk$(cgisuffix) $(cgidir)/pw/backtalk$(cgisuffix); \
+	  ln $(cgidir)/backtalk$(cgisuffix) $(cgidir)/pw/backtalk$(cgisuffix); \
+	  if test $(attachments) = yes; then \
+	    echo rm -f $(cgidir)/pw/backfile$(cgisuffix) $(cgidir)/adm/backfile$(cgisuffix); \
+	    rm -f $(cgidir)/pw/backfile$(cgisuffix) $(cgidir)/adm/backfile$(cgisuffix); \
+	    echo ln $(cgidir)/backfile$(cgisuffix) $(cgidir)/pw/backfile$(cgisuffix); \
+	    ln $(cgidir)/backfile$(cgisuffix) $(cgidir)/pw/backfile$(cgisuffix); \
+	    echo ln $(cgidir)/backfile$(cgisuffix) $(cgidir)/adm/backfile$(cgisuffix); \
+	    ln $(cgidir)/backfile$(cgisuffix) $(cgidir)/adm/backfile$(cgisuffix); \
+	  fi \
+	fi
+	../install-sh -d -o $(owner) -m 755 $(libexecdir)
+	@if test $(dynaload) = yes; then \
+	    $(LIBTOOL) cp lib_grpadm.la lib_cnfadm.la $(libexecdir); \
+	    echo "Please ignore the preceeding irrelevant message generated by the"; \
+	    echo "officious but otherwise highly useful Gnu libtool program.  You"; \
+	    echo "will never want to link against those libraries."; \
+	    echo "----------------------------------------------------------------------"; \
+	fi
+	$(INSTALL) -o $(owner) -m 700 btc $(libexecdir)
+	@if test $(authtype) != passwd -a $(authtype) != shadow; then \
+	   echo ../install-sh -d -o $(owner) -m 755 $(bindir); \
+	   ../install-sh -d -o $(owner) -m 755 $(bindir); \
+	else \
+	   echo $(INSTALL) -o root -g $(group) -m 4710 partutil $(libexecdir)/partutil; \
+	   $(INSTALL) -o root -g $(group) -m 4710 partutil $(libexecdir)/partutil; \
+	fi
+	@if test $(attachments) = yes; then \
+	    echo $(INSTALL) -o $(owner) -m 711 cleanattach $(bindir); \
+	    $(INSTALL) -o $(owner) -m 711 cleanattach $(bindir); \
+	fi
+
+# Install backtalk programs owned by 'httpd'
+install-binaries-httpd: $(BINARIES)
+	@if test $(authtype) != passwd -a $(authtype) != shadow; then \
+	   if test $(owner) = $(httpd); then \
+	      echo $(INSTALL) -o $(httpd) -m 711 btmkuser $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 711 btmkuser $(bindir); \
+	      echo $(INSTALL) -o $(httpd) -m 711 btpasswd $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 711 btpasswd $(bindir); \
+	      echo $(INSTALL) -o $(httpd) -m 711 btvalid  $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 711 btvalid  $(bindir); \
+	      echo $(INSTALL) -o $(httpd) -m 711 btrmuser $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 711 btrmuser $(bindir); \
+	   else \
+	      echo $(INSTALL) -o $(httpd) -m 4711 btmkuser $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 4711 btmkuser $(bindir); \
+	      echo $(INSTALL) -o $(httpd) -m 4711 btpasswd $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 4711 btpasswd $(bindir); \
+	      echo $(INSTALL) -o $(httpd) -m 4711 btvalid  $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 4711 btvalid  $(bindir); \
+	      echo $(INSTALL) -o $(httpd) -m 4711 btrmuser $(bindir); \
+	      $(INSTALL) -o $(httpd) -m 4711 btrmuser $(bindir); \
+	   fi; \
+	fi
+
+.PHONY: binaries install install-binaries install-binaries-owner \
+	install-binaries-httpd tags clean

@@ -1,0 +1,148 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% setinew script
+%
+% The "setinew" script is a form from which administrators can select which
+% items will be initially new for new users.  This script is its own form
+% handler.
+%
+% Query Parameters:
+%    conf=		Name of the conference to edit.
+%
+%    which=             Which items to make new: "all", "some" or "none"
+%    do_since=          If true, use the new_since value
+%    days_since=        Number of days since
+%    isel=              List of selected items
+%    admhome=   URL of administrative menu
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+(
+<HTML><HEAD>
+<TITLE>)/conftitle( Conference - Initial New Items</TITLE>
+</HEAD>
+<BODY BGCOLOR=white>
+)
+
+open_conf { (No such )Conference( \()conf(\) </BODY></HTML>\n) stop } if
+
+/which defined {
+
+  % Set the new values
+  /new_since 0 def
+  which (all) eq {
+    /new_isel (1-$) def
+  } {
+    which (none) eq {
+      /new_isel () def
+    } {
+      /do_since defined { do_since {
+        /new_since /days_since defined {days_since cvi}{7}ifelse def
+      } if } if
+      /new_isel isel def
+    } ifelse
+  } ifelse
+
+  (*settings) [/new_isel /new_since] savevar
+
+  clear flavor(/confopt)+ jump
+} if
+
+% title line
+(<H1>)conftitle( Conference Initial New Items</H1>\n)
+
+% load the current settings
+/new_isel (1,$) def
+/new_since 0 def
+(*settings) [/allowhtml /new_isel /new_since] loadvar pop
+new_isel (1-$) eq {/new_since 0 def} if
+
+% form header
+(<FORM ACTION=setinew>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<INPUT TYPE=radio NAME=which VALUE=all> Make <STRONG>ALL</STRONG> items
+new when a newuser joins.
+<P>
+<INPUT TYPE=radio NAME=which VALUE=none> Make <STRONG>NO</STRONG> items
+new when a newuser joins.
+<P>
+<INPUT TYPE=radio NAME=which VALUE=some CHECKED> Make the items selected below
+new when a newuser joins.
+)
+
+% new_since checkbox
+
+(<BLOCKQUOTE>
+<INPUT TYPE=checkbox NAME="do_since" VALUE=1)
+new_since {( CHECKED)} if
+(>&nbsp;&nbsp;<EM>Any items that have been responded to in the last
+<INPUT TYPE=text NAME="days_since" SIZE=3 VALUE=)
+new_since {new_since}{7} ifelse (> days</EM><P>\n)
+
+% List the items
+
+/isel (1-$) store	% selector for all items
+/showforgotten 1 store	% show forgotten items as well as unforgotten items
+/cnt 0 def		% initial counter for number of items
+
+% begin loop for each item 
+{
+  % get the next item
+  isel next_item
+  {
+    break	% next_item failed - no more items
+  }{
+    this_item
+    {
+      break	% this_item failed - shouldn't happen
+    }{
+      % save new item selector
+      pop /isel xstore 
+  
+      (<INPUT TYPE=checkbox NAME="isel" VALUE=)item
+      dup new_isel in_sel {( CHECKED)} if
+      (>&nbsp;#)item(: )
+    
+      % print item number and title
+      (0) read_item {pop (Internal error "read_item") halt} if
+      title
+
+      % print status flags
+      retired {( [retired])} if
+      frozen {( [frozen])} if
+      linked {( [linked])} if
+      (<BR>\n)
+
+      % update count
+      /cnt inc
+    } ifelse
+  } ifelse
+} loop
+cnt 0 eq {
+  % If there are no items, offer a checkbox for the first item anyway
+  (<INPUT TYPE=checkbox NAME="isel" VALUE=1)
+  1 new_isel in_sel {( CHECKED)} if
+  `(>&nbsp;&nbsp;<EM>Future first item</EM><BR>\n)'
+} if
+% Add a checkbox for the last item.
+(<P><INPUT TYPE=checkbox NAME="isel" VALUE="$")
+new_isel ($) 0 search 0 gt {( CHECKED)} if
+(>&nbsp;<EM>&nbsp;&nbsp;The last item</EM><BR>
+</BLOCKQUOTE>
+<INPUT TYPE=submit VALUE="Change Settings">
+</FORM>
+</BODY>
+</HTML>
+)

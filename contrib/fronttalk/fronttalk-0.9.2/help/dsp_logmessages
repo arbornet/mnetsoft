@@ -1,0 +1,7 @@
+                       Fronttalk Display Value:  LOGMESSAGES
+
+Usage:  DISPLAY LOGMESSAGES
+
+Display both the login and logout screen for the current conferences.
+
+See also "HELP DISPLAY LOGIN" and "HELP DISPLAY LOGOUT".

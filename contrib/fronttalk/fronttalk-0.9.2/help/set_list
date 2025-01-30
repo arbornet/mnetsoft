@@ -1,0 +1,14 @@
+                       Fronttalk Setting:  LIST
+
+Usage:  DISPLAY LIST
+        SET LIST
+
+Display/Edit your conference hot list on the current server.  This is a list
+of favorite conferences you can create.  The CHECK command will give a summary
+of the number of new responses in your hotlist conferences, and the NEXT
+command will cycle you through them in the order listed.
+
+The hotlist should just be a list of conference names, one per line.  You
+cannot use a form like <server>:<confernence> here.  There are separate
+hotlists for each server and each can only refer to conferences on that server.
+(We hope to improve this in the future).

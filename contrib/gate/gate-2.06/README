@@ -1,0 +1,104 @@
+				Gate
+			A text-gatherer for Unix
+			      Version 2.06
+			       Jan Wolter
+
+Introduction
+============
+
+Gate is text-gatherer. A text-gatherer is like a text-editor, but much
+more lightweight and unobtrusive.
+
+If you have a program or shell script that asks people to enter a small
+chunk of text, a text-gatherer like Gate is a good way to do it. It
+doesn't clear the screen (annoying if there were just some instructions
+printed there). It doesn't require you to know a lot of obscure editing
+commands. It doesn't make excessive demands on the intelligence of your
+terminal emulation software.
+
+It does provide a number of features that make it easier for novice
+users to produce good text. It does word-wrap, prints a prompt on each
+new line, and allows backspacing from the currently line onto previous
+lines. It also provides features that a more experienced user can use. You
+can call up normal editor, or use some of gate's simple-minded editing
+commands. You can read in files, or save your text to a file. You can
+filter your text through something like the unix "fmt" command. It
+provides a nice spell-checking interface too.
+
+Some of what it does is pretty obscure - If you print a prompt on each
+line, and the text being entered is meant to be printed without a prompt,
+or with a different number of characters prefixed to each line, there
+is a very good risk that all your tabs will be messed up. Gate fixes
+things so tabs during input act just like they will on output.
+
+It is quite configurable, and decently portable among Unix systems.
+
+I am not currently doing active development on gate, but bug-fix release
+still occasionally happen.  Basically, the era where novice-friendliness
+was sought in command-line interfaces is past.  Novices are mostly provided
+with GUI's these days.  So the motivation for further improvements (like
+making arrow keys work) is lacking.
+
+History
+=======
+
+Gate is something of a dinosaur.
+
+Gate was designed in the 1980s to be used with the Picospan or Yapp
+conferencing systems, and many parts of the design were optimized for this
+use. (It sort of works with Caucus too.) It is heavily used on M-Net and
+Grex, mostly by people who don't know they are running it (the natural
+reward for unobtrusiveness). There is a similar program, named "red"
+that was written for use with Picospan on the Well. I've never seen it,
+but I believe gate does everything red does and quite a bit more. It
+has been used in non-conferencing applications, but not all that much.
+
+More recently, gate has been used with Fronttalk, an open source,
+client-server clone of Picospan.
+
+The name "gate" is an abbreviation of "GAther TExt."
+
+Installation
+============
+
+Unpack the distribution.  Inside the distribution directory do
+
+   ./configure
+
+The following options are interesting:
+
+   Spell checkers:
+
+        IF NONE OF THESE OPTIONS ARE GIVEN, GATE WILL NOT SPELL CHECK.
+
+        --with-aspell      Gnu aspell version 0.50 or later
+        --with-oldaspell   older versions of Gnu aspell
+        --with-ispell      Gnu international ispell version 3.x
+        --with-gispell     Gnu ispell version 4.x (obsoleted by 3.x)
+        --with-oldspell    Unix 'spell' command (with + command-line option)
+        --with-olderspell  Unix 'spell' command (without + command-line option)
+
+        If the programs are not installed in your path, then you'll have to
+        do --with-foospell=/the/full/path/name .
+
+    Compatibility:
+
+        --with-picospan    Picospan compatible [default].
+        --with-yapp        Yapp compatible.
+
+    Default editor:
+
+        --with-editor=<path>  Editor to use for users with no EDITOR env
+			      variable.  Default is 'vi'.
+
+    Paths:
+
+	--prefix=<path>     Install directory.  Default /usr/local.
+
+To compile, do
+
+    make
+
+To install the program, the help file and the man page do
+
+    make install

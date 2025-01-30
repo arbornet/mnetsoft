@@ -1,0 +1,51 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% chpwform script
+%
+% This script displays a form in which the user can enter a new password.  The
+% actual password change is done by the changepass.bt script.  It is used both
+% for users to change their own passwords and for system administrators to
+% change other people's passwords.  This script is not useful on systems where
+% nopwedit is true.
+%
+% Query Parameters
+%   login=	User whose password we want to change
+%   errmesg=	Optional error message to display at the top of the page
+
+flavor(config)+ include
+
+% Print the header
+(<HTML><HEAD>
+<TITLE>Change Password for )login(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+</HEAD>
+<BODY )background(>
+) global_header
+(<H1>Change Password for )login(</H1>
+)
+
+% Display error message from previous attempt, if any
+/errmsg defined {
+  errmsg { (<STRONG>Password not changed: )errmsg(</STRONG><P>\n)} if
+} if
+
+% Warn off people who try to change other people's passwords
+amadm !  login id ne  and {
+ (Only )login( or an administrator can change )login('s password.
+ </BODY></HTML>\n)
+ stop
+} if
+
+% Display the form -- It's important to use the POST method here, since we
+% don't want these parameters displayed or logged.
+
+(Enter the new password twice, once in each box.
+<FORM METHOD=POST ACTION=changepass>
+<INPUT TYPE="hidden" NAME=login VALUE=)login(>
+New Password: <INPUT TYPE="password" NAME=passwd1> <BR>
+Same Password: <INPUT TYPE="password" NAME=passwd2> <BR>
+<INPUT TYPE=submit VALUE="Change Password">
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

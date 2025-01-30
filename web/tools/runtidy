@@ -1,0 +1,6 @@
+#!/bin/sh
+for file
+do
+	echo $file
+	tidy -eq $file 2>&1
+done

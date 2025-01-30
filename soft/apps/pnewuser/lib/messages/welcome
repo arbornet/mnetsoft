@@ -1,0 +1,46 @@
+From: Newuser Program <newuser@grex.org>
+To: {$name} <{$email}>
+Subject: Your new account on grex.org.
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Dear {$name},
+
+    This is the 'newuser' program on grex.org, where you
+recently created an account.  I'm just writing to let you
+know that your account has been created and is ready to
+be logged into.  Your login information is as follows:
+
+        login:     {$login}
+        password:  {$password}
+
+    You may login via SSH using a client of your choice.
+If you are using Mac OS X or some variant of Unix (such
+as Linux), an SSH client is very likely already installed
+on your computer; just open a Terminal window or xterm and
+type,
+
+	ssh {$login}@grex.org
+
+    If you are using Microsoft Windows, we recommend using
+the 'PuTTY' client (use your favorite search engine to
+find a download link near you).
+
+    If, for whatever reason, you cannot use SSH, you may
+also login using telnet, but this has been deprecated on
+Grex and isn't likely to be supported for much longer.
+
+    We hope you enjoy using our system and the services we
+offer.  Whether your interest is in our discussion forums,
+real time chat, or just learning about Unix and programming,
+we hope you will find us a compelling offering and stay
+with us for some time.
+
+    If there are any questions or concerns, feel free to
+get in touch with the Grex staff by sendmail email to
+help\@grex.org, or on the web at http://grex.org/.  Happy
+hacking on behalf of the Grex staff,
+
+        - The Newuser Program
+

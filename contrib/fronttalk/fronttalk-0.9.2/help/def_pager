@@ -1,0 +1,12 @@
+                            Fronttalk Define:  PAGER
+
+Usage:  DEFINE PAGER "more"
+
+When ever multiple lines of text are displayed, Fronttalk will filter the
+output through the program defined by the PAGER define.  This is almost
+always "more" (or "less").
+
+The pager can be something more complex.  For example, if you wanted
+everything displayed in upper case you could do:
+
+   define pager "tr a-z A-Z | more"

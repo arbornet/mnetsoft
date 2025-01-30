@@ -1,0 +1,14 @@
+                     Fronttalk Defines:  NSEP
+
+Usage:  DEFINE NSEP "<string>"
+
+The NSEP define is an item separator used during READ commands.  It
+is displayed after the item header and text, but before the responses to
+the item.  Normally it just reports the total number of responses.
+
+For full details on its format, see help pages on SEPARATORS, ITEMFUNC,
+ITEMCOND, and SEPDATE.
+
+The default value is:
+
+  "\n%(N%r new of %)%zn response%S total.\n"

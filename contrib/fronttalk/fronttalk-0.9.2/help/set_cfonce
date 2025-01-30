@@ -1,0 +1,12 @@
+                       Fronttalk Setting:  CFONCE
+
+Usage:  DISPLAY CFONCE
+        SET CFONCE
+
+Display/change your remote .cfonce file on the current server.   This is a
+file that contains Fronttalk commands to execute when you first connect to
+the server.  Usually this consists mainly of DEFINE and SET commands.
+
+There can also be a .cfonce file in your home directory (or in a subdirectory
+of your home directory named .cfdir) on your local system.  To view or edit
+this, just use unix commands.

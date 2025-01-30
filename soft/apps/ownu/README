@@ -1,0 +1,83 @@
+WNU - WEB NEW USER
+Jan Wolter
+
+HISTORY
+
+This is a CGI version of the newuser program based on Marcus Watt's original
+tty-based newuser source.  Marcus's code is used to read the configuration
+file, and to do actual account creation.  New code is used to collect the
+information from the user and check it for validity.
+
+For ease of maintainence, an attempt has been made to share as many of
+Marcus's unaltered source code files as possible.  In a few places this is a
+bit kludgy, because Marcus's code wasn't really designed to do this, but
+mostly it works OK.
+
+Much of the code in wnu-login.c which checks the validity of logins and
+passwords is adapted from code in Marcus's pwd.c file.  Unfortunately, pwd.c
+could not be shared.
+
+Routines from Marcus's newuser called by WNU are:
+
+	read_config()	add_user()	kwscan()	mkpasswd()
+	check_alias()	set_lock()	un_lock()	notthisone()
+	fwrtusr()       obvious()
+
+
+INTERFACE
+
+WNU works with a fundamentally different (and arguably inferior) user
+interface than the tty-based version.  In Marcus's version, you are asked
+a series of questions, and each response is checked as you go, giving you
+a chance to change your response immediately if it is wrong.  In WNU, all
+information must be placed on a form, and submitted in batch.  You don't
+get any feedback until you've completed and submitted the form.  Then you
+can go back, edit the form, and resubmit it.
+
+To make the best of this basically crummy interface model, the program has
+been designed to report errors in batch.  If there are several errors,
+it doesn't just report the first one, but tries to report them all.  This
+reduces the number of iterations that need to be made, but the price of this
+is that nearly all the checks need to be done on each submission of the form.
+Thus WNU can put somewhat more load on the system than tty-based version.
+
+It might actually be a better design to display a series of pages, each with
+just a few questions, but we'd either have to figure out some way of
+establishing local storage of the responses to the previous pages of the form,
+or we'd have to bounce the previous responses back through the user's browser
+by including them in the URL sent by the next pages submit buttons.  Both
+methods would impose significant security problems.  Plus you'd probably have
+to redo all the checks before installing the account anyway, so you'd still
+have a lot of performance penalty.
+
+Moral of the story:  Pretty pictures, boxes and fonts alone do not make a
+better user interface.  The Web-browser interface has deep weaknesses.
+
+LOGGING
+
+WNU does identical logging to Marcus's newuser, appending to a file
+descriptions of every account created.  In addition, it has its own error
+log file with logs problems that might be of interest to system administrators.
+This includes internal errors in WNU and users giving input that may have
+resulted from an attempt to crack the system.  Of course, all transactions
+are also logged in the httpd log.  You should take care to set up your
+application form with the POST method, so that user's passwords don't get
+logged in the httpd log file.
+
+INSTALLATION
+
+There are lots of versions of Marcus's newuser program floating around and new
+ones appear from time to time.  They don't have version numbers (well, neither
+does wnu).  There is a version date printed out, but it doesn't change as
+often as the code does.  So basically, I have no way to tell you if this
+version of web-newuser will work with the particular version of newuser code
+you have.  You may need to make small changes to the code.  You may need to
+to add or subtract from the list of files the Makefile tries to get from
+the newuser source.
+
+First, build and completely test and debug the command-line version of newuser
+on your system.  This is very likely a very challenging project.
+
+Next, edit the wnu Makefile, down to where the ---- line is.
+
+Now do a "make".  Test carefully.  Fix all the bugs.  

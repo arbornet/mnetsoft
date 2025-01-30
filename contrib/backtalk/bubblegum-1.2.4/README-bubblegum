@@ -1,0 +1,129 @@
+			BACKTALK BUBBLEGUM INTERFACE
+		   (c) 2001-2003  Jan Wolter & Steve Weiss
+
+			      Version 1.2.4
+	          Requires Backtalk Version 1.3.17 or later
+
+DESCRIPTION:
+
+The Backtalk Bubblegum Interface is a set of scripts that implement a
+simplified interface to the Backtalk conferencing system that is designed
+to be friendly to kids, and other people wanting a less complex interface.
+Bubblegum is basically a pared-down version of Pistachio, with fewer, bigger
+buttons and and a slightly flashier look.
+
+The bubblegum interface was originally developed under contract to the
+Canton Public Library's PULSE project ("Partnership Uniting Libraries and
+Schools Electronically") which aims to put a "virtual branch" of the library
+in each elementary school classroom.  Part of this is "Booktalk" a customized
+version of the Backtalk conferencing system designed to allow students and
+teachers to hold on-line discussions of books with other members of their own
+class as well as members of other classes at other schools.  Parents and
+other interested people have read-only access.  In support of this project,
+the bubblegum user interface and the booktalk administrative tools were
+developed.  Since PULSE is a publically funded project designed to be a model
+that other libraries and school systems can emulate, all software developed
+for this project is available for free.  More information about PULSE is
+available at http://pulse.cantonpl.org/.
+
+Special thanks go to Canton Public Library staff members Carl Miller, Jim
+Wiljanen and Jean Tabor for their contributions to the design of the
+bubblegum interface.
+
+INSTALLATION:
+
+(1) Make sure that you have the correct version of Backtalk installed.  The
+    top of this file tells the minimum version of Backtalk needed to support
+    the scripts in this package.  Later versions of Backtalk may or may not
+    be compatible.  If we release a version of Backtalk not compatible with
+    this interface package, a new version of this package will be released.
+
+(2) Unpack the Bubblegum distribution.
+
+    OK, if you hadn't already done that, you wouldn't be reading this, would
+    you?  We'll refer to the full path of the new directory containing the
+    distribution as DISTDIR.
+
+(3) Versions of Backtalk after 1.1.4 have a 'btinstall' script to simplify
+    the installation of seperately distributed interface packages.  Btinstall
+    assumes that the configuration of Backtalk hasn't radically changed since
+    you used Backtalk's 'make install' commands to install the system.  If
+    you've manually rearranged what goes where on the disk, btinstall will
+    need some editing, or you'll need to install the interface manually.
+
+    TO INSTALL USING BTINSTALL:
+
+    (a)  Login either as root or as the user that owns Backtalk's files on
+         your system.
+
+    (b)  Find where the 'btinstall' script was installed, so you can run it.
+         You want to be sure you get the installed copy of the program, which
+	 has been modified with information about your installation, not
+	 the one in the distribution directory.
+
+    (c)  cd into the unpacked distribution directory, DISTDIR.
+
+    (d)  Run 'btinstall'
+
+    TO INSTALL WITHOUT BTINSTALL:
+
+    This distribution contains two subdirectories.  The 'script' subdirectory
+    contains all the Backtalk scripts that implement the interface.  The
+    'image' directory contains some button images.  These just have to be
+    moved into directories named 'bubblegum' under Backtalk's script and
+    image directories.  In a bit more detail:
+
+    (a) Find the Backtalk script directory.  The default pathname is
+        /usr/local/backtalk/script, but it will vary on different systems.
+        Typically it will contain the config.bt script, the userinfo.bt script
+        and subdirectories for all installed interfaces.
+
+    (b) Create a new subdirectory under the script directory, called
+        'bubblegum'.  Make sure the directory is writable to the Backtalk
+	account, so that compiled copies of the scripts can be written into
+	it by Backtalk.
+
+    (c) Copy all the files in DISTDIR/script to the new bubblegum directory.
+
+    (d) Find the Backtalk image directory.  This will normally be somewhere
+        under your http server's document root.  The "imghost" symbol defined
+	in config.bt gives the URL of this directory.
+
+    (e) Create a new subdirectory under the image directory, called
+        'bubblegum'.
+
+    (f) Copy all the files and directories under DISTDIR/image into this new
+        bubblegum image directory.  These should all be readable by the http
+        server.
+
+That's all.  Backtalk's 'welcome' page will automatically detect the
+presence of the bubblegum interface, and include it in the list of available
+interfaces.
+
+CUSTOMIZATION:
+
+Bubblegum may be customized by editing the SCRIPTDIR/bubblegum/config.bt file.
+After editting it, you should probably do "rm SCRIPTDIR/bubblegum/*.bb" to
+delete any previously compiled scripts, forcing the system to recompile with
+the new settings.
+
+The main things to edit in this file are the colors of the text and background,
+the button set to use, the names for things (is it a 'conference', a 'forum',
+a 'room', a 'discussion' or a 'bookchat'?), and special feature switches.
+Most of these are adequately explained in the config.bt file.
+
+Three button sets are distributed with this package.  The 'gumball' buttons
+are generic but ugly.  The 'book' buttons are specific to the PULSE Booktalk
+system.  The 'maroon' buttons are also fairly generic.  If you are at all
+serious about using this interface, you will almost certainly want to create
+a new button set of your own.  The following should be kept in mind:
+
+   - You should pick one size for your buttons and make them all that size.
+
+   - Buttons should probably not be much wider than 120 pixels, and a little
+     narrower than that is better.  Otherwise they will push the conference
+     text off the screen for users with smaller monitors.
+
+   - Buttons should have exactly the same filenames as those in the two
+     button sets in the distribution.  Labels on the buttons should, of course,
+     be adjusted to match whatever terminology you are using for things.

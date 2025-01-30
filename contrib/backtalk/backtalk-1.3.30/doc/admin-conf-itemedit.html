@@ -1,0 +1,118 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Editing Items</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Editing Items</H2>
+Version 1.3.30
+<P>
+&copy; 1997-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk has built-in tools for editing items and responses.
+Generally these should not be over-used.
+In fact, they should almost never be used.
+If people make mistakes or misstatements, they should just post another
+response correcting it.
+If something really needs to be removed, the response can be erased or the
+item killed.
+<P>
+However, there are rare circumstances where editing items makes sense.
+You can do so through Backtalk simply by logging in as the conference
+administrator, and reading the item in question.  There should be `Edit'
+buttons near each response.
+<P>
+This document tells how to use a text editor to edit the raw item files.
+<P>
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log onto the Unix conference administration account.
+<P>
+This is the account that owns all the conference files and the backtalk
+program itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> change directory to conference directory
+<P>
+Each conference has a directory where all its files are kept.  There is a
+pointer to this directory in the <TT>conflist</TT> file.  The location
+of the <TT>conflist</TT> file depends on how your system is configured.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the item file
+<P>
+Inside the conference directory, you will find (among other things) various
+files named <TT>_1</TT>, <TT>_2</TT>, <TT>_3</TT> and so on.
+This are the files where the items with the corresponding numbers are
+saved.  They are text files, so you can use any ordinary text editor on them.
+<P>
+A typical item file looks like this:
+<PRE>
+    !&lt;ps02&gt;
+    ,HWelcome to the Martian Veldt
+    ,R0000
+    ,U14,carter
+    ,AJohn Carter
+    ,D32db20b2
+    ,T
+    Welcome to the Red planet of Mars.
+    May I see your passport please?
+    ,E
+    ,R0000
+    ,U15,marvin
+    ,AMarvin The Martian
+    ,D343068aa
+    ,T
+    What's up doc?
+    ,E
+</PRE>
+The first line is always "<TT>!&lt;ps02&gt;</TT>" and identifies this as version
+two of the picospan response file format.
+The lines starting with commas are tags.  The tags are:
+<BLOCKQUOTE>
+<TABLE>
+<TR><TD>,H<TD>Item title line
+<TR><TD>,R<TD>Response flags (hidden, erased, etc).
+<TR><TD>,U<TD>Author id (uid number and login name).
+<TR><TD>,A<TD>Author full name (or pseudonym).
+<TR><TD>,D<TD>Date response was posted
+<TR><TD>,T<TD>Start of response text
+<TR><TD>,E<TD>End of response text
+</TABLE>
+</BLOCKQUOTE>
+Note that in the file the item text is simply treated as the first response.
+<P>
+If you are reasonably cautious about not reordering or deleting tags, you
+should be able to edit things here easily.
+It isn't a good idea to delete or insert new responses, since this will
+renumber all succeeding responses and confuse all the user's participation
+files.
+<HR>
+
+<LI><INPUT TYPE=checkbox> Empty item index file
+<P>
+For efficiency, Backtalk maintains index files for each item that tell it
+where each response begins in the item file.
+If you've edited the item file, the index file is probably incorrect now.
+Backtalk is pretty good about detecting errors in index files and repairing
+them, but it won't always work right away.
+So the best thing to do is to empty the index file.
+Backtalk will always detect this and regenerate it.
+You shouldn't delete the index file, because this will cause problems for
+linked items.
+<P>
+The index files are in the <TT>indexdir</TT> subdirectory of the conference
+directory.  (If the directory doesn't exist, by all means create it).
+Inside the indexdir subdirectory, you will find files with names like
+<TT>@1</TT>, <TT>@2</TT>, <TT>@3</TT>, and so on.  These are the index files
+for the different item numbers.
+So if you have been editing item number 24, you should do:
+<PRE>
+    cat /dev/null > indexdir/@24
+</PRE>
+</OL>
+</BODY></HTML>

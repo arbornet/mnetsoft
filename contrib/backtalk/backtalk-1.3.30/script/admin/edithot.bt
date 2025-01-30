@@ -1,0 +1,387 @@
+% Backtalk Administrative Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% edithot script
+%
+% This is the form generator and query handler for editing the global
+% conference hot list.  If run without the "op" parameters, it just displays
+% the cflist, with controls for editing it and a list of conferences that
+% can be added to it.
+%
+% This makes no attempt at locking.
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (M) = move an item to a different position in the list
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%                   (V) = just display the menu.
+%    oldn=	(M,D Only) Line number of source item.
+%    newn=      (M,A Only) Line number of destination (insert before this).
+%    cname=     (A Only) New conference, heading or tag
+%    ctype=	(A Only) Type:  (C)=conference, (H)=heading, (T)=tag
+%    cgrp=      (A Only) group to restrict new conference to
+%    tm=	Time file was last modifed.
+%    admhome=   URL of administrative menu
+
+flavor(config)+ include
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+% <element> typeof <cname> <ctype>
+/typeof {
+  dup 0 1 substr (#) eq {
+    dup 1 1 substr (:) eq
+     { 2 999999 substr (T)}
+     { 1 999999 substr (H)} ifelse
+  }{ (C) } ifelse
+} def
+
+% Print the page header
+(<HTML><HEAD><TITLE>Edit Global Default Conference Hot List</TITLE></HEAD>
+<BODY BGCOLOR=white>
+)
+
+% set some defaults
+/cmds 1 def		% display commands on listing
+/rem 0 def		% don't kill anything
+/add 0 def		% don't add anything
+/edited 0 def		% don't write out new list
+/click 1 def		% click on conf titles to goto conf
+/err () def		% no error message
+/op defined ! {/op (V) def} if
+/cgrp defined ! {/cgrp () def} if
+/ctype defined ! {/ctype (C) def} if
+/oldn defined {oldn cvi} {0} ifelse /oldn xdef
+/newn defined {newn cvi} {0} ifelse /newn xdef
+
+% Load the hotlist into memory
+2 cflist_array /cflist xdef
+(*dflt.cflist) filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt {
+      /op (V) def
+      /err (Ignoring reloaded query - don't want to do same thing twice.\n) def
+      /cname () def
+   } if
+} if
+
+% Do add case
+op (A) eq {
+   newn ! {
+      /cmds 0 def
+   } {
+      % Do the insertion
+      /add 1 def
+   } ifelse
+} if
+
+% Do move case
+op (M) eq {
+   oldn ! {
+      /op (V) def
+   } {
+   newn ! {
+      % Do the deletion, and ask for insertion location
+      /cmds 0 def
+      /rem 1 def
+   } {
+      % Do the insertion
+      /add 1 def
+   } ifelse } ifelse
+} if
+
+% Do deletion case
+op (D) eq {
+   oldn ! {
+      /op (V) def
+   } {
+      % Do the deletion
+      /rem 1 def
+   } ifelse
+} if
+
+/ncf cflist length def
+
+% if "rem" flag set, delete oldn
+rem {
+   /i oldn 1 - def
+   cflist i get typeof /ctype xdef /cname xdef  % save deleted element
+   cflist i () put
+   /edited 1 def
+   /ncf dec
+} if
+
+% if "add" flag set, insert newn
+add {
+   % construct the new element
+   ctype (C) eq {
+     cname cgrp{cgrp(:)+exch+}if
+   } {
+     ctype (H) eq {
+	(#)cname+
+     } {
+	(#:)cname+
+     } ifelse
+   } ifelse /element xdef
+
+   /i newn 1 - def
+   i cflist length ge {
+     % add to end of array
+     cflist dup length element put
+   } {
+     % prepend inserted name to existing array element
+     cflist i `element (\n) cflist i get' put
+   } ifelse
+   /edited 1 def
+   /ncf inc
+} if
+
+% construct a newline separated list of conference names
+/cftext `cflist {dup {(\n)} if} forall' def
+
+edited {
+  cftext (*dflt.cflist) write
+  (*dflt.cflist) filedate cvi /filetime xdef
+} if
+
+% display a heading
+cmds {
+  (<H1>Edit Global Default Conference Hot List</H1>\n)+
+  (Goto <A HREF=")admhome(">Admin Menu</A>\n)
+} if
+
+% display a caption
+cmds {
+  (<H2>Edit the Current Default Hot List for All Users:</H2>\n)
+
+  /url [(<A HREF="edithot?tm=)filetime(&admhome=)admhome] def
+} {
+  ctype (H) eq {(heading)}{ctype (C) eq {(conference)}{(tag)}ifelse}ifelse
+    /what xdef
+  op (A) eq {
+     (<STRONG>Where do you want to insert the )cname( )what(?</STRONG>\n)
+  } {
+     (<STRONG>To which location do you want to move the )what(?</STRONG>\n)
+  } ifelse
+
+  /click 0 def
+  /url [(<A HREF="edithot?op=)op(&tm=)filetime(&admhome=)admhome
+        /oldn defined {(&oldn=)oldn} if
+        /cname defined {(&cname=)cname cgiquote} if
+        /cgrp defined {(&cgrp=)cgrp cgiquote} if
+        /ctype defined {(&ctype=)ctype} if
+        ] def
+ 
+} ifelse
+
+print
+
+(<TABLE BORDER=1 CELLPADDING=2>\n)
+
+cftext {
+  /nocf 0 def
+  /cnt 0 def
+
+  % Print out the current contents of the file
+  {
+     /cnt inc
+
+     cftext (\n) clip /cname xdef /cftext xdef
+
+     cname {
+
+       (<TR>)
+       cmds {
+	  (<TD BGCOLOR=FFFF00>)url(&op=M&oldn=)cnt(">Move</A></TD>)
+	  (<TD BGCOLOR=FF0000>)url(&op=D&oldn=)cnt(">Delete</A></TD>)
+       } {
+	  (<TD BGCOLOR=FFFF00>)url(&newn=)cnt
+	  (">here =></A>\n</TD></TR><TR><TD></TD>)
+       } ifelse
+
+       (<TD>)
+       cname 0 1 substr (#) eq {
+	 cname 1 1 substr (:) eq {
+	   % a tag
+	   (TAG: )cname 2 9999 substr quote
+	 } {
+	   % a heading
+	   (<STRONG>)cname 1 9999 substr quote(</STRONG>\n)
+	 } ifelse
+       } {
+	 % extract group quantifier, if any
+	 cname (:) clip exch dup {
+	   /cname xdef /group xdef
+	 } {
+	   /group xdef pop
+	 } ifelse
+
+	 % show conference name
+	 click {
+	    (<A HREF=")SCRIPT_NAME(/)helper(/confhome?conf=)
+		cname cgiquote(">)cname quote
+	    (</A>)
+	    group {( \(group )group( only\))} if
+	 } {
+	    cname quote
+	 } ifelse
+	 (</TD></TR>\n)
+       } ifelse
+     } if
+
+     cftext ! {break} if
+
+  } loop
+  cmds ! {
+     (<TR><TD BGCOLOR=FFFF00>)url(&newn=)cnt 1 +(">here =></A></TD></TR>\n)
+  } if
+  (</TABLE>\n)
+} {
+  /nocf 1 def
+  pop (No Conferences Listed\n)
+} ifelse
+
+print
+
+cmds {
+
+  (<P><HR><H2>Add a Conference:</H2>
+  To add a conference, either type the name into the box below
+  and click the "Add It" button, or click the Add button in the list
+  of conferences below.  With the first option, you can specify a group,
+  in which case that hotlist entry is used only for members of the chosen
+  group.<P>
+  <BLOCKQUOTE>
+  <TABLE BORDER=1>
+  <FORM METHOD=post ACTION=edithot>
+  <TR><TD><STRONG>Conference Name:</STRONG></TD>
+  <TD><STRONG>Groups:</STRONG></TD>
+  <TD>&nbsp;</TD></TR>
+  <TR><TD><INPUT TYPE=text NAME=cname SIZE=20></TD>
+  <TD><SELECT NAME=cgrp><OPTION VALUE="">All\n)
+  [groups] {
+    quote (<OPTION VALUE=") exch dup (">) exch (\n)
+  } forall
+  (</SELECT><INPUT TYPE=hidden NAME=op VALUE=A>
+  <INPUT TYPE=hidden NAME=ctype VALUE=C>
+  <INPUT TYPE=hidden NAME=admhome VALUE=")admhome quote(">\n)
+  nocf {(<INPUT TYPE=hidden NAME=newn VALUE=1>\n)} if
+  (<INPUT TYPE=hidden NAME=tm VALUE=)filetime(></TD>
+  <TD><INPUT TYPE=submit VALUE="Add It"></TD></TR>
+  </FORM></TABLE></BLOCKQUOTE>\n)
+
+  print
+  (<TABLE BORDER=1 CELLPADDING=2>\n)
+
+  /usepublic_txt constant {
+
+    bbsdir(/public.txt)+ read /pt xdef
+
+    {
+      pt (\n) parse dup ! {break} if
+        /work_line xdef /pt xdef
+
+      (<TR>)
+      work_line pt_confline sgrep {
+        % found a conference line
+	aload /work_line xdef     % conference description
+	      /cname xstore pop   % conference name
+	(<TD BGCOLOR=00FF00>)url(&op=A&cname=)cname cgiquote
+	nocf {(&newn=1)} if (">Add</A></TD>\n)
+        (<TD><A HREF=")SCRIPT_NAME(/)helper(/confhome?conf=)cname cgiquote(">)
+	cname quote(</A></TD><TD>)
+        work_line quote(</TD>)
+      } {
+	work_line pt_headline sgrep {
+	  % found a header line
+	  1 get
+          (<TD></TD><TD COLSPAN=2><STRONG>)exch quote(:</STRONG></TD>\n)
+	} if
+      } ifelse
+      (</TR>)
+    } loop
+  } {
+    (*confmenu) read /cm xdef
+
+    {
+      cm (\n) clip exch /cm xdef
+
+      % Skip comment lines
+      dup 0 1 substr (#) eq {pop continue} if
+
+      % Pick apart the line
+      (:) clip /cname xdef
+      (:) clip /ctitle xdef /cdes xdef
+
+      (<TR>)
+      cname {
+	% a conference
+	(<TD BGCOLOR=00FF00>)url(&op=A&cname=)cname cgiquote nocf {(&newn=1)} if
+	(">Add&nbsp;)cname quote(</A></TD>\n<TD><A HREF=")
+	SCRIPT_NAME(/)helper(/confhome?conf=)cname cgiquote
+	(">)ctitle quote(</A></TD><TD>) cdes quote(</TD>\n)
+      } {
+	 % a heading
+	 (<TD></TD><TD COLSPAN=2><STRONG>)ctitle quote(:</STRONG> )cdes quote(</TD>\n)
+      } ifelse
+      (</TR>)
+
+      cm ! {pop break} if
+
+    } loop
+  } ifelse
+  (</TABLE>
+  <P><HR><H2>Add a Heading:</H2>
+  You can insert headings into the global default hotlist.  Note that not
+  all interfaces actually display these.  You can insert a new one with the
+  form below.
+  <P>
+  <BLOCKQUOTE>
+  <TABLE BORDER=1>
+  <FORM METHOD=post ACTION=edithot>
+  <TR><TD><STRONG>Heading Text:</STRONG></TD>
+  <TD>&nbsp;</TD></TR>
+  <TR><TD><INPUT TYPE=text NAME=cname SIZE=40></TD>
+  <INPUT TYPE=hidden NAME=op VALUE=A>
+  <INPUT TYPE=hidden NAME=ctype VALUE=H>
+  <INPUT TYPE=hidden NAME=admhome VALUE=")admhome quote(">\n)
+  nocf {(<INPUT TYPE=hidden NAME=newn VALUE=1>\n)} if
+  (<INPUT TYPE=hidden NAME=tm VALUE=)filetime(></TD>
+  <TD><INPUT TYPE=submit VALUE="Add It"></TD></TR>
+  </FORM></TABLE></BLOCKQUOTE>
+  <P><HR><H2>Add a Tag:</H2>
+  Tags are used by some interfaces and administrative tools to mark interesting
+  spots in the default conference list.  You can insert a new one with the
+  form below.
+  <P>
+  <BLOCKQUOTE>
+  <TABLE BORDER=1>
+  <FORM METHOD=post ACTION=edithot>
+  <TR><TD><STRONG>Tag Text:</STRONG></TD>
+  <TD>&nbsp;</TD></TR>
+  <TR><TD><INPUT TYPE=text NAME=cname SIZE=20></TD>
+  <INPUT TYPE=hidden NAME=op VALUE=A>
+  <INPUT TYPE=hidden NAME=ctype VALUE=T>
+  <INPUT TYPE=hidden NAME=admhome VALUE=")admhome quote(">\n)
+  nocf {(<INPUT TYPE=hidden NAME=newn VALUE=1>\n)} if
+  (<INPUT TYPE=hidden NAME=tm VALUE=)filetime(></TD>
+  <TD><INPUT TYPE=submit VALUE="Add It"></TD></TR>
+  </FORM></TABLE></BLOCKQUOTE>\n)
+
+} if
+
+(</BODY></HTML>
+)

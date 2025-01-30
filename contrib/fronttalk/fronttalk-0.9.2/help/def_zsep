@@ -1,0 +1,16 @@
+                     Fronttalk Defines:  ZSEP
+
+Usage:  DEFINE ZSEP "<string>"
+
+The ZSEP define is an item separator displayed during READ commands after
+each item.
+
+For full details on its format, see help pages on SEPARATORS, ITEMFUNC,
+ITEMCOND, and SEPDATE.
+
+The default value is:
+
+  "%(T\f%)%c"
+
+This displays a formfeed if the FF flag was given on the READ command,
+but otherwise does nothing.

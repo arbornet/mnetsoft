@@ -1,0 +1,199 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+%
+% item RSS script
+%
+% Generate a syndication feed describing the responses to an item.
+%
+% Query Parameters:
+%    conf=	conference name
+%    item=      item number
+%    fmt=       'RSS-2.0' or 'RSS-0.91' etc.
+%    flav=      flavor to link to. 'pistachio' or 'wasabi' or whatever
+%    len=       number of characters to show from beginning of each resp text.
+%               negative means full length, 0 means none.
+%    days=      show only responses posted in the last n days.  0 means all.
+%    login=     Y if we should link to authenticated page
+
+flavor(config)+ include
+
+
+% - get_resp <flag>
+%  Get the next response in /nrs.  Return true if there was none.
+
+/get_resp {
+  nrs next_resp {1} {exch /nrs xdef read_resp} ifelse
+} def
+
+
+% <string> <len> truncate <string>
+%  Shorten a string of text to be no longer than the given length.  Cuts it
+%  of after the end of a word and appends three dots.  Always leaves at least
+%  25 characters.
+
+/truncate {
+  dict begin
+    /n xdef
+    /s xdef
+    
+    n  s length lt {
+
+      % Loop from s[n] backwards
+      {
+        % stop if n is less than 25
+        n 25 le { break } if
+
+        % stop if s[n] is white space
+        ( \n\t)   s n 1 substr   0 search  0 ge { break } if
+
+        /n dec
+      } loop
+
+      % do the clip
+      s 0 n substr (...)+
+
+    } {
+      % string is already less than n characters
+      s
+    } ifelse
+  end
+} def
+
+
+% Set default description length
+/len defined {/len len cvi def} {/len default_resp_len def} ifelse
+/days defined ! {/days 7 def} if
+/days days cvi def
+/since days { time days cvi 86400 * - } { 0 cvt } ifelse store
+/login defined {login caps (Y) eq } {0} ifelse /login xdef
+
+% If no conference specified, do default confernce
+conf ! { /conf (?) store } if
+
+open_conf {
+  (<error>No conference )conf(.</error>\n)
+  halt
+} if
+
+(since) item this_item {
+  (<error>No item )item( in conference )conf(.</error>\n)
+  halt
+}  if
+read_item {
+  (<error>Error accessing )item( in conference )conf(.</error>\n)
+  halt
+}  if
+rev_sel /nrs xdef
+
+% Set up the proper RSS interface and flavor interface
+flavor(loadrss)+ include
+flavor(loadflavor)+ include
+
+% Output RSS header
+rss_start
+
+% Get item title
+/rss_title title def
+
+% Get item description
+/rss_description () def
+0 read_resp {
+  /rss_description
+    0 read_text
+    default_item_len 0 ge {default_item_len truncate} if
+    def
+} if
+rss_description ! {
+  /rss_description title def
+} if
+
+% Get item link
+/rss_link conf item item_link def
+
+% Get language
+/site_language constant {
+  /rss_language site_language def
+} if
+
+% Get copyright
+/site_copyright constant {
+  /rss_copyright site_copyright def
+} if
+
+% Get webmaster
+/site_webmaster_name constant {
+  /rss_webmaster_name site_webmaster_name def
+} if
+/site_webmaster_email constant {
+  /rss_webmaster_email site_webmaster_email def
+} if
+
+% Get managing editor
+/fw_is_managing_editor constant {
+} {
+  /site_managingeditor_name constant {
+    /rss_managingeditor_name site_managingeditor_name def
+  } if
+  /site_managingeditor_email constant {
+    /rss_managingeditor_email site_managingeditor_email def
+  } if
+} ifelse
+
+% Get most recent response
+get_resp {
+  % No responses  Return empty channel
+  rss_start_channel
+} {
+  % Have at least one response.  Set lastbuilddate
+  /rss_lastbuilddate date def
+
+  % Output Channel Header
+  rss_start_channel
+
+  % If we aren't doing descriptions, erase the variable
+  len 0 eq { /rss_description undef } if
+
+  % Loop through responses, in reverse order
+  {
+    % Response title
+    /rss_title `Response cap (#)resp
+	( - )authorname
+	/include_author_login constant { ( \()authorid(\)) } if
+      ' def
+
+    % Item links and date
+    /rss_link conf item resp resp_link def
+    /rss_comments conf item resp cvs(-$)+ resp_link def
+    /rss_pubdate date def
+
+    % Set author, unless all the author info is already in the title
+    /rss_author_name `authorname
+      /include_author_login constant { ( [)authorid(]) } if
+      ' def
+    /email_suffix constant {
+       /rss_author_email authorid email_suffix+ def
+    } if
+
+    % description - normally start of response text
+    len 0 ne {
+      /rss_description
+	0 read_text
+	  len 0 gt { len truncate } if
+	  chomp
+	def
+    } if
+
+    % Output item
+    rss_item { break } if
+
+    % get next response, if there is one
+    get_resp { break } if
+
+  } loop
+
+} ifelse
+
+% Output Channel trailer
+rss_end_channel
+
+% Output RSS trailer
+rss_end

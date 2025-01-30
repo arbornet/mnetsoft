@@ -1,0 +1,42 @@
+Grex / Party / Installation
+
+Party is a rewrite of Marcus Watt's program by Jan Wolter and is distributed
+from his jan's web site at http://www.unixpapa.com/party.html
+
+*******************************
+Create Suidbin Directory first.
+*******************************
+
+This installs configuration scripts from the grexdoc directory.  You should
+make sure these are the most recent copies, especially for chantab and noisetab
+which change frequently.
+
+Make sure the 'party' user and 'partyadm' group have been created.  The program
+will run suid-party.  Configuration files will be write permitted to group
+partyadm so that people in that group can edit them.
+
+Check the web page to see what the latest version is.
+
+If the latest version is 2.12, then you would do:
+
+   cd grexdoc/party
+   ./build party-2.12
+   ./install party-2.12
+
+The 'build' command will fetch the distribution from Jan's web site,
+configure it, and compile it.
+
+The 'install' command copies the binaries to the right places, permits
+them correctly, makes some symbolic links
+
+Theoretically these scripts can be used for upgrades too.
+
+You'll need to install a line in the crontab to roll the party logs.
+This is
+
+	22 5 * * 0      /usr/local/libexec/roll_party_log
+
+Actually, this should probably as 'party', not as 'root', so you should
+enter this line using:
+
+   crontab -u party -e

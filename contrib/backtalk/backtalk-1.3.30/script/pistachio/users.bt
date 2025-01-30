@@ -1,0 +1,186 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% users script
+%
+% This script lists users.  The unsorted versions is designed to be usable,
+% if not necessarily fast, even on systems with huge numbers of users.  It
+% displays at most 50 users per screen.  The sorted version is likely to be
+% bad if you have tens of thousands of users, so the "many_users" constant
+% may be set true in the Pistachio config.bt file to disable this for all
+% but administrators.  It doesn't page, because the data is too likely to
+% change between hits.
+%
+% This script is it's own handler.
+%
+% Query Parameters:
+%    from=	if defined, start the scan after this login name.  Used only
+%               with unsorted listings.
+%    pattern=   show only users whose name or login contains this string.
+%		(if not defined, do no search, just give form)
+%		(if null, show all users)
+%    sort=      if undefined default to "no", otherwise:
+%               "no" - don't sort
+%               "login" - sort by login id
+%               "recent" - sort by last login time, most recent first
+%               "absent" - sort by last login time, least recent first
+%    showvalid= if undefined default to -1, otherwise:
+%               -1 - list all users
+%                0 - list valid users
+%                1 - list unvalidated users
+%                2 - list invalidated users
+
+/maxperpage 50 defconstant
+
+flavor(config)+ include
+(lib/robots) include
+
+/butsel 4 defconstant flavor(buttondef)+ include
+
+/titl [(List of )bbsname( users) /from defined {( continued)} if] def
+
+/showvalid dup defined {showvalid cvi} {-1} ifelse def
+/sort defined ! {/sort (no) def} if
+
+(<HTML><HEAD>
+<TITLE>)titl(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+)bio_robot(</HEAD>
+<BODY)body_tags(>
+) global_header
+(<H1>)titl(</H1>
+
+<FORM METHOD=POST ACTION=users>
+Find users with names or logins containing:<BR>
+<INPUT TYPE=text NAME=pattern SIZE=40)
+/pattern defined {( VALUE=)pattern}if
+(>)
+
+many_users ! amadm or {
+  ( <SELECT NAME=sort>\n)
+  (<OPTION VALUE="no") sort (no) eq {( SELECTED)} if
+    (> Unsorted\n)
+  (<OPTION VALUE="login") sort (login) eq {( SELECTED)} if
+    (> Sorted by Login\n)
+  (<OPTION VALUE="recent") sort (recent) eq {( SELECTED)} if
+    (> Most Recent First\n)
+  (<OPTION VALUE="absent") sort (absent) eq {( SELECTED)} if
+    (> Least Recent First\n</SELECT>\n)
+} if
+
+(<INPUT TYPE=submit VALUE="Do Scan"><BR>
+<SMALL>(leave blank to list all users)</SMALL>
+)
+
+amadm {
+  (<BR>Show <INPUT TYPE=radio NAME=showvalid VALUE="-1")
+  showvalid -1 eq {( CHECKED)} if (>all users&nbsp;&nbsp;&nbsp;&nbsp;\n)
+  (<INPUT TYPE=radio NAME=showvalid VALUE="0")
+  showvalid 0 eq {( CHECKED)} if (>validated users&nbsp;&nbsp;&nbsp;&nbsp;\n)
+  (<INPUT TYPE=radio NAME=showvalid VALUE="1")
+  showvalid 1 eq {( CHECKED)} if (>unvalidated users&nbsp;&nbsp;&nbsp;&nbsp;\n)
+  (<INPUT TYPE=radio NAME=showvalid VALUE="2")
+  showvalid 2 eq {( CHECKED)} if (>invalidated users<BR>\n)
+} if
+
+(</FORM><P>
+)
+
+/pattern defined {
+  % set up for the search
+  pattern {
+    () pattern 1 search pop	% compile the search pattern
+    /checkpat {uname () 1 search -1 ne ufname () 1 search -1 ne or} def
+  } {
+    /checkpat 1 def
+  } ifelse
+
+  (Matches Found:<TABLE><TH>login:</TH>)
+  mayseefname {(<TH>full name:</TH>)} if
+  (<TH>last on:</TH>\n)
+  print
+  
+  sort (no) eq {
+    % Unsorted case: print as we go
+
+    % goto the first user
+    /from defined {
+      from seekuser nextuser
+    }{
+      firstuser
+    } ifelse
+    
+    % loop through the rest of the users
+    /i 0 def
+    { dup ! {pop break} if
+      dup /uname xdef
+      userinfo /status xdef /laston xdef pop /ufname xdef pop pop
+      showvalid -1 ne {showvalid status ne {nextuser continue} if } if
+      status 0 ge { checkpat {
+	(<TR><TD><A HREF="bio?login=)uname(">)uname(</A></TD>)
+	mayseefname {(<TD>&nbsp;)ufname(&nbsp;&nbsp;</TD>)} if
+	(<TD>) laston {laston ztime}{(unknown)}ifelse (</TD><TD>)
+	status { status 1 eq {( [u)} {( [i)} ifelse (nvalidated])} if
+	(</TD></TR>\n)
+	print
+	/i inc i maxperpage ge { break } if
+      } if } if
+      nextuser
+    } loop
+    
+    (</TABLE><P>\n)
+
+    i maxperpage lt {
+      (<EM>end of list</EM>)
+    } {
+      (<A HREF="users?from=)uname
+      /pattern defined {(&pattern=)pattern} if
+      (">More Matches</A>)
+    } ifelse
+
+  } {
+    % Sorted case:  Sort them all, then print the subset that fits
+
+    % Build an array of arrays containing the users
+    [
+    firstuser
+    {
+      dup ! {pop break} if
+      dup /uname xdef
+      userinfo /status xdef /laston xdef pop /ufname xdef pop pop
+      showvalid -1 ne {showvalid status ne {nextuser continue} if } if
+      status 0 ge { checkpat {
+        [uname ufname laston status]
+      } if } if
+      nextuser
+    } loop
+    ]
+
+    % do the sort
+    sort (login)  eq { 0 1 } {
+    sort (recent) eq { 2 0 }
+                     { 2 1 } ifelse } ifelse
+    asort
+
+    % print them all out
+    {
+      aload /status xdef /laston xdef /ufname xdef /uname xdef
+      (<TR><TD><A HREF="bio?login=)uname(">)uname(</A></TD><TD>&nbsp;)ufname
+      (&nbsp;&nbsp;</TD><TD>)
+      laston {laston ztime}{(unknown)}ifelse (</TD><TD>)
+      status { status 1 eq {( [u)} {( [i)} ifelse (nvalidated])} if
+      (</TD></TR>\n)
+      print
+    } forall
+    (</TABLE>\n)
+  } ifelse
+
+} if
+
+(
+<HR>
+Goto <A HREF=begin>)entrance_button(</A> or <A HREF=help/users>)
+help_button(</A>
+)
+global_footer
+(</BODY></HTML>
+)

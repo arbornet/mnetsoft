@@ -1,0 +1,13 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% edithot script
+%
+% This updates the user's hotlist.  Sorry, you don't get to decide the order
+% of the conferences in your hotlist.  The list of conferences come in as the
+% comma separated string "confs"
+
+flavor(config)+ include
+
+/confs () default (,) (\n) 0 replace (\n) + (*.cflist) write
+
+flavor(conflist)+ chain

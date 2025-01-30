@@ -1,0 +1,9 @@
+{
+    "title":"*** BBS MENU ***",
+    "entries": [
+        {"key":"B", "exec":"/cyberspace/bin/bbs", "desc":"Grex FrontTalk BBS (Main BBS)"},
+        {"key":"I", "exec":"/cyberspace/bin/bbsguide", "desc":"FrontTalk BBS introduction"},
+        {"key":"G", "exec":"/cyberspace/bin/gboard", "desc":"Grex GBoard BBS"},
+        {"key":"E", "exit":true, "desc":"Exit this menu"}
+    ]
+}

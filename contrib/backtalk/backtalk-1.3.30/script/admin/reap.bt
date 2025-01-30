@@ -1,0 +1,74 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% reap script
+%
+% This script deletes a lot of users at a single stroke.
+%
+% Query Parameters:
+%    ulist=     comma-separated list of users to delete.
+%    confirm=   must be defined for delete to work
+%    noconfirm= defined if we cancelled the operation
+%    goto=      script to run when done.
+%    admhome=   admin menu URL
+
+nopwedit {(Cannot delete Unix accounts) stop } if
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+/ulist defined ! {/ulist () def} if
+ulist ! {(No users to delete.) stop} if
+
+/confirm defined ! {
+  /noconfirm defined {
+    goto jump
+  } if
+  (<HTML><HEAD><TITLE>Delete Users</TITLE></HEAD>
+  <BODY BGCOLOR=white>\n)
+  (<FORM ACTION=reap METHOD=post>
+  <INPUT TYPE=hidden NAME=ulist VALUE=")ulist(">
+  <INPUT TYPE=hidden NAME=goto VALUE=")goto quote(">
+  <INPUT TYPE=hidden NAME=admhome VALUE=")admhome quote(">
+  Really Delete users listed below:
+  <INPUT TYPE=submit NAME=confirm VALUE="Yes">
+  <INPUT TYPE=submit NAME=noconfirm VALUE="No">
+  </FORM>
+  <BLOCKQUOTE><TT>\n)
+  [ ulist (,) split ] { (<BR>\n) print } forall
+  (</TT></BLOCKQUOTE>
+  </BODY></HTML>\n)
+  halt
+} if
+
+/n 0 def
+% delete them all
+[ ulist (,) split ] {
+  % silently skip non-existant users
+  dup userinfo ! /stat xdef pop pop pop pop pop stat 0 lt {pop continue} if
+  % remove the user
+  selectuser
+  removeuser
+  /n inc
+} forall
+() selectuser
+
+/goto defined { goto jump } if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+(<HTML><BODY BGCOLOR=white>
+)
+
+n( Users Deleted.
+<P>
+<A HREF=")admhome(">Goto Admin Menu</A><BR>
+<A HREF="listusers">Goto User List</A>
+</BODY>
+</HTML>
+)

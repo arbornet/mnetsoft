@@ -1,0 +1,45 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% optset script
+%
+% This is the form handler for the "optform.bt" screen.  It sets various
+% user options.
+%
+% Query Parameters:
+%   uname= 	   user whose options we are setting
+%   frames= 	   new value of frames option
+%   rpage=         new value of responses per page option
+%   rtype=         new value of response type option
+%   confsummary=   new value of conference summary option.
+%   abalone.rpage=
+%   abalone.scheme=
+%   abalone.list=
+
+uname id ne {
+  amadm !  {
+    % warn off unauthorized users
+   (Only )uname( or an administrator can change )uname('s settings.)
+   stop
+ }{
+   % administrators can set other user's options
+   uname selectuser
+ } ifelse
+} if
+
+% convert numeric parameters to integer form
+/frames frames cvi def
+/confsummary confsummary cvi def
+/rpage rpage cvi def
+rpage 0 le {/rpage 30 def} if
+/abalone.rpage abalone.rpage cvi def
+abalone.rpage 0 le {/abalone.rpage 25 def} if
+
+% save new options
+(*.backtalk)
+  [/frames /rpage /rtype /confsummary
+   /abalone.rpage /abalone.list /abalone.scheme] savevar
+
+% unselect user
+amadm {() selectuser} if
+
+flavor(showuser)+ jump

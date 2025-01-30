@@ -1,0 +1,17 @@
+LOGFILE=/var/users/staff/procmail.log
+
+:0fw
+* < 256000
+| /usr/local/bin/spamc -u staff
+
+:0e
+{
+EXITCODE=$?
+}
+
+:0:
+* ^X-Spam-Status: Yes
+/dev/null
+
+:0: /var/users/staff/procmail.lock
+! cross, gelinas@umich.edu, i, kentn, tonster@tonster.com, unicorn

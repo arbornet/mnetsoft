@@ -1,0 +1,22 @@
+% Backtalk Gumdrop Interface - (c) 2003, Jan Wolter, Steve Weiss
+%
+% begin script
+%
+% This is the entry point for the one-conf script.  
+
+/oneconf 1 defconstant
+/oneitem 1 defconstant
+
+urlarg {
+  urlarg (:) clip /conf xdef cvi dup {
+    /item xdef
+  } {
+    % no item number given - do external location redirect to gumball
+    /http_location `backtalkurl(/gumball:)conf' store
+    halt
+  } ifelse
+} if
+
+/rsel (new) def
+/noskip 1 def
+(bubblegum/read) chain

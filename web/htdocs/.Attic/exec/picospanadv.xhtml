@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:webmaster@cyberspace.org" />
+
+  <title>PicoSpan Advanced Features</title>
+</head>
+
+<body>
+  <h1>PicoSpan Advanced Features</h1>
+
+  <h2>Keeping a List of Your Conferences</h2>You can keep a list of
+  conferences which you want to read in a file called .cflist in
+  your home directory. Use an editor to create .cflist which
+  contains a list of conferences, one per line. Your .cflist might
+  read:
+  <pre>
+        agora
+        info
+        coop
+        cooking
+        classified
+        synthesis
+</pre>Once you have this file, you will automatically enter the
+first conference in your list whenever you start Picospan, unless
+you say otherwise. From the Ok: prompt, you can use the command
+"check" to see how many new items and new-reponse items are in each
+of those conferences. The "next" command will take you to the next
+conference with any new material in it.
+
+  <h2>Commands to Customize Picospan</h2>There are several things
+  you can set up for you Picospan sessions automatically. You need
+  to use an editor to create a file in your home directory called
+  .cfonce
+
+  <p>Every time you start a Picospan session, Picospan will execute
+  the commands in your .cfonce file. Here are a few commands you
+  can use there:</p>
+
+  <ul>
+    <li>define pager - This lets you select the program which feeds
+    the output to your terminal. You can use any of our pager
+    programs, the two most popular ones are more and less. In your
+    file, you can use one of:
+      <pre>
+        define pager more
+        define pager less
+        define pager "less -dE -P 'Press Spacebar for more, q to quit'"
+</pre>
+    </li>
+
+    <li>define editor - This lets you select the editor you will
+    use any time you enter an item or response in Picospan. You
+    don't need to worry about filenames, just give the command name
+    for the editor of your choice. Here are a few examples:
+      <pre>
+        define editor vi
+        define editor bbsed
+        define editor "pico -nn"
+</pre>
+    </li>
+
+    <li>define shell - This tells Picospan which shell you want to
+    use whenever you run a Unix command. Also, if you enter a ! by
+    itself, it will give you this Unix shell. Some examples:
+      <pre>
+        define shell csh
+        define shell bash
+</pre>
+    </li>
+
+    <li>set edalways - If you have an editor defined, this tells
+    Picospan to always use that editor, rather than the built-in
+    editor. Just put that in your .cfonce, like so:
+      <pre>
+        set edalways
+</pre>
+    </li>
+
+    <li>set nosource - The fairwitness of a conference may have
+    defined certain commands to be run every time you enter the
+    conference, such as changing the "Ok:" prompt to something
+    else. If you'd rather not have this happen, put thise in your
+    .cfonce :
+      <pre>
+        set nosource
+</pre>
+    </li>
+  </ul>
+</body>
+</html>

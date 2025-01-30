@@ -1,0 +1,14 @@
+                       Fronttalk Setting:  FORGET
+
+Usage:  SET FORGET
+        SET NOFORGET
+
+The FORGET flag controls whether or not forgotten and retired items are
+included when you do a READ, BROWSE or FIND.  It does not effect commands
+like FREEZE and REMEMBER.
+
+By default FORGET is set, so that forgotten or retired items will not be
+shown.  If you set NOFORGET, they will be shown.
+
+Note that the FORGET flag does not effect the display of hidden responses,
+as it does in Picospan.  The HIDE flag does this.  See "HELP SET HIDE".

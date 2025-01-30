@@ -1,0 +1,19 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+(Conference List Page) (pistachio/help/header) include
+
+(<H2>The )Conference cap( List Page:</H2>
+
+This page shows a list of the available )Conferences(.
+Just click the name of the )Conference( to go to that )Conference(.
+<P>
+If there is )AConference( that you know exists, but isn't listed on this
+page, then return to the )hrefbegin(help/begin>entrance page</A> and use
+the little text box there to type the name of the )Conference( you want to
+goto.
+)
+global_footer
+(</BODY></HTML>
+)

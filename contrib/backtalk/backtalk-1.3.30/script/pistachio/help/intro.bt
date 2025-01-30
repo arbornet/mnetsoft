@@ -1,0 +1,219 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/butsel 15 defconstant flavor(buttondef)+ include
+flavor(config)+ include
+
+(<HTML>
+<TITLE>Pistachio Backtalk Help: Introduction</TITLE></HEAD>
+<BODY)body_tags(>
+)global_header
+(<H1>Pistachio Backtalk Help:<BR>
+An Introduction</H1>
+
+<A NAME=backtalk><H2>The Backtalk Conferencing System</H2></A>
+
+Backtalk is a web-based computer conferencing system developed by
+Jan Wolter and Steve Weiss.  For more information,
+see the <A HREF=http://www.unixpapa.com/backtalk>Backtalk web page</A>.
+<P>
+Computer conferencing systems allow people to post original messages,
+and to read and reply to the postings of other people.
+Unlike E-mail, computer conferencing systems are designed to gracefully
+support discussions amoung groups of people, sometimes very large groups.
+Unlike chat systems, computer conferencing systems are not real-time -
+the people involved in the discussion are not necessarily all online
+at the same time.
+
+<A NAME=account><H4>User Accounts</H4></A>
+
+To participate in Backtalk conferencing, a user must have an account,
+with a login name and a password.
+When you first enter the conferencing system you will be asked to give
+these to identify yourself.
+This not only provides a measure of security for the )Conferences(,
+making it possible to restrict the set of people who can access it and
+allowing the author of each message to be identified,
+but it also means Backtalk can remember things about you.
+Thus, you will not normally be shown messages you have seen before,
+because Backtalk will remember what you have seen.
+<P>
+Normally each user will also provide a little personal information, so that
+people interested in the user's postings can satisfy their curiousity about
+the author.
+<P>
+<A NAME=anonymous>On</A> some systems, anonymous users, who do not have
+accounts, may be permitted to read the )Conferences(, but not to post to them.
+Many of the functions of Backtalk won't work for anonymous users.
+
+<A NAME=account><H4>Conference Structure</H4></A>
+
+To help organize multiple threads of discussions,
+most conferencing systems impose some kind of structure on discussions.
+Backtalk adopts one of the most successful structures, which was pioneered
+by text-based systems like Confer and Picospan, and is now used in many
+other popular conferencing systems.
+<P>
+There are three levels to the structure:
+<DL>
+<DT><A NAME=conference>)Conferences cap(:</A>  
+<DD>Any Backtalk system will have a selection of )Conferences(.
+    Each )Conference( covers some broad topical area.
+    Each is moderated by a person called ``)AFairwitness(.''
+    Some )Conferences( may be open to all users,
+    while others may be restricted to select list.
+<DT><A NAME=item>)Items cap(:</A>  
+<DD>Each )Conference( can contain any number of ``)Items(.''
+    A)AnItem 1 100 substr( has a number, a title,
+    and some introductory text starting off a discussion of a new topic.
+    In most )Conferences(, any user will be able to enter )Items(.
+<DT><A NAME=response>)Responses cap(:</A>  
+<DD>Users interested in discussing an )Item('s topic can append ``)Responses(''
+    onto the end of it.  Each )Response( is tagged with the author's name,
+    and they are kept strictly in the order they were posted.
+</DL>
+
+<H4>Interface Flavors</H4>
+
+Backtalk's user interface is designed to be almost limitlessly reconfigurable.
+We call each different interface we create a ``flavor.''
+Different Backtalk flavors may look completely different and may have
+entirely different buttons and controls.
+
+<H2>The Pistachio Interface</H2>
+
+``Pistachio'' is one of the original experimental interfaces to Backtalk.
+It was named after its greenish default background color,
+and was originally designed as a testbed for using various advanced HTML
+features in computer conferencing.  It's slowly been tamed into a reasonably
+usable interface.
+
+<H4>Buttons</H4>
+
+Pistachio uses buttons for most of it's controls.
+Some are just little blank buttons, like this: )button(.  They will always
+have some text next to them telling what they do.
+Other buttons are labeled, for example )readnew_button(.  These are often
+the more commonly used buttons, which should be easy to find quickly.
+<P>
+Sometimes buttons will be grayed-out, like this: )noreadnew_button(.
+This means that that function is not available, and pushing the button will
+not work.  For example, the ``read new'' button is turned gray when there is
+nothing new to read.
+<P>
+If you are )AFairwitness( or an administrator, you will see red buttons,
+like this: )fw_erase_button(.  Red buttons allow you to do things that
+ordinary users would not be allowed to do,
+like erase another user's posting
+(some installations won't allow even )Fairwitnesses( to do this).
+The color is to warn and remind you that you are doing something extraordinary.
+<P>
+Oh, and feel free to use your browser's ``Back'' button any time you want,
+as much as you want.
+Backtalk won't be confused by it (or at least not enough to speak of),
+and Pistachio has lots of dead ends that you can't get out of any other way.
+It's also fine to open multiple backtalk windows at the same time.
+
+<H4>Reading</H4>
+
+What most people want to do with Pistachio is read the )Conferences(.
+So when you arrive on the )hrefbegin(help/begin>entrance page</A>
+you will see a selection of different buttons all designed to get you
+into the )Conferences( you want to read.  You can get a list of )Conferences(,
+and click on the name of the one you want, or you can type in the name of
+the )Conference( and hit a button to go there, or you can just hit the big
+``read new'' button to read all new )Responses( in all the )Conferences( on your
+hot list.
+<P>
+A ``hot list'' is just your list of the )Conferences( that most interest you.
+There is a button on the entrance page that lets you edit this.
+Most systems will have a default ``hot list'' for new users and anonymous
+users, but you will surely want to change this to reflect your own interests.
+<P>
+When you arrive in )AConference(, however you got there, you will be at the
+)hrefbegin(help/confhome>)Conference( home page</A>.
+Again, you will find a big, bright ``read new'' button here, to do what you
+will most often want to do - read the new postings to the )Conference(.
+Alternately,
+the )Conference( home page has a button that allows
+you to list all the )Items( and select just the ones that interest you.
+There are also various other controls, to do things like enter new )Items(
+and change your name in the )Conference( \(you can use different names in each
+)Conference(\).
+There is also a ``next )Conference('' button that lets you skip to the next
+)Conference( on your hot list.
+<P>
+When you read )AConference(, each )Item( will be displayed to you on a single
+)hrefbegin(help/read>read )Item( page</A>.
+The page will be divided into two windows.  The top part, which doesn't
+scroll, has a selection of commonly used buttons.  The bottom part contains
+the new )Responses( to the )Item(, and at the very bottom, a box you can use to
+post your own )Responses( with.  This bottom part can be scrolled up and down.
+<P>
+The ``next )Item('' button in the control panel is used to continue on to the
+next )Item(.  It'll be grayed out if you have read all the new )Items( in the
+)Conference(, in which case you can take the ``next conf'' button to the next
+)Conference( in your lot list, or use the ``conf home'' button to return to
+the )Conference( home page, or the ``entrance'' button to return to the entrance
+page.
+<P>
+If the )Item( is really boring to you, and you never want to see it again,
+just hit the ``forget'' button.
+
+<H4>Posting</H4>
+
+The form for entering new )Items( can be reached from a button on the
+)Conference( home page.  The form for responding to an )Item( is at the bottom
+of the read )Item( page.  Both are pretty simple to use:
+you type your )Response( into the big box, and hit the ``Post'' button to
+post it.
+<P>
+If no text entry forms appear, the )Item( may have been frozen by the author
+or the )Fairwitness(, or you may be in a read-only )Conference(, or you may
+be an anonymous user.
+
+<H4>Your Account</H4>
+
+There is a button on the entrance page that lets you go to a form where you
+can change settings on your account.  This includes your name and
+various personal information.
+You can also change your password there,
+and even delete your own account.
+Some of the capabilities may not be available on some systems.
+
+<H4>Exiting</H4>
+)
+sessions {
+(There are logout buttons on most pistachio pages.
+Clicking one of these will log you out.
+It's best to remember to do this, especially if you are on a public computer,
+as otherwise people coming soon after you leave may be able to access your
+account.  It is never a bad precaution to exit the browser before leaving
+the computer in such environments.
+)
+} {
+(You don't have to do anything special to exit.
+Just go wandering off to another web page, or exit your browser, or whatever.
+Backtalk will never be confused by this.
+<P>
+<STRONG>Warning:</STRONG>
+If you using Backtalk from a public terminal, it is important that you exit
+the browser before leaving.
+Otherwise, the browser will retain your login and password in its memory,
+and the next user of the terminal will be able to enter the )Conferences(
+as you.
+)
+} ifelse
+(
+<H2>More Help:</H2>
+
+For more help, you can read the detailed help pages for each type of Backtalk
+page.  You can start with the )hrefbegin(help/begin>entrance page</A>.
+But really, you might as well just start using the system.
+There are )help_button( buttons on most pages that will send you to the help
+page for that Backtalk page.
+)
+global_footer
+(</BODY></HTML>
+)

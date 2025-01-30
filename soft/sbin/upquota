@@ -1,0 +1,233 @@
+#!/usr/bin/perl
+
+# User quota adjuster
+#
+#   I'm thinking of this as a temporary tool to be used until we get a
+#   comprehensive, database driven user administration tool built.
+#
+#   This program knows only about home directory quotas.  It does nothing
+#   with /tmp quotas.
+
+# ------------------------------- CONFIGURATION ----------------------------
+
+# Log file
+
+$logpath= "/var/log/quota.log";
+
+# Blocksize for this operating system.  Can this be got form the system?
+
+$blocksize= 512;
+
+# Blocks per inodes.  We get numbers of inodes to allocate in user space
+# by dividing the block limit by this value.  Typical users seem to be around
+# 20-30 blocks per inode.  The limit should probably be much lower, as we
+# would like to have most users running up against the block limit before the
+# inode limit.  The inode limit is mainly there to keep users from using up
+# inodes by creating thousands of empty files.  This can be a floating point
+# number.
+
+$bpi= 1.5;
+
+# Home filesystems.  This is a list of all filesystems that home directories
+# can appear on and which we are running quotas on.  All these pathnames should
+# end with a slash!  If one of these is mounted under the other, it must be
+# listed before it's parent.
+
+@homes= ("/a/", "/c/");
+
+# Extra space.  The values given to this program are soft limits.  The hard
+# limit will be set slightly higher than the soft limit.  The amount of
+# extra space in kilobytes is given by the value below:
+
+$slack= 100;
+
+
+# Path of setquota and quota commands.
+
+$setquotapath= "/usr/local/sbin/setquota";
+$quotapath= "/usr/bin/quota";
+
+# If this is true, non-root can run this command, though it won't do anything.
+
+$testing= 0;
+
+
+# --------------------------------------------------------------------------
+
+sub conv
+{
+    my ($quota)= @_;
+
+    if ($quota =~ /^(\d+(\.\d*)?)[mM]$/)
+    {
+	return int ($1 * 1024 + .5);
+    }
+    elsif ($quota =~ /^(\d+)[kK]$/)
+    {
+	return $1;
+    }
+    elsif ($quota =~ /^\d+$/)
+    {
+	return $quota;
+    }
+    else
+    {
+	return undef;
+    }
+}
+
+if ($< != 0 and !$testing)
+{
+    print "You must be root to adjust quotas\n";
+    exit(1);
+}
+
+if ($ARGV[0])
+{
+     $user= $ARGV[0]
+}
+else
+{
+     print "User: ";
+     $user= <STDIN>;
+     chomp $user;
+}
+
+($uname, $passwd, $uid, $gid, $quot, $comment, $fullname, $homedir)=
+    getpwnam $user;
+$passwd= undef;
+
+if (!$uname)
+{
+    print "User '$user' not found.\n";
+    exit 1;
+}
+
+foreach $dir (@homes)
+{
+    if (substr($homedir,0,length($dir)) eq $dir)
+    {
+	$hisfs= $dir;
+	last;
+    }
+}
+
+if (!$hisfs)
+{
+    print "Home directory for '$user' is '$homedir'.\n",
+	"Can only adjust quotas on home directories in: $homes[0]";
+    for ($i= 1; $i < @homes; $i++)
+    {
+	print ", $homes[$i]";
+    }
+    print ".\n";
+    exit 1;
+}
+
+if ($ARGV[1])
+{
+    $rawquota= $ARGV[1];
+    $quota= conv($rawquota);
+    if (!defined $quota)
+    {
+	print "Bad quota syntax '$rawquota'.  Should be like 1.25M or 1500K.\n";
+	exit 1;
+    }
+}
+else
+{
+    while (1)
+    {
+	print "New Quota: ";
+	$rawquota= <STDIN>;
+	chomp $rawquota;
+	$quota= conv($rawquota);
+	last if defined $quota;
+	print "Bad quota syntax '$rawquota'.  Should be like 1.25M or 1500K.\n";
+    }
+}
+
+if ($ARGV[2])
+{
+    $reason= $ARGV[2];
+    for ($i= 3; $i < @ARGV; $i++)
+    {
+	$reason.= ' '.$ARGV[$i];
+    }
+}
+else
+{
+    print "Reason: ";
+    $reason= <STDIN>;
+    chomp $reason;
+}
+
+print "\nOld ";
+system "$quotapath -v $user | grep -v /tmp | sed -e 's/blocks/kbytes/'";
+
+$nbs= $quota;
+$nbh= $quota + $slack;
+$nis= int(($nbs*1024)/($blocksize*$bpi) + 0.5);
+$nih= int(($nbh*1024)/($blocksize*$bpi) + 0.5);
+
+print "New Disk quotas for user $user (uid $uid):\n";
+print "     Filesystem  kbytes   quota   limit           files   quota   limit\n";
+foreach $dir (@homes)
+{
+    $cdir= $dir;
+    chop $cdir;
+    if ($dir eq $hisfs)
+    {
+	printf "%15.15s %15d %7d %23d %7d\n", $cdir, $nbs, $nbh, $nis, $nih;
+    }
+    else
+    {
+	printf "%15.15s %15d %7d %23d %7d\n", $cdir, 0, 0, 0, 0;
+    }
+}
+print "Reason: $reason\n\n";
+
+while (1)
+{
+    print "Confirm [y/n]: ";
+    $confirm= <STDIN>;
+    if ($confirm =~ /^(n|N)/)
+    {
+	print "Quota change canceled\n";
+	exit 1;
+    }
+    elsif ($confirm =~ /^(y|Y)/)
+    {
+	last;
+    }
+    print "Strange response\n";
+}
+
+if (!open LOG,">>$logpath")
+{
+    print "Cannot open log file $logpath - aborting\n";
+    exit(1);
+}
+
+$myid= $ENV{LOGNAME};
+$date= scalar localtime;
+print LOG "$date [$myid] $user (uid=$uid) to $nbs","K: $reason\n";
+close LOG;
+
+print "\nExecuting...\n";
+foreach $dir (@homes)
+{
+    $cdir= $dir;
+    chop $cdir;
+    if ($dir eq $hisfs)
+    {
+	$cmd= "$setquotapath -u -f $cdir -bs$nbs -bh$nbh -is$nis -ih$nih $user";
+    }
+    else
+    {
+	$cmd= "$setquotapath -u -f $cdir -bs0 -bh0 -is0 -ih0 $user";
+    }
+    print "$cmd\n";
+    system $cmd;
+}
+print "Done\n";

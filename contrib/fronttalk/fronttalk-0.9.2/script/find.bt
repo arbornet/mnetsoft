@@ -1,0 +1,150 @@
+% Backtalk Fronttalk Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% find script
+%
+% This script searches for various things in a conference.
+%
+% Query Parameters:
+%    conf=	name of the conference we are searching
+%    isel=      items to search
+%    rsel=      Response select (all,new,brandnew,unseen,newresp)
+%    reverse=   reverse isel.
+%    sincedate= if defined, read since date in this string.
+%    pattern=   pattern to search for.
+%    by=        author login to search for.
+%    mode=      either "exact" for string search (default)
+%                      "re" for regular expression search
+%    icase      defined if matching should be case insensitive (default on)
+
+/http_content_type (text/plain) store
+
+/pattern dup () default def
+/by dup () default def
+pattern () eq by () eq and {
+  (<ERROR MSG="No pattern or login given">\n)
+  stop
+} if
+/mode dup (exact) default def
+/icase dup 1 default def
+/reverse dup 0 default def
+isel ! {/isel (1-$) def} if
+reverse { /isel isel rev_sel store } if
+showforgotten 0 eq {/showforgotten 1 def} if
+
+/sincedate defined {
+  /since sincedate 0 1 dtime store
+  /rsel (since) store
+} if
+
+rsel () eq {
+  /rsel (all) store
+} if
+
+% compile the pattern, set up search macros
+pattern {
+  mode (re) eq
+  {
+    % compile a regular expression
+    pattern icase{(im)}{(m)}ifelse regex
+    {
+      (<ERROR MSG="Regular Expression Error: )exch(">\n)
+      stop
+    } {
+      /reg xdef
+    } ifelse
+    % define a match function
+    /match {reg grep} def
+  } {
+    % compile a plain text string
+    () pattern icase search pop
+    % define a match function
+  /match {() icase search 0 ge} def
+  }
+  ifelse
+} {
+  /match {pop 0} def
+} ifelse
+
+
+open_conf {
+  (<ERROR MSG="Conference )conf quote( does not exist!">\n)
+  stop
+} if
+mayread ! {
+  (<ERROR MSG="Conference )conf quote( not accessible.">\n)
+  stop
+} if
+
+
+% <text> scan_text
+%  Find matches in a response.
+/scan_text
+{
+  /txt xdef
+  erased ! {
+    /ln 0 def
+    {
+      txt () eq {break} if
+      txt (\n) clip /rline xdef /txt xdef
+      /ln inc
+      rline match
+      {
+	(<TEXT ITEM=)item( RESP=)resp( AUTHOR=)authorid( LINE=)ln
+	  ( TITLE=")title quote(" TEXT=")rline quote(">\n) print
+	/cnt inc
+      } if
+    } loop
+  } if
+} def
+
+
+/cnt 0 def
+/blindfold 1 store	% don't "see" any of the items we read
+
+{ isel next_item {break} if
+  this_item {break} if
+  read_item {break} if
+  /nrs xdef
+  /isel xdef
+  /ihead 0 def
+  /rhead 0 def
+
+  % search title
+  resp 0 eq   by !   authorid by in_sel  or  and {
+    title match {
+      (<TITLE ITEM=)item( AUTHOR=)authorid( TITLE=")title quote(">\n) print
+      /cnt inc
+      /ihead 1 def
+    } if
+
+    % Check item text body
+    pattern {
+      0 read_text scan_text
+    } {
+      (<TEXT ITEM=)item( RESP=0 AUTHOR=)authorid( TITLE=")title quote(">\n)
+      /cnt inc
+    } ifelse
+  } if
+
+
+  % search responses
+  {
+      % find next response
+      nrs next_resp {break} if 
+      read_resp {pop break} if
+      /nrs xdef
+
+      by ! authorid by in_sel or {
+	pattern  {
+          0 read_text scan_text
+	} {
+	  (<TEXT ITEM=)item( RESP=)resp( AUTHOR=)authorid( TITLE=")title quote
+	    (">\n)
+	  /cnt inc
+	} ifelse
+      } if
+  } loop
+
+} loop
+
+(<COUNT N=)cnt(>\n)

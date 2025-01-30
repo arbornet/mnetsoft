@@ -1,0 +1,167 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% begin script
+%
+% This is the front page for the papaya interface.  It shows the conference
+% logo, and some links to goto conferences or edit personal settings or
+% search for users.
+
+% Most of papaya uses relative links.  This page uses absolute links because
+% if you get here with a location redirect, then some browsers don't seem to
+% know where you are and thus screw up relative links.  Yuck.
+/our_url SCRIPT_NAME(/papaya/)+ def
+
+flavor(config)+ include
+/extern_bio constant {(lib/biolink) include} if
+
+% page header
+(
+<HTML><HEAD>
+<TITLE>)bbsname(: MAIN MENU</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">\n)
+(S) flavor(meta)+ include
+(</HEAD>
+<BODY )background(>
+)global_header bbslogo (
+<H1>)bbsname(: MAIN MENU</H1>
+)
+
+% If the browser looks stupid, warn the user.
+browser 2 lt {
+  (<STRONG>WARNING!  As far as we know, your browser )
+  /HTTP_USER_AGENT defined {
+    (\(which identifies itself as ``)HTTP_USER_AGENT(''\))
+  } {
+    ((which could not be identified))
+  } ifelse
+  ( is not capable of using tables.  If this is true,
+  then some of these papaya pages may look really ugly.
+  You may prefer to <A HREF=)SCRIPT_NAME(/vanilla/begin>use the vanilla
+  interface</A> instead.  If we're wrong, and your browser <EM>does</EM>
+  support tables, then please let us know so we can update our database.
+  </STRONG><P>)
+} if
+
+% if "show_motd" is true, show the contents of the /etc/motd file.
+% Otherwise just show bbs/motd.html file.
+/show_motd constant {
+
+  flavor(links)+ include
+
+  (<HR><CENTER><TABLE><TR><TD><PRE>)
+
+  (/etc/motd) read expand
+
+  % Grex has some additional motd files
+  bbsname (Grex) eq {
+    (/usr/local/lib/motd.birthday) read expand
+  } if
+
+  (</PRE></TD></TR></TABLE></CENTER>\n)
+
+} {
+  (*motd.html) read
+  dup {(<HR>) exch} if
+} ifelse
+
+(<MENU>\n)
+
+% A command to read new responses in your hotlist conferences
+
+(@0) next_conf /nconf xdef /csel xdef
+nconf {
+  (<LI><A HREF=")our_url(confhome?conf=)nconf(&csel=)csel`(&nextnew=">
+    First )Conference( in ) id{(your )} if (hotlist with new )Responses'
+} {
+  (<LI><A HREF=")our_url(confhome?conf=%3F&csel=&nextnew=">
+    Go to the default )Conference
+} ifelse
+(</A><P>\n)
+
+% a command to list all conferences
+
+(<LI><A HREF=")our_url`(conflist">)Conference cap( index</A><P>\n)'
+
+% a command to your bio
+
+id {
+  (<LI><A HREF=")
+  /extern_bio constant { extern_edit_bio } { our_url(bio?doedit=Y) } ifelse
+  (">)id( profile</A><P>\n)
+
+  (<LI><A HREF=")our_url(twitlist">Ignore users</A><P>\n)
+} if
+
+% a command to edit preferences
+
+% (<LI><A HREF=")our_url(prefs">preferences</A><P>\n)
+
+(<LI><A HREF=")our_url(help?page=begin">help</A><P>\n)
+
+(</MENU>
+<HR>
+<H3>)Conferences cap( in )id{(your )}if Conference( hotlist:</H3>
+<TABLE BORDER=0>
+<TH>New<BR>)Responses(</TH><TH>&nbsp;</TH><TH>New<BR>)Items
+(</TH><TH>&nbsp;</TH><TH VALIGN=bottom>)Conference cap( name</TH>
+)
+
+1 cache_conflist
+
+% Read in the hotlist
+0 /cnt xdef
+1 cflist_array {
+  /conf xstore
+  /cnt inc
+
+  % display the line
+  (<TR><TD ALIGN=center>)
+  snoop_conf {
+    (-</TD><TD ALIGN=CENTER>-</TD><TD ALIGN=center>-</TD><TD>)
+    (Cannot access conference )conf quote(.)
+  } {
+    conf_new pop /newresp xdef /brandnew xdef pop
+    newresp(</TD><TD></TD><TD ALIGN=center>)brandnew
+    (</TD><TD></TD><TD><A HREF="confhome?conf=)conf cgiquote
+    (&csel=@)cnt(">)conftitle quote(</A>)
+    newresp brandnew + id and {
+      (&nbsp;&nbsp;<IMG SRC=")imghost(/)flavor(new.gif">)
+    } if
+  } ifelse
+  (</TD></TR>\n)
+} forall
+close_conf
+
+cnt ! {
+  pop `(<BR>No )Conferences( on Hotlist\n)'
+} {
+  (</TABLE>)
+} ifelse
+(</TD></TR>\n)
+
+0 cache_conflist
+
+(<HR>
+<TABLE WIDTH=100% BORDER=0>
+<TR><TD>
+<A HREF="http://)HTTP_HOST SCRIPT_NAME("><IMG SRC=")
+imghost(/)flavor(back.gif" BORDER=0>&nbsp;Return</A> to welcome screen
+)
+
+sessions { id {
+  (<P><A HREF=")backtalkurl(/public/logout">Logout</A> of Backtalk.<BR>\n)
+} if } if
+
+(</TD><TD ALIGN=right>
+<FORM METHOD="post" ACTION=")our_url(confhome">
+Go to )Conference(: <INPUT TYPE=text NAME=conf SIZE=12>
+<INPUT TYPE=submit VALUE="Enter">
+</FORM>
+</TD></TR></TABLE>
+)
+
+global_footer
+(</BODY>
+</HTML>
+)
+

@@ -1,0 +1,23 @@
+              Introduction to "OK" Prompt Commands
+
+Welcome to Fronttalk - a Picospanish command-line interface to Backtalk.
+
+To get help on a specific topic type "HELP <topicname>".  For a complete
+list of commands and topics, type "HELP TOPICS".
+
+For a list of Backtalk servers you can connect to, type "DISPLAY SERVERS".
+To connect to a different server, use the "SERVER" command.
+
+For a list of all available conferences on the current server, type
+"DISPLAY CONFERENCES".  To select a conference use the "JOIN" command.
+
+To read all new items and responses the current conference, type "READ NEW".
+To keep things simple on your first visit just a few items will initialy
+be considered "new".  Others will become "new" on later visits as new
+responses are posted to them.  To read everything you haven't seen, do
+"READ UNSEEN" instead of "READ NEW".
+
+A listing of items in the current conference can be obtained with the
+"BROWSE".
+
+You can get out with the "QUIT" command.

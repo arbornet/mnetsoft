@@ -1,0 +1,13 @@
+                        Fronttalk Defines:  ULISTMSG
+
+Usage:  DEFINE ULISTMSG "<string>"
+
+The ULISTMSG define is used to generate the output from the "DISPLAY ULIST"
+command.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(1x%6g%)%c"

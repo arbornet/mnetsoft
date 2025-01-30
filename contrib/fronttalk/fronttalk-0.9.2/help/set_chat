@@ -1,0 +1,12 @@
+                       Fronttalk Setting:  CHAT/WRITE/MESG
+
+Usage:  SET WRITE
+        SET CHAT
+	SET MESG
+
+        SET NOWRITE
+	SET NOCHAT
+	SET NOMESG
+
+These commands turn message permissions on the local terminal on and off.
+They are equivalent to the unix commands "mesg y" and "mesg n".

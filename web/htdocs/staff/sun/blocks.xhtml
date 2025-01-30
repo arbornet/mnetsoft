@@ -1,0 +1,504 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: The Kernel Blocks</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1>NOTE: These notes are of historical value only!</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+  <div id="content">
+  <p>Grex has changed drastically since this document was written.
+  It no longer runs under SunOS on a Sun machine, but rather, as of
+  mid-2017, under a modern BSD on an x86 machine. As such, these
+  blocks are no longer used and instead we use the <em>pf</em> packet
+  filter package to accomplish the same thing.</p>
+
+  <p><a href="index.xhtml">[index]</a></p>
+
+  <h1>Grex Staff Notes: The Kernel Blocks</h1>
+
+  <p>It's Grex's policy to allow only validated members to use certain
+  Internet services, like outbound telnet, ftp and IRC. A few other
+  things, like eggdrop, aren't allowed at all, while services like
+  finger and talk are allowed to all users. The reasons for these
+  policies are described in our note on <a href="goals.xhtml">Grex
+  Security Goals</a>. To enforce this, we must block the use of certain
+  services by certain Grex users.</p>
+
+  <p>This document explains how these blocks are implemented on
+  Grex. Most of the discussion is in terms of the telnet program,
+  but the same applies to ftp, IRC and other services.</p>
+
+  <h2>Nope, Not in the Wrapper Scripts</h2>
+
+  <p>If you look at <tt>/usr/local/bin/telnet</tt> on Grex, you
+  will see that it is really the following script:</p>
+
+  <pre>
+    #!/bin/sh
+    REAL_CLIENTS=/usr/local/grex-scripts/.inet_real
+    MYNAME=`basename $0`
+    if [ -r /usr/local/lib/internet.test ]; then
+            echo " "
+    else
+            /usr/local/grex-scripts/no_internet
+    fi
+    exec ${REAL_CLIENTS}/${MYNAME} $*
+  </pre>
+
+  <p>The <tt>ftp</tt> and <tt>irc</tt> wrappers scripts are
+  similar. Sometimes people find these and say "Aha! I've found a way
+  to bypass the blocks. The real telnet program is hidden in the <tt>
+  .inet_real</tt> directory. If I run that instead of the script
+  I'll be able to telnet out."</p>
+
+  <p>No such luck. The script is only there to print a nice message
+  explaining to people why the telnet program won't work for them
+  (and to suggest to them that they might want to become members).
+  The blocks are lower down.</p>
+
+  <h2>Nope, Not in the Telnet Program</h2>
+
+  <p>So when people find out that the "real" telnet program that is
+  hidden in the <tt>.inet_real</tt> directory doesn't work either, we
+  often see them downloading their own telnet programs. Apparantly they
+  figure that since some network services, like <tt>finger</tt> work for
+  them, the blocks that prevent them from telnetting must be in the
+  telnet program.</p>
+
+  <p>This isn't a terribly smart thing to try, so it's no wonder
+  that a lot of the people who try it, do it badly. Some download
+  binaries from incompatible systems (clue: only binaries for a
+  SPARC system running SunOS 4.1 have a ghost of a chance of
+  running on Grex). Others download source code and try to compile
+  it (clue: yes, you are allowed to compile programs on Grex, but
+  be aware that Grex is so heavily loaded that large compiles will
+  slow down the system noticably and take a very long time. Grex's
+  staff is almost sure to notice, so be prepared for some
+  attention. If you want to compile something large here, it is
+  always best to talk to the staff <em>first</em>.)</p>
+
+  <p>Those people who successfully download or compile their own
+  telnet clients on Grex quickly discover that their's don't work
+  any one wit better than the one in the <tt>.inet_real</tt>
+  directory. <em>The blocks are not in the telnet program</em>. In
+  fact, the telnet, ftp and irc clients on Grex are among the few
+  programs that we haven't made any changes to. Please don't waste
+  our bandwidth moving other telnet programs here. They really,
+  truely, honestly won't work. The blocks are lower down.</p>
+
+  <p>And by the way, the same goes for eggdrop. We don't allow
+  anyone to use eggdrop, so we don't have any version installed
+  here, but if you do succeed in downloading and compiling the
+  thing here without bringing annoyed staff members down on your
+  head, you'll find that it won't work for non-members for exactly
+  the same reasons that telnet and ftp don't work for non-members:
+  the kernel blocks.</p>
+
+  <h2>Yep, the Blocks are in the Kernel</h2>
+
+  <p>The kernel is the core of the Unix operating system. It manages all
+  running processes, allocating memory and CPU time to them. It handles
+  all low-level I/O to all the standard devices, including disks, tapes,
+  and serial ports. It also handles some of the higher level
+  abstractions built on top of those devices. On the hard disks, there
+  is the Unix file system and directory tree, with file access
+  permissions enforced by the kernel. For the dial-in serial ports, the
+  kernel takes care of basic terminal emulation, like echoing the
+  characters you type and keeping track of what your backspace character
+  is. And for the serial port that serves as Grex's internet connection,
+  the kernel provides facilities to make internet connections to remote
+  systems and to send and receive packets. That's the part of the system
+  we modified to implement our access restrictions.</p>
+
+  <p>If you are used to older microcomputers, you may think a program
+  could just access the serial ports directly, and bypass the kernel.
+  But mainframe computers (and these days, most microcomputers) can run
+  in either supervisor mode or in user mode. The machine code
+  instructions you need to directly access devices only work in
+  supervisor mode and only the kernel runs in supervisor mode. (Even if
+  you are "root", all your programs run in user mode.) Because of this,
+  only the kernel can directly access the hardware devices, and it is
+  not possible to bypass the kernel. This has been the basic concept
+  behind all real security on all real computers for the last thirty
+  years, and it works very, very well.</p>
+
+  <h3>Where the Kernel Blocks fit in the Kernel</h3>
+
+  <p>We don't have source for the SunOS kernel, but all modern BSD
+  kernels are structured very much alike (they all derive from 4.2BSD,
+  which was developed at the Univeristy of California, Berkeley with
+  public funds, and is thus public domain). Thus, if you look at the
+  publically available FreeBSD, NetBSD or OpenBSD kernels gives you'll
+  get a good idea of how the SunOS kernel works (we also disassembled
+  very small portions of the SunOS kernel to confirm that it hadn't
+  changed too much). There are also several textbooks describing in
+  detail how all this works (see, for example, Leffler, McKusick, Karels
+  and Quarterman, <em>The Design and Implementation of the 4.3BSD
+  Operating System</em>, Addison Wesley: 1989).</p>
+
+  <p>There are several layers to the implementation of networking in BSD
+  kernels. We are specifically interested in the layers implementing the
+  basic Internet UDP and TCP protocols. UDP is a very simple protocol
+  for sending individual packets (which may or may not arrive) over the
+  net. It is most commonly used for communicating with domain name
+  servers and establishing <tt>talk</tt> connections. TCP is a much more
+  complex and much more widely used protocol that establishes
+  connections between pairs of machines, over which streams of
+  information may be reliably sent.</p>
+
+  <p>The kernel routines handling TCP and UDP communications activity
+  are organized by the kinds of events they respond to:</p>
+
+  <dl>
+    <dt><tt>udp_usrreq()</tt> and <tt>tcp_usrreq()</tt></dt>
+    <dd>handle all requests from user programs, such as to send
+    data, fetch data from a receive buffer, or (for TCP only) to
+    open or close a connection.</dd>
+
+    <dt><tt>udp_input()</tt> and <tt>tcp_input()</tt></dt>
+    <dd>handle the arrival of a packet from another system.</dd>
+
+    <dt><tt>tcp_timer()</tt></dt>
+    <dd>handle the expiration of a timer (TCP only).</dd>
+  </dl>
+
+  <p>Before any kind of UDP or TCP packets can be sent or received, your
+  application program must ask the kernel to create a socket in the
+  Internet domain, and it must specify a network address and port number
+  to send or connect to. (The network address selects the remote
+  machine, and the port number selects the service on that machine.)
+  There are several ways that your application program can specify the
+  remote address and port, including the <tt>connect()</tt>,
+  <tt>bind()</tt>, <tt>sendto()</tt>, and <tt>sendmsg()</tt> kernel
+  calls, but all of these methods result in calls to either
+  <tt>udp_usrreq()</tt> or <tt>tcp_usrreq()</tt>, and in either case, a
+  routine named <tt>in_pcbconnect()</tt> is called to actually save the
+  information.</p>
+
+  <p>It is around the <tt>in_pcbconnect()</tt> routine that we place our
+  wrappers. The wrappers cause <tt>in_pcbconnect()</tt> to appear to
+  fail if the particular connection being requested is not permitted by
+  Grex policy.</p>
+
+  <p>Sun doesn't distribute source code for their kernel, but they do
+  distribute a kernel kit, consisting of hundreds of already compiled
+  ".o" object files, which can be linked together to form a runable
+  kernel. So we were able to make our changes by making some small edits
+  to one of the object modules, causing it to call our routines instead
+  of Sun's, and adding in our own new module.</p>
+
+  <p>What we did was write two new routines, called
+  <tt>in_TCPconnect()</tt> and <tt>in_UCPconnect()</tt>, which do the
+  needed checks, and then either exit with an error code or call the
+  <tt>in_pcbconnect()</tt> routine. We then manually editted the symbol
+  tables in the SunOS kernel object files, replacing calls to
+  <tt>in_pcbconnect()</tt> with either <tt>in_TCPconnect()</tt> or
+  <tt>in_UDPconnect()</tt> (the names are the same lengths, so this is
+  an easy edit). The call to <tt>in_pcbconnect()</tt> in
+  <tt>tcp_usrreq</tt> was replaced with a call to
+  <tt>in_TCPconnect()</tt>, and the two calls in <tt>upd_usrreq</tt>
+  were replaced with calls to <tt>in_UDPconnect()</tt>. That way, after
+  we relinked the kernel, all calls to <tt>in_pcbconnect()</tt> had to
+  pass our tests before being processed.</p>
+
+  <p>Most of the work on this was done by Grex staff members Marcus
+  Watts and Steve Weiss.</p>
+
+  <h3>The TCP wrapper</h3>
+
+  <p>The TCP wrapper, <tt>in_TCPconnect()</tt> allows the connection to
+  be made only if one of the following is true:</p>
+
+  <ol>
+    <li>The user has a uid number less than 1000. On Grex, this
+    allows system processes, including root processes, and staff,
+    to start TCP connections.</li>
+
+    <li>The connection being established is to "localhost", or to a
+    host on Grex's subnet. We are trying to restrict access to the
+    outside Internet, not to our own systems.</li>
+
+    <li>The connection is to a port number on the following list:
+
+      <blockquote>
+        <table border="1">
+          <tr>
+            <td>43</td>
+
+            <td>whois</td>
+          </tr>
+
+          <tr>
+            <td>53</td>
+
+            <td>dns</td>
+          </tr>
+
+          <tr>
+            <td>70</td>
+
+            <td>gopher</td>
+          </tr>
+
+          <tr>
+            <td>79</td>
+
+            <td>finger</td>
+          </tr>
+
+          <tr>
+            <td>80</td>
+
+            <td>http</td>
+          </tr>
+
+          <tr>
+            <td>113</td>
+
+            <td>ident</td>
+          </tr>
+
+          <tr>
+            <td>517</td>
+
+            <td>talk</td>
+          </tr>
+
+          <tr>
+            <td>518</td>
+
+            <td>ntalk</td>
+          </tr>
+        </table>
+      </blockquote>
+
+      <p>Thus, all users, even non-members, can have
+      access to these standard Internet services.</p>
+    </li>
+
+    <li>The user is a member of group 95, the "internet" group.
+    This allows the people who are listed in the "internet" group
+    in the <tt>/etc/group</tt> file to have access to all TCP
+    services.</li>
+  </ol>
+
+  <p>Here's the actual code (actually, it's a slightly out-of-date
+  version, with Grex's old IP address). Note that if all goes well,
+  we call the real routine, in_pcbconnect(). Otherwise, we log an
+  error and return the access error code.</p>
+
+  <pre>
+        in_TCPconnect(inp, nam)
+                struct inpcb *inp;
+                struct mbuf *nam;
+        {
+             int i;
+             struct proc *p= u.u_procp;
+             ushort uid = p-&gt;p_cred-&gt;cr_uid;
+             int  *grps = p-&gt;p_cred-&gt;cr_groups;
+             struct sockaddr_in *sin = mtod(nam, struct sockaddr_in *);
+             long saddr;
+
+             if (nam-&gt;m_len &lt; sizeof *sin) goto Skip;
+             saddr= ntohl(sin-&gt;sin_addr.s_addr); /* for platform completeness */
+
+             if ( (uid &gt;= 1000) &amp;&amp; u.u_ruid
+                &amp;&amp; ((saddr &amp; 0xFFFFFF00) != (127 &lt;&lt; 24))
+                &amp;&amp; ((saddr &amp; 0xFFFFFF00) != ((152 &lt;&lt; 24) + (160 &lt;&lt; 16) + (30 &lt;&lt; 8) ))
+                &amp;&amp; ((saddr &amp; 0xFFFFFFE0) != ((198 &lt;&lt; 24) + (87 &lt;&lt; 16) + (20 &lt;&lt; 8) + 32))        &amp;&amp; (sin-&gt;sin_port != 43)     /* whois */
+                &amp;&amp; (sin-&gt;sin_port != 53)     /* DNS (dig) */
+                &amp;&amp; (sin-&gt;sin_port != 70)     /* gopher */
+                &amp;&amp; (sin-&gt;sin_port != 79)     /* finger */
+                &amp;&amp; (sin-&gt;sin_port != 80)     /* http */
+                &amp;&amp; (sin-&gt;sin_port != 113)    /* ident */
+                &amp;&amp; (sin-&gt;sin_port != 517)    /* talk */
+                &amp;&amp; (sin-&gt;sin_port != 518)    /* ntalk */
+                )
+                /* if all of the above *and* conditions are true, the user must be a
+                   member */
+                {
+                   /* Test for membership: This assumes that group "internet" == 95 */
+                   for(i = 0;(i &lt; NGROUPS) &amp;&amp; (grps[i] != 0) &amp;&amp; (grps[i] != 95);i++)
+                     ;
+                   if ( (i == NGROUPS) || (grps[i] == 0) )
+                     {
+                     log(LOG_INFO,
+                      "b_TCP: %d/&lt;%s&gt; denied %d.%d.%d.%d:%d, %d/%d\n",
+                      p-&gt;p_pid, u.u_comm,
+                      (unsigned char)(saddr&gt;&gt;24),
+                      (unsigned char)(saddr&gt;&gt;16),
+                      (unsigned char)(saddr&gt;&gt;8),
+                      (unsigned char)(saddr),
+                      sin-&gt;sin_port, u.u_ruid, u.u_rgid);
+
+                     return EACCES;
+                     }
+                 }
+        Skip:
+             return in_pcbconnect(inp, nam);
+        }
+  </pre>
+
+  <h3>The UDP wrapper</h3>
+
+  <p>The UDP wrapper, <tt>in_UDPconnect()</tt> is very similar. It makes
+  the requested connection under the any of the following
+  conditions:</p>
+
+  <ol>
+    <li>The user has a uid number less than 1000.</li>
+
+    <li>The connection being established is to "localhost", or to a
+    host on Grex's subnet.</li>
+
+    <li>The connection is to a port number on the following list:
+
+      <blockquote>
+        <table border="1">
+          <tr>
+            <td>53</td>
+
+            <td>dns</td>
+          </tr>
+
+          <tr>
+            <td>517</td>
+
+            <td>talk</td>
+          </tr>
+
+          <tr>
+            <td>518</td>
+
+            <td>ntalk</td>
+          </tr>
+        </table>
+      </blockquote>
+    </li>
+
+    <li>The user is a member of group 95, the "internet"
+    group.</li>
+  </ol>
+
+  <p>Here's the actual code for the in_UDPconnect() wrapper.</p>
+
+  <pre>
+        in_UDPconnect(inp, nam)
+                struct inpcb *inp;
+                struct mbuf *nam;
+        {
+             int i;
+             struct proc *p= u.u_procp;
+             ushort uid = p-&gt;p_cred-&gt;cr_uid;
+             int  *grps = p-&gt;p_cred-&gt;cr_groups;
+             struct sockaddr_in *sin = mtod(nam, struct sockaddr_in *);
+             long saddr;
+
+             if (nam-&gt;m_len &lt; sizeof *sin) goto Skip;
+
+             saddr= ntohl(sin-&gt;sin_addr.s_addr); /* for platform completeness */
+
+             if ( (uid &gt;= 1000)
+                &amp;&amp; ((saddr &amp; 0xFFFFFF00) != (127 &lt;&lt; 24))
+                &amp;&amp; ((saddr &amp; 0xFFFFFF00) != ((152 &lt;&lt; 24) + (160 &lt;&lt; 16) + (30 &lt;&lt; 8) ))
+                &amp;&amp; ((saddr &amp; 0xFFFFFFE0) != ((198 &lt;&lt; 24) + (87 &lt; 16) + (20 &lt;&lt; 8) + 32))
+                &amp;&amp; (sin-&gt;sin_port != 53)     /* dns */
+                &amp;&amp; (sin-&gt;sin_port != 517)    /* talk */
+                &amp;&amp; (sin-&gt;sin_port != 518)    /* ntalk */
+                )
+                /* if all of the above *and* conditions are true, the user must be a
+                   member */
+                {
+                   /* Test for membership: This assumes that group "internet" == 95 */
+                   for(i = 0;(i &lt; NGROUPS) &amp;&amp; (grps[i] != 0) &amp;&amp; (grps[i] != 95);i++)
+                     ;
+                   if ( (i == NGROUPS) || (grps[i] == 0) )
+                     {
+                     log(LOG_INFO,
+                      "b_UDP: %d/&lt;%s&gt; denied %d.%d.%d.%d:%d, %d/%d\n",
+                      p-&gt;p_pid, u.u_comm,
+                      (unsigned char)(saddr&gt;&gt;24),
+                      (unsigned char)(saddr&gt;&gt;16),
+                      (unsigned char)(saddr&gt;&gt;8),
+                      (unsigned char)(saddr),
+                      sin-&gt;sin_port, u.u_ruid, u.u_rgid);
+                     return EACCES;
+                     }
+                 }
+        Skip:
+             return in_pcbconnect(inp, nam);
+        }
+  </pre>
+
+  <h2>Conclusion</h2>
+
+  <p>There is admittedly something fundamentally klunky about hardwiring
+  Grex's administrative policies into our operating system's kernel. It
+  means that if we want to change the services we offer (or change our
+  IP address) we need to rebuild the kernel. But on a system where we
+  give all users full access to Unix development tools, that's where it
+  has to be.</p>
+
+  <p>Still looking for an easy way to get around our blocks? Click
+  <a href="../member.xhtml">here</a>.</p>
+  </div>
+
+  <div id="history">
+  <h4>Document History:</h4>
+  <p>
+  Aug 13, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Initial revision.<br />
+
+  Aug 15, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Various corrections and improvements suggested by Marcus Watts
+    (<a href="mailto:mdw@cyberspace.org">mdw</a>) and Valerie Mates
+    (<a href="mailto:valerie@cyberspace.org">valerie</a>).<br />
+
+  Mar 30, 1998: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Various minor corrections and updates.<br />
+
+  Apr 14, 1998: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Clarified some details about Sun object files based on information from
+    Marcus Watts (<a href="mailto:mdw@cyberspace.org">mdw</a>).<br />
+
+  Feb 16, 1998: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Various minor clarifications.<br />
+  </p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: blocks.xhtml 1607 2017-05-31 16:16:21Z cross $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:webmaster@cyberspace.org" />
+
+  <title>bbsed introduction</title>
+</head>
+
+<body>
+  <pre>
+Item 11: bbsed - a simple editor for the novice user
+Entered by Dave Lovelace (davel) on Thu, Nov 26, 1992 (22:12):
+ 
+ 
+ If you're new to Unix systems, you may find vi and jove intimidating until
+ you've had a chance to play with them.  Until then, you may want to stick
+ with a simpleminded editor that's basically what you use to enter items.
+ It's called bbsed.  If you want to edit a file (including creating one),
+ from a Picospan (conference) prompt you would type
+ 
+ !bbsed filename
+ 
+ where "filename" is replaced by the name of the file you want to edit.
+ If this is a new file, you'll find yourself ready to enter text.  If it's
+ not, you'll get a prompt for an editor command.  To get help (such as it
+ is), enter a question mark (?) - a few more commands are available by
+ entering ampersand (&amp;) - at the beginning of a line (all by itself).
+ You must do this at the editor command prompt; if you're entering text,
+ first enter a line consisting only of a period.
+ 
+ This is not a really powerful editor, &amp; editing any big chunks of text
+ is (IMHO) more trouble than learning to use vi.  For editing a short
+ list of short lines (as a .cflist) it's just fine.
+ Use "." or ^D to end.
+ 
+ Here are the commands, as the help features give them to you.
+ 
+ Edit command (? for help): # means optional line number
+ 
+ c      - continue with next line
+ a      - abandon the text you've typed (or use "q")
+ s      - send text and quit (or use "w")
+ d #    - delete line #
+ i #    - insert before line #
+ e #    - edit line #
+ l #    - list from line # with numbers
+ p #    - print from line # without numbers
+ 
+ Type &amp; for more commands
+ 
+ Edit command (? for help): More commands:
+ 
+ r      - read a UNIX file into buffer
+ u      - continue in upload mode
+ f #    - find a string starting at line #
+ !cmd   - execute UNIX command "cmd"
+ 
+ Commands and responses may be combined
+    with ";". Example: e12;us;them;p
+ 
+ Be aware that the "edit" command (e) lets you replace a string in a given
+ line with another string, as the example shows.  Nothing more powerful.
+ But you can learn all the commands in about 3 minutes, unlike everything
+ else available.
+
+</pre>
+</body>
+</html>

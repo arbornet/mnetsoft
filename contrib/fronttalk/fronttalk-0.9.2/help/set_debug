@@ -1,0 +1,8 @@
+                    Fronttalk Setting:  DEBUG
+
+Usage:  SET DEBUG
+        SET NODEBUG
+
+Setting the DEBUG flag causes Fronttalk to output streams of incoherent
+debugging information.  It can also be set by putting the -d flag on the
+command line when Fronttalk is invoked.

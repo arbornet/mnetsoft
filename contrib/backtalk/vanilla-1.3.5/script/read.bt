@@ -1,0 +1,229 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% read - a web script to read the specified item and offer the option to
+% post a response or continue reading
+
+/shyfile constant {flavor(unreg)+ include} if
+
+% construct byline macro used in more than one place
+/byline
+{( by )
+ mayseealias {
+   authorname quote ( \(<a href=bio?login=) authorid (>)
+   authorid expand (</a>\))
+ } {
+   authorid expand
+ } ifelse
+ ( on ) date ctime (:<p>\n)
+} def
+
+%============== define  error1 macro  ============== (could be built-in)
+
+% <script that errored> <location> <recovery macro> error1 -
+
+
+/error1
+{(<h1> Error </h1> Backtalk has become confused. It encountered an error in 
+ internal script ") 4 3 roll               % 1st arg to top
+(" while performing ") 5 4 roll            % 2nd arg to top
+(".  This is not a fatal error. <p> <hr> )
+ 6 5 roll                                  % first arg to top
+ exec halt     % execute recovery and quit
+} def
+
+% set up variable to propagate csel
+/csel defined {(&csel=) csel +} {()} ifelse /prop_csel xdef
+
+% set up format filter macros
+flavor(links)+ include
+
+%============== read script body begins here  ============== 
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+(
+<HTML>
+<HEAD>
+<BASE HREF=")backtalkurl(/)flavor(read"></HEAD>
+<TITLE>) bbsname ( ) ( Conference - Item ) item (</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>\n)
+(I) flavor(meta)+ include
+(</HEAD>
+<BODY>
+)
+
+conftitle 4 1 roll
+
+mayread ! {(The ) conftitle ( conference cannot be read. You may
+<a href=conflist>return to the list of conferences</A>.) halt } if
+
+bbslogo (<h1>) bbsname ( ) conftitle ( Conference</h1>\n)
+
+rsel item this_item      %-->  <nrs> <err>
+{ (read) (this_item) {flavor(browse)+ call}  error1} if
+
+read_item      %-->  <nrs> <err>
+{ (read) (read_item) {flavor(browse)+ call}  error1} if
+
+/nrs xstore               % clean up the stack
+
+( <h3>Item ) item (: ) title expand (</h3>
+Entered) byline
+
+resp {nrs maxresp count_sel ( new of )}
+     { /shyfile constant {form_text}{(<PRE>) 0 read_text expand (</PRE>)} ifelse } 
+   ifelse
+maxresp ( responses total. )
+
+mayresp ! id and
+ { frozen {( [This item is frozen.] )}
+          {( [This conference is frozen.] )} ifelse } if
+
+(<br clear=all><hr>)
+
+% remember first response to be printed in first_resp
+nrs next_resp { maxresp } { exch pop } ifelse /first_resp xdef
+
+{
+nrs
+next_resp {break} if
+read_resp {pop break} if
+/nrs xstore
+
+(#) resp ( of ) maxresp byline
+
+hidden erased or 
+  {erased 
+    {(This response has been erased.)}
+    {(<a href=view?conf=) conf (&item=) item
+      (&resp=)resp(>View "hidden" response</a>.)}
+    ifelse
+  (<p>\n)
+  resp 1 + item mark_unseen pop
+  }
+  { /shyfile constant{form_text}{(<PRE>) 0 read_text expand (</PRE>)}ifelse }
+  ifelse
+
+mayhide
+  { ([<a href=hide?conf=) conf (&item=) item (&resp=) resp
+    prop_csel (&isel=) isel (&rsel=) rsel (&fn=) 
+    hidden {(S>Show)} {(H>Hide)} ifelse
+    (</a>] )
+} if
+mayerase
+  { ([<a href=hide?conf=) conf (&item=) item (&resp=) resp
+    prop_csel (&isel=) isel (&rsel=) rsel (&fn=E>Erase</a>] <p>\n)
+} if
+
+(<br clear=all><hr>\n)
+
+} loop
+
+% Now we have written the response out.
+% It's time to output a response posting form and a menu of choices 
+
+% normalize rsel to all or new
+rsel (all) eq {(all)}{(new)} ifelse /rsel xstore
+
+% see if there are any more items to look at
+isel next_item {() () 0} {} ifelse /nitem xdef pop /nisel xdef
+
+nitem ! {(There are no more items selected. <p>)} if
+
+(You have several choices:<ul> \n)
+
+% put the posting menu item at the top, so it is salient
+mayresp
+{(<li>Type in a response below, and press "Post" to enter it.\n)} if
+
+% set maypass variable true if there is something to pass
+id first_resp maxresp lt and /maypass xdef
+
+% create a menu item to read the next item, but only if there is one.
+nitem {
+  % first compute the string hrefmore
+  [ (?isel=) nisel (&conf=) conf prop_csel
+  showforgotten {(&showforgotten=) showforgotten } if
+  (&item=) nitem (&rsel=) rsel ] /hrefmore xdef
+  maypass {
+    (<li><a href=read) hrefmore (>Pass, and read the next item</a>\n)
+    (<li><a href=ppone) hrefmore (&ppitem=)item(&ppresp=) first_resp 
+    (>Postpone responding, and continue reading</a>\n)
+  } {  
+    (<li><a href=read) hrefmore (>Read the next item</a>\n)  
+  } ifelse
+} if
+
+% create a menu item to go back and include unseen responses
+first_resp 1 gt {
+  [(<a href=read?conf=)conf prop_csel(&item=)item(&isel=)isel(&rsel=)]
+     /read_args xdef
+  (<li>Redisplay, showing )
+  first_resp 10 gt {
+    read_args first_resp 10 - (-$>the previous 10 responses</a>, or )} if
+  read_args (0-$>the entire item</a>)} if
+
+id {
+  % create a menu item (or 2) to forget or remember the item being viewed
+  forgotten {(&rem=T>Restore this forgotten)}{(&rem=>Forget this)} ifelse
+  /forget_text xdef 
+
+  nitem {
+    (<li><a href=forget?conf=)conf prop_csel (&fitem=)item
+    (&item=)nitem(&isel=)nisel(&rsel=)rsel(&goto=read) forget_text
+    ( item and continue reading</a>\n)
+  } if
+
+  (<li><a href=forget?conf=)conf prop_csel(&fitem=)item
+  (&goto=browse) forget_text ( item</a> and return to the menu of )conftitle
+  ( items\n)
+
+  csel {
+    (<li><a href=nextconf?csel=)csel(>Search the remaining conferences 
+    on your conference list</a>\n)
+  } if
+} if
+
+% create a menu item to browse the conf for other items
+(<li>Go to the <a href=browse?conf=) conf (>menu of items</a>
+ for the )conftitle( conference \n)
+(<li>Go to the <a href=conflist>list of conferences</a>
+ <li>Go to the <a href=begin>opening screen</a>\n)
+maypass
+{(<li><a href=ppone?conf=)conf(&ppitem=)item(&ppresp=)first_resp
+ (>Postpone responding, and go to the opening screen</a>\n)} if
+
+(</ul>)
+
+mayresp {
+id ! {
+  % Figure out a default alias for anonymous posters
+  anonposter /usrname pushuser ! { /alias xstore } if
+  alias ! {/alias (Anonymous User) store } if
+} if
+(
+<FORM METHOD=POST ACTION=response>
+<INPUT TYPE=submit VALUE="Post"><INPUT TYPE="reset" VALUE="Clear response">
+Name <INPUT NAME=pseudo VALUE=") alias (">
+Post as "hidden" <INPUT NAME=hide TYPE=checkbox>
+<br>
+<INPUT NAME=conf TYPE=hidden value=") conf (">
+<INPUT NAME=item TYPE=hidden value=) item (>
+<INPUT NAME=isel TYPE=hidden value=) isel (>
+<INPUT NAME=rsel TYPE=hidden value=) rsel (>
+<INPUT NAME=prevmax TYPE=hidden value=) maxresp (>
+) /csel defined {(<INPUT NAME=csel TYPE=hidden value=) csel (> )} if ( 
+<TEXTAREA NAME="text" ROWS=12 COLS=72 WRAP=HARD></TEXTAREA>
+
+</FORM >
+
+)} if
+
+(<p>
+
+</BODY></HTML>
+)

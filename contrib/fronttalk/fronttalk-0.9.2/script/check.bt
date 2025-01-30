@@ -1,0 +1,21 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+/http_content_type (text/plain) store
+
+% If no conference list was given, use the .cflist
+/csel dup (@0) default def
+csel ! {/csel (@0) def} if
+
+{
+  csel next_conf /conf xstore /csel xdef
+  conf ! {break} if
+
+  (<CHECK NAME=")conf quote(" )
+
+  open_conf {
+    (ERR="Not accessible">\n)
+  } {
+    conf_new /unseen xdef /newr xdef /newi xdef /total xdef
+    (TOTAL=)total( NEWI=)newi( NEWR=)newr( UNSEEN=)unseen(>\n)
+  } ifelse
+} loop

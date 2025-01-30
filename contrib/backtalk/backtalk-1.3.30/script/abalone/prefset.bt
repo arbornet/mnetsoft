@@ -1,0 +1,82 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% prefset script
+%
+% This is the form handler for the "pref.bt" screen.  It sets various
+% user options.
+%
+% Query Parameters:
+%   login= 	 user whose options we are setting
+%   list=	 conferences on begin page (all) or (hot)
+%   rpage=       new value of responses per page option
+%   rtype=       new value of response type option
+%   *timezone*=  new value of conference summary option.
+%   passwd1=     new password
+%   passwd2=     confirmation of new password.
+%   newrfav=     new value of response favor option.
+%   newifav=     new value of item favor option.
+%   menujump=    new value of menu behavior option.
+%   recent=      new value of recent responses option.
+
+flavor(config.bt)+ include
+
+login id ne {
+  amadm !  {
+    % warn off unauthorized users
+   (Only )login( or an administrator can change )login('s settings.)
+   stop
+ }{
+   % administrators can set other user's options
+   login selectuser
+ } ifelse
+} if
+
+% convert numeric parameters to integer form
+/abalone.rpage rpage cvi def
+abalone.rpage 0 eq {/abalone.rpage 25 def} if
+/abalone.menujump menujump cvi def
+
+/abalone.list list def
+
+/abalone.scheme /scheme default_scheme default def
+/abalone.css /css () default def
+abalone.scheme (custom) eq abalone.css () eq and {
+  /abalone.scheme default_scheme def
+} if
+
+post_log_file { /abalone.recent recent cvi def } if
+/rfav newrfav cvi def
+/ifav newifav cvi def
+
+% unscramble those timezone settings
+/setzone 0 def
+timezone1 {/setzone 1 def   /timezone timezone1 store} if
+timezone2 {/setzone 1 def   /timezone timezone2 store} if
+timezone3 {/setzone 1 def   /timezone timezone3 store} if
+timezone4 {/setzone 1 def   /timezone timezone4 store} if
+timezone5 {/setzone 1 def   /timezone timezone5 store} if
+timezone6 {/setzone 1 def   /timezone timezone6 store} if
+timezone7 {/setzone 1 def   /timezone timezone7 store} if
+/systimezone defined {/setzone 1 def   /timezone () def} if
+
+% save new options
+(*.backtalk)
+[/abalone.scheme /abalone.rpage /abalone.list /rtype /rfav /ifav
+ /abalone.menujump /abalone.css
+ post_log_file { /abalone.recent } if
+ setzone {/timezone} if]
+savevar
+
+% do password change, if requested
+nopwedit ! { /passwd1 defined { passwd1 {
+  passwd1 passwd2 ne {
+    /errmsg (The two copies of the new password are not identical) def
+  } {
+    passwd1 changepass /errmsg xdef
+  } ifelse
+} if } if } if
+
+% unselect user
+amadm {() selectuser} if
+
+flavor(pref)+ jump

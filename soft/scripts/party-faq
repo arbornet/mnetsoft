@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Display Grex FAQ sheet
+#
+grexmore /cyberspace/grex/docs/party-faq

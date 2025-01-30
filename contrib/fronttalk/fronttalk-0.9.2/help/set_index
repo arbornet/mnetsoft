@@ -1,0 +1,15 @@
+                       Fronttalk Setting:  INDEX
+
+Usage:  DISPLAY INDEX
+        SET INDEX
+
+Display/Edit the index file for the current conference.  Theoretically the
+index file contains some brief information about the conference, like a
+a list of currently active topics.  Users can display it by doing "DISPLAY
+INDEX".  However, I've never seen a system where this is actually used for
+anything.
+
+The index can also be displayed/edited with the "DISPLAY AGENDA" and
+"SET AGENDA" commands.
+
+Only the fairwitness of the conference can "SET INDEX".

@@ -1,0 +1,71 @@
+# Classifications for less common browsers (not Mozilla, Microsoft, Lynx)
+#  -1 = annoying.  Be less than accomodating for people running this.
+#   0 = non-graphical, lynx-like
+#   1 = basic HTML 2.0.  No tables, no frames. &nbsp; often doesn't work.
+#   2 = basic netscape enhancements. tables.  no frames.
+#   3 = fancy netscape enhancements. frames.
+# first line matching an initial substring of HTTP_USER_AGENT is used.
+# This file is currently mostly guesswork.
+#
+# *** TABS MUST SEPARATE STRING FROM CLASS NUMBER
+#
+# Label                       Class     Comments
+Opera				3	Usually pretends to be Netscape.
+Cyberdog                        2
+IBrowse                         2       Amiga, HTML 3.2 but no frames
+SPRY_Mosaic                     2       Version numbering weird
+IBM WebExplorer/v1.0            1       No tables in early versions?
+IBM WebExplorer                 2       OS/2
+QuarterDeck Mosaic Version 2    2
+QuarterDeck Mosaic              1
+Amiga-AWeb/3                    3	Don't know about version 2
+Amiga-AWeb                      1
+NCSA Mosaic                     2
+Emacs-W3			2
+Emissary			2
+Chimera/2			2	actually has frames, but work badly
+Chimera				1
+amaya				2	as of V3.1
+Konqueror			2	don't know a thing about it, really
+w3m				2
+#
+# Email Address Collectors.  (Actually, they are the only ones from vaguely
+# respectable firms that actually identify themselves.)  Some backtalk pages
+# will decline to run for browser class -1.
+#
+CherryPicker			-1
+EmailCollector			-1
+EmailSiphon			-1
+EmailWolf			-1
+ExtractorPro			-1
+NICErsPRO			-1
+Telesoft			-1
+WebBandit			-1
+webbandit			-1
+WebEMail			-1
+#
+# Search Engines.  Uncommenting these directives makes some backtalk pages.
+# inaccessible, but there are better ways to discourage legitimate search
+# engines.
+#
+#Acoon				-1	Accon
+#AltaVista			-1
+#AnzwersCrawl			-1	Anzwers
+#Arachnoidea			-1	EuroSeek
+#ArchitextSpider		-1	Excite
+#fido				-1	PlanetSearch
+#GAIS				-1	seednet
+#Googlebot			-1	Google
+#Gulliver			-1	Northern Light
+#Infoseek			-1
+#KIT_Fireball			-1	Fireball
+#lwp-trivial			-1	Search 4 Free
+#Lycos_Spider			-1	Lycos
+#Scooter			-1	Altavista
+#search.at			-1
+#sexsearcher			-1
+#Slurp				-1	Hotbot
+#SwissSearch			-1	SwissSearch
+#Ultraseek			-1	Infoseek
+#WebCrawler			-1
+#WiseWire			-1

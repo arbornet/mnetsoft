@@ -1,0 +1,30 @@
+                          Fronttalk Separators:
+                   Functions Used in Item Separators
+
+For general information about separators see "HELP SEP".  This page just
+describes the function codes that can be used in item separators:
+
+   %i    - item number.
+   %h    - item title.
+   %a    - full name of author.
+   %l    - login name of author.
+   %u    - uid number of author.
+   %n    - number of responses to item.
+   %r    - current response number.
+   %s    - number of lines in current response.
+   %q    - number of charaters in current response.
+   %k    - number of charaters in current response / 1024.
+   %L    - text of current response line.  (TXTSEP, FSEP only)
+   %N    - current response line number.   (TXTSEP, FSEP only)
+
+The following functions return dates and times.  If a <count> is given,
+like '%3t', then it controls the format.  See "HELP DATESEP":
+
+   %t    - date/time of item or response (default format is 0).
+   %d    - date/time of item or response (default format is 1).
+
+The following Picospan item separator functions are NOT IMPLEMENTED in
+Fronttalk:
+
+   %Q    - number of charaters in current item.
+   %K    - number of charaters in current item / 1024.

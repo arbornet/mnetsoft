@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <title>GSN: About Grex's Hardware and Software</title>
+  <script type="text/javascript"></script>
+  <style type="text/css" media="screen">
+    @import "../style/default.css";
+  </style>
+</head>
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a><span id="grex"><em>Grex's</em></span> Hardware and Software</a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="../grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="../newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="../faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="../member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="../contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <h2>Hardware</h2>
+  <p>
+  Previously, Grex was spread across several computers and other devices
+  including the "main" Grex server, a satellite server called "gryps"
+  that handled ancillary duties, a terminal server and a bank of modems
+  and other associated devices.  This was necessary for performance
+  reasons at one time, as Grex was slow and underpowered and it was
+  critical for system stability to offload as much as possible from the
+  primary machine.  But things are quite different now.  Grex is
+  far more powerful than before, and the current configuration reflects
+  that.  Furthermore, Grex spent most of its early life in space controlled
+  by the Grex staff.  It is now in a colocation facility, gryps is gone,
+  and there is neither need nor space for a terminal server.</p>
+  <h3>Main Computer and Hosting</h3>
+  <p>
+  Grex currently runs on an HP multicore system that was donated in
+  early 2012 and replaced a system that had been purchased
+  in 2003.  The HP computer is temporary, and will be upgraded soon.</p>
+  <p>
+  Grex is hosted at
+  <a href="http://www.a2hosting.com/">A2 Hosting</a>, a developer
+  friendly hosting provider in Michigan, in the mid-Western part of
+  the United States.</p>
+  <p>
+  Grex no longer offers dial-up service.</p>
+  <h3>Software</h3>
+  <p>
+  Grex runs the <a href="http://www.openbsd.org/">OpenBSD</a> operating
+  system, mostly unmodified from the basic distribution.  Additionally, we
+  have installed a number of third party packages from the OpenBSD ports
+  collection, and we also run some software either written by or closely
+  associated with the Grex community, such as the
+  <a href="http://www.unixpapa.com/backtalk/">backtalk</a>
+  conferencing software, the
+  <a href="http://www.unixpapa.com/party.html">party</a>
+  multi-user chat program and the
+  <a href="http://www.unixpapa.com/write.html">Orville write</a>
+  replacement for the standard Unix
+  <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=write&amp;sektion=1&amp;format=html"><em>write</em>(1)</a>
+  program.</p>
+  <p>
+  At the time of this writing, all software running on Grex is
+  <a href="http://en.wikipedia.org/wiki/Open_source_software">Open Source</a>.
+  The venerable Picospan conferencing software, long a staple of life on
+  Grex and the last non-open software we ran, has been replaced by
+  <a href="http://www.unixpapa.com/backtalk/fronttalk/">Fronttalk</a>.  This
+  is in sharp contrast to Grex's origins on Sun computers, where we did not
+  even have access to the operating system source code, and changes to the
+  system often required binary modifications!</p>
+  <h3>Major Software Component Evolutions</h3>
+  <p>
+  Over Grex's history, particularly on the Sun-based computers it was
+  started on and ran on for much of its life, the Grex staff was forced to
+  make major changes to the operating system and related software for
+  reasons from stability to security and performance.  Lacking source code,
+  these modifications were often via binary changes or clever use of system
+  facilities.  This has changed with the move to OpenBSD, but below are a
+  few notes on major historical changes that were made and the current
+  status of the analogous components.  More information on the historical
+  Grex implementations can be found <a href="sun/">here</a>.</p>
+  <dl>
+    <dt>Internet Blocks</dt>
+    <dd>
+      <p>
+      Soon after Grex was connected to the Internet, it was discovered that
+      allowing anyone to access the network without any sort of
+      authentication led to attacks against other systems being mounted from
+      Grex; something no one had ever intended.  A scheme was devised to
+      block network access to non-validated users for all but a few
+      well-defined services, and this was implemented by modifying the SunOS
+      kernel to check whether a user was a member of a certain Unix group
+      before passing on network traffic from that user.  The implementation
+      involved making changes to the symbol tables in the SunOS kernel
+      object files to call routines written by members of the Grex staff
+      that checked a user's credentials before passing a packet down the
+      network stack; more details can be found
+      <a href="sun/blocks.xhtml">here</a>.</p>
+      <p>
+      Furthermore, access to step past the filters was only granted to users
+      who had chosen to become members of Grex and were active members at
+      the time.  If a user became a member, but later let her membership
+      lapse, she would also lose access to the network.</p>
+      <p>
+      This served Grex well for several years, but today, we implement
+      this using the excellent OpenBSD
+      <a href="http://www.openbsd.org/faq/pf/">PF</a> packet filtering
+      package.  However, the principle remains largely the same, with minor
+      technical differences.  Furthermore, the idea of a user being a member
+      as a prerequisite for Internet access has been removed.  Users are now
+      validated via one of several ways and remain so for as long as they
+      have an active account.  If a member lets his or her membership lapse,
+      they do not lose their network access.</p>
+    </dd>
+    <dt>The Fork-bomb killer</dt>
+    <dd>
+      <p>
+      Grex has always had its share of users who want to test the doors on
+      the system's security, and some are more annoying than others.
+      Particularly bothersome are those who run fork bombs on the system: a
+      fork bomb is a program that executes as many copies of itself as it
+      can, and that is <em>all</em> that it does.  Traditionally, these slow
+      down the system considerably.</p>
+      <p>
+      On the Sun, Grex used the operating system's basic resource limit
+      facility to put a cap on the total number of processes that a given
+      user could run and this helped mitigate the problem, but did not
+      eliminate it: even a small fork bomb could incapacitate the system.
+      This was exacerbated by the fact that, under SunOS, one could not
+      kill processes that were in the process of forking, making it
+      difficult to stop this sort of attack.  So, members of the Grex
+      staff wrote software that was loaded into the kernel to detect fork
+      bombs and kill <em>all</em> processes associated with the offending
+      user, effectively ending the problem.</p>
+      <p>
+      Two things were notable about this software, one related to
+      implementation and the other an oversight that, to our knowledge,
+      never led to an exploited attack.  The latter deals with the fact
+      that, under SunOS, there were two ways to create a process: calling
+      the
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=fork&amp;sektion=2&amp;format=html"><em>fork</em>(2)</a>
+      system call or calling the
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=vfork&amp;sektion=2&amp;format=html"><em>vfork</em>(2)</a>
+      system call.  <em>Vfork</em> is similar to
+      <em>fork</em> but was built as an optimization after the observation
+      that, most times, a
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=fork&amp;sektion=2&amp;format=html"><em>fork</em>(2)</a>
+      call is immediately followed by an
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=execve&amp;sektion=2&amp;format=html"><em>execve</em>(2)</a>
+      call, and so there is no need to do all of the work of a full fork.
+      In particular, one of the semantics is that after calling
+      <em>vfork</em>, the parent process will not be scheduled to run again
+      until after the child either calls
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=execve&amp;sektion=2&amp;format=html"><em>execve</em>(2)</a>
+      or exits.  Because of this, it was decided that there was no reason to
+      incorporate support for
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=vfork&amp;sektion=2&amp;format=html"><em>vfork</em>(2)</a>
+      into the code that detected fork bombs.  However, it turned out that
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=vfork&amp;sektion=2&amp;format=html"><em>vfork</em>(2)</a>
+      <em>was</em> exploitable.  In particular, a <em>vfork</em> based bomb
+      could simply execute itself if, for instance, its executable was
+      stored in some known location.</p>
+      <p>
+      The other interesting thing about the fork bomb killer on the Sun
+      centered around its installation and operation.  As previously stated,
+      Grex did not have the source code for SunOS, and so did not have the
+      source code for
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=fork&amp;sektion=2&amp;format=html"><em>fork</em>(2)</a>.
+      However, SunOS had a loadable kernel module interface, and the fork
+      bomb killer was written in terms of this as a loadable device driver.
+      When loaded, it overwrote the address of the real <em>fork</em> in the
+      kernel system call vector, replacing it with a call to itself.  It
+      would try to invoke the real <em>fork</em> on the user's behalf, and
+      would detect if the it failed.  It then maintained a count of such
+      failures for each user, which was periodically decreased by time-decay
+      code that was latching onto one of the kernel's internal timers.  It
+      did not look for total number of fork calls or active processes or
+      anything of that nature, but rather, for fork failures over a given
+      period of time.  If, based on the somewhat arbitrary condition of a
+      user having more than fifty fork failures in two seconds, the killer
+      determined that a user was executing a fork bomb, it would walk the
+      process table and send SIGKILL to each process owned by the offender,
+      being sure to propagate the signal to each such process's children, if
+      any, effectively logging the user out.  An interesting side effect of
+      the implementation as a loadable kernel module and the implementation
+      of the SunOS LKM interface was that the
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=fork&amp;sektion=2&amp;format=html"><em>fork</em>(2)</a>.
+      wrapper had a device node associated with it in /dev.</p>
+      <p>
+      With the move to OpenBSD and new hardware, this was revisited, and a
+      prototype implementation was written but it was deemed not worth the
+      bother: the new system handles a user running a forkbomb without
+      degrading system performance unduly, and the kernel allows you to kill
+      them off.  However, the technique remains in the back of our
+      collective minds should this become a problem again in the future.</p>
+    </dd>
+    <dt>The Password Database</dt>
+    <dd>
+      <p>
+      Originally, Grex used the standard 7th Edition format flat text
+      /etc/passwd file standard under SunOS.  However, as the system grew,
+      it became clear that this would not scale, and that using the old
+      <em>crypt</em>(3) based 7th Edition password hash that was also
+      standard under SunOS at that time was less than ideal from a security
+      perspective, as was keeping the hashed passwords in /etc/passwd, where
+      anyone could read them.  In a gradual evolution, all three of these
+      problems were addressed and eventually the entire password subsystem
+      was replaced with custom code to both index the password database and
+      provide a shadow password file, unreadable to most users.  Also, the
+      Grex staff came up with a new algorithm for hashing the passwords
+      themselves that performed significantly better than and had several
+      security advantages over the standard, DES-based algorithm used in
+      SunOS's <em>crypt</em>(3) routine.  It was also thought that passwords
+      hashed with this algorithm might be directly incorporated as keys
+      into, e.g., a modified Kerberos V key distribution center as the
+      authentication basis for a networked Grex spread across several
+      machines.  More details, as well as some source code, can be found
+      <a href="sun/passwd.xhtml">here</a>.</p>
+      <p>
+      Unfortunately, the indexing scheme was not compatible with Sun's
+      tools, and the Grex staff had to build and maintain custom,
+      non-standard utilities to administer the password database.  Further,
+      the standard tools were not removed from the system but would corrupt
+      the database if used, requiring a laborious rebuild process: this
+      caught more than one new system administrator (and an unsuspecting
+      user community) by surprise.  However, OpenBSD shipped with a password
+      database indexing system that performed well enough on modern hardware
+      that this customization was deemed unnecessary and not carried
+      forward.  Further, a shadow password database is a standard part of
+      the OpenBSD password subsystem.</p>
+      <p>
+      Grex's custom password hashing algorithm, however, was another matter.
+      Originally a major improvement over the standard <em>crypt</em>(3),
+      most of Grex's users' passwords had been converted to use it over the
+      years.  Since it is practically impossible to invert the hashing
+      process to recover the original password and hash with another
+      algorithm, and since Grex still had some hope for building a KDC based
+      on user's encrypted passwords as keys, and in order to avoid forcing
+      users to change their passwords, the Grex staff implemented support
+      for the Grex hashing algorithm for OpenBSD using the
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bsd_auth&amp;sektion=3&amp;format=html">BSD Authentication System.</a>
+      </p>
+      <p>
+      However, this had several problems of its own.  First, the hash itself
+      was based on the HMAC transformation, but all the inputs to it except
+      for the password itself were fixed, eliminating the unique properties
+      of HMACs that make them useful, and effectively rendering the security
+      of the algorithm equivalent to that of the underlying hash function.
+      Further, it had to be maintained: every time the system was upgraded,
+      support for the hashing function would have to be patched into it.
+      This would be doubly true for any sort of custom Kerberos KDC.  One of
+      the benefits of moving to OpenBSD was a much reduced maintenance
+      burden: by continuing to use a custom hashing algorithm, we were
+      negating that to some extent.  So, in 2007, Grex moved to the
+      blowfish-based hashing algorithm used with OpenBSD's
+     <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bcrypt&amp;sektion=3&amp;format=html"><em>bcrypt</em>(3)</a>
+      hashing implementation.</p>
+      <p>
+      The method used to migrate is interesting and bears mentioning here:
+      the process was completely transparent to users, and involved two
+      major steps.  The first, and most obvious, was to modify the code that
+      creates users on Grex to use
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bcrypt&amp;sektion=3&amp;format=html"><em>bcrypt</em>(3)</a>
+      instead of Grex's custom hash.  Next, we unmodified the
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=passwd&amp;sektion=1&amp;format=html"><em>passwd</em>(1)</a>
+      program so that it would produce standard passwords
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bcrypt&amp;sektion=3&amp;format=html"><em>bcrypt</em>(3)</a>
+      when run.  Finally, and most interestingly, we instrumented the
+      various programs that performed password authentication to detect
+      whether a user's password had been hashed using
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bcrypt&amp;sektion=3&amp;format=html"><em>bcrypt</em>(3)</a>
+      or Grex's algorithm.  If the latter, it would rehash it using
+      <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bcrypt&amp;sektion=3&amp;format=html"><em>bcrypt</em>(3)</a>
+      and store the result in the password database.  In this way, we were
+      able to rapidly convert the entire user population's passwords to use
+      the standard algorithm.  Further, if Grex ever revisits the idea of
+      using, e.g., Kerberos, this will likely be the main way that we add
+      users to the KDC.</p>
+      <p>
+      As of now, Grex's password database and the passwords in it are
+      completely standard.</p>
+    </dd>
+    <dt>Queueing Telnet and idled</dt>
+    <dd>
+      <p>
+      On Grex's Sun computers, pseudo-tty devices (ptys) for incoming
+      network connections were a scarce resource, as the system was
+      sufficiently underpowered that it could not support that many users at
+      one time and ptys were limited in order to keep the system relatively
+      responsive.  An unfortunate consequence was that demand exceeded
+      supply, and it became difficult for many users to get a pty, making
+      Grex difficult to use at best.  Some users developed "war-telneter"
+      scripts to telnet to Grex repeatedly until they got a pty, further
+      slowing the system down.  This led to two consequences: the
+      development of a queueing telnet daemon and the running of a program
+      that looked for and logged out idle users.  The latter was the open
+      source <em>idled</em> program, while the former was developed in house
+      and would place incoming telnet connections on a queue if more than a
+      certain number of users were logged in at once.  Eventually, queued
+      users would obtain a pty as other users logged off.</p>
+      <p>
+      With the move to OpenBSD, statistical analysis was performed on
+      historic queue size data and it was found that, with a total of 128
+      ptys available for user logins, the queue was almost never used.
+      Further, grex's new machine was sufficiently powerful that it could
+      handle this load easily.  Consequently, the queueing telnet daemon was
+      not brought forward to OpenBSD.</p>
+      <p>
+      With the elimination of the queueing telnet daemon and an abundance of
+      resources, it was soon determined that the idle daemon wasn't doing
+      very much good and it, too, was removed.</p>
+      <p>
+      Periodically, this causes problems as people launch denial of service
+      attacks against Grex, trying to tie up its ptys and other resources.
+      Unfortunately, the telnet queue could not have helped against this: an
+      attacker would first simply tie up the legitimate ptys, and then just
+      fill the queue.  The end result would be the same, in that legitimate
+      users would be denied the ability to use Grex.  Given the
+      intractability of combating denial of service attacks in general, it
+      was deemed not worth the effort.  However, recent attacks may require
+      Grex's staff to revisit this issue.</p>
+    </dd>
+    <!--
+    <dt>Hierarchical Directories</dt>
+    <dd>
+      <p>
+      In order to cut down on directory sizes and access times, Grex
+      has employed a set of hierarchal home directories for many years.
+      E.g., a user such as 'carson' has the home directory /a/c/a/carson.
+      This was carried forward from the Sun computers to the new machine.
+      </p>
+    </dd>
+    <dt>Mail changes</dt>
+    <dd>
+      <p>
+      On the Sun, Grex used a heavily modified version of sendmail and
+      delivered mail into a set of hierarchical mail directories.  This
+      has been replaced by the Postfix mailer, which simply delivers
+      mail into /var/mail.</p>
+    </dd>
+    -->
+  </dl>
+</div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: system.xhtml 1547 2016-09-25 14:57:21Z kentn $</span>
+</div>
+</body>
+</html>

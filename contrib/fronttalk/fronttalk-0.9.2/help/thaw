@@ -1,0 +1,15 @@
+                       Fronttalk Command:  THAW
+
+Usage:  THAW <item range>
+
+Mark all selected items not frozen, so that people can once again post
+responses to it.  Fairwitnesses can thaw frozen items in their conferences.
+Depending on the Backtalk server configuration, the original author of an
+item may also be able to thaw it.
+
+For a full description of item ranges, do "HELP RANGE".  If you just say
+"THAW" without arguments the current item will be thawed.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to thaw it.

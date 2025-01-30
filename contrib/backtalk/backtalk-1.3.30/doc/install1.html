@@ -1,0 +1,839 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part I: Backtalk Configuration</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  <A HREF=install.html>Introduction</A><BR>
+Next:  <A HREF=install2.html>Part II:  Compilation</A>
+<HR>
+The first step in installing Backtalk is to configure the programs.
+To do this, you unpack the distribution, <TT>cd</TT> into the distribution
+directory and do:
+<P>
+<TABLE WIDTH=100% BORDER=1><TR><TD>
+&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<TT>./configure</TT> <EM>&lt;options&gt;</EM><BR>
+&nbsp;
+</TD></TR></TABLE>
+<P>
+<STRONG><FONT COLOR=red>NOTE:</FONT></STRONG>
+<OL>
+<LI><STRONG><FONT COLOR=red>You'll almost certainly need some options on
+    the configure command.</FONT></STRONG>
+    <BR>
+    Most options have default values appropriate for a simple installation
+    using Backtalk accounts, but most installers will want to change at least
+    some of them.  It is possible that running <TT>configure</TT> without
+    options will work for you, but you should scan the option list below to
+    make sure there is nothing there you need.  A summary of options can be
+    printed by doing "<TT>./configure --help</TT>".<P>
+
+<LI><STRONG><FONT COLOR=red>Backtalk's configure option flags work
+    differently than most configure scripts.</FONT></STRONG>
+    <BR>
+    The default flag values apply only to the first time you run
+    <TT>configure</TT>.  Later, the defaults are whatever value the flag had
+    on the previous run.  Thus, if you want to change just one option flag,
+    you can rerun <TT>configure</TT> giving just the option to change.
+    Everything else will retain it's previous value.
+    If you want to start over from a clean slate, remove the
+    <TT>config.cache</TT> file before rerunning <TT>configure</TT>.
+</OL>
+A few options have no default values.  If you don't
+specify them, the <TT>configure</TT> script will prompt you for values on
+the first run.  On later runs the default values are the values you gave on
+the first run, so won't be prompted again.  To change them, either give
+the flag, or remove the <TT>config.cache</TT> file.
+
+<H3>"Mandatory" Options</H3>
+
+A few options do not have default values, since the correct values vary too
+much between systems, and they are too difficult to automatically detect in
+any reliable fashion.
+<FONT COLOR=RED>If you do not specify values for these options on
+the <TT>configure</TT> command and there are no cached values from a previous
+run, then you will be prompted for values.</FONT>
+
+<DL>
+<DT><TT>--htmldir=</TT><EM>&lt;path&gt;</EM><BR>
+    <TT>--htmlurl=</TT><EM>&lt;url&gt;</EM>
+<P>
+<DD><STRONG>HTML Directory and URL.</STRONG><BR>
+    Backtalk uses several <TT>.html</TT> files that need to be accessible over
+    the web.  You need to specify the full path name of the directory in which
+    they are installed, and the full URL of that directory.
+    <P>
+    For example, if you are installing Backtalk under
+    the system's document root, you might
+    specify:
+    <BLOCKQUOTE>
+        <TT>--htmldir=/usr/local/apache/htdocs/backtalk</TT><BR>
+        <TT>--htmlurl=http://my.system.com/backtalk</TT>
+    </BLOCKQUOTE>
+    or if you are installing Backtalk under
+    a user account on the system, you might specify:
+    <BLOCKQUOTE>
+        <TT>--htmldir=/home/mylogin/public_html/backtalk</TT><BR>
+        <TT>--htmlurl=http://my.system.com/~mylogin/backtalk</TT>
+    </BLOCKQUOTE>
+    <P>
+    Note that <TT>--htmldir</TT> must always begin with a slash, and
+    <TT>--htmlurl</TT> must always begin with "<TT>http://</TT>" or
+    "<TT>https://</TT>".
+<P>
+<DT><TT>--cgidir=</TT><EM>&lt;path&gt;</EM><BR>
+    <TT>--cgiurl=</TT><EM>&lt;url&gt;</EM>
+<P>
+<DD><STRONG>CGI-Bin Directory and URL.</STRONG><BR>
+    Backtalk uses many cgi-bin programs that must be installed where they
+    can be executed by the web server.  You need to specify the full path name
+    of the cgi-bin directory to use and the full URL of that directory.
+    <P>
+    For example, if you are installing Backtalk into the system's
+    cgi-bin directory, you might specify:
+    <BLOCKQUOTE>
+        <TT>--cgidir=/usr/local/apache/cgi-bin/backtalk</TT><BR>
+        <TT>--cgiurl=http://my.system.com/cgi-bin/backtalk</TT>
+    </BLOCKQUOTE>
+    <P>
+    Some systems are set up so that CGI programs can be installed in the
+    same directories as HTML documents, with the CGI programs being identified
+    by a file-name suffix like <TT>.cgi</TT>.  In such cases your
+    <TT>--cgidir</TT> and <TT>--cgiurl</TT> values may be the same as your
+    <TT>--htmldir</TT> and <TT>--htmlurl</TT> values, but you should also set
+    the <TT>--cgi-suffix=.cgi</TT> option, as described below.
+    <P>
+    Note that <TT>--cgidir</TT> must always begin with a slash, and
+    <TT>--cgiurl</TT> must always begin with "<TT>http://</TT>" or
+    "<TT>https://</TT>".
+<P>
+<DT><TT>--httpd-id=</TT><EM>&lt;id&gt;</EM>
+<P>
+<DD><STRONG>User HTTP Server Runs As.</STRONG><BR>
+    The HTTP server on your system runs as some particular user.  Backtalk
+    needs to know what user that is so that it can check that is it really
+    being run by HTTP server, and so that authentication databases can be
+    set up to be readable only by the HTTP server.
+    <P>
+    On many systems, the HTTP server runs as "nobody" (though we think it is
+    better to set up a separate account called "www" or "http" for the HTTP
+    server to run as).
+    If you are running Apache, you can find out what user it is running as
+    by looking at the <TT>User</TT> option in the Apache configuration files.
+    Alternately you could do a <TT>ps</TT> and note what login most
+    <TT>httpd</TT> processes are running as (there may be one running as
+    'root' - ignore it).
+    <P>
+    Note that if your CGI's will be running under 'suexec' or some other
+    wrapper that causes them to be run by the owner of the file, then this
+    should be the owner of the files, exactly the same value as the owner-id
+    below.
+    <P>
+    You can specify the id number either by UID number, or by login name,
+    like:
+    <BLOCKQUOTE>
+        <TT>--httpd-id=65534</TT>
+    </BLOCKQUOTE>
+    or
+    <BLOCKQUOTE>
+        <TT>--httpd-id=nobody</TT>
+    </BLOCKQUOTE>
+    Note that if you give the login name rather than the uid number, then
+    the <TT>configure</TT> script needs to convert the name to a number.  It is
+    fairly clever about figuring out how to do this on most Unix systems, but
+    if you are building a binary to be run on some other system, a conversion
+    based on your build system's password database may not be correct.  Use
+    uid numbers in such cases.
+<P>
+<DT><TT>--owner-id=</TT><EM>&lt;id&gt;</EM>
+<P>
+<DD><STRONG>User Backtalk Should Run As.</STRONG><BR>
+    Ideally you should create a new Unix account for Backtalk to run under.
+    All the conference files will be owned by this user, and Backtalk
+    processes will (mostly) run as this user.  We suggest that the name
+    "<TT>backtalk</TT>" be used for this account, but 
+    "<TT>cfadm</TT>" is traditional for Picospan and Yapp systems.
+    <P>
+    It would be unwise to use <TT>root</TT> for this.  Anything else is
+    OK, though an account used for nothing else is best.
+    <P>
+    It can be set to the same value as <TT>--httpd-id</TT>.
+    If you are running under <TT>suexec</TT> it must be the same.
+    However, doing this in a non-<TT>suexec</TT> environment
+    may weaken Backtalk's security since this would allow all cgi programs
+    on your system to access the conference and user databases.
+    <P>
+    You can specify the id number either by UID number, or by login name,
+    like:
+    <BLOCKQUOTE>
+        <TT>--owner-id=406</TT>
+    </BLOCKQUOTE>
+    or
+    <BLOCKQUOTE>
+        <TT>--owner-id=backtalk</TT>
+    </BLOCKQUOTE>
+    If you use the second form, the account must exist, so that the
+    <TT>configure</TT> script can figure out its UID number.
+    It is fairly clever about figuring out how to find the UID number
+    on most Unix systems, but if you are building a binary to be run on
+    some other system, a conversion based on your build system's password
+    database may not be correct.  Use uid numbers in such cases.
+<P>
+<DT><TT>--owner-group=</TT><EM>&lt;id&gt;</EM>
+<P>
+<DD><STRONG>Group Backtalk Should Run As.</STRONG><BR>
+    This is only needed if you are using Unix login ids with Backtalk, in
+    which case a new group should be created for Backtalk to run in.  Nothing
+    else should be in this group, as all user's participation files will be
+    readable and writable to this group.  It would be reasonable to give the
+    group the same name as the owner account.
+    <P>
+    You can enter either the group name or group id number.  Names will be
+    converted to numbers by looking them out in the system's group database.
+<P>
+<DT><TT>--admin-group=</TT><EM>&lt;id&gt;</EM>
+<P>
+<DD><STRONG>Group Backtalk Admin Accounts will be in.</STRONG><BR>
+    This is only needed if you are using Unix login ids with Backtalk, in
+    which case it should be the GID number or name of a unix group.  All
+    Unix accounts in this group will have conference administration rights,
+    and will be able to create, destroy and reconfigure conferences through
+    the web interface, and will function as fairwitnesses in all conferences.
+    <P>
+    Command-line admin tools can be used only from the account defined by
+    the 'owner_id' flag.
+</DL>
+
+<H3>Directory Structure Options</H3>
+
+There is a set of options to tell the system what to install where.
+Most users will find is sufficient to just use <TT>--prefix</TT> to set
+a root directory for Backtalk, and just let the rest default.  However, you
+can set each directory individually.
+<P>
+The first two are just prefixes that are used in the default values for
+the others:
+
+<DL>
+<DT><TT>--prefix=</TT><EM>&lt;prefix&gt;</EM>
+<P>
+<DD><STRONG>Architecture-Independent Directory Prefix.</STRONG>
+Default= /usr/local/backtalk<BR>
+Install all architecture-independent files under this (like conference
+data files, scripts and configuration files).
+<P>
+<DT><TT>--exec-prefix=</TT><EM>&lt;exec-prefix&gt;</EM>
+<P>
+<DD><STRONG>Architecture-Dependent Directory Prefix.</STRONG>
+Default= <EM>&lt;prefix&gt;</EM><BR>
+Install all architecture-Dependent files (like executable binaries)
+under this.
+</DL>
+<P>
+The rest of the directory options designate specific directories where
+Backtalk files are installed, as outlined in the following table:
+<P>
+<TABLE WIDTH=100% BORDER=1>
+<TH>option</TH><TH>default</TH><TH>what's installed</TH>
+<TR><TD><TT>--cgidir</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>No default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>CGI programs:
+<TT>backtalk</TT>
+</TD></TR>
+<TR><TD><TT>--bindir</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD><EM>&lt;exec-prefix&gt;</EM><TT>/bin</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Command-line administrative commands:
+<TT>makeconf</TT>,
+<TT>decomp</TT>,
+<TT>btpasswd</TT>*,
+<TT>btvalid</TT>*,
+<TT>btrmuser</TT>*,
+<TT>btmkuser</TT>*
+</TD></TR>
+<TR><TD><TT>--libexecdir</TT></TD>
+<TD><EM>&lt;exec-prefix&gt;</EM><TT>/libexec</TT></TD>
+<TD>Programs usually run by other programs:
+<TT>btc</TT>,
+<TT>partutil</TT>**
+</TD></TR>
+<TR><TD><TT>--bbsdir</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/bbs</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Conference data files.</TD></TR>
+<TR><TD><TT>--userdir</TT>&nbsp;&nbsp;&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/user</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>User's settings and participation files*.</TD></TR>
+<TR><TD><TT>--scriptdir</TT>&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/script</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Backtalk scripts.</TD></TR>
+<TR><TD><TT>--etcdir</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/etc</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Read-mostly data files owned by <TT>owner-id</TT>.</TD></TR>
+<TR><TD><TT>--passwddir</TT>&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/passwd</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Read-mostly data files owned by <TT>httpd-id</TT>,
+mainly the <TT>auth</TT> database*.</TD></TR>
+<TR><TD><TT>--logdir</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/log</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Backtalk log files.</TD></TR>
+<TR><TD><TT>--htmldir</TT>&nbsp;&nbsp;&nbsp;</TD>
+<TD>No default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Images and style sheets.</TD></TR>
+<TR><TD><TT>--mandir</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD><EM>&lt;prefix&gt;</EM><TT>/man</TT>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD>Man pages.</TD></TR>
+</TABLE>
+<BLOCKQUOTE>
+*&nbsp; These files are only installed for systems with Backtalk accounts.<BR>
+** These files are only installed for systems with Unix accounts.<BR>
+</BLOCKQUOTE>
+
+<H3>Other Backtalk Configuration Options</H3>
+
+The rest of the <TT>configure</TT> options have default values that may well
+work just fine for you.
+
+<DL>
+<DT><TT>--cgi-suffix=</TT><EM>&lt;suffix&gt;</EM>
+<P>
+<DD><STRONG>CGI Filename Suffix.</STRONG>  Default= null<BR>
+    This is a suffix to be appended to the names of all CGI program
+    filenames.  Some servers are configured so that all CGI programs must
+    have names ending in <TT>.cgi</TT>.  If this is the case on your server,
+    you should specify a <TT>--cgi-suffix=.cgi</TT> option.
+<P>
+<DT><TT>--login=basic|form</TT>
+<P>
+<DD><STRONG>Type of Authentication to Use.</STRONG>
+    Default= <TT>basic</TT><BR>
+    Backtalk can use either of two different methods to track the identity
+    of logged in users from page to page.
+    <DL>
+    <DT><TT>--login=basic</TT>
+    <DD><EM>Basic Authentication</EM>.
+        This is the authentication method built into all browsers and
+	http servers.  In the case of Apache, authentication is actually
+	handled by any one of several authentication modules, like
+	<TT>mod_auth</TT>, <TT>mod_auth_dbm</TT>, <TT>mod_auth_db</TT>, etc.
+	Users will see a pop-up box with a login form when they enter the
+	system.  The browser will automatically remember their password and
+	resend it as needed to access future pages.  It is not possible for
+	users to log off without exiting all their browser windows.
+	<P>
+	The disadvantages of this are lack of control over the appearance
+	of the login window, lack of a logout button, and somewhat
+	promiscuous sending of the user's password, leading to increased
+	vulnerability to sniffers.
+    <DT><TT>--login=form</TT>
+    <DD><EM>Cookie-Based Form Authentication</EM>.
+	Backtalk will generate a login box on the main page.  After users
+	log in, a cookie will be set containing a 'session ID'.  The browser
+	will automatically send that back with all future requests.  Backtalk
+	looks the session ID from the cookie up in a session database to
+	identify the current users.  Users can log off by clicking a logout
+	button on the screen.
+	<P>
+	<FONT COLOR=red><STRONG>This may be insecure on some servers!
+	</STRONG></FONT>  Cookies are passed to CGI programs in environment
+	variables.  On most Unix systems, it is possible to see the values
+	of environment variables in other user's processes.  Thus if any
+	untrusted users can login to or install CGI programs on the server
+	you are using, then they could potentially steal a session ID and
+	impersonate a user.
+    </DL>
+<P>
+<DT><TT>--auth=text|db|dbm|sql|passwd|shadow</TT>
+<P>
+<DD><STRONG>Type of Database to Authenticate From.</STRONG>
+    Default= <TT>text</TT><BR>
+    Backtalk users will normally be required to give a login and password
+    before accessing Backtalk.  These will be checked (by httpd) against
+    some sort of database to see if they are correct.  This option
+    specifies what kind of database to use.  If used with <TT>--login=basic</TT>
+    your http server must have a module installed that supports this form
+    of authentication database.  With <TT>--login=form</TT> no special
+    support from the http server is needed and any of these options can be
+    used.
+    <P>
+    The first four options are for Backtalk accounts, maintained by Backtalk's
+    user administration tools.
+    <DL>
+    <DT><TT>--auth=text</TT>
+    <DD>Logins and passwords are kept in a flat text file.
+        This is for use with standard authentication systems like Apache's
+        <TT>mod_auth</TT>.
+    <DT><TT>--auth=db</TT>
+    <DD>Logins and passwords are kept in a hashed Berkeley DB database.
+        This is for use with Apache's <TT>mod_auth_db</TT>.
+        It gives faster authentications than the <TT>text</TT> option.
+        You need some version of the Berkeley DB library installed on your
+        system.  Backtalk, like Apache supports versions 1, 2 and 3.
+    <DT><TT>--auth=dbm</TT>
+    <DD>Logins and passwords are kept in a hashed DBM database.
+        This is for use with Apache's <TT>mod_auth_dbm</TT>.
+        It gives faster authentications than the <TT>text</TT> option.
+        You need some DBM library (Gnu's GDBM and Berkeley DB can emulate DBM)
+        installed on your system.
+    <DT><TT>--auth=sql</TT>
+    <DD>Logins and passwords are kept in an SQL database.  You must specify
+        which SQL server (ie, PostgreSQL, MySQL, etc) you are using with one
+	of the <TT>--with-*</TT> options below.
+	There are many third-party Apache
+	modules for doing basic authentication from an SQL database that
+	could be used with this
+	(<A HREF=http://www.giuseppetanzilli.it/mod_auth_pgsql/>mod_auth_pgsql</A>,
+	<A HREF=http://authpg.sourceforge.net/>mod_auth_pg</A>,
+	<A HREF=http://www.diegonet.com/support/mod_auth_mysql.shtml>mod_auth_mysql</A>,
+	mod_auth_msql, mod_auth_oracle, mod_auth_ora7, mod_auth_ora8, etc.).
+	However, this is most commonly used with <TT>--login=form</TT>
+	instead.
+    </DL>
+    <P>
+    The last two options are for real Unix accounts.  You'll need to use
+    the standard Unix account administration tools to create and manage these
+    accounts.
+    <DL>
+    <DT><TT>--auth=passwd</TT>
+    <DD>Logins and encrypted passwords are kept in the standard Unix
+        <TT>/etc/passwd</TT> file or some other database that is readable
+        to all users.
+        This is for Unix systems which do not have shadow password files
+        (a dying breed due to their security weaknesses).
+        To authenticate from such a database with Apache, you'll need to
+        install <TT>mod_auth_system</TT> or <TT>mod_auth_pam</TT>.
+        (<TT>Mod_auth_external</TT> could be used, but is overkill.)
+    <DT><TT>--auth=shadow</TT>
+    <DD>Logins and encrypted passwords are kept in the standard Unix
+        <TT>/etc/shadow</TT> file or some other database that is readable
+        only to root.  This includes almost all modern Unix systems.
+        To authenticate from such a database with Apache, you'll need to
+        install <TT>mod_auth_external</TT> and <TT>pwauth</TT>.
+	(<TT>Mod_auth_system</TT> or <TT>mod_auth_pam</TT> could be used,
+	but only if you weaken system security significantly.)
+    </DL>
+    If you implement your own authentication module, it can be selected with
+    this option.  If the module is implemented in <TT>src/auth_foo.c</TT> and
+    <TT>incl/auth_foo.h</TT> then it can be invoked with an <TT>--auth=foo</TT>
+    option.
+<P>
+<DT><TT>--ident=tagfile|authfile|text|hash|sql|yapp</TT>
+<P>
+<DD><STRONG>Type of Database to Store User Information In.</STRONG><BR>
+    Default= <TT>tagfile</TT> for Backtalk accounts,
+    <TT>authfile</TT> for Unix accounts<BR>
+    Backtalk needs information about each user, such as uid number,
+    full name and home directory.  (Note that uid numbers and home directories
+    for Backtalk accounts are completely unrelated to normal Unix uid numbers
+    and directory names - they are used only internally to Backtalk.)
+    There are several options for where this information is stored.
+    <DL>
+    <DT><TT>--ident=tagfile</TT>
+    <DD>The user's home directory is generated from his login name by a
+        standard algorithm.  All other user information is stored in 
+	a file stored in that directory.  This option is fast and easily
+	maintained, but may require more disk space than the centralized
+	database options.
+    <DT><TT>--ident=authfile</TT>
+    <DD>All user information is stored in the same database as the
+        authentication information.  This is the only option that can be
+        used if you are using real Unix accounts, but it can be used with
+        text or hashed databases too.  Apache will tolerate having extra
+	information in the various authentication database, but this is
+	not necessarily true for other HTTP servers.  Used with SQL servers,
+	this puts the identity information in the same table as the password
+	instead of in a separate table.
+    <DT><TT>--ident=text</TT>
+    <DD>User information is stored in a flat file similar in format to the
+        <TT>/etc/passwd</TT> file, without the password field.  This can be
+        a slow to search if you have thousands of users.
+    <DT><TT>--ident=hash</TT>
+    <DD>User information is stored in a hashed db or dbm file.  These can be
+        searched very quickly, but can be more difficult to maintain.
+    <DT><TT>--ident=sql</TT>
+    <DD>User information is stored in an SQL table.  The SQL server being used
+        must be specified using one of the <TT>--with-*</TT> options below.
+    <DT><TT>--ident=yapp</TT>
+    <DD>This is for compatibility with Yapp installations that do <EM>not</EM>
+        use Unix accounts.  The user's full name and email address is stored
+	in Yapp-style file called 'passwd' in their home directory.  The
+	uid and gid values are stored in a file called 'id' similar to that
+	used in the <TT>--ident=tagfile</TT> option.  This is clunky and the
+	only reason to use it is if you are running web Yapp and Backtalk
+	on the same conference database.
+    </DL>
+    If you implement your own identity module, it can be selected with
+    this option.  If the module is implemented in <TT>src/ident_bar.c</TT> and
+    <TT>incl/ident_bar.h</TT> then it can be invoked with an
+    <TT>--ident=bar</TT> option.
+<P>
+<DT><TT>--group=text|sql|unix</TT>
+<P>
+<DD><STRONG>Type of Database to Store Group Information In.</STRONG><BR>
+    Default= <TT>unix</TT> for Unix accounts,
+    <TT>sql</TT> with SQL identity databases, <TT>text</TT> otherwise<BR>
+    The group database gives the name and group id of the different user
+    groups, and tells which users are in which groups.
+    The default settings will almost always be right.
+    <DL>
+    <DT><TT>--group=unix</TT>
+    <DD>Use the native Unix group database, normally the /etc/group file.
+        This can only be used if <TT>--auth=passwd</TT> or
+	<TT>--auth=shadow</TT> has been selected, and it is the only
+	option in that case.
+    <DT><TT>--group=sql</TT>
+    <DD>Use two tables in the SQL database.  An SQL server to use must
+	be specified using one of the <TT>--with-*</TT> options below.
+    <DT><TT>--group=text</TT>
+    <DD>Use a Backtalk text file whose format is similar to the unix group
+        file.  This is normally used with non-SQL Backtalk accounts.
+	<P>
+	If you don't want to do anything much with groups, you can select
+	this option and not create the Backtalk group file.  Backtalk will
+	assume the existance of three hardcoded groups:  <TT>cfadm</TT>,
+	<TT>gradm</TT>, and <TT>user</TT>, with group ID numbers 0, 1, and
+	2 respectively.  This will give you a tiny performance gain.
+    </DL>
+    If you implement your own group module, it can be selected with
+    this option.  If the module is implemented in <TT>src/grp_baz.c</TT>
+    then it can be invoked with an <TT>--group=baz</TT> option.
+<P>
+<DT><TT>--session=none|text|sql</TT>
+<P>
+<DD><STRONG>Type of Session Database to Use.</STRONG>
+    Default= <TT>none</TT> with <TT>--login=basic</TT> or <TT>text</TT> with
+       <TT>--login=form</TT><BR>
+    If and only if you are using form logins, then Backtalk will need to
+    maintain a session database that keeps track of all currently logged in
+    users.
+    Two formats are supported:
+    <DL>
+    <DT><TT>--session=text</TT>
+    <DD><EM>Binary File</EM>.
+        Sessions are recorded in a binary file, normally named <EM>&lt;etcdir
+	&gt;</EM><TT>/bt_session</TT>.
+    <DT><TT>--session=sql</TT>
+    <DD><EM>SQL Server Table</EM>.
+	Sessions are recorded in an SQL table.  An SQL server to use must
+	be specified using one of the <TT>--with-*</TT> options below.
+    </DL>
+    If you implement your own session module, it can be selected with
+    this option.  If the module is implemented in <TT>src/sess_baz.c</TT>
+    then it can be invoked with an <TT>--session=bas</TT> option.
+<P>
+<DT><TT>--disable-edituser<BR>
+--enable-edituser</TT>
+<P>
+<DD><STRONG>Disable User Database Editing</STRONG>
+    Backtalk normally includes tools to do a variety of different kinds of
+    user database editing, including creating and deleting accounts, changing
+    passwords, and changing full names.
+    <P>
+    Obviously these are all disabled if you use Unix logins - Backtalk
+    should not have access to edit the Unix /etc/passwd or /etc/shadow file.
+    In such installations account maintainance is done through the usual
+    Unix tools.
+    <P>
+    If you are using a pre-existing authentication database, and already have
+    a suite of tools to maintain it, then you may not want to enable Backtalk
+    to edit that database as well.  In such cases, you should configure with
+    the <TT>--disable-edituser</TT> option.
+<P>
+<DT><TT>--disable-attachments<BR>
+--enable-attachments</TT>
+<P>
+<DD><STRONG>Disable Attachments</STRONG>
+    Backtalk normally allows users to attach images and other files to their
+    postings.  These files are uploaded to the Backtalk server and
+    maintained there, being kept as long as the response they are attached
+    to is kept.  Allowing users to post attachments, however, can eat up a
+    lot of disk space, especially since we haven't yet implemented any kind
+    of quotas, so disabling this feature may be a good choice for
+    installations with limited disk space.
+    <P>
+    If attachments are disabled, users will still be able to include links
+    and images in Backtalk postings, but they will have to get those files
+    onto the web via some route other than Backtalk.
+    <P>
+    The attachments themselves are always stored in disk files.  The attachment
+    index will be stored in an SQL database if you have configured Backtalk
+    with an SQL server, or in a dbm hash file otherwise.
+<P>
+<DT><TT>--with-pwauth=/path/to/pwauth</TT>
+<P>
+<DD><STRONG>Compile with the 'pwauth' authenticator</STRONG>
+    Default= No<BR>
+    This is only used or needed if you are doing form-based logins
+    (<TT>--login=form</TT>) with real Unix accounts (<TT>--auth=shadow</TT>).
+    Then Backtalk will need to know the path where
+    the pwauth program is installed so that it will be able to check the
+    validity of passwords.  The pwauth package is part of the
+    <A HREF=http://www.unixpapa.com/mod_auth_external.html>mod_auth_external</A>
+    distribution.
+<P>
+<DT><TT>--with-aspell</TT><BR>
+<TT>--with-ispell</TT>
+<P>
+<DD><STRONG>Compile with the 'aspell' or 'ispell' spellchecker</STRONG>
+    Default= No<BR>
+    If you have Kevin Atkinson's GNU Aspell program, or Geoff Kuenning's
+    International Ispell program version 3.1.x installed on your server,
+    Backtalk can use it to allow users to spell check their postings.
+    GNU Aspell and International Ispell are freeware and are available from
+    <A HREF=http://aspell.sourceforge.net/>http://aspell.sourceforge.net/</A>
+    and
+    <A HREF=http://fmg-www.cs.ucla.edu/geoff/ispell.html>http://fmg-www.cs.ucla.edu/geoff/ispell.html</A> respectively.
+    <P>
+    If your system seems to have both, then very likely you really have only
+    aspell, and the thing that appears to be ispell is aspell pretending to be
+    ispell.  Aspell is probably generally to be prefered, though the foreign
+    language support in ispell may (or may not) be better.
+    <P>
+    No other spell checkers are yet supported.
+    In particular, ispell version 4.0 is a completely unrelated program, not
+    a newer version of International Ispell and is not supported (and hard
+    to find these days).
+    <P>
+    If you have and want to use <TT>aspell</TT> include the
+    <TT>--with-aspell</TT> path.  If it is installed in a directory not in your
+    current path, do <TT>--with-aspell=/absolute/path/to/aspell</TT>.
+    Ispell can be configured similarly.
+<P>
+<DT><TT>--with-suexec</TT>
+<P>
+<DD><STRONG>Run under suExec or cgiwrap</STRONG>
+    Default= No<BR>
+    Many ISPs set Apache up so that all your CGI programs run as you,
+    instead of as whatever user Apache runs as.  This is typically done
+    with a program called <TT>suExec</TT> or <TT>cgiwrap</TT>.  If you are
+    in this kind of environment, then you will need to turn on the
+    <TT>with-suexec</TT> flag, and set both <TT>owner-id</TT> and
+    <TT>httpd-id</TT> to your login ID.
+    <P>
+    <FONT COLOR=red><STRONG>Choosing this option weakens Backtalk's security.
+    </STRONG></FONT>
+    The file containing encrypted passwords must be readable to anyone
+    who can log into any Unix account on the server.  This is because
+    the authentication database must be created and edited by programs
+    running as you, but they must be readable to the httpd server, which
+    does not run as you.  Making it readable to the httpd server also
+    makes it readable to all other users.  In some cases, you may be able
+    to improve on this, but mostly doing so requires an accommodating
+    administrator, and if you had one, you wouldn't be running under
+    suExec, would you?
+<P>
+<DT><TT>--lastlog=backtalk|unix|none</TT>
+<P>
+<DD><STRONG>What type of Lastlog file to Maintain?</STRONG>
+    Default= <TT>backtalk</TT><BR>
+    The lastlog file keeps a record of when each user logged in last.
+    It's useful if you want to be able to expire abandoned accounts, or just
+    want to know when someone was on last.
+    <DL>
+    <DT><TT>--lastlog=backtalk</TT>
+    <DD>Backtalk maintains it's own lastlog file.  This can be used either
+        with Backtalk accounts or Unix accounts (though with Unix accounts
+        it will tell only when the last logged into Backtalk, not when they
+        last logged into their Unix account).
+    <DT><TT>--lastlog=unix</TT>
+    <DD>If you are using real Unix accounts, and your Unix system has a lastlog
+        file, then you can define this to keep Backtalk's last log in the same
+        file as the Unix last log.  This way, the lastlog will tell when the
+        user last logged in either via Backtalk or the via the normal login
+        program.
+    <DT><TT>--lastlog=none</TT>
+    <DD>Maintain no lastlog.
+    </DL>
+<P>
+<DT><TT>--userlevels=0|1|2</TT>
+<P>
+<DD><STRONG>How many hierarchy levels to use in user directories?</STRONG>
+    Default= <TT>0</TT><BR>
+    If you are using Backtalk accounts, then Backtalk will maintain a
+    directory for each user under the <TT>--userdir</TT> directory (see
+    below).  This directory will contain his participation files and
+    personal settings.  If you have a very large number of users, then
+    this directory of user directories could have a lot of entries and be
+    slow to find specific users in.  Increasing the number of intermediate
+    directory levels improves search times.  For example, if you use 2
+    levels, then the home directory for <TT>steve</TT> would be something
+    like <TT>/usr/local/backtalk/user/s/t/steve</TT>.
+    At most 2 intermediate levels are supported.
+    <P>
+    If you are using real Unix accounts, then ignore this - the user's
+    normal home directory is used instead.
+<P>
+<DT><TT>--with-picospan<BR>
+--with-yapp<BR>
+--with-yapp3</TT>
+<P>
+<DD><STRONG>Be Picospan or Yapp Compatible?</STRONG>
+    Default= neither set<BR>
+    Picospan is a command-line oriented conferencing system developed by
+    Marcus Watts.  It was marketed by NETI until NETI went broke.  Yapp 2.3
+    is a clone of Picospan developed by Dave Thaler.  Yapp 3.0 is a web
+    based version of that.  Backtalk can be
+    compatible with either one, so that the same conferences can be read
+    either through Backtalk or through Picospan or Yapp.  Setting these flags
+    ensures that Backtalk will be strictly compatible with the named
+    conferencing system.  You can't have more than one,
+    as they are not completely compatible with each other.
+    <P>
+    Don't enable these unless you really mean to use Backtalk with Yapp or
+    Picospan - the native file format is better.
+    <P>
+    The <TT>--with-picospan</TT> and <TT>--with-yapp</TT> options only really
+    make sense with the <TT>--auth=passwd</TT> or <TT>--auth=shadow</TT>
+    options and real Unix accounts.  Yapp 3.0 can be configured to use
+    non-unix accounts, in which case it should be used with the
+    <TT>--auth=text</TT> and <TT>--ident=yapp</TT> options.
+<P>
+<DT><TT>--with-pgsql<BR>
+--with-mysql<BR>
+--with-msql</TT>
+<P>
+<DD><STRONG>Use an SQL Server?</STRONG>
+    Default= none<BR>
+    <P>
+    Options are being added to Backtalk to enable to keep some of it's
+    databases, especially user databases, in an SQL database.  At this time,
+    only the PostgreSQL and MySQL options have been tested.  The msql option
+    is not even completely written and will not work.  We hope to add Sybase
+    and Oracle options in the future.
+    <P>
+    <STRONG>Important Note on Configuring SQL Servers:</STRONG><BR>
+    To be able to compile and link Backtalk with the header files and
+    libraries for your SQL server, it may be necessary to explicitly give
+    the path names where the headers and libraries reside.
+    This is done by setting the <TT>CPPFLAGS</TT> and <TT>LDFLAGS</TT>
+    environment variables.
+    <P>
+    The syntax for doing this differs in different shells.
+    If you have a borne-type shell, you might do:
+    <PRE>
+    CPPFLAGS=-I/usr/local/include/mysql LDFLAGS=-L/usr/local/lib/mysql \
+        ./configure --with-mysql ...  </PRE>
+    or if your system has the '<TT>env</TT>' program, you could do:
+    <PRE>
+    env CPPFLAGS=-I/usr/local/include/mysql LDFLAGS=-L/usr/local/lib/mysql \
+        ./configure --with-mysql ...  </PRE>
+    The path names above are from a FreeBSD system with MySQL.
+    They may be different on your system.
+    <P>
+    For msql installations, the path names will usually be
+    <TT>/usr/local/Hughes/include</TT> and <TT>/usr/local/Hughes/lib</TT>
+    respectively.
+<P>
+<DT><TT>--lock=fcntl|flock|lockf|tmpfile|any</TT>
+<P>
+<DD><STRONG>What type of Locking to Use?</STRONG>
+    Default= <TT>any</TT><BR>
+    Normally the configure script will choose the type of file locking to use
+    on your Unix system.  If you are sharing conference files with Picospan
+    or Yapp, however, then it is important that you use the same locking
+    protocol as they do.  Since they can be built with different locking
+    protocols, you may need to explicitly define which locking protocol to
+    use.  Options are:
+    <DL>
+    <DT><TT>--lock=any</TT>
+    <DD>Let the configure script choose a locking protocol.
+    <DT><TT>--lock=fcntl</TT>
+    <DD>Use the <TT>fcntl()</TT> call to lock files.
+    <DT><TT>--lock=flock</TT>
+    <DD>Use the <TT>flock()</TT> call to lock files.
+    <DT><TT>--lock=lockf</TT>
+    <DD>Use the <TT>lockf()</TT> call to lock files.
+    <DT><TT>--lock=tmpfile</TT>
+    <DD>Create a temp file to indicate that a file is locked.  The
+        <TT>--lock=tmpfile</TT> locking protocol is compatible with
+        Yapp's lock-file protocol.  It has not been tested against
+        Picospan's.
+    </DL>
+<P>
+<DT><TT>--disable-trap-crash<BR>
+--enable-trap-crash</TT>
+<P>
+<DD>By default when Backtalk detects a software error that would cause a core
+dump, it instead tries to display a detailed error page describing the error.
+This is usually more useful, but if you'd like the core file instead, you
+can disable this feature with this flag.  Disabling it may be a minor
+security hazard on some systems where core dumps are publicly readable,
+since those core dumps may contain sensitive data.
+<P>
+<DT><TT>--enable-exec<BR>
+--disable-exec</TT>
+<P>
+<DD>
+This option is only for use with Unix login accounts.  If enabled, it becomes
+possible for users to directly execute the backtalk cgi program, and be
+recognized based on their uid number.  This is mainly useful if Fronttalk
+is being run on the same server as Backtalk, since it enables Fronttalk to
+directly execute Backtalk instead of accessing it though the http server,
+thus eliminating the need for users already logged into the system to relogin
+to run Backtalk.
+<P>
+<DT><TT>--disable-dynaload<BR>
+--enable-dynaload</TT>
+<P>
+<DD>This option is now mostly useless, as only very small parts of the program
+are dynamically loaded even if it is enabled.  It may not compile successfully
+on some versions of Unix.
+<P>
+Everytime you click a link or button while using Backtalk, the Backtalk
+program must be loaded and run from scratch (this is a problem common to
+almost all CGI programs).  This means that loading fast is more important
+for Backtalk than for many other programs.  If Backtalk is configured with
+the <TT>--enable-dynaload</TT> directive, then some of the less commonly
+used parts of the program will be built as shared libraries, and only linked
+in on-demand only if they are needed.  This makes the program a bit smaller
+and a bit faster to load.
+
+<H3>Low-Level Configuration Options</H3>
+
+Not all Backtalk configuration options are settable from the
+"<TT>./configure</TT>" utility.  For unusual configurations, you may want
+to set some lower-level options by manually editting the
+<TT>incl/config.h</TT> or <TT>incl/common.h</TT> files.
+Since <TT>incl/config.h</TT> is overwritten every time you run
+"<TT>./configure</TT>" this isn't really a great place to put local
+customizations.  So "<TT>incl/config.h</TT>" includes
+"<TT>incl/localconfig.h</TT>", which exists solely as a from which to alter
+low-level settings.
+<P>
+These instructions will not give extensive details on the different low-level
+options.  Lots of comments exist in the <TT>incl/config.h</TT> file, and most
+sites will never need any of these.  We will list a few so you know they
+exist.  Several of these may need to be changed when integrating with a
+<A HREF=auth.html>foreign authentication</A> system.
+<P>
+<DL>
+<DT><TT>MAX_LOGIN_LEN</TT>
+<DD>Defines the number maximum number of characters allowed in a user login
+name.
+<DT><TT>AUTH_FILE</TT>
+<DD>Defines the location of a flat <TT>mod_auth</TT>-style
+<TT>htpasswd</TT> file.
+<DT><TT>AUTH_DBM</TT>
+<DD>Defines the location of a hash <TT>mod_auth_db</TT> or
+<TT>mod_auth_dbm</TT>-style password file.
+<DT><TT>AUTO_CREATE_DIR</TT>
+<DD>If defined, Backtalk will create a home directory for any user who hasn't
+got one.  If accounts were created by another program, then home directories
+are likely missing.
+<DT><TT>SESSION_COOKIE</TT>
+<DD>Defines the name of the cookie that contains the session ID.
+<DT><TT>SESSION_ID_LEN</TT>
+<DD>Maximum size of a session ID.  Defined in <TT>incl/sess.h</TT>.
+Changing this won't make Backtalk make larger session IDs, but if you are
+using session IDs generated by a different program, it will make Backtalk
+able to read them.
+</DL>
+<HR>
+Prev:  <A HREF=install.html>Introduction</A><BR>
+Next:  <A HREF=install2.html>Part II:  Compilation</A>
+</BODY></HTML>

@@ -1,0 +1,110 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part III: SQL Server Configuration</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  <A HREF=install2.html>Part II: Compilation</A><BR>
+Next:  Part IV: Installation
+(<A HREF=install4a.html>with Backtalk Accounts</A> or
+<A HREF=install4b.html>with Unix Accounts</A>)
+<HR>
+Obviously, this step should be skipped if you haven't configured
+Backtalk to use an SQL server.  Proceed directly to the installation
+step.
+<P>
+<STRONG>(1) Create the SQL Database</STRONG>
+<P>
+If you are not using a pre-existing database, then this is the time to create
+one.  The normal name for the database would be '<TT>backtalk</TT>' but
+anything can be used.  The database must be accessible from whatever account
+the CGI's run on.
+<P>
+The commands to create a database will vary for different SQL servers.
+For PostgreSQL, you might create a database with:
+<PRE>
+    createdb backtalk</PRE>
+<P>
+You might also want to create a username and password for Backtalk to log
+in as and permit the database to be accessible only to that account.  Whether
+this is needed depends on your configuration.
+<P>
+<STRONG>(2) Edit the Runtime Configuration File</STRONG>
+<P>
+Edit <TT>misc/backtalk.conf</TT>.
+<P>
+If you are upgrading a system that uses SQL, you will probably want to
+copy the `<TT>backtalk.conf</TT>' file that is installed in the backtalk
+<TT>etc</TT> directory into <TT>misc/backtalk.conf</TT>.
+<P>
+Currently the only things that can be set in this file are SQL server
+configuration settings.  If your SQL server is running on the same machine
+as Backtalk, the database is called '<TT>backtalk</TT>', and no login or
+password is needed to connect, you can probably use he default configuration
+file without changes.  Otherwise, you may want to set the following options:
+<P>
+<OL>
+<LI> <STRONG>SQL Server Hostname</STRONG>.<BR>
+     This is the name of the machine that the SQL server runs on.  The
+     syntax is like
+     <BR>&nbsp;<BR><TT>
+     &nbsp;&nbsp;&nbsp;sql_hostname sqlserver.mysite.com</TT>
+     <BR>&nbsp;<BR>
+     The default is '<TT>localhost</TT>', that is the same machine that
+     Backtalk runs on.
+     <BR>&nbsp;<BR>
+     If the name '<TT>localhost</TT>' is given, Backtalk will usually
+     not form a TCP/IP connection, but will instead use the more efficient
+     Unix sockets.  If you give a fully qualified domain name, like
+     '<TT>sqlserver.mysite.com</TT>', then a TCP/IP connection will be
+     made, even if that happens to be the same machine Backtalk is
+     running on.
+<BR>&nbsp;<BR>
+<LI> <STRONG>SQL Server Port Number</STRONG>.<BR>
+     This is the port number that the SQL server listens for connections on.
+     The command to set this looks like:
+     <BR>&nbsp;<BR><TT>
+     &nbsp;&nbsp;&nbsp;sql_port 5432</TT>
+     <BR>&nbsp;<BR>
+     The default depends on the SQL server you are using.  Unless your SQL
+     server has been modified to listen on something other than the default
+     port, you shouldn't have to set this.
+<BR>&nbsp;<BR>
+<LI> <STRONG>SQL Database Name</STRONG>.<BR>
+     This is the name of the database that you created in step (1).
+     The default is '<TT>backtalk</TT>'.  You can set something else
+     with a command like:
+     <BR>&nbsp;<BR><TT>
+     &nbsp;&nbsp;&nbsp;sql_dbname my_conf_db</TT>
+<BR>&nbsp;<BR>
+<LI> <STRONG>SQL Login Name</STRONG>.<BR>
+     If a login is needed to access the database, then the login name should
+     be specified, as follows:
+     <BR>&nbsp;<BR><TT>
+     &nbsp;&nbsp;&nbsp;sql_login conflogin
+     </TT><BR>&nbsp;<BR>
+     If no login name is configured, none is used.
+<BR>&nbsp;<BR>
+<LI> <STRONG>SQL Login Password</STRONG>.<BR>
+     If a password is needed to access the database, then the password name
+     should be specified, as follows:
+     <BR>&nbsp;<BR><TT>
+     &nbsp;&nbsp;&nbsp;sql_password foobar</TT>
+     <BR>&nbsp;<BR>
+     If no password is configured, none is used.
+     <BR>&nbsp;<BR>
+     Note that the password must be given in clear text, and the configuration
+     file must be readable to the backtalk owner account.  There may be
+     security issues with this on some servers.
+</OL>
+<HR>
+Prev:  <A HREF=install2.html>Part II: Compilation</A><BR>
+Next:  Part IV: Installation
+(<A HREF=install4a.html>with Backtalk Accounts</A> or
+<A HREF=install4b.html>with Unix Accounts</A>)
+</BODY></HTML>

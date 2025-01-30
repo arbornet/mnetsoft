@@ -1,0 +1,23 @@
+                       Fronttalk Command:  FIND
+
+Usage:  FIND "pattern" (login) <item range>
+
+Search items in the current conference.  The item range is used to select
+a subset of the conferences to search.  The default is ALL at the Ok
+prompt, or just the current item at the "Respond or pass" prompt.  For a
+full description of item ranges, do "HELP RANGE".
+
+Quoted and parenthesized strings have a different meaning for FIND than
+the do for other commmands.  Quoted strings are a pattern to search the
+items for.  Parenthesized strings restrict the search to items and responses
+by that author.
+
+Here are some common examples:
+
+   FIND "potatos"         - Find all mentions of the word "potatos"
+   FIND "cats" 1-3        - Find all mentions of cats in items 1 through 3
+   FIND "peas" (joe,mike) - Find all places where joe or mike mentioned "peas"
+   FIND (harry)           - Find all items and responses posted by harry
+
+The formatting of the Find output is controlled by the FSEP and FTSEP defines.
+See "HELP DEFINE FSEP" for more information.

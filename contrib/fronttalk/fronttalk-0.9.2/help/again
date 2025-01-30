@@ -1,0 +1,8 @@
+                       Fronttalk Command:  AGAIN
+
+Usage: AGAIN                               ("Respond or Pass?" prompt only)
+
+Display the current item again.
+
+See "HELP RP" for other ways to redisplay portions of the current item from
+the "Respond or pass?" prompt.

@@ -1,0 +1,302 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% confhome script
+%
+% The conference home page script displays the "front door" screen for a
+% conference.  It offers some of the more basic read buttons, plus options
+% to enter new items, search the conference, and resign from the conference.
+% There is also a link to the item list page (we originally had the item list
+% on this page, but it was too slow to load in big conferences).  You can also
+% change your conference alias.  For fairwitnesses, there are some additional
+% buttons, for setting conference configuration and linking items into the
+% conference.
+%
+% This also implements an important part of the "next conference" button.  If
+% the "nextnew" variable is defined, we automatically skip ahead to the next
+% conference.
+%
+% Query Parameters:
+%    conf=	conference name
+%    csel=	rest of list of conferences to visit
+%    nextnew=	if defined, skip conferences with no new responses
+%    secret=    password for the conference to join (optional)
+%    dunno=     defined if we don't know password for conference
+
+% Possible Redirect to recent.bt
+/recent.x defined {flavor(recent)+ jump} if
+
+% page header
+(<HTML><HEAD>
+<BASE HREF=")backtalkurl(/)flavor(confhome">
+)
+
+flavor(config)+ include
+
+% the "goto conf" link on the entrance page can result in this script being
+% run without an conference name.  Trap that.
+conf ! {
+  (</HEAD><BODY)body_tags(>)global_header
+  (No )Conference( name given.</BODY></HTML>)
+  halt
+} if
+
+% The following loop skips through conferences to find one with newresponses.
+% We collect the output of that process in an array so that we can swap some
+% header information on top of it after we are done.
+
+[
+{
+  % check if the conference is accessible and has new responses
+  flavor(openconf)+ stopped {
+    /bodyline xdef	% save the <BODY> line returned by openconf
+    `(The )Conference( ``)'conf('' does not exist.\n)
+    /skip 1 def
+    /conf () store
+  } {
+    /bodyline xdef	% save the <BODY> line returned by openconf
+    mayread ! secret 2 ne /dunno defined or and {
+      (You do not have access to the ``)conf`(</A>'' )Conference(.\n)'
+      /skip 1 def
+      /conf () store
+    } {
+      % get number of new responses (nnr) and number of new items (nni)
+      conf_new pop 3 copy /nnr xdef /nni xdef /nit xdef + exch pop
+      ! /nextnew defined and dup /skip xdef {
+        `(No new )Responses( in the ``)
+        (<A HREF=confhome?conf=)'conf(>)conf`(</A>'' )Conference(.\n)'
+      } if
+    } ifelse
+  } ifelse
+
+  % If skip was set above, and we have more conferences, go on to them
+  skip /nextnew defined /csel defined and and {
+    csel {
+      % skip to next conference
+      close_conf
+      csel next_conf /conf xstore /csel xstore
+      % erase any password given for the last conference
+      /dunno undef /cpass () store
+      (<HR>\n)
+      conf {continue} if
+    } if
+    % no more conferences
+    ]
+    [(<TITLE>No New )Conferences cap(</TITLE>)metatags
+     (</HEAD><BODY)body_tags(>\n)
+     global_header ]
+    exch
+    `(No more )Conferences(.\n<P>Goto )'
+    /regbutton undef
+    /butsel 4 defconstant flavor(buttondef)+ include
+    (<A HREF=begin>)entrance_button(</A>\n</BODY></HTML>\n)
+    halt
+  } {
+    % read this conference
+    conf {break} {halt} ifelse
+    break
+  } ifelse
+} loop
+]
+
+% swap the title lines above whatever output the loop above generated
+[
+(<TITLE>)bbsname( )conftitle`( )Conference cap( Home Page</TITLE>\n)
+use_rss_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference cap(" HREF=")
+  anon_url(cinnamon?conf=)conf(">\n)
+} if
+metatags
+(</HEAD>)'bodyline global_header
+]
+exch
+
+% If we haven't got the password, ask for it
+secret 2 eq /dunno defined ! and {
+   [/conf /csel /nextnew] flavor(confpass)+ jump
+} if
+
+% If we still haven't got read access, say goodbye
+mayread ! {
+      (You do not have access to the ``)conf`(</A>'' )Conference(.\n)'
+} if
+
+% we have found the conference we wanted - display the conference home page
+
+/butsel 7 defconstant flavor(buttondef)+ include
+
+% display the BBS name and logo
+/imageURL constant {
+  (<A HREF=)imageURL(><IMG SRC=")logo(" HEIGHT=)logo.h( WIDTH=)logo.w
+  ( ALIGN=absbottom BORDER=0></A>\n)
+} {
+  (<IMG SRC=")logo(" HEIGHT=)logo.h( WIDTH=)logo.w( ALIGN=absbottom>\n)
+} ifelse
+(<FONT SIZE=+2><STRONG>)conftitle`( )Conference( home page</STRONG></FONT>
+<HR>
+)'
+
+% display the conference login screen, prefering the html version
+/login () def
+(*settings) /login loadvar login ! or {
+  /login `(<PRE>)conf_login expand(</PRE>\n)' def
+} if
+login(<HR>\n) print
+
+% print a message telling how many new items there are
+conftitle( has )nit( )nit 1 eq {Item}{Items} ifelse (: )nni( brand new, )
+nnr( with new )Responses+(.<P>)+
+
+% header for the control panel
+(<FORM ACTION=read>
+<TABLE CELLSPACING=0 CELLPADDING=0 WIDTH=100%>
+<TR><TD VALIGN=top>
+)
+
+/rsel (new) store
+
+% readnew button
+%  construct the item selector
+mark (1-$)
+  /reverse get_conf_note {rev_sel}if
+  /bnewlast get_conf_note /bl xdef
+  /nofavfirst get_conf_note {0}{1}ifelse
+  /bnewfirst get_conf_note bl or {2}{0}ifelse +
+  fav_sel bl{exch}if (,) jointomark
+next_item {
+  noreadnew_button( No new )Items+
+} {
+  /item xstore /nrsel xstore /isel xstore
+  (<A HREF=read?conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+  (&tmprsel=)nrsel
+  showforgotten {(&showforgotten=)showforgotten} if
+  (>)readnew_button`(</A> )Responses( in )'conf
+} ifelse
+
+/state [(conf=)conf csel {(&csel=)csel} if (>)] def
+
+% itemlist button
+(.<BR><A HREF=browse?)state itemlist_button`(</A>
+for this )Conference(.<BR>
+)'
+
+% For authenticated users, an enter item button
+maxitem 0 gt amfw or {
+  maypost { (<A HREF=enter?)state button(</A>)}
+     { no_button } ifelse
+  ( Enter a new)
+} {
+  no_button `( Only )Fairwitnesses( can enter first)'
+} ifelse
+`( )Item(.<BR>\n)'
+
+% Read selected items
+(<INPUT TYPE=image NAME=x )button( )clip pop`( Read )Item( numbers
+<INPUT TYPE=hidden NAME=conf VALUE=")'conf(">
+<INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+<INPUT TYPE=hidden NAME=rsel VALUE=new>
+<INPUT TYPE=hidden NAME=noskip VALUE=1>
+<INPUT TYPE=hidden NAME=showforgotten VALUE=1>
+<INPUT TYPE=text NAME=isel SIZE=8><BR>
+)
+
+% For authenticated users, a conference option button
+id {(<A HREF=myconf?)state button(</A>)}{no_button} ifelse
+`( Edit your )Conference( settings.<BR>\n)
+
+% For fairwitnesses, buttons for configurations and ulists
+amfw {
+  (<A HREF=confopt?)state fw_button
+  `(</A> Set )Conference( configuration options.<BR>\n)'
+  userlist grouplist or {
+    (<A HREF=ulist?goto=pistachio/confhome&)state fw_button
+    (</A> Edit user list.<BR>\n)
+  } if
+} if
+
+(</TD><TD VALIGN=top>
+)
+
+% next conference button
+csel next_conf /nconf xdef /ncsel xdef
+nconf {
+  (<A HREF=confhome?conf=)nconf(&csel=)ncsel(&nextnew=>)nextconf_button(</A>
+  from your hotlist \()nconf(\).)
+} {
+  nonextconf_button `( No Next )Conference cap(.)'
+} ifelse
+
+
+% search button
+(<BR>
+<A HREF=findform?)state button`(</A>
+Search the )Conference(.<BR>\n)'
+
+% For authenticated users, a resign button
+id { (<A HREF=resignconfirm?)state button(</A>)}
+   { no_button } ifelse
+`( Resign from this )Conference(.<BR>\n)'
+
+% For users with read access, a participants button
+mayread { (<A HREF=participants?)state button(</A>)}
+   { no_button } ifelse
+`( List )Conference( participants.<BR>\n)'
+
+% For fairwitnesses, buttons for linking and passwords
+amfw {
+  (<A HREF=linkform?)state fw_button
+  `(</A> Link in )Item( from another )Conference(.<BR>\n)'
+  secret {
+    (<A HREF=setsecret?) state
+    fw_button`(</A> Change )Conference( password.<BR>\n)'
+  } if
+} if
+
+(</TD></TR></TABLE></FORM>\n)
+
+% for authenticated users, a form to change your conference alias
+id {
+  `(<FORM ACTION=changealias>
+  Your name in this )Conference( is
+  <INPUT TYPE=hidden NAME=conf VALUE=")'conf(">
+  <INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+  <INPUT TYPE=text NAME=newalias SIZE=25 VALUE=")alias(">
+  <INPUT TYPE=submit VALUE="Change It">
+  </FORM>
+  )
+} {
+  (<HR>
+  You are reading this )Conference( as an unregistered user.  Because of this:
+  <UL>
+  <LI> The system will not remember which )Items( and )Responses( you have seen,
+       so everything will always appear to be new everytime you come here.
+  <LI> You will not be able to post or respond to )Items(.
+  </UL>
+  For a more pleasant conferencing experience, we recommend that you
+  <A HREF=)register_url(>register</A> and <A HREF=)
+  sessions {
+    anon_url(public/login?bounce=)serverurl anon_url
+    (pistachio/confhome%3Fconf%3D)conf cgiquote(%26csel%3D)csel cgiquote
+  } {
+    pw_url(pistachio/confhome?conf=)conf cgiquote(&csel=)csel cgiquote
+  } ifelse
+  (>login</A> before reading this )Conference(.\n)
+} ifelse
+
+% page footer
+(<HR>\n)
+use_rss_icon expose_rss_conf and {
+  (<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD>)
+} if
+(Goto <A HREF=begin>)entrance_button(</A> or
+<A HREF=help/confhome>)help_button(</A>)
+sessions{id{( or )logout_link}if}if
+use_rss_icon expose_rss_conf and {
+  (</TD>\n<TD ALIGN=right><A TITLE="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference(" HREF=")
+  anon_url(cinnamon?conf=)conf("><IMG SRC=")rss_icon
+  (" BORDER=0></A></TD></TR></TABLE>\n)
+} if
+global_footer
+(</BODY></HTML>
+)

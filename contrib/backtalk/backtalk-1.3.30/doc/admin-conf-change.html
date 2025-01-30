@@ -1,0 +1,208 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Opening and Closing Conferences</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Opening and Closing Conferences</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk conferences can be either open (so anyone can join them) or
+closed (so only users on a list maintained by the fairwitness can enter them).
+Opening or closing an existing conference can be done either from the
+Backtalk web interface or from Unix.
+Both procedures are described here.
+
+<H2>Opening or Closing Conferences From Backtalk:</H2>
+
+To open or close a Backtalk conference, follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Goto the conference edit page.
+<P>
+There is a link on the administration page labelled "Edit a Conference".
+Click on this.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Specify the conference to be edited.
+<P>
+You will be shown a form containing one box.
+Enter the name of the conference that
+you want to edit here and kill the button labeled "Edit It".
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Specify the new conference mode.
+<P>
+The form that comes up next will include checkboxes for all conference
+modes currently supported by Backtalk - currently "open", and various
+variations on "closed" and "fishbowl".
+Check whichever you want and then click on the "Change Settings" button.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the user list
+<P>
+If you chose one of the options that allows you to designate which 
+particular users or groups of users may access the conference, then you
+may want to set up the initial user list (or you may want to leave that
+to the fairwitness to do).
+<P>
+After changing the conference mode, you'll get a screen describing the
+new settings, and if the conference requires a user list, there will
+be a clickable "Edit this conference's user list" link.  Alternately,
+you can use the "Edit a Conference's User List" link on the main administrative
+menu.
+<P>
+Following either of these links will get yo to the "Edit User List" page.
+On the top part of the form you will be able to check which of the currently
+defined groups of users should be able to access the conference.  On the
+Bottom of the page, you will be able to type in login ID's of
+individual users who should be able to access it.  Click "Update" to make
+your changes.
+
+<HR>
+</OL>
+
+<H2>Opening or Closing Conferences From Unix:</H2>
+
+The procedure from Unix identical to that used
+for Picospan or Yapp 2.3 conferences.
+<P>
+To open or close Backtalk conference, follow the following
+steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log onto the Unix conference administration account.
+<P>
+This is the account that owns all the conference files and the backtalk
+program itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> change directory to conference directory
+<P>
+Each conference has a directory where all its files are kept.  There is a
+pointer to this directory in the <TT>conflist</TT> file.  The location
+of the <TT>conflist</TT> file depends on how your system is configured.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the conference <TT>config</TT> file
+<P>
+Inside the conference directory, you will find (among other things) a
+file named <TT>config</TT>.  This is the file we need to edit to open or
+close the conference.
+A typical <TT>config</TT> file looks like this:
+<PRE>
+    !&lt;pc02&gt;
+    .martian1.cf
+    0
+    marvin,carter
+    0
+</PRE>
+The fifth line of this contains a numeric code which tells if the conference
+is open or closed.  That line may be missing in which case the conference
+is open.
+There may be some other lines after these.
+We need to change the value in the fifth line (or add the line if it doesn't
+exist).
+<P>
+The possible values that can be used here are:
+<BLOCKQUOTE><TABLE BORDER=1>
+<TR><TD>0
+<TD>all users may read and post [default]
+<TR><TD>4
+<TD>only users in the ulist or glist may read and post
+<TR><TD>5 
+<TD>only users who know the password may read or post
+<TR><TD>6 
+<TD>only users who are in the ulist or glist
+and know the password may read or post
+<TR><TD>8
+<TD>all users may read and post (but item files not directly readable)
+<TR><TD>20*
+<TD>only users in the ulist or glist may post / all may read
+<TR><TD>21*
+<TD>only users who know the password may post / all may read
+<TR><TD>22*
+<TD>only users who are in the ulist or glist and
+know the password may post / all may rea
+</TABLE>
+</BLOCKQUOTE>
+* Picospan doesn't support fishbowl conferences (though Yapp does),
+so if you want to be compatible with Picospan,
+modes 20, 21, and 22 are unusable.
+<P>
+So all you have to do is change the fifth line of the conference
+<TT>config</TT> file to one of the other values in this table.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Update the conference
+<TT>ulist</TT> and <TT>glist</TT> file
+<P>
+For conferences with modes 4, 6, 20, or 22 there is a list maintained of
+which users may enter the conference.
+This is in two files, one named <TT>ulist</TT>, the other name <TT>glist</TT>,
+both of which are in the same conference directory as the <TT>config</TT> file.
+The <TT>ulist</TT> file simply contains the Backtalk login
+names of the users who may join, listed one per line.
+Similarly the <TT>glist</TT> file contains the names of Backtalk user groups
+who may join, listed one per line.
+You can use either or both files.
+<P>
+If you are opening a formerly closed conference, you may want to delete
+these files (though you don't have to).
+<P>
+If you are closing a formerly open conference, you may want to create them
+and edit them to contain initial lists of users and groups.
+Or you can just leave it to the fairwitness to do this through the Backtalk
+interface.
+(Note that the fairwitnesses of a conference can always join a conference
+even if they are <EM>not</EM> in the ulist or glist.)
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Change the conference password
+<P>
+For conferences with modes 5, 6, 21, or 22 there is a password stored in
+a file named <TT>secret</TT> in the same conference directory as the
+<TT>config</TT> file.
+It simply contains the password, stored in plain text.
+Obviously, this file should not be read permitted.
+<P>
+If you are opening a formerly closed conference, you may want to delete
+this file (though you don't have to).
+<P>
+If you are closing a formerly open conference, you may want to create it,
+making sure to permit it mode 644.
+Or you can just leave it to the fairwitness to do this through the Backtalk
+interface (fairwitnesses and conference administrators will see a "Change
+Password" button on the conference home page).
+If there is no secret file on a conference whose mode is 5, 6, 21, or 22,
+then no password will work to get in.
+However,
+the fairwitnesses of a conference can always join their conference
+without giving a password,
+so they will be able to get in to set the initial password.
+
+</OL>
+</BODY></HTML>

@@ -1,0 +1,81 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% enter script
+%
+% This script displays a form allowing you to enter a new item in a conference.
+% The "enterpost.bt" script is the form handler for this.
+%
+% Query Parameters:
+%   conf=	name of conference to post to
+%   csel=	list of conferences to read (not used, just passed along)
+
+flavor(config)+ include
+
+% page header
+(
+<HTML>
+<HEAD>
+<TITLE>)bbsname( - )
+/conftitle `( )Conference cap( - Enter )AnItem(</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+)/metatags(</HEAD>\n)'
+
+% open the conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+secret 2 eq /dunno defined ! and { [/conf /csel] flavor(confpass)+ jump } if
+
+global_header
+
+maypost ! {`(You cannot post to )Conference( )'conf(.) stop } if
+
+/butsel 68 defconstant flavor(buttondef)+ include
+
+% get user options
+/rtype (text/plain) def
+(*.backtalk) /rtype loadvar pop
+
+% Output form to post new item
+`(<H1>Enter an )Item( into the )conftitle( conference</H1>
+Goto <A HREF="confhome?conf=)'conf(&csel=)csel(">)
+confhome_button(</A> or <A HREF=help/enter>)help_button(</A>
+<P>
+Type in your new )Item( below. Fill in a one-line title
+and then press "Enter" to enter it.
+
+<FORM METHOD=POST ACTION=enterpost>
+<TABLE WIDTH=100%><TR>
+<TD ALIGN=left>Name: <INPUT NAME=pseudo VALUE=")alias quote("> \()id(\)
+)
+/allowhtml dflt_html def (*settings) [/allowhtml /ifav] loadvar pop
+allowhtml {
+(</TD><TD>
+<SELECT NAME=texttype>
+<OPTION VALUE="text/plain">Plain Text
+<OPTION VALUE="text/html")rtype (text/html)eq {( SELECTED)} if (>Pure HTML
+<OPTION VALUE="text/html-blanks")rtype (text/html-blanks)eq {( SELECTED)} if (>lazy HTML
+</SELECT>
+)}{(<INPUT TYPE=hidden NAME=texttype VALUE="text/plain">
+)} ifelse
+(</TD><TD ALIGN=right>
+<INPUT TYPE=image NAME=enter )enter_button_src(
+<INPUT TYPE=image NAME=preview )
+  canspell{spelling_button_src}{preview_button_src}ifelse(
+</TD></TR></TABLE>
+Title: <INPUT NAME=title size=68><BR>
+<INPUT NAME=conf TYPE=hidden VALUE=")conf(">)
+csel {(<INPUT NAME=csel TYPE=hidden VALUE=")csel(">)} if
+(<TEXTAREA NAME="text" ROWS=18 COLS=72 WRAP=HARD></TEXTAREA>)
+canattach {
+  (<BR><INPUT TYPE=checkbox NAME=atch VALUE=1>&nbsp;Attach a File)
+} if
+(\n</FORM >)
+global_footer
+(</BODY></HTML>
+)

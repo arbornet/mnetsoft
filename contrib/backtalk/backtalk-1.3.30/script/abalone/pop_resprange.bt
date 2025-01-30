@@ -1,0 +1,43 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_resprange script
+%
+% For the resprange command, generate a popup window prompting for the
+% range of responses
+
+flavor(config)+ include
+
+(<HTML>\n)
+
+mainwin !  {
+  (<HEAD><SCRIPT Language="Javascript">
+<!--
+var cs=1;
+var ce=1;
+function inmain() {
+var rs= document.pop.rstart.value;
+var re= document.pop.rend.value;
+if (rs != '' || re != '') opener.location=document.pop.action+'?conf=)conf
+  (&csel=)csel(&item=)item
+  since {(&since=)since}if
+  /nextnew defined {(&nextnew=)nextnew}if
+  (&rstart='+escape(rs)+'&rend='+escape(re);
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>
+<FORM NAME=pop ACTION=")backtalkurl(/)flavor(read" METHOD=POST)
+mainwin!{( onSubmit="return inmain()")} if (>
+<INPUT TYPE=hidden NAME=conf VALUE=")conf(">
+<INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+<INPUT TYPE=hidden NAME=item VALUE=")item(">\n)
+since {(<INPUT TYPE=hidden NAME=since VALUE=")since(">\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=")nextnew(">\n)} if
+(Display )Responses ( from
+<INPUT TYPE=text NAME=rstart SIZE=5 onFocus="if (cs) {cs= 0; document.pop.rstart.value='';}" VALUE=0> through
+<INPUT TYPE=text NAME=rend SIZE=5 onFocus="if (ce) {ce= 0; document.pop.rend.value='';}" VALUE="$">
+<INPUT TYPE=submit VALUE="Go" onClick="return inmain()">
+</FORM></BODY></HTML>\n)

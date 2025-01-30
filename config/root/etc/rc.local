@@ -1,0 +1,39 @@
+#	$OpenBSD: rc.local,v 1.44 2011/04/22 06:08:14 ajacoutot Exp $
+
+# Site-specific startup actions, daemons, and other things which
+# can be done AFTER your system goes into securemode.  For actions
+# which should be done BEFORE your system has gone into securemode
+# please see /etc/rc.securelevel.
+
+echo -n 'starting local daemons:'
+
+# Add your local startup actions here.
+
+# Put in place an /etc/nologin if /etc/keepout exists.
+if [ -f /etc/keepout ]; then
+	cp /etc/keepout /etc/nologin
+fi
+
+# Robocop hasn't worked properly in years. It probably never will.
+#    -cross, May 16, 2017.
+#if [ -f /cyberspace/libexec/robocop ]; then
+#	( umask 022 ; exec /cyberspace/libexec/robocop ) &
+#	echo -n " robocop"
+#fi
+
+if [ -x /cyberspace/libexec/webauthd ]; then
+	/cyberspace/libexec/webauthd
+	echo -n ' webauthd'
+fi
+
+if [ -x /cyberspace/contrib/pkg/packages/denyhosts/daemon-control ]; then
+	/cyberspace/contrib/pkg/packages/denyhosts/daemon-control start >/dev/null 2>&1
+	echo -n ' denyhosts'
+fi
+
+if [ -x /cyberspace/libexec/start-rt ]; then
+	/cyberspace/libexec/start-rt >/dev/null 2>&1
+	echo -n ' rt'
+fi
+
+echo '.'

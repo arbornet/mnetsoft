@@ -1,0 +1,40 @@
+	   Introduction to "Respond or Pass" Prompt Commands
+
+To get help on a specific topic type "HELP <topicname>".  For a complete
+list of commands and topics, type "HELP TOPICS".
+
+Most of the commands listed here can be abbreviated.  For example "r" instead
+of "RESPONSE".
+
+The "Respond or Pass" prompt is displayed after displaying an item.  The
+most commonly used options are:
+
+  RESPOND   - Post your own response to the end of the item.
+  PSEUDONYM - Respond, using a pseudonym.
+  PASS      - Don't respond.  Go on to the next item.
+  <enter>   - Hitting enter without typing a command is the same as PASS.
+  QUIT      - Stop reading items.  Return to OK prompt.
+  NEW       - Quit, without marking the current item as having been read.
+  POSTPONE  - Pass, without marking the current item as having been read.
+  FORGET    - Mark item forgotten, so it won't be shown to you in the future.
+  REMEMBER  - Unforget a forgotten item.
+
+You can redisplay portions of the current item with the following commands:
+
+  AGAIN     - Display the item again.
+  12        - Redisplay the item starting with response 12.
+  ONLY 12   - Redisplay response 12 only.
+  0         - Redisplay the item starting with the item text.
+  12-24     - Redisplay responses 12 through 24.
+  12,24     - Redisplay responses 12 and 24
+  HEAD      - Redisplay the item header.
+
+If you are the author of an item, or a fairwitness in the conference, you
+may be able to use some of the following commands:
+
+  FREEZE    - Prevent any further responses from being posted to this item.
+  THAW      - Unfreeze the item.
+  RETIRE    - Don't show this item to anyone (unless they "READ NOFORGET").
+  UNRETIRE  - Unretire the item.
+  RETITLE   - Change the title on this item.
+  KILL      - Delete this item.

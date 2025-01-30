@@ -1,0 +1,16 @@
+#!/bin/sh
+
+umask 027
+
+if [ ! -d $HOME/.cfdir ]; then
+	mkdir $HOME/.cfdir
+	chmod 711 $HOME/.cfdir
+	[ -e $HOME/.cfonce ] && mv $HOME/.cfonce $HOME/.cfdir
+	[ -e $HOME/.cflist ] && mv $HOME/.cflist $HOME/.cfdir
+	mv $HOME/.??*.cf $HOME/.cfdir 2>/dev/null || true
+	mv $HOME/.??*.cfx $HOME/.cfdir 2>/dev/null || true
+	mv $HOME/cbf.* $HOME/.cfdir 2>/dev/null || true
+	mv $HOME/cf.buffer $HOME/.cfdir 2>/dev/null || true
+fi
+
+exec fronttalk "$@"

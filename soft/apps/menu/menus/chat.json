@@ -1,0 +1,16 @@
+{
+    "title":"*** PARTY MENU ***",
+    "entries": [
+        {"key":"P", "exec":"@/scripts/d27", "desc":"Party (Join)"},
+        {"key":"W", "exec":"pwho | grexmore", "desc":"Who's in party"},
+        {"key":"R", "exec":"@/scripts/d28", "desc":"Read a party channel"},
+        {"key":"T", "exec":"@/scripts/d30", "desc":"Tail a party channel"},
+        {"key":"S", "exec":"@/scripts/d29", "desc":"Search for a string"},
+        {"key":"L", "exec":"@/scripts/d31", "desc":"List party logs"},
+        {"key":"H", "exec":"@/scripts/d32", "desc":"Help screen"},
+        {"key":"F", "exec":"/cyberspace/bin/party-faq", "desc":"Party FAQ's"},
+        {"key":"M", "exec":"man party | grexmore", "desc":"Manual page for party"},
+        {"key":"E", "exit":true, "desc":"Exit this menu"}
+    ],
+    "footer":"Tip: To get started, choose either H) or P)"
+}

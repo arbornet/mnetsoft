@@ -1,0 +1,20 @@
+{
+    "title":"*** FILE UTILITIES ***",
+    "entries": [
+        {"key":"L", "exec":"@/scripts/d18", "desc":"List Directory Files"},
+        {"key":"N", "exec":"@/scripts/d15", "desc":"New directory (mkdir)"},
+        {"key":"K", "exec":"@/scripts/d13", "desc":"Kill a directory"},
+        {"key":"V", "exec":"@/scripts/d20", "desc":"View a file (more)"},
+        {"key":"F", "exec":"@/scripts/d23", "desc":"File move (file1 file2)"},
+        {"key":"C", "exec":"@/scripts/d25", "desc":"Copy a file (file1 file2)"},
+        {"key":"R", "exec":"@/scripts/d22", "desc":"Remove a file (rm filename)"},
+        {"key":"P", "exec":"@/scripts/d17", "desc":"Permission file change"},
+        {"key":"O", "exec":"@/scripts/d19", "desc":"Owner file change"},
+        {"key":"G", "exec":"@/scripts/d21", "desc":"Group file change"},
+        {"key":"I", "exec":"@/scripts/d24", "desc":"Invoke editor (pico,ed,vi)"},
+        {"key":"S", "exec":"@/scripts/d16", "desc":"Shell change"},
+        {"key":"M", "exec":"@/scripts/d26", "desc":"Manuals for this system"},
+        {"key":"E", "exit":true, "desc":"Exit to main menu"}
+    ],
+    "footer":"Tip: To change directories, type '!cd <newdir>' OR '!cd ..' for parent dir"
+}

@@ -1,0 +1,22 @@
+                       Fronttalk Command:  FREEZE
+
+Usage:  FREEZE <item range>
+
+Mark all selected items frozen.  Once an item is frozen, no user will be able
+to post new response to it.  Fairwitnesses can freeze items in their
+conferences.  Depending on the Backtalk server configuration, the original
+author of an item may also be able to freeze it.
+
+To unfreeze a frozen item, use the THAW command.
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   FREEZE 13         - Freeze item 13.
+   FREEZE ALL        - Freeze all items in the conference.
+
+If you just say "FREEZE" the default is to freeze the current item.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to freeze it.

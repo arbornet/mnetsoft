@@ -1,0 +1,49 @@
+.\"	@(#)extract.1	1.0
+.\"
+.TH EXTRACT 1 "Dec 4, 1995"
+.AT 3
+.SH NAME
+extract \- print responses from a PicoSpan item
+.SH SYNOPSIS
+.B extract
+<confname> [-h] <item> [<resp> | <resp>-<resp> | <resp>- | head]
+.SH DESCRIPTION
+.I Extract
+is a program to print response from a PicoSpan, Yapp or Backtalk item.
+It is useful as a quick way to refer to an item or response from
+random places, for example, while entering a response.
+It is actually a simplified version of the ancient and obsolete
+.IR bbsread (1)
+program.
+
+If no response numbers are given, the entire item is printed.
+Alternatively, a single response number or a range of response numbers may
+be specified to print only selected responses.
+The item text is treated as response number zero.
+If response number zero is printed, then the item header will be printed too.
+To print only the item header, the word "head" may be supplied instead of
+a response number.
+
+.I Extract
+never updates your participation file.  It doesn't care if you are a member
+of the named conference or not.
+
+If the -h flag is given, and you are in a Backtalk environment, the
+.I extract
+will prefer to print any HTML version of the items and responses selected.
+If there is no HTML version, it just returns the plaintext version.
+
+.SH AUTHOR
+Jan Wolter
+.SH BUGS
+.I Extract
+can't read conferences which are closed or even "protected public."
+I'll probably fix this some day.
+
+.I Extract
+doesn't know from rseps and iseps.
+I'll never fix this.
+.SH "SEE ALSO"
+.IR bbs (1),
+.IR forget (1),
+.IR bbsread (1)

@@ -1,0 +1,29 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Get some settings
+%  The following variables are shared with pistachio, but some have a slightly
+%  different meaning in wasabi:
+%
+%     login:      html text to display at top of sidebar
+%     bgcolor:    background color for sidebar
+%     textcolor:  text color for sidebar
+%     linkcolor:  unvisited link color for sidebar
+%     alinkcolor: active link color for sidebar
+%     new_isel:   item selector for new and unregistered users
+%     new_since:  more of the same
+%     no_robots:  per conference robot exclusion setting
+
+/login (<center><font SIZE=+3><strong>&nbsp;Great<br>
+&nbsp;Green<br>&nbsp;Room</strong></font></center>\n) def
+/bgcolor (green) def
+/textcolor (white) def
+/linkcolor () def
+/vlinkcolor () def
+/alinkcolor () def
+/new_isel ($-1) def
+/new_since () def
+/wasabi.bgcolor (white) def
+/norobots 1 def
+
+(*settings) [ /login /bgcolor /textcolor /linkcolor /vlinkcolor /alinkcolor
+              /new_isel /new_since /norobots /wasabi. ] loadvar pop

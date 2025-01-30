@@ -1,0 +1,190 @@
+#!/usr/bin/perl
+# $Header: /var/ncvs/grex/soft/sbin/reapcheck,v 1.1 2007-02-15 20:51:44 janc Exp $
+#
+# Reap program for Grex, originally written by Valerie Mates
+# (valerie@cybersapce.org), 5/15/97.
+#
+# Mauled by others since.
+#
+# This program makes a list of users whose accounts can be deleted.
+# It does not delete anything.
+#
+
+# Set locations of some files:
+$password_file = "/etc/passwd";
+$immortal_file = "/cyberspace/etc/immortal";
+
+# Some other constants
+$lastlog_struct = "l c8 c256";
+$lastlog_sz = 268; # sizeof(struct lastlog) = 4 + 8 + 256
+
+# Read any passed-in parameters:
+# If user specified -v, give verbose output:
+$verbose = ($ARGV[0] eq "-v");
+
+# Initialize $now to the current time.
+$now = time();
+
+# Open the lastlog file, for use later:
+open(LASTLOG, "/var/log/lastlog");
+
+# Figure out our two reap deadlines.
+# Note: 3 weeks is 1,814,400 seconds; 90 days is 7,776,000 seconds.
+$threeweeksago  = $now - 1814400;
+$threemonthsago  = $now - 7776000;
+
+# Run the "members" command and read results into array $members[].
+# Call chop() to remove trailing newlines on each array element.
+open(MEMBERS, "/cyberspace/bin/members |");
+while (<MEMBERS>) {
+   chop($_);
+   $members{$_} = 1;
+}
+close (MEMBERS);
+
+# Load the immortals list into array $immortals[].
+# Call chop() to remove trailing newlines on each array element.
+if (!open(IMMORTALS, $immortal_file))
+{
+    print STDERR "Cannot open immortals file: $immortal_file\n";
+    exit;
+}
+while (<IMMORTALS>) {
+   chop($_);
+   $immortals{$_} = 1;
+}
+close (IMMORTALS);
+
+# Now, loop through all lines in the password file, checking each user:
+open(PASSWD, $password_file);
+while (<PASSWD>) {
+
+   # Look up this user's /etc/passwd entry:
+   ($user, $pw, $uid, $group, $fullname, $homedir, $shell) = split(/:/, $_);
+
+   #if (($group < 50) || ($group > 59)) {
+   #   next;
+   #}
+
+   if (($group < 1000)) {
+      next;
+   }
+
+   if ($verbose) {
+      print "$user ";
+   }
+
+   # Look up the last time the user logged in:
+   if ($prev_uid != ($uid - 1)) {
+      seek(LASTLOG, $uid * $lastlog_sz, 0);
+   }
+   $prev_uid = $uid;
+   read(LASTLOG, $lastlog[$i], $lastlog_sz);
+   ($last_on, $ll_line, $ll_host) = unpack($lastlog_struct, $lastlog[$i]);
+
+   # Initialize $nuke to 0 (false).  If we decide user should be toast,
+   # we will set $nuke to 1 (true) instead.
+   $nuke = 0;
+
+   # We think the user never logged in.
+   # Look up modified-date of home directory.
+   if ($last_on == 0) {
+
+      if ($verbose) {
+         print "Never logged in ";
+      }
+
+     ($def, $ino, $mode, $nllink, $alsouid, $gid, $rdev, $size, $atime, $mtime,
+      $ctime, $blksize, $blocks) = stat($homedir);
+
+      # If home directory hasn't changed in 3 weeks then the user is nukeable.
+      if ($verbose) {
+         ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst,$gmtoff,$tm_zone) = localtime($mtime);
+         $year += 1900;
+         $mon++;
+          print "mtime $mtime ($mon/$mday/$year) ";
+      }
+
+      if (($mtime > 0) && ($mtime < $threeweeksago)) {
+         $nuke = 1;
+
+         if ($verbose) {
+            print "Account created more than 3 weeks ago. ";
+         }
+
+      } elsif ($verbose) {
+         print "Account created less than 3 weeks ago. ";
+      }
+
+
+   } else {
+
+      if ($verbose) {
+         ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($last_on);
+         $year += 1900;
+         $mon++;
+         print "Last login $mon/$mday/$year ";
+      }
+
+      # If user hasn't logged on in 90 days then user is nukeable.
+      if ($last_on < $threemonthsago) {
+         $nuke = 1;
+
+         if ($verbose) {
+            print "Last login more than 90 days ago. ";
+         }
+
+      } elsif ($verbose) {
+         print "Last login less than 90 days ago. ";
+      }
+   }
+
+   # If the user's UID is less than 1000, don't nuke.
+   if ($nuke && ($uid < 1000)) {
+      $nuke = 0;
+
+      if ($verbose) {
+         print "Low UID! ";
+      }
+
+   }
+
+   # If the user is a member, don't nuke.
+   if ($nuke && ($members{$user} == 1)) {
+      $nuke = 0;
+
+      if ($verbose) {
+         print "Is a member! ";
+      }
+
+   }
+
+   # If the user is immortal, don't nuke.
+   if ($nuke && ($immortals{$user} == 1)) {
+      $nuke = 0;
+
+      if ($verbose) {
+         print "Is immortal! ";
+      }
+
+   }
+
+   # If the user should be nuked, print their login ID.
+   if ($nuke) {
+
+      if ($verbose) {
+         print "NUKE\n";
+      } else {
+         print "$user\n";
+      }
+
+   } elsif ($verbose) {
+      print "Keep\n";
+   }
+}
+close (PASSWD);
+
+close (LASTLOG);
+
+# Exit program.
+exit;

@@ -1,0 +1,32 @@
+/* BRIGHT */
+body {color: black; background: white}
+a:link {color: #8A2BE2}
+a:active {color: #8A2BE2}
+a:visited {color: #4B0082}
+td.hello {background: red; color: white; font-family: serif; font-size: 120%}
+td.tlinks {background: red; color: white; text-align: right}
+td.tlinks a {font-weight: bold}
+td.mast {}
+td.navbar {background: red; color: white}
+td.colhead {background: #8A2BE2; color: white; font-family: serif; font-size: 120%; font-weight: bold}
+td.sechead {background: red; color: white}
+td.bigsechead {background: red; color: black; font-family: serif; font-size: 120%}
+td.odd  {background: yellow; color: black}
+td.even {background: lime; color: black}
+td.alert {background: red; color: white; font-weight: bold}
+.copyright {font-family: serif; font-size: 70%}
+.small {font-family: serif; font-size: 83%}
+.big {font-family: serif; font-size: 120%}
+.bigbold {font-family: serif; font-size: 120%; font-weight: bold}
+.authfn {font-family: serif; font-size: 83%}
+.authid {font-family: serif; font-size: 120%}
+.itemtitle {font-family: serif; font-size: 120%; font-weight: bold; font-style: italic}
+.respnote {font-family: serif; font-size: 95%; font-style: italic}
+.resphead {font-weight: bold}
+.respdate {font-family: serif; font-size: 83%}
+.respstat {font-style: italic}
+.attach {font-family: serif; font-size: 83%}
+.jumpout {background: #8A2BE2; color: white; font-family: serif; font-size: 70%}
+.jumpin {font-family: serif; font-size: 70%}
+textarea {font-family: monospace}
+a.rss {border:1px solid;border-color:#FC9 #630 #330 #F96;padding:0 3px;font:bold 10px verdana,sans-serif;color:#FFF;background:#F60;text-decoration:none;margin:0}

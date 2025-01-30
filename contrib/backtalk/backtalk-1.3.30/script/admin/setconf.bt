@@ -1,0 +1,46 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% setconf script
+%
+% Form handler for "color.bt" which sets a variable in a conference
+% "settings" file.
+%
+% Query Parameters:
+%    conf=	conference name
+%    what=	what to change: bgcolor textcolor linkcolor
+%                               alinkcolor vlinkcolor
+%                               regbutton admbutton offbutton
+%    color=	color selected from color table (for color options only)
+%    custom=	color typed in (if color= (custom))
+%    to=        button style to set (for button options only)
+%    admhome=   URL of administrative menu
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+open_conf {( Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+% convert "what" from a string to a literal name
+/what what cvn def
+what /bgcolor eq
+what /textcolor eq or
+what /linkcolor eq or
+what /alinkcolor eq or
+what /vlinkcolor eq or {
+  color (custom) eq {/color custom def} if
+  color length 6 ne color <<[^0-9A-Fa-f]>> grep or color and {
+    /msg `(<STRONG>Illegal color value:</STRONG> `)color
+         ('.  It should be a 6-digit hexidecimal number, containing only digits and letters A through F.)' def
+  } {
+    what color def
+    (*settings) what savevar
+  } ifelse
+} if
+
+what /regbutton eq
+what /admbutton eq or
+what /offbutton eq or {
+  what to def
+  (*settings) what savevar
+} if
+
+flavor(confopt)+ jump

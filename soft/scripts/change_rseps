@@ -1,0 +1,254 @@
+#!/usr/bin/perl
+#
+# Perl script to set user's FrontTalk iseps and rseps.
+# Original version by Valerie Mates 7/30/97.
+#
+
+# Set settings:
+$seps_dir = "/usr/local/lib/seps";
+$userid = $ENV{'LOGNAME'};
+$homedir = $ENV{'HOME'};
+
+$pager = $ENV{'PAGER'};
+if ($pager eq "") {
+   $pager = "more -d";
+}
+
+#
+# First, let's introduce ourselves.
+#
+
+print <<EOF;
+
+   Hi $userid!  You can use this program to change the way items and responses
+   look in FrontTalk.  This program will ask for permission before it makes any
+   permanent changes.
+
+EOF
+
+print "Press enter to continue: ";
+$char = getc;
+if ($char eq "q" || $char eq "Q") {
+   print "\nNo changes made.\n";
+   exit;
+}
+
+# Open the directory with the separators and examples.
+# Read the file names in the separators directory into array "sepfiles".
+
+if (!opendir (SEPS_DIR, "$seps_dir")) {
+   print <<EOF;
+      Oh oh... unable to open directory $seps_dir
+      Looks like something is seriously wrong on Grex
+      Please send mail to staff\@cyberspace.org to tell
+      them about the problem.  Thanks!
+
+      No changes made.
+EOF
+
+   exit;
+}
+@sepfiles = readdir SEPS_DIR;
+closedir SEPS_DIR;
+
+# Sort the directory listing, case insensitively.
+@sepfiles = sort {lc($a) cmp lc ($b) } @sepfiles;
+
+# Count how many *.example files we found:
+
+$i = 0;
+$count = 0;
+while ($sepfiles[$i] ne "") {
+   if ($sepfiles[$i] =~ /.example$/) {
+     $count++;
+   }
+   $i++;
+}
+
+
+# View Examples
+
+# Print message.
+
+print <<EOF;
+
+   I will show you examples of $count different formats.
+   Each of these examples was created in the Test conference
+   by running the commands "read 27" and "browse 25-30"
+
+   I will show you each example and ask if you want to use it.
+   If you like it, type "y" to set your settings to match.
+   If you don't like it, type "n" to see more formats.
+
+   The formats differ mostly in the layout of the headers and
+   the number of blank lines around the prompts.
+
+   Another option is to build your own separators.  For info
+   about that, go to FrontTalk and type "help separators".
+   If you would like your separators to be included in this
+   program, send email to staff\@cyberspace.org.
+
+EOF
+
+# Run this next part repeatedly, until the user says to exit.
+$start_over = "y";
+while ($start_over eq "y" || $start_over eq "Y") {
+
+   print "Press enter to continue: ";
+   $char = getc;
+   if ($char eq "q" || $char eq "Q") {
+      print "\nNo changes made.\n";
+      exit;
+   }
+   
+   # Loop through all *.example files in our directory and
+   # cat each one to the screen.
+   $i = 0;
+   while ($sepfiles[$i] ne "") {
+      if ($sepfiles[$i] =~ /.example$/) {
+         print "\n";
+   
+         # Convert file name, such as "remmers.example" into the name of
+         # the person who wrote the file, eg. "remmers".  Then print a
+         # header with the name of the author of the example.
+   
+         $author = $sepfiles[$i];
+         $author =~ s/.example//;
+         print "***\n";
+         print "*** Separators by $author\n";
+         print "***\n\n";
+   
+         # Invoke the user's own pager to display this file:
+         system("$pager $seps_dir/$sepfiles[$i]");
+   
+         print "\n";
+         print "Use these $author-style separators? (y/n/q) ";
+         chomp($use_these = <STDIN>);
+         if ($use_these eq "q" || $use_these eq "Q") {
+            print "\nNo changes made.\n";
+            exit;
+         } elsif ($use_these eq "y" || $use_these eq "Y") {
+   
+            # The user said to use these settings.
+   
+            # Open user's .cfonce file, plus a .cfonce.new file.
+            # Copy .cfonce to .cfonce.new, making changes.
+   
+            # See if user has a .cfdir directory.
+            if ( -d "$homedir/.cfdir") {
+               $cfonce = "$homedir/.cfdir/.cfonce";
+            } else {
+               $cfonce = "$homedir/.cfonce";
+            }
+   
+   
+            # Open file .cfonce.new to write to it:
+   
+            if (!open(NEWCFONCE, ">$cfonce.new")) {
+               close(OLDCFONCE);
+               print "\n";
+               print "Oh oh.  Could not write to a new .cfonce file\n";
+               print "($cfonce.new)\n";
+               print "Error is $!\n";
+               print "\n";
+               print "Settings not changed.\n";
+               print "\n";
+               exit;
+            }
+   
+            # Open .cfonce file.
+   
+            if (!open(OLDCFONCE, "<$cfonce")) {
+               print "\n";
+               print "Weird.  Could not read your .cfonce file\n";
+               print "($cfonce)\n";
+               print "\n";
+            } else {
+   
+               # Copy old .cfonce to new .cfonce:
+   
+               $last_line = "";
+               while (<OLDCFONCE>) {
+                  if ($_ =~ /define isep/ ||
+                      $_ =~ /define rsep/ ||
+                      $_ =~ /define ishort/ ||
+                      $_ =~ /define prompt/ ||
+                      $_ =~ /define rfpprompt/ ||
+                      $_ =~ /conference separators added/ ||
+                      $_ =~ /by change_rseps program/ ) {
+                     # Don't copy lines with the above strings in them
+                     # (One o' these days I should make that case insensitive.)
+                  } else {
+
+                     # Copy line, unless it's a duplicate of previous line.
+                     # (That prevents us leaving scads of blank lines if this
+                     # program is run repeatedly.)
+                     if ($last_line ne $_) {
+                        print NEWCFONCE $_;
+                     }
+                     $last_line = $_;
+                  }
+               }
+               close(OLDCFONCE);
+            }
+   
+            # Now open the file with the separators in it, and copy its
+            # contents to the user's new .cfonce file.
+   
+            $date = scalar localtime;
+            print NEWCFONCE "\n\n# $author-style conference separators added";
+            print NEWCFONCE " on $date\n";
+            print NEWCFONCE "# by change_rseps program\n";
+   
+            if (!open(SEPFILE, "<$seps_dir/$author.seps")) {
+               close(OLDCFONCE);
+               print "\n";
+               print "Oh oh. Could not read from file with new format in it.\n";
+               print "($seps_dir/$author.seps)\n";
+               print "Error is $!\n";
+               print "\n";
+               print "Settings not changed.\n";
+               print "\n";
+               exit;
+            }
+            while (<SEPFILE>) {
+               print NEWCFONCE $_;
+            }
+            print NEWCFONCE "\n";
+
+            close(SEPFILE);
+            close(NEWCFONCE);
+   
+            # Finally, rename the new .cfonce file to replace the old one.
+            if (!rename("$cfonce.new", "$cfonce")) {
+               print "Oh oh.  Could not replace your .cfonce file.\n";
+               print "Error is: $!\n";
+               print "\n";
+               print "Settings not changed.\n";
+               print "\n";
+               exit;
+   
+            }
+   
+            print "\nOk, your settings have been changed.\n";
+            print "\n";
+            print "The change will take effect *next* time you run FrontTalk.\n";
+            print "\n";
+            exit;
+         }
+   
+      }
+      $i++;
+   
+   }
+
+   # We have gone through the whole list without making any changes.
+   # Ask the user if we should start over.
+
+   print "\n";
+   print "Done listing all separators.\n";
+   print "No changes made.\n";
+   print "\n";
+   print "Start over? (y/n) ";
+   chomp($start_over = <STDIN>);
+}

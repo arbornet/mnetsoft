@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: Introduction</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+  <h1>NOTE: These notes are historical only!</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <p>Grex moved away from the system described in these notes long
+  ago. It is now running on far more modern hardware (as of mid-2017
+  an x86 based machine) and far more modern software (as
+  of mid-2017, a modern BSD). Grex is also in considerably healthier
+  financial shape than when these notes were written, and buys new
+  hardware from various vendors, rather than bottom-feeding used
+  stuff. Similarly, demand on Grex's resources has decreased over
+  the years, as Unix access has become less novel. The supply of
+  Sun hardware that used to be kept around has largely disappeared
+  as Grex moved out of its old home and into a co-location facility
+  years ago. Finally, all of the dialin lines have gone away, as
+  dialin itself is pretty much a rarity these days</p>
+
+  <p>That said, these notes may still be of interest to some, if
+  only as an historical reminder of how one group did a lot with
+  very little, and overcame many technical challenges. Hence, it is
+  presented here, in near-original format, with notes such as this
+  one preceeding the information to describe the ways in which Grex
+  has evolved.</p>
+
+  <h1>Grex Staff Notes: Introduction</h1>
+
+  <p>This series of web pages is produced by the Grex Staff to
+  describe various administrative and technical matters related to
+  Grex. These pages are meant as a way for staff members to share
+  knowledge and information about how Grex works both with other
+  staff members and the general public.</p>
+
+  <p>Some of these pages are meant for the general reader, while
+  others delve very deeply into technical details of how things
+  work on Grex.</p>
+
+  <p>Grex's staff believes that good system security should not
+  depend on obscurity. Therefore, there is quite a lot of detailed
+  information included here about things like how passwords are
+  stored on Grex.</p>
+
+  <p>We encourage anyone who has comments or suggestions about the
+  contents of these pages to send mail to
+  <a href="mailto:help@grex.org">help@grex.org</a>. Please send
+  questions about Grex to <a href="mailto:help@grex.org">help@grex.org</a>,
+  not to individual members of the staff. Many staffers are swamped
+  with too much e-mail and may reply very slowly or not at all.</p>
+
+  <h2>Grex's Staffers</h2>Grex has always been staffed entirely by
+  volunteers. Staff members don't have fixed areas of
+  responsibility, but tend to accumlate specific areas of primary
+  activity. Currently, the staff consists of the following people:
+
+  <table border="1">
+    <tr>
+      <th>Name</th>
+
+      <th>Login</th>
+
+      <th>Activities</th>
+    </tr>
+
+    <tr>
+      <td>Glenda Andre</td>
+
+      <td>glenda</td>
+
+      <td>General system configuration.</td>
+    </tr>
+
+    <tr>
+      <td>STeve Andre</td>
+
+      <td>steve</td>
+
+      <td>General system configuration. Sun hardware. Security
+      monitoring. Reaping expired accounts.</td>
+    </tr>
+
+    <tr>
+      <td>Walter Cramer</td>
+
+      <td>i</td>
+
+      <td>Conference administration.</td>
+    </tr>
+
+    <tr>
+      <td>Kip deGraaf</td>
+
+      <td>kip</td>
+
+      <td>General system configuration. Security monitoring. System
+      backups. Reaping expired accounts.</td>
+    </tr>
+
+    <tr>
+      <td>Joe Gelinas</td>
+
+      <td>gelinas</td>
+
+      <td>Daily monitoring of system performance and staff mail.
+      System backups. Reaping expired accounts. Network
+      configuration.</td>
+    </tr>
+
+    <tr>
+      <td>Bruce Howard</td>
+
+      <td>bhoward<br />
+      bruce</td>
+
+      <td>General system configuration. Daily monitoring of system
+      performance. Security monitoring. Reaping expired
+      accounts.</td>
+    </tr>
+
+    <tr>
+      <td>Charles Mitchell</td>
+
+      <td>arthurp</td>
+
+      <td>x86 hardware. Conference administration.</td>
+    </tr>
+
+    <tr>
+      <td>Marcus Watts</td>
+
+      <td>mdw</td>
+
+      <td>Author of picospan, newuser, and queuing telnet daemon.
+      Maintainer of grex versions of sendmail, mail, login, passwd,
+      finger, and fingerd. E-mail guru. Network configuration. Sun
+      hardware.</td>
+    </tr>
+
+    <tr>
+      <td>Steve Weiss</td>
+
+      <td>srw</td>
+
+      <td>Co-author of backtalk. Webmaster. Staff mail. Password
+      changes. Kernel blocks. FAQs.</td>
+    </tr>
+
+    <tr>
+      <td>Jan Wolter</td>
+
+      <td>janc</td>
+
+      <td>Author of party, write, gate, web-newuser, watch,
+      orphaned process killer. Co-author of backtalk. Staff
+      notes.</td>
+    </tr>
+
+    <tr>
+      <td>Steve Gibbard</td>
+
+      <td>scg</td>
+
+      <td>Former staff member. Network configuration. Terminal
+      servers.</td>
+    </tr>
+  </table>
+
+  <p>Past staff members include Dan Cross, Greg Cronau, Tom Dohne,
+  Meg Geddes, Michelangelo Giansiracusa, Steve Gibbard, Dan
+  Gryniewicz, Scott Helmke, Rob Henderson, Jeff Kaplan, Dave
+  Lovelace, Valerie Mates, Mike McNally, Carl Miller, Michael
+  O'Leary, John Remmers, TS Taylor and Marc Unangst.</p>
+
+  <p>Several people assist in the running of Grex but do not have
+  superuser access. Ryan Antkowiak (ryan), Eric Bassey (other),
+  Nissa Austad (snow), and Jill (beamer) are party administrators.
+  Morena Vasquez (munkey) is a webmaster. Mary Remmers is the Grex
+  archivist. A number of other users, including Jared Mauch, Rob
+  Argy, Mike McNally, Klaus Wolter, Mark Conger, Dave Martinelli,
+  and Sri (nt) have been very helpful in assisting the Grex staff
+  in various ways, as have all the users who volunteer as helpers,
+  assisting other users with problems.</p>
+
+  <h2>Staff Notes</h2>
+
+  <dl>
+    <dt><a href="http://www.unixpapa.com/grextech/pumpkin/">A Tour
+    of the Pumpkin</a></dt>
+
+    <dd>Photos of Grex's computer room, with descriptions of our
+    equipment.</dd>
+
+    <dt><a href="about.xhtml">About Grex's Hardware and
+    Software</a></dt>
+
+    <dd>An overview of the hardware Grex runs on, and the software
+    customizations we have installed.</dd>
+
+    <dt><a href="http://www.unixpapa.com/newgrex/">Grex 2003
+    Assembly Notes</a></dt>
+
+    <dd>Construction of Grex's future computer.</dd>
+
+    <dt><a href="goals.xhtml">Security Goals</a></dt>
+
+    <dd>A general description of Grex's security.</dd>
+
+    <dt><a href="privacy.xhtml">Privacy on Grex</a></dt>
+
+    <dd>A discussion of the kinds of circumstance under which
+    Grex's staff might look at private user files or E-mail.</dd>
+
+    <dt><a href="blocks.xhtml">The Kernel Blocks</a></dt>
+
+    <dd>A detailed description of how Grex's Kernel has been
+    modified to enforce our restrictions on outgoing telnet and ftp
+    connections.</dd>
+
+    <dt><a href="passwd.xhtml">The Password Database</a></dt>
+
+    <dd>A detailed description of how passwords are stored and
+    encrypted on Grex.</dd>
+
+    <dt><a href="eggdrop.xhtml">Eggdrop on Grex</a></dt>
+
+    <dd>A FAQ discussing why we do not support or allow eggdrop on
+    Grex.</dd>
+
+    <dt><a href="volunteer.xhtml">Volunteering</a></dt>
+
+    <dd>Information for people who would like to help the Grex
+    staff, or perhaps join the ranks.</dd>
+
+    <dt><a href="/~invent/index.cgi">Equipment Inventory</a></dt>
+
+    <dd>A list of the equipment currently owned by Cyberspace
+    Communications.</dd>
+
+    <dt><a href="forsale.xhtml">Equipment For Sale or
+    Swap</a></dt>
+
+    <dd>A list of the computer equipment Grex has that we would
+    like to get rid of.</dd>
+
+    <dt><a href="wishlist.xhtml">Equipment Wish List</a></dt>
+
+    <dd>A list of the computer equipment Grex is looking for.</dd>
+  </dl>
+
+  <div id="history">
+  <h6>Document History:</h6>
+  <p>
+    Jul 18, 2008: Dan Cross (cross) -
+      Updated to reflect historical nature.<br />
+
+    Jun 4, 2005: Joe Gelinas (<a href="mailto:gelinas@grex.org">gelinas</a>) -
+      Updated staff list.<br />
+
+    Feb 9, 2004: Joe Gelinas (<a href="mailto:gelinas@grex.org">gelinas</a>) -
+      Updated staff list.<br />
+
+    Jul 30, 2003: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Updated staff list.<br />
+
+    Nov 8, 1999: Michelangelo Giansiracusa
+      (<a href="mailto:spooked@grex.org">spooked</a>) -
+      Updated staff list.<br />
+
+    Nov 4, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Updated staff list.<br />
+
+    Jan 14, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Updated staff list.<br />
+
+    Jul 10, 1998: Steve Weiss (<a href="mailto:srw@grex.org">srw</a>) -
+      Added "volunteering" note.<br />
+
+    Apr 9, 1998: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Added Overview page.<br />
+
+    Mar 9, 1998: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Added Eggdrop page.<br />
+
+    Aug 21, 1997: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Initial Revision.<br />
+  </p>
+  </div>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: index.xhtml 1607 2017-05-31 16:16:21Z cross $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

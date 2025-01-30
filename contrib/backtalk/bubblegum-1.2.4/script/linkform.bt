@@ -1,0 +1,117 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% linkform script
+%
+% Display a form for linking items from another conference into this
+% conference.  The actual linking is done by the "linkitem.bt" script.
+% Only fairwitnesses can do this.
+%
+% Query Parameters:
+%    conf=	conference to link into
+%    errmsg=    optional error message to display at top of screen
+%    lconf=     optional guess at conference to link from
+%    litem=     optional guess at item to link in
+
+flavor(config)+ include
+
+% <default> conf_pulldown ...
+% A function to generate the <OPTION> tags for a pulldown list of all
+% conferences - or at least all the ones in the menu.
+/conf_pulldown {
+  /dcf xdef
+  /usepublic_txt constant {
+    % Load the "public.txt" file
+    bbsdir (/public.txt) + read /remainder xdef
+
+    % Process the file, line-by-line
+    {
+      % get the next line
+      remainder (\n) parse
+	dup () eq {break} if
+	/work_line xdef
+	/remainder xdef 
+
+      % check if it is a conference line
+      work_line pt_confline sgrep {
+	 1 get /conf xstore  % get conference name
+	 (<OPTION VALUE=")conf(")
+	 dcf conf eq {( SELECTED)} if
+	 (>) conf cap (\n)
+      } if
+    } loop
+
+  } {
+    % Load the confmenu file
+    (*confmenu) read /remainder xdef
+
+    % Process the file, line-by-line
+    {
+      % get the next line
+      remainder (\n) parse exch /remainder xdef
+      dup ! {break} if
+
+      % skip comments
+      dup 0 1 substr (#) eq {pop continue} if
+
+      % parse apart the line
+      (:) clip /cname xdef
+      (:) clip /ctitle xdef pop
+
+      cname {
+	% Format a conference name
+	(<OPTION VALUE=")cname(")
+	 dcf cname eq {( SELECTED)} if
+	(>)ctitle(\n)
+      } if
+
+    } loop
+  } ifelse
+} def
+
+% page header
+(<HTML><HEAD>
+<TITLE>Share )Item cap( from another )Conference cap(</TITLE></HEAD>
+)
+
+% open conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+(<BODY )background(>\n)
+secret 2 eq /dunno defined ! and {
+  [/conf /errmsg /lconf /litem] flavor(confpass)+ jump
+} if
+
+global_header
+
+`(<H1>Share )Item cap( from another )Conference cap(</H1>
+)
+
+% warn off people without the proper access
+amfw ! {`(Only the )Fairwitness( can link )Items( into the )'
+        conftitle( )Conference(.\n)
+	stop} if
+
+% display any error message
+/errmsg defined {
+  errmsg { (Link failed: )errmsg(<P>\n)} if
+  } if
+
+% link form
+`(This form may be used to make )AnItem( from any other )Conference
+( appear in the )'conftitle`( )Conference( as well.
+<P>
+<FORM METHOD=POST ACTION=linkitem>
+<INPUT TYPE="hidden" NAME=conf VALUE=)'conf(>
+)Conference cap(: <SELECT NAME=lconf>
+<OPTION VALUE="">-- please select --
+)
+/lconf defined {lconf}{()} ifelse conf_pulldown
+(</SELECT><BR>
+)Item cap( number: <INPUT TYPE=text NAME=litem SIZE=20)
+/litem defined {( VALUE=)litem( )} if
+(><BR>
+<INPUT TYPE=submit VALUE="Share )Item cap(">
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,11 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: spell <filename>
+
+<RETURN> to enter spell.
+File name to spell check? "
+read spell
+echo ""
+/usr/bin/spell $spell

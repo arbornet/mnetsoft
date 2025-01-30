@@ -1,0 +1,170 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% browse - a web script to read the specified conferemce and offer the option to
+% read one or more items, else move on
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+% enhancement needed here to handle "password protected" conferences (code 2)
+
+(<HTML>
+<HEAD>
+<BASE HREF=")backtalkurl(/)flavor(browse"></HEAD>
+<TITLE>) bbsname ( ) ( Conference)
+showforgotten 2 eq {(- Forgotten items)+} if
+(</TITLE>\n)
+(C) flavor(meta)+ include
+(</HEAD>\n)
+
+conftitle 3 1 roll
+
+mayread ! {(The ) conf ( conference cannot be read. You may
+<a href=conflist>return to the list of conferences</A>.) halt } if
+
+/login (-) def
+(*settings) /login loadvar login (-) eq or {
+  bbslogo
+  (<h1>) bbsname ( ) conftitle ( Conference</h1>)
+
+  (<pre>) conf_login expand (</pre>\n)
+} {
+  (<P>) login
+} ifelse
+
+(<hr>\n) print
+
+showforgotten 1 eq {((Includes forgotten items))} if
+showforgotten 2 eq {((Only forgotten items))} if
+
+% define F_R macro to display F or R when showforgotten != 0
+showforgotten {{
+  (<a href=forget?conf=) conf (&fitem=) item (&showforgotten=) showforgotten
+  (&goto=browse&rem=)
+  forgotten {(T>R)} {(>F)} ifelse
+  (</a>)}}
+  {{}} ifelse /F_R xdef
+showforgotten {(<br>Click on "F" or "R" to forget or remember an item.)} if
+
+(<pre>
+item nresp ) id {(new )} if (header
+
+)
+(1-$) /isel xstore
+0 /cnt xdef
+
+% begin loop for each item 
+{isel next_item {break} {this_item {break} {pop /isel xstore 
+  
+  % print "R" or "F" to remember or forget
+  F_R
+
+  % print item # and # of responses
+  item 4 cvscol maxresp 4 cvscol 
+
+  % if authenticated: print number new, or the word "all"
+  id {
+    (<a href=read?conf=) conf (&item=) item (&rsel=new>)
+    maxread 0 lt {( all)} {maxresp maxread - 4 cvscol} ifelse (</a>)
+  } if
+ 
+  ( - ) % separate number from titles
+
+  (0) read_item {pop (</pre></tt><b>Internal error "read_item") halt}
+  {(<a href=read?conf=) conf (&item=) item (&rsel=all>) title (</a>)
+   forgotten showforgotten 2 ne and {( [forgotten])} if
+   retired {( [retired])} if
+   frozen {( [frozen])} if
+   linked {( [linked])} if
+   (\n)
+   /cnt inc
+   } ifelse
+  } ifelse } ifelse } loop
+
+cnt 0 eq { (There are no )
+  showforgotten 2 eq {(forgotten )} if (items.\n) } if
+
+(</pre><hr>)
+
+% Now we have listed the items.
+% It's time to output a menu of choices 
+
+(You have several choices:<ul> \n)
+
+% Anonymous users get the standard spiel that they should get an account here.
+id ! {(
+ <li>Since you are not logged in, the system is unable to remember what you
+ have seen from previous sessions,
+ so all of the responses always seem to be new.\n)
+ mayresp ! {(You will not be able to respond to items..\n) } if
+ maypost ! {(You will not be able to post new items.\n) } if
+ (<a href=")register_url(">By requesting an account</a> the system will be
+ able to keep track of what you have seen, and you will be able to
+ participate fully if you wish.
+ <li>If you already have an account, <a href=")
+ sessions {
+   anon_url(public/login?bounce=http://)
+   HTTP_HOST anon_url flavor(browse%3Fconf%3D)conf
+ } {
+   pw_url flavor(browse?conf=)conf
+ } ifelse
+ (">please log in</a>
+ )} if
+
+% create menu item to read all new responses (if authenticated and they exist)
+id {
+  /rsel (new) store (1-$) next_item ! {
+    /nitem xdef pop /nisel xdef
+    (<li>)
+    (<a href=read?conf=)conf(&item=)nitem
+      (&isel=)nisel(&showforgotten=)showforgotten
+      (&rsel=new>Read all new responses</a> in the above items)
+    } if
+  } if
+  
+% Create a menu item to read all responses
+/rsel (all) store (1-$) next_item ! {
+ /nitem xdef pop /nisel xdef
+ (<li>)
+  (<a href=read?conf=)conf
+  showforgotten {(&showforgotten=)showforgotten} if
+  (&item=)nitem(&isel=)nisel
+  (&rsel=all>Read all responses</a> in the above items)
+  } if
+
+% fairwitnesses get the option of doing extra things.
+% actually I think these things should be menu items here, rather than trekking
+% off to some other page to get them. "fwmenu" has not bee written yet, tho.
+amfw {(<li>Since you, )id(, are a fw, you will get fw commands here eventually\n)} if
+
+% if user is authenticated, this menu item lets them enter a new item.
+maypost {(
+ <li><a href=enter?conf=)conf(>Enter a new item</a> in this conference
+ )} if
+
+% explain vanilla reading
+cnt {(<li>Select one of the item titles listed above to read 
+  just that particular item.)} if
+
+(<a href=browse?conf=)conf + /hrefbrowse xdef
+
+id { % begin 3 cases of showforgotten
+  {(<li>) hrefbrowse (&showforgotten=1>Also show forgotten items</a>
+    <li>Show only ) hrefbrowse (&showforgotten=2>forgotten items</a>\n)}
+  {(<li>Show only ) hrefbrowse (>non-forgotten items</a>
+    <li>) hrefbrowse (&showforgotten=1>Also show non-forgotten items</a>)}
+  {(<li>) hrefbrowse (>Don't show forgotten items</a>
+    <li>) hrefbrowse (&showforgotten=2>Show only forgotten items</a>\n)}
+  3 showforgotten roll pop pop exec % case statement on showforgotten
+  } if
+ 
+(<li><a href=findform?conf=)conf(>Search</a> the )conftitle( Conference.\n)
+
+% create menu items to navigate
+(<li>Go to the <a href=conflist>list of conferences</a>
+ <li>Go to the <a href=begin>opening screen</a>\n)
+
+(
+</ul>
+<p>
+
+</BODY></HTML>
+)

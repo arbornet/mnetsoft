@@ -1,0 +1,125 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Validating and Invalidating Users</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Validating and Invalidating Users</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+If your Backtalk system is set up so that users use use real Unix login ids
+to log into Backtalk, then you won't be able to validate or invalidate users
+through Backtalk.  All user administration must be done through the standard
+Unix commands instead.
+<P>
+However, if you system is set up to only use Backtalk accounts, then
+system administrators can validate or invalidate users.
+A user who is invalidated or unvalidated cannot log in.
+The system will reject any password he types in.
+<P>
+Some systems create all accounts in an unvalidated state and require a
+system administrator to validate each user before they can log in.
+The procedure for validating or invalidating a user follows.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+
+<H2>Validating/Invalidating with the Web Interface's 'Edit User' tool</H2>
+
+This is convenient if you only want to validate one user and
+know that user's login name.
+
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Follow the 'Edit User Account' link in the 'User' section of the menu.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Enter the user's login ID and click 'Edit'.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Next to the "Account Status" display at the top of the page
+is a link which, if clicked, with invalidate valid accounts,
+or validate unvalidated or invalidated accounts.
+
+</OL>
+
+<H2>Validating/Invalidating with the Web Interface's 'User List' tool</H2>
+
+This is convenient if you don't know the login names of
+the users you want to validate/invalidate
+or if you want to validate/invalidate more than one user.
+
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Follow the 'List Users' link in the 'User' section of the menu.
+<P>
+You will get a control panel for doing searches for users.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Select users to list.
+<P>
+Use the various controls to select which users you want to see,
+making sure the select the `Detailed Information and Edit Buttons' option
+at the bottom of the page.  If you leave the controls in their default setting,
+you will get a list of all users.
+Click the 'Do Scan' button to start your search.
+A listing of all selected users will appear below the control panel.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Validate the users.
+<P>
+Find the user or users you want to delete.  Their current status is displayed
+in the rightmost column.  Click on the current status to change it from
+"valid" to "invalidated" or from "invalidated" or "unvalidated" to "valid".
+
+</OL>
+
+<H2>Validating/Invalidating using <TT>btvalid</TT> from Unix</H2>
+
+<OL>
+<HR>
+<LI><INPUT TYPE=checkbox> Log into the Unix conference administration account
+<P>
+This is the account that owns all the conference files, user database
+files, and Backtalk itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Run the <TT>btvalid</TT> command
+<P>
+If you want to validate the user "<TT>ferdinand</TT>" then issue the following
+command:
+<PRE>
+    btvalid ferdinand y
+</PRE>
+To invalidate the same user, you'd do:
+<PRE>
+    btvalid ferdinand n
+</PRE>
+</FORM>
+</BODY></HTML>

@@ -1,0 +1,86 @@
+			 BACKTALK VANILLA INTERFACE
+		   (c) 1996-2003  Jan Wolter & Steve Weiss
+
+			      Version 1.3.5
+	          Requires Backtalk Version 1.3.24 through 1.3.XX
+		        or Backtalk Version 1.4.6 or later
+
+DESCRIPTION:
+
+The Backtalk Vanilla Interface is a set of scripts that implement a
+simple interface to the Backtalk conferencing system.  It was originally
+designed by Steve Weiss to be friendly to Lynx users.  It uses no images,
+and makes minimal demands on the intelligence of the browser.
+
+Vanilla was the first Backtalk interface implemented, and served as a test
+bed for many of our ideas, but the author's interest in it is rather low
+these days.  It is being maintained, but not upgraded.  Before Backtalk
+version 1.3.0, vanilla was distributed as part of the main Backtalk
+distribution.  Now it has been broken out as a separately distributed
+interface, mainly because we don't think it is of much interest to many
+people any more.
+
+INSTALLATION:
+
+(1) Make sure that you have the correct version of Backtalk installed.  The
+    top of this file tells the minimum version of Backtalk needed to support
+    this scripts in this package.  Later versions of Backtalk may or may not
+    be compatible.  If we release a version of Backtalk not compatible with
+    this interface package, a new version of this package will be released.
+
+(2) Unpack the Vanilla distribution.
+
+    OK, if you hadn't already done that, you wouldn't be reading this, would
+    you?  We'll refer to the full path of the new directory containing the
+    distribution as DISTDIR.
+
+(3) Backtalk has a 'btinstall' script to simplify the installation of
+    seperately distributed interface packages.  Btinstall assumes that the
+    configuration of Backtalk hasn't radically changed since you used
+    Backtalk's 'make install' commands to install the system.  If you've
+    manually rearranged what goes where on the disk, btinstall will need
+    some editing, or you'll need to install the interface manually.
+
+    TO INSTALL USING BTINSTALL:
+
+    (a)  Login either as root or as the user that owns Backtalk's files on
+         your system.
+
+    (b)  Find where the 'btinstall' script was installed, so you can run it.
+         You want to be sure you get the installed copy of the program, which
+	 has been modified with information about your installation, not
+	 the one in the backtalk distribution directory.
+
+    (c)  cd into the unpacked distribution directory, DISTDIR.
+
+    (d)  Run 'btinstall'
+
+    TO INSTALL WITHOUT BTINSTALL:
+
+    This distribution contains a 'script' subdirectory which contains all
+    the Backtalk scripts that implement the interface.  Unlike most interfaces,
+    there is no 'image' directory, because vanilla makes little use of images.
+    The contents of the script directory needs to be moved into directory
+    named 'bubblegum' under Backtalk's script directory.  In a bit more detail:
+
+    (a) Find the Backtalk script directory.  The default pathname is
+        /usr/local/backtalk/script, but it will vary on different systems.
+        Typically it will contain the config.bt script, the userinfo.bt script
+        and subdirectories for all installed interfaces.
+
+    (b) Create a new subdirectory under the script directory, called
+        'vanilla'.  Make sure the directory is writable to the Backtalk
+	account, so that compiled copies of the scripts can be written into
+	it by Backtalk.
+
+    (c) Copy all the files in DISTDIR/script to the new vanilla directory.
+
+That's all.  Backtalk's 'welcome' page will automatically detect the
+presence of the vanilla interface, and include it in the list of available
+interfaces.
+
+CUSTOMIZATION:
+
+Unlike most Backtalk flavors, Vanilla hasn't got a config.bt file, so there
+is no way to do much customization on it, sort of editing the various scripts
+directly.

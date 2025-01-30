@@ -1,0 +1,98 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/butsel 64 defconstant flavor(buttondef)+ include
+(Enter )Item cap( Page)++ (pistachio/help/header) include
+
+(<H2>The Enter )Item cap( Page:</H2>
+
+This page allows you to enter a new )Item( in )AConference(.
+Simply type the title of the )Item( in the ``Title'' box and
+it's text in the big box below.
+If you want your name to appear differently than usual, you can
+edit it in the ``Name'' box.
+When you are ready, push the <IMG )enter_button_src( button to post the )Item(.
+
+<H3>)Item cap( Formatting</H3>
+
+Backtalk offers three slightly different )Item( formatting options:
+<UL>
+<LI><STRONG>Plain Text</STRONG>
+    <P>
+    The )Item( will be displayed pretty much just as it was when you typed
+    it in, in a fixed width font with the spacing unaltered.
+    <P>
+    The only change that will be made to your text is that certain
+    types of strings will be automatically made clickable.  For
+    example:
+    <UL>
+    <P>
+    <LI><TT>http://www.unicef.org</TT><BR>
+        URL's beginning with <TT>http:</TT> or <TT>https:</TT> connect to
+        that site when clicked.
+    <P>
+    <LI><TT>mailto:backtalk@hvcn.org</TT><BR>
+        E-mail addresses with a <TT>mailto:</TT> prefix send mail to the
+        given E-mail address when clicked.
+    <P>
+    <LI><TT>ftp://someplace.com/pub/filename</TT><BR>
+        Strings starting the <TT>ftp:</TT> prefix connect to an ftp server
+        and fetch the named file or directory listing when clicked.
+    <P>
+    <LI><TT>conf:general</TT><BR>
+        If you type <TT>conf:</TT> followed by )AConference( name, then
+        click it will connect to the <A HREF=confhome>)Conference( home page</A>
+        for that )Conference(.
+    <P>
+    <LI><TT>item:9</TT><BR>
+        <TT>item:general,9</TT><BR>
+        If you type <TT>item:</TT> followed by a number, or )AConference( name
+        and number, then clicking on it displays the named )Item(.  If no
+        )Conference( name is given, that )Item( in the current )Conference( is
+        displayed.
+    <P>
+    <LI><TT>resp:53</TT><BR>
+        <TT>resp:9,53</TT><BR>
+        <TT>resp:general,9,53</TT><BR>
+        If you type <TT>resp:</TT> followed by a )Response( number, then
+        clicking on it will display that )Response( of the current )Item(.
+        Alternately, you can specify the )Conference( name and )Item( number
+        as well.
+    </UL>
+    You can use dots or colons in place of the commas in the above examples.
+<P>
+<LI><STRONG>HTML</STRONG>
+    <P>
+    Your )Item( text will be treated as HTML text.
+    HTML is the standard markup language used to create web pages.
+    HTML text is automatically formatted by the reader's browser, usually
+    in a proportional font.
+    <P>
+    You can use some <A HREF=html>HTML tags</A> in your )Response( to control
+    spacing, formatting, text size and style, to include images,
+    and to create links.
+<P>
+<LI><STRONG>Lazy HTML</STRONG>
+    <P>
+    Normally in HTML you need to enter a <TT>&lt;P&gt;</TT> tag every
+    time you want to leave a blank line.
+    The "lazy HTML" option is just like the "HTML" option,
+    but it automatically converts blank lines to <TT>&lt;P&gt;</TT> tags.
+    This is intended to allow you to forget that you are entering HTML
+    text, and still have it come out reasonable looking.
+</UL>
+
+<H3>)Item cap( Previewing</H3>
+
+If you hit the <IMG )preview_button_src( button you will be shown how
+your )Item( would look to other Backtalk users )
+/text_interface defined {
+  (and to )text_interface( users )
+} if
+(if you posted it now.  This is especially useful if you are using the
+"HTML" or "Lazy HTML" formatting options.
+)
+global_footer
+(</BODY></HTML>
+)

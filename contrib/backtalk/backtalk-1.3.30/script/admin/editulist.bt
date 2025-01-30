@@ -1,0 +1,128 @@
+% Backtalk Administrative Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% ulist script
+%
+% Form for editing the lists of users and groups that may access a conference.
+% it is it's own handler
+%
+% Query Parameters:
+%   conf=       which conference (for ulist and login only)
+%   go=         flag equal to one if we have new values for ulist and glist
+%   glist=	groups for glist file, in comma-separated format
+%   ulist=      users for ulist file, in newline-separated format
+%   admhome=    URL of administrative menu
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+% header
+(<HTML><HEAD>
+<TITLE>Edit User List</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+</HEAD>
+<BODY BGCOLOR=white>
+)
+
+conf ! {(No conference specified) stop} if
+open_conf {(No such conference \()conf(\)\n) stop} if
+
+/glist defined ! {/glist () def} if
+
+/go defined {
+  % do update
+
+  % check if we have write access
+  (*ulist) writable ! {(Cannot write to ulist.) stop} if
+  (*glist) writable ! {(Cannot write to glist.) stop} if
+
+  % fix up and save ulist value
+  `ulist <<[\r\n \t,;:]+>>m 0 {(\n)} rgrep dup {(\n)} if'
+  dup /ulist xdef
+  (*ulist) write
+
+  % fix up and save glist value
+  glist (,) (\n) 0 replace (\n) +
+  dup /glist xdef
+  (*glist) write
+
+  (Update completed:
+  <BLOCKQUOTE>
+  <STRONG>Group List:</STRONG><BR>\n<BLOCKQUOTE><PRE>\n)
+  glist { glist quote } { (None) } ifelse
+  (\n</PRE></BLOCKQUOTE>\n<STRONG>User List:</STRONG><BR>\n<BLOCKQUOTE><PRE>\n)
+  ulist { ulist quote } { (None) } ifelse
+  (\n</PRE></BLOCKQUOTE>\n</BLOCKQUOTE>
+  <A HREF=editulist?conf=)conf(&admhome=)admhome
+  (>Continue Editing User/Group List</A>.<P>
+  <A HREF=editconf?conf=)conf(&admhome=)admhome
+  (>Edit Conference Mode, Fairwitnesses and Title</A>.<P>
+  <A HREF=)admhome(>Return to adminstration menu</A>.
+  </BODY></HTML>\n)
+  stop
+} if
+
+(<H1>Edit User List</H1>\n)
+
+amfw ! {`(Only )Fairwitnesses( can edit the user list\n)' stop} if 
+userlist ! {
+  (<STRONG>NOTE: This is an open conference.  This user list will be\n)
+  (ignored unless and until the conference is closed by a conference\n)+
+  (administrator.</STRONG><P>\n)+
+} if
+
+(<FORM METHOD=POST ACTION=editulist>
+All users in the groups checked below may )
+fishbowl{(post to)} {(access)} ifelse
+( the <EM>)conf(</EM> conference.
+<P>
+<STRONG>Check all that apply</STRONG>:
+<BR>
+<TABLE WIDTH=100%>\n)
+/ncol 4 defconstant
+/col 0 def
+/glist (*glist) read def
+[groups] {
+  /g xdef
+  col 0 eq {(<TR>)} if
+  /col inc
+  (<TD><INPUT TYPE=checkbox NAME=glist VALUE=)g
+  g glist (\n ,;\t) inlist {( CHECKED)} if
+  (> )g(&nbsp;&nbsp;&nbsp;&nbsp;</TD>)
+  col ncol eq {(</TR>) /col 0 def} if
+} forall
+col {(</TR>)} if
+(</TABLE>
+<HR>
+The users whose logins are listed below may also )
+fishbowl{(post to)} {(access)} ifelse
+( the <EM>)conf(</EM> conference.
+<P>
+<STRONG>Enter one login name per line:</STRONG>
+<BR>
+)
+conf {(<INPUT TYPE="hidden" NAME=conf VALUE=)conf(>)} if
+(<INPUT TYPE="hidden" NAME=admhome VALUE=)admhome(>
+<TEXTAREA NAME=ulist ROWS=20 COLS=)loginlen 1 +( WRAP=OFF>)
+(*ulist) read quote
+(</TEXTAREA>
+<BR>
+<INPUT TYPE=hidden NAME="go" VALUE="1">
+<INPUT TYPE=submit VALUE="Update">
+</FORM>
+<A HREF=)admhome(>Return to Admin Menu</A>
+</BODY></HTML>
+)

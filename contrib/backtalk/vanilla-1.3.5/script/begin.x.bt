@@ -1,0 +1,39 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+
+flavor(version)+ include
+
+(You may:<ul>\n)
+
+id {( 
+  <li><A HREF=nextconf?csel=@0>Read new reponses from your preselected 
+  list of conferences</a>
+  )}{( 
+  <li><a href=")register_url(">
+  Create your own personal account</a> so you can participate
+  <li>If you already have an account, <a href=")
+  sessions {
+    anon_url (public/login?bounce=)serverurl anon_url
+  } {
+    pw_url
+  } ifelse
+  flavor(begin">
+  please log in</a>
+  )} ifelse
+
+(<li><a href=conflist>View the menu of conferences</a>\n)
+
+nopwedit ! id and {(<li><a href=chpwform>Change your password</a>\n)} if
+(<li><a href=users>Show the list of all the users</a>\n)
+sessions id and {
+ (<li><a href=")backtalkurl(/public/logout">logout</a>\n)
+} {
+ (<li><a href=/>leave conferencing and return to the main menu</a>\n)
+} ifelse
+(</ul>
+For operations on a particular conference, you should pick the
+" menu of conferences" above, and select that conference.
+<p>
+<font size=-2>)version( / )if_version( - )copyright(</FONT>
+</body></html>
+)

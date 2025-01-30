@@ -1,0 +1,15 @@
+                        Fronttalk Defines:  INDXMSG
+
+Usage:  DEFINE INDXMSG "<string>"
+
+The INDXMSG define is a conference separator displayed when a user does
+"DISPLAY INDEX".  It normally just displays the index file.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(1x%2g%)%c"
+
+This just displays the conference index file.

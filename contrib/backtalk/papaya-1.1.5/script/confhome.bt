@@ -1,0 +1,380 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% confhome script
+%
+% The conference home page script displays the "front door" screen for a
+% conference.
+%
+% This also implements an important part of the "next conference" button.  If
+% the "nextnew" variable is defined, we automatically skip ahead to the next
+% conference.
+%
+% Query Parameters:
+%    conf=	conference name
+%    csel=	rest of list of conferences to visit
+%    list=      What to list: "all", "new", "since" "forgotten"
+%    nextnew=	if defined, skip conferences with no new responses
+%    password=   password for the conference to join (optional)
+%    dunno=     defined if we don't know password for conference
+
+flavor(config)+ include
+
+% page header
+(<HTML>
+<HEAD>
+<TITLE>)bbsname(: )/thistitle(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(confhome">\n)
+/thisheader
+(</HEAD>
+)/thisbody(\n)
+global_header
+
+% default body line
+/thisbody `(<BODY  )background(>)' def
+
+% check that we have a conference name.
+conf ! {
+  /thistitle `(No )Conference' def
+  thistitle( name given.</BODY></HTML>)
+  flavor(footer)+ chain
+  halt
+} if
+
+% The following loop skips through conferences to find one with newresponses.
+
+{
+  % check if the conference is accessible and has new responses
+  flavor(openconf)+ stopped {
+    `(The )Conference( ``)'conf('' does not exist.\n)
+    /skip 1 def
+    /conf () store
+  } {
+    /thisbody xdef
+    mayread ! secret 2 ne /dunno defined or and {
+      (You do not have access to the ``)conf`(</A>'' )Conference(.\n)'
+      /skip 1 def
+      /conf () store
+    } {
+      % get number of new responses (nnr) and number of new items (nni)
+      conf_new /nun xdef 3 copy /nnr xdef /nni xdef /nit xdef + exch pop
+      ! /nextnew defined and dup /skip xdef {
+        `(No new )Responses( in the ``)
+        (<A HREF=confhome?conf=)'conf(>)conf`(</A>'' )Conference(.\n)'
+      } if
+    } ifelse
+  } ifelse
+
+  % If skip was set above, and we have more conferences, go on to them
+  skip /nextnew defined /csel defined and and {
+    csel {
+      % skip to next conference
+      close_conf
+      /oldcsel csel def
+      csel next_conf /conf xstore /csel xstore
+      % erase any password given for the last conference
+      /dunno undef /cpass () store
+      (<HR>\n)
+      conf {continue} if
+    } if
+    % no more conferences
+    /thistitle `(<TITLE>No New )Conferences cap(</TITLE>)' def
+    `(No more )Conferences(.\n)
+    flavor(footer)+ chain
+    halt
+  } {
+    % read this conference
+    conf {break} {halt} ifelse
+    break
+  } ifelse
+} loop
+
+/thistitle `(Browse the )conftitle( )Conference(</TITLE>\n)' def
+
+/thisheader `(C) flavor(meta)+ include' def
+
+% If we haven't got the password, ask for it
+secret 2 eq /dunno defined ! and {
+   [/conf /csel /nextnew] flavor(confpass)+ jump
+} if
+
+% If we still haven't got read access, say goodbye
+mayread ! {
+      (You do not have access to the ``)conf`(</A>'' )Conference(.\n)'
+} if
+
+% we have found the conference we wanted - display the conference home page
+
+% find next and previous conferences
+flavor(nextprev)+ include
+
+% If we are putting up an RSS icon, start a table
+use_rss_icon expose_rss_conf and {
+  (<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD>)
+} if
+
+% do the previous conference button
+prev {
+  (<A HREF="confhome?)prev(">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(prevconf.gif"></A>)
+} {
+  greybutton {(<IMG BORDER=0 SRC=")imghost(/)flavor(noprevconf.gif">)} if
+} ifelse
+
+% do the next conference button
+next {
+  (<A HREF="confhome?)next(&nextnew=1">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(nextconf.gif"></A>)
+} {
+  greybutton {(<IMG BORDER=0 SRC=")imghost(/)flavor(nonextconf.gif">)} if
+} ifelse
+
+/list dup id {(new)}{(all)}ifelse default def
+/state  `(conf=)conf cgiquote(&csel=)csel' def
+/localstate  `state(&list=)list
+		/password defined {(&password=)password} if
+		/dunno defined {(&dunno=)dunno} if
+		' def
+
+% readnew button
+/rsel (new) store
+(1-$) next_item ! {
+  /item xstore pop /isel xstore
+  (<A HREF="read?)state(&item=)item(&rsel=)rsel
+  showforgotten {(&showforgotten=)showforgotten} if
+  ("><IMG BORDER=0 SRC=")imghost(/)flavor(readnew.gif"></A>)
+} {
+  greybutton {(<IMG BORDER=0 SRC=")imghost(/)flavor(noreadnew.gif">)} if
+} ifelse
+
+% do the enter button
+maxitem 0 gt amfw or maypost and {
+  (<A HREF="enter?)state(&goto=confhome">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(enter.gif"></A>)
+} {
+  greybutton {(<IMG BORDER=0 SRC=")imghost(/)flavor(noenter.gif">)} if
+} ifelse
+
+% do the search button
+mayread {
+  (<A HREF="findform?)state(">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(search.gif"></A>)
+} {
+  greybutton {(<IMG BORDER=0 SRC=")imghost(/)flavor(nosearch.gif">)} if
+} ifelse
+
+% do the participants button
+mayread {
+  (<A HREF="participants?)state(">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(participants.gif"></A>)
+} {
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(participants.gif">)
+} ifelse
+
+% do the resign button
+id {
+  (<A HREF="resignconfirm?)state(">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(resign.gif"></A>)
+} {
+  greybutton {(<IMG BORDER=0 SRC=")imghost(/)flavor(noresign.gif">)} if
+} ifelse
+
+% do the help button
+(<A HREF="help?page=confhome">)
+(<IMG BORDER=0 SRC=")imghost(/)flavor(help.gif"></A>)
+
+% do login and register buttons
+id ! {
+  (<A HREF=")register_url(">)
+  (<IMG BORDER=0 SRC=")imghost(/)flavor(register.gif"></A>)
+
+  (<A HREF=")
+  sessions {
+    anon_url(public/login?bounce=http://)HTTP_HOST anon_url
+    (papaya/confhome%3Fconf%3D)conf cgiquote(%26csel%3D)csel cgiquote
+  } {
+    pw_url(papaya/confhome?)state
+  } ifelse
+  ("><IMG BORDER=0 SRC=")imghost(/)flavor(login.gif"></A>)
+} if
+
+% Put up RSS icon
+use_rss_icon expose_rss_conf and {
+  (</TD>\n<TD ALIGN=right><A TITLE="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference(" HREF=")
+  anon_url(cinnamon?conf=)conf("><IMG SRC=")rss_icon
+  (" BORDER=0></A></TD></TR></TABLE>\n)
+} if
+
+(<HR>\n)
+
+% display the conference login screen, prefering the html version
+/login () def
+(*settings) /login loadvar login ! or {
+  /login `(<PRE>)conf_login expand(</PRE>\n)' def
+} if
+login
+
+% print a message telling how many new items there are
+conftitle( has )nit( )nit 1 eq {Item}{Items} ifelse (: )
+nni( brand new, )
+nnr( with new )Responses+(, )+nun( unseen<P>\n)
+
+% For fairwitnesses, buttons for linking and passwords
+amfw {
+  (You are )AFairwitness( in this )Conference(:
+  <A HREF="linkform?)localstate(">link in item</A>
+| <A HREF="setinew?)localstate(">set initial new items</A>\n)
+
+  secret {
+    (| <A HREF=setsecret?)localstate(">change password</A>\n)
+  } if
+  userlist grouplist or {
+    (| <A HREF=ulist?)localstate(">edit userlist</A>\n)
+  } if
+} if
+
+
+id {
+  `(<FORM ACTION=changealias>
+  Your full name in this )Conference( is:
+  <INPUT TYPE=hidden NAME=conf VALUE=")'conf(">
+  <INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+  <INPUT TYPE=hidden NAME=list VALUE=")list(">
+  <INPUT TYPE=text NAME=newalias SIZE=25 VALUE=")alias(">
+  <INPUT TYPE=submit VALUE="Change It">
+  </FORM>
+  )
+} if
+
+(<HR>
+Possible ranges: &lt;
+<A HREF="confhome?)state(&list=all">All</A>\n)
+id {(| <A HREF="confhome?)state(&list=new">New</A>\n)} if
+(| <A HREF="confhome?)state(&list=since">Activity within last 7 days</A>\n)
+id {(| <A HREF="confhome?)state(&list=forgotten">Forgotten</A>\n)} if
+(&gt;<BR>
+Displaying: <STRONG>)
+
+list (all) eq {
+  (all items)
+  /showforgotten 0 def
+  /rsel (all) store
+} if
+list (new) eq {
+  Items( with new )Responses
+  /showforgotten 0 def
+  /rsel (new) store
+} if
+list (unseen) eq {
+  (unseen )Items
+  /showforgotten 0 def
+  /rsel (unseen) store
+} if
+list (since) eq {
+  Items( with new )Responses( in the last 7 days)
+  /showforgotten 0 def
+  /rsel (since) store
+  /since (-7 days) 0 1 dtime store
+} if
+list (forgotten) eq {
+  (forgotten )Items
+  /showforgotten 2 def
+  /rsel (all) store
+} if
+
+(</STRONG>\n)
+
+% list all items
+
+(<P>)
+mark
+(<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>\n)
+
+/isel (1-$) store	% selector for all items
+/cnt 0 def		% initial counter for number of items
+/nnew 0 def
+
+% begin loop for each item 
+{
+  % get the next item
+  isel next_item
+  {
+    break	% next_item failed - no more items
+  }{
+    this_item
+    {
+      break	% this_item failed - shouldn't happen
+    }{
+      % save new item selector
+      pop /isel xstore 
+
+      % Count new responses - skip non-new ones if only showing new stuff
+      id { /nnew maxresp maxread - def } if
+  
+      % print item number and title
+      (<TR><TD ALIGN=right VALIGN=top>)item(&nbsp;&nbsp;</TD><TD VALIGN=top>)
+      (0) read_item {pop (</TABLE></TABLE><B>Internal error) halt} if
+      (<STRONG><A HREF="read?)state(&item=)item(&rsel=)rsel
+        (&showforgotten=)showforgotten
+	since {(&since=)since cvi}if
+	(">)title quote
+	(</A> \()authorid quote(\)</STRONG>)
+      % print status flags
+      forgotten showforgotten 2 ne and {( [forgotten])} if
+      retired {( [hidden])} if
+      frozen {( [frozen])} if
+      linked {( [linked])} if
+      (</TD>\n)
+      (<TD><IMG BORDER=0 HEIGHT=25 WIDTH=20 SRC=")imghost(/)flavor
+	(nothing.gif"></TD>)
+
+
+      % print number of new responses (not for anonymous users)
+      id {
+        /nnew maxread 0 lt {maxresp 1 +} {nnew} ifelse def
+        (<TD ALIGN=left>)nnew(&nbsp;new&nbsp;of</TD>)
+      } if
+
+      % print total number of responses
+      (<TD ALIGN=right>&nbsp;&nbsp;&nbsp;)maxresp 1 +
+      id !{( )Responses}if (</TD><TD>&nbsp;)
+      nnew {(<IMG BORDER=0 SRC=")imghost(/)flavor(new.gif">)} if
+
+      id {
+	(</TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="forget?)localstate
+	  (&item=)item(&goto=confhome&op=)
+	  forgotten {(remember">Remember)} {(forget">Forget)} ifelse
+	  (&nbsp;this&nbsp;)Item cap
+      } if
+
+      amfw {
+        (</TD><TD>&nbsp;&nbsp;&nbsp;&nbsp;<A HREF="killitem?)localstate
+          (&item=)item(">Delete&nbsp;this&nbsp;)Item cap
+      } if
+      (</TD></TR>\n)
+
+      % update count
+      /cnt inc
+    } ifelse
+  } ifelse
+} loop
+(</TABLE>
+)
+
+cnt 0 eq
+{
+  % if there were no items, print a message to that effect
+  cleartomark
+  `(<STRONG>There are no )list (all) ne {list} if( )Items(.</STRONG>\n)'
+} if
+
+(</TD></TR>
+)
+
+
+nun nnr nni ++ 0 ne id and {
+  (<A HREF="fix?)state(&list=)list(">Mark everything as read</A>\n)
+} if
+
+/conf () store
+flavor(footer)+ chain

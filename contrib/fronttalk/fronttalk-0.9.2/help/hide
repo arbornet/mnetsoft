@@ -1,0 +1,20 @@
+                       Fronttalk Command:  HIDE
+
+Usage: HIDE <response number>               ("Respond or Pass?" prompt only)
+
+Hide the response with the given number in the item currently being read.
+
+Hidden responses are not displayed by default, but any user can still see
+them by reading with the NOHIDE flag set (see "HELP SET NOHIDE"), or by
+doing "ONLY <response number>" at the "Respond or Pass?" prompt.
+
+Responses may be hidden because the author wants to retract the response
+without making it unavailable to those who really want to see it, or because
+the response is extremely long and not of universal interest.
+
+Normally fairwitnesses and the author of the response have the power to hide
+an item.
+
+You can unhide an item with the SHOW command.
+
+Synonyms:  EXPURGATE

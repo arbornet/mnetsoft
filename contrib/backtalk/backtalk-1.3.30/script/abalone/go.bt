@@ -1,0 +1,305 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% go script
+%
+% Script for running various commands off pulldown menus on various pages.
+%   command=
+%      addtwit        Add user to twitlist (login)
+%      confhome       Goto Conference Home (conf)
+%      confname       Change your name in this conference (conf)
+%      confopt        Change conference options (conf)
+%      deltwit        Remove user to twitlist (login)
+%      disfavor       Disfavor one item (conf,item)
+%      disfavorall    Disfavor a bunch of items (conf,isel)
+%      edithot        Edit Hot list
+%      editpref       Edit Preferences
+%      enteritem      Enter a new item.
+%      entrance       Goto entrance
+%      favor          Favor one item (conf,item)
+%      favorall       Favor a bunch of items (conf,isel)
+%      findconf       Search a Conference
+%      finduser       Search for User Bios
+%      freeze         Freeze one item (conf,item)
+%      freezeall      Freeze a bunch of items (conf,isel)
+%      gotoconf       Goto a particular conference [popup]
+%      help           Help.
+%      forget         Forget this item (conf,item)
+%      forgetall      Forget list of items (conf,isel)
+%      killall        Delete list of items (conf,isel) [popup]
+%      remember       Remember this item (conf,item)
+%      rememberall    Remember list of items (conf,isel)
+%      linkin         Link an item into this conference (conf) [popup]
+%      logout         Logout.
+%      mytitle        set private title (conf,item) [popup]
+%      nextconf       Goto next conference (csel)
+%      nextitem       Read next item (isel, conf)
+%      readallconf    Read all in all conferences
+%      readallitem    Read all in this conf (conf)
+%      readhotconf    Read new in all hotlist conferences
+%      readnewitem    Read new in this conf (conf)
+%      recent         List recent postings
+%      resign         Quit a conference (conf) [popup]
+%      resprange      Read a range of responses (conf,item) [popup]
+%      retire         Retire one item (conf,item)
+%      retireall      Retire a bunch of items (conf,isel)
+%      retitle        Retitle an item (conf,item) [popup]
+%      respond        Respond to this item (conf,item) [popup]
+%      thaw           Thaw one item (conf,item)
+%      thawall        Thaw a bunch of items (conf,isel)
+%      unretire       Unretire one item (conf,item)
+%      unretireall    Unretire a bunch of items (conf,isel)
+
+/command dup (entrance) default def
+
+% a little function to open a conference
+/oc { open_conf {Conference cap( ')conf(' does not exist\n) halt} if } def
+
+% If command name starts with an @, we are running a command that was supposed
+% to have been Javascripted into a popup window in the main window instead.
+% This happens if we have Javascript turned off in our browser.  If so, set
+% the "mainwin" flag and fix up our command name
+command 0 1 substr (@) eq dup /mainwin xdef {
+  /command command 2 99999 substr def
+} if
+
+command (readhotconf) eq
+{
+  (@0) next_conf /conf xdef /csel xdef
+  /nextnew 1 def
+  flavor(confhome)+ jump
+} if
+
+command (nextconf) eq
+{
+  csel next_conf /conf xdef /csel xdef
+  flavor(confhome)+ jump
+} if
+
+command (readnewitem) eq
+{
+  oc
+  /item 0 store
+  /isel dup defined {isel{isel}{(1-$)}ifelse}{(1-$)}ifelse
+      mark exch 1 fav_sel (,) jointomark def
+  /rsel (new) def
+  /noskip 0 store
+  flavor(read)+ jump
+} if
+
+command (readallitem) eq
+{
+  oc
+  /item 0 store
+  /isel dup defined {isel{isel}{(1-$)}ifelse}{(1-$)}ifelse
+     mark exch 1 fav_sel (,) jointomark def
+  /rsel (all) def
+  flavor(read)+ jump
+} if
+
+command (readallconf) eq
+{
+  % csel needs to be set to list of all conferences - ugly!
+  /csel () def
+  /usepublic_txt constant {
+    bbsdir (/public.txt) + read /remainder xdef
+    {
+      % get the next line
+      remainder (\n) parse
+        dup () eq {break} if
+        /work_line xdef
+        /remainder xdef
+      % if it is a conference line, it starts with a blank
+      work_line pt_confline sgrep {
+	% pick conference name out of line, and add it to csel
+        aload pop exch pop
+	csel dup {(,)+} if exch + /csel xdef
+      } if
+    } loop
+  } {
+    (*confmenu) read /remainder xdef
+    {
+      % get the next line
+      remainder (\n) parse exch /remainder xdef
+      dup ! {break} if
+      % skip comments
+      dup 0 1 substr (#) eq {pop continue} if
+      % pick out conference name
+      (:) clip /cname xdef pop
+      cname {
+	csel dup {(,)+} if cname + /csel xdef
+      } if
+    } loop
+  } ifelse
+  csel next_conf /conf xdef /csel xdef
+  /rsel (all) store
+  flavor(confhome)+ jump
+} if
+
+command (entrance) eq { flavor(begin)+ jump } if
+
+command (confhome) eq { flavor(confhome)+ jump } if
+
+command (nextitem) eq
+{
+  /item 0 def
+  open_conf ! {
+    isel next_item ! {
+      /item xstore pop /isel xstore
+    } if
+  } if
+  flavor(read)+ jump
+} if
+
+% This isn't really very good - if the session is expired, we'll have to
+% relogin to run the go.bt script so we can jump to the public/logout script.
+command (logout) eq { (public/logout) jump } if
+
+command (gotoconf) eq { flavor(pop_gotoconf)+ jump } if
+
+command (resprange) eq { flavor(pop_resprange)+ jump } if
+
+command (enteritem) eq { flavor(enteritem)+ jump } if
+
+command (editpref) eq { flavor(pref)+ jump } if
+
+command (finduser) eq { flavor(users)+ jump } if
+
+command (findconf) eq { flavor(find)+ jump } if
+
+command (edithot) eq { flavor(hotlist)+ jump } if
+
+command (respond) eq { flavor(pop_respond)+ jump } if
+
+command (resign) eq { flavor(pop_resign)+ jump } if
+
+command (confname) eq { flavor(confname)+ jump } if
+
+command (mytitle) eq { flavor(pop_mytitle)+ jump } if
+
+command (retitle) eq { flavor(pop_retitle)+ jump } if
+
+command (recent) eq { flavor(recent)+ jump } if
+
+command (addtwit) eq { /op (A) def flavor(editignore)+ jump } if
+command (deltwit) eq { /op (D) def flavor(editignore)+ jump } if
+
+command (favor) eq {
+  oc
+  item /fav 1 set_item_note
+  flavor(read)+ jump
+} if
+
+command (disfavor) eq {
+  oc
+  item /fav 0 set_item_note
+  flavor(read)+ jump
+} if
+
+command (forget) eq {
+  oc
+  item forget_item {
+     (Could not forget item )item( in )Conference( ')conf('\n)
+     halt
+  } if
+  flavor(read)+ jump
+} if
+
+command (remember) eq {
+  oc
+  item remember_item {
+     (Could not remember item )item( in )Conference( ')conf('\n)
+     halt
+  } if
+  flavor(read)+ jump
+} if
+
+command (retire) eq {
+  oc
+  1 retire_item {
+     (Could not retire item )item( in )Conference( ')conf('\n)
+     halt
+  } if
+  flavor(read)+ jump
+} if
+
+command (unretire) eq {
+  oc
+  0 retire_item {
+     (Could not unretire item )item( in )Conference( ')conf('\n)
+     halt
+  } if
+  flavor(read)+ jump
+} if
+
+command (freeze) eq {
+  oc
+  1 freeze_item {
+     (Could not freeze item )item( in )Conference( ')conf('\n)
+     halt
+  } if
+  flavor(read)+ jump
+} if
+
+command (thaw) eq {
+  oc
+  0 freeze_item {
+     (Could not thaw item )item( in )Conference( ')conf('\n)
+     halt
+  } if
+  flavor(read)+ jump
+} if
+
+command (favorall) eq {
+  /op {item /fav 1 set_item_note} def
+  flavor(itemop)+ jump
+} if
+
+command (disfavorall) eq {
+  /op {item /fav 0 set_item_note} def
+  flavor(itemop)+ jump
+} if
+
+command (forgetall) eq {
+  /op {item forget_item pop} def
+  flavor(itemop)+ jump
+} if
+
+command (rememberall) eq {
+  /op {item remember_item pop} def
+  flavor(itemop)+ jump
+} if
+
+command (freezeall) eq {
+  /op {1 freeze_item pop} def
+  flavor(itemop)+ jump
+} if
+
+command (thawall) eq {
+  /op {0 freeze_item pop} def
+  flavor(itemop)+ jump
+} if
+
+command (retireall) eq {
+  /op {1 retire_item pop} def
+  flavor(itemop)+ jump
+} if
+
+command (unretireall) eq {
+  /op {0 retire_item pop} def
+  flavor(itemop)+ jump
+} if
+
+command (linkin) eq { flavor(pop_linkin)+ jump } if
+
+command (killall) eq { flavor(pop_killall)+ jump } if
+
+command (kill) eq { flavor(pop_kill)+ jump } if
+
+command (confopt) eq { flavor(confopt)+ jump } if
+
+command <<^help(:(.*))?$>> sgrep {
+  2 get /topic xdef
+  flavor(help)+ jump
+} if
+
+flavor(missing)+ jump

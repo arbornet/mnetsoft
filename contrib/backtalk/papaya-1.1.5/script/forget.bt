@@ -1,0 +1,36 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% forget script
+%
+% This is the handler for the "forget" and "remember" buttons on the read
+% screen and for the "Forget this item" link on the confhome screen.  It
+% forgets or remembers the item and jumps to another page.
+%
+% Query Parameters:
+%    conf=	conference to forget an item in
+%    item=      item number to forget
+%    op=        "forget" if we are forgetting, "remember" if we are remembering
+%    goto=      page to goto afterwards - (confhome) or (read)
+%
+%    csel=	current list of conference (not used, just passed through)
+%    rsel=      current response selector (not used, just passed through)
+%    noskip=    are we reading only new items? (not used, just passed through)
+%    since=     date we are reading since (not used, just passed through)
+
+flavor(config)+ include
+
+% open the conference
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+% do the remember or forget
+item
+op (forget) eq {forget_item} {remember_item} ifelse
+{
+  (Backtalk error: could not )op( item )item( in the )conf( )Conference(.\n)
+  halt
+} if
+
+/goto dup (read) default def
+
+% goto read page
+flavor goto+ jump

@@ -1,0 +1,17 @@
+                       Fronttalk Command:  RETITLE
+
+Usage:  RETITLE <item number>
+        RETITLE <item number> "<title>"
+	RETITLE
+	RETITLE "<title>"
+
+Change the title of an item.  If entered at the "Respond or pass?" prompt,
+then the item number can be omitted.  If the new title is not given on the
+command line, you will be prompted for it.
+
+Who can retitle items depends on the server configuration.  The conference
+fairwitness and the item author may each be able to do so.
+
+Note that it is also possible to set private titles, seen only by the user
+who sets them.  Anyone can set a private title on any item.  See the MYTITLE
+command.

@@ -1,0 +1,214 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+%
+% Output Script - RSS 2.0 Version
+%
+% NOTES:
+%
+%   - RSS 2.0 puts no limits on numbers of links or lengths of fields.
+%
+
+flavor(config)+ include
+
+
+% <time> rtime <string>
+%   Convert a time into an RSS 822 format time string, pleasantly
+%   bastardized with a four digit years.
+/rtime {
+  htime (-) ( ) 0 replace
+} def
+
+
+% <categorylist> <prefix> do_categories ...
+%  Output some category statements for all categories in the given list.
+%  Category list is a comma-separated list of categories, each of which
+%  can be either just a category, or 'realm:category'.  The prefix is a
+%  string of spaces inserted at the start of each line.
+/do_categories {
+   begin
+     /prefix xdef
+     /list xdef
+     {
+       list (,) parse exch /list xdef
+       dup ! {break} if
+       (:) clip quote exch dup {
+         prefix(<category domain=")4 2 roll(">)exch quote
+       }{
+         pop prefix(<category>)3 2 roll
+       } ifelse
+       (</category>\n)
+     } loop
+   end
+} def
+
+
+% <fullnamevar> <emailvar> usrstr <string>
+%  Given a full name and an email address, make a standard email address
+%  including both.  Either both can be empty strings or undefined.
+
+/usrstr {
+   dict begin
+   dup defined {exec} {pop ()} ifelse /em xdef
+   dup defined {exec} {pop ()} ifelse /fn xdef
+   em {
+     em quote
+     fn {
+	% have email and name
+        ( \()+ fn quote+ (\))+
+     } if
+   } {
+     fn {
+       % have name but no email
+       (\() fn quote+ (\))+
+     } if
+   } ifelse
+   end
+} def
+
+
+/rss_start {
+  /http_content_type (text/xml) store
+
+  (<?xml version="1.0"?>
+<rss version="2.0">
+)
+  print
+} def
+
+
+/rss_start_channel {
+
+  (  <channel>
+    <title>)rss_title quote(</title>
+    <link>)rss_link quote(</link>
+    <description>)rss_description quote(</description>
+)
+  /rss_language defined {
+    (    <language>)rss_language quote(</language>\n)
+  } if
+
+  /rss_copyright defined {
+    (    <copyright>)rss_copyright quote(</copyright>\n)
+  } if
+
+  /rss_categories defined {
+    rss_categories (    ) do_categories
+  } if
+
+  /rss_managingeditor_name defined /rss_managingeditor_email defined or {
+    (    <managingEditor>)
+	/rss_managingeditor_name /rss_managingeditor_email usrstr
+	(</managingEditor>\n)
+  } if
+
+  /rss_webmaster_name defined /rss_webmaster_email defined or {
+    (    <webMaster>)/rss_webmaster_name /rss_webmaster_email usrstr
+      (</webMaster>\n)
+  } if
+
+  /rss_image_url defined {
+    (    <image>\n)
+    (      <url>)rss_image_url quote(</url>\n)
+    (      <link>)rss_link quote(</link>\n)
+    (      <title>)rss_image_title quote(</title>\n)
+    /rss_image_description defined {
+      (      <description>)rss_image_description quote(</description>\n)
+    } if
+    /rss_image_width defined {
+      (      <width>)rss_image_width(</width>\n)
+    } if
+    /rss_image_height defined {
+      (      <height>)rss_image_height(</height>\n)
+    } if
+    (    </image>\n)
+  } if
+
+  /rss_textinput_link defined {
+    (    <textinput>\n)
+    (      <title>)rss_textinput_title quote(</title>\n)
+    (      <description>)rss_textinput_description quote(</description>\n)
+    (      <name>)rss_textinput_name quote(</name>\n)
+    (      <link>)rss_textinput_link quote(</link>\n)
+    (    </textinput>\n)
+  } if
+
+  /rss_pubdate defined {
+    (    <pubDate>)rss_pubdate rtime(</pubDate>\n)
+  } if
+
+  /rss_lastbuilddate defined {
+    (    <lastBuildDate>)rss_lastbuilddate rtime(</lastBuildDate>\n)
+  } if
+
+(    <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+    <generator>)version(/) if_version(</generator>
+)
+    print
+
+} def
+
+
+/rss_item {
+
+  (    <item>\n)
+
+  /rss_title defined {
+    (      <title>)rss_title quote(</title>\n)
+  } if
+
+  /rss_link defined {
+    (      <link>)rss_link quote(</link>\n)
+  } if
+
+  /rss_description defined {
+    (      <description>)rss_description quote(</description>\n)
+  } if
+
+  /rss_pubdate defined {
+    (      <pubDate>)rss_pubdate rtime(</pubDate>\n)
+  } if
+
+
+  /rss_comments defined {
+    (      <comments>)rss_comments quote(</comments>\n)
+  } if
+
+  /rss_enclosure_url defined {
+    (      <enclosure url=")rss_enclosure_url quote
+    		(" length=")rss_eclosure_length quote
+		(" type=")rss_enclosure_type quote(" />\n)
+  } if
+
+  /rss_guid defined {
+    (      <guid) rss_guid_permalink {( isPermaLink="true")} if
+           (>)rss_guid quote(</guid>\n)
+  } if
+
+  /rss_source defined {
+    (      <source>)rss_source quote(</source>\n)
+  } if
+
+  /rss_author_name defined /rss_author_email defined or {
+    (      <author>)/rss_author_name /rss_author_email usrstr(</author>\n)
+  } if
+
+  /rss_categories defined {
+    rss_categories (      ) do_categories
+  } if
+
+  (    </item>\n)
+
+  print
+
+  % There is no maximum number of items, so always return false
+  0
+} def
+
+
+/rss_end_channel {
+   (  </channel>\n)
+} def
+
+
+/rss_end {
+   (</rss>\n)
+} def

@@ -1,0 +1,55 @@
+#!/bin/sh
+# $Header: /var/ncvs/grex/soft/scripts/party,v 1.2 2008-08-08 00:56:07 cross Exp $
+
+# Wrapper script that goes around party.
+#
+# Created by Valerie Mates, popcorn@cyberspace.org, 4/7/95
+#
+# Description:
+# * If the user has never run party before, show the party.welcome
+#   file and the party news file.
+# * If the party news file has changed since the last time the user
+#   saw it, display the party news file.
+# * Then, for everybody, display the party motd and run party.
+
+if [ ! -f $HOME/.partymsg ]
+then
+
+   if [ -f /cyberspace/etc/party/party.welcome ]
+   then
+      /cyberspace/bin/grexmore /cyberspace/etc/party/party.welcome
+      echo "-----"
+      echo -n "Press Enter to continue... "
+      read junk
+   fi
+
+#   if [ -f /cyberspace/etc/party/party.news ]
+#   then
+#      /cyberspace/bin/grexmore /cyberspace/etc/party/party.news
+#      echo "-----"
+#      echo -n "Press Enter to continue... "
+#      read junk
+#   fi
+
+else
+   if [ -f /cyberspace/etc/party/party.news ]
+   then
+      if test $HOME/.partymsg -ot /cyberspace/etc/party/party.news 
+      then
+         /cyberspace/bin/grexmore /cyberspace/etc/party/party.news
+         echo "-----"
+         echo -n "Press Enter to continue... "
+         read junk
+      fi
+   fi
+fi
+
+if [ -f /cyberspace/etc/party/party.motd ]
+then
+   /cyberspace/bin/grexmore /cyberspace/etc/party/party.motd
+   echo "-----"
+fi
+
+/usr/bin/touch $HOME/.partymsg
+
+exec /suid/bin/party "$@"

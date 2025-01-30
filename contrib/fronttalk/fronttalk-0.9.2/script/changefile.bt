@@ -1,0 +1,61 @@
+% Copyright 2002, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to overwrite a file.  Arguments are
+%   conf       Conference names (for per-conference files only)
+%   file       File name.  Any of:
+%      "cflist"      - user's conference hot list
+%      "cfonce"      - user's rc file
+%      "cfrc"        - user's other rc file
+%      "plan"        - user's .plan file
+%      "bull"        - conference bulletin file
+%      "index"       - conference index file
+%      "login"       - conference login screen
+%      "logout"      - conference logout screen
+%      "ulist"       - conference user list file
+%      "glist"       - conference group list file
+%      "secret"      - conference password
+%      "welcome"     - conference welcome file
+%      "confrc"      - conference rc file
+%      "bbsrc"       - system rc file
+%      "dflt.cflist" - system default conference hot list
+%      "motd.html"   - system motd file
+%   text      New content of the file.
+
+
+/handle () def
+file (cflist) eq { /handle (*.cflist) def } if
+file (cfonce) eq { /handle (*.cfonce) def } if
+file (cfrc) eq { /handle (*.cfrc) def } if
+file (plan) eq { /handle (*.plan) def } if
+file (bull) eq { /handle (*bull) def } if
+file (index) eq { /handle (*index) def } if
+file (login) eq { /handle (*login) def } if
+file (logout) eq { /handle (*logout) def } if
+file (ulist) eq { /handle (*ulist) def } if
+file (glist) eq { /handle (*glist) def } if
+file (secret) eq { /handle (*secret) def } if
+file (welcome) eq { /handle (*welcome) def } if
+file (confrc) eq { /handle (*confrc) def } if
+file (bbsrc) eq { /handle (*bbsrc) def } if
+file (dflt.cflist) eq { /handle (*dflt.cflist) def } if
+file (motd.html) eq { /handle (*motd.html) def } if
+
+handle ! {
+   (<ERROR MSG="Unknown file ')file('">\n)
+   stop
+} if
+
+conf { open_conf {
+ (<ERROR MSG="Conference ')conf(' could not be accessed">\n)
+ stop
+} if } if
+
+handle writable ! {
+   (<ERROR MSG="Permission to write file ')file(' denied">\n)
+   stop
+} if
+
+text handle write
+
+(<DONE>
+)

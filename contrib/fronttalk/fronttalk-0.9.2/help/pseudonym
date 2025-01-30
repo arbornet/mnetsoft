@@ -1,0 +1,10 @@
+                       Fronttalk Command:  PSEUDONYM
+
+Usage: PSEUDONYM                            ("Respond or Pass?" prompt only)
+
+This enters a new response into the item currently begin read, just like the
+RESPOND command does, except that it will prompt you for the full name to use
+when posting.  Note that your login ID will always be attached to the posting
+so this cannot actually be used to hide your identity in any serious way.
+
+See "HELP RESPOND" for more information.

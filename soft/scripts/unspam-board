@@ -1,0 +1,5 @@
+#!/bin/sh
+p=/usr/local/bin/procmail
+rc=/var/users/board/unspam-board
+#tee -ai /grex/board/board-talk | $p -tYm $rc || exit 75
+exec $p -tYm $rc || exit 75

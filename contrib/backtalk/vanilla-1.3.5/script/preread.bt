@@ -1,0 +1,26 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% preread - a web script to find an item and then go read it
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+(<HTML>
+<HEAD>
+<TITLE>) bbsname ( ) conf ( Conference Scan</TITLE>
+</HEAD>
+<BODY>
+)
+
+mayread ! {(The ) conf ( conference cannot be read.<hr>)
+  flavor (begin.x) + jump} if
+
+bbslogo (<h1>) bbsname ( ) conf ( Conference</h1>\n)
+
+% see if there are any more items to look at
+isel next_item {() () 0} {} ifelse /item xstore /nrs xstore /isel xstore
+
+item
+  {clear flavor (read) + jump}
+  {(There is nothing new in the )conf( conference.<hr>\n)
+   flavor (begin.x) + jump}
+  ifelse

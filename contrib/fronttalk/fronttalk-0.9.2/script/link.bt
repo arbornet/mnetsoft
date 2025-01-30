@@ -1,0 +1,89 @@
+% Copyright 2002, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to link items:
+%   dst           Destination conference
+%   src           Source conference
+%   isel          selector for items to link.
+%   rsel          Response selector (all,new,brandnew,unseen,newresp)
+%   reverse       If defined and nonzero, reverse the item selector.
+%   sincedate     If defined, link items entered since this date
+%   pattern       If defined, link only items with this substring in title
+%   showforgotten If 2, link only forgotten.  Otherwise, link forgotten or not.
+%   by            If defined, link only items by users in comma sep list.
+
+/http_content_type (text/plain) store
+
+% First open source conference - and make a list of the items to link over
+/conf src store
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+% Fix up since
+/sincedate defined {
+  /since sincedate 0 1 dtime store
+  /rsel (since) store
+} if
+
+% Default rsel
+rsel () eq {
+   /rsel (all) store
+} if
+
+showforgotten 0 eq {/showforgotten 1 store} if
+
+% If we have a pattern, compile it
+/pattern defined { () pattern 1 search pop } if
+
+/n 0 def
+/items [] def
+{
+  isel next_item {break} if
+  /item xstore  /nrs xdef  /isel xstore
+
+  /pattern defined /by defined or {
+    % get the item title
+    nrs item this_item { break } if
+    read_item { break } if pop
+
+    % skip item if title does not contain pattern
+    /pattern defined {
+      title () 1 search 0 lt {continue} if
+    } if
+
+    % skip item if author is not on by list
+    /by defined {
+      authorid by in_sel ! {continue} if
+    } if
+  } if
+
+  % Add item number to array
+  items n item put
+  /n inc
+} loop
+
+close_conf
+
+n 0 eq {(<ERROR MSG="No items to link selected">\n) stop} if
+
+/conf dst store
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+amfw ! {(<ERROR MSG="You are not a fairwitness in conference ')conf quote
+        ('">\n) stop} if
+
+items {
+  /i xdef
+  src i link_item /rc xdef
+  rc 0 eq {
+    (<DONE DSTITEM=)exch( SRCITEM=)i(>\n)
+  } if
+  rc 1 eq {
+    (<ERROR MSG="Could not link from conference ')src quote('">\n)
+  } if
+  rc 2 eq {
+    (<ERROR MSG="Could not access item )i( in conference ')src quote('">\n)
+  } if
+  rc 3 eq {
+    (<ERROR MSG="Permission to link item )i( from conference ')src quote
+    (' denied">\n)
+  } if
+} forall

@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Script to use janc's "gate" program to enable word-wrap in FrontTalk.
+#
+# $Id: use_gate 1051 2011-01-18 14:19:37Z cross $
+#
+
+CFONCE=$HOME/.cfonce
+if [ -d $HOME/.cfdir ]; then
+	CFONCE=$HOME/.cfdir/.cfonce
+fi
+
+echo "Enabling word-wrap for you in BBS"
+
+cat >> $CFONCE <<EOF
+
+# The next two lines enable word-wrapping in BBS
+set edalways
+define editor gate
+EOF
+
+exit $?

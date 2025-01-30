@@ -1,0 +1,167 @@
+% Backtalk Welcome Screen -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% welcome script
+%
+% This is a sample front-page screen.  You may want to use it, or you may
+% want to direct users directly to the pistachio/begin.bt screen from another
+% HTML page of your own.
+%
+% This version automatically detects which interfaces are installed and
+% lists those options.
+%
+% This script gets run in two different ways - first with no arguments to
+% display the welcome page, then with the "flav" and "auth" variables set to
+% actually enter an interface.
+%
+% Query Parameters:
+%    flav=	flavor we want to run.
+%    auth=      zero if we want to be anonymous.
+
+% if using sessions, don't cache this page
+sessions { /http_no_cache 1 store } if
+
+% chase away certain non-browsers
+browser 0 lt {(Not a browser)halt} if
+
+% After the user clicks on the "Go!" button, this section redirects the user
+% to the proper URL to enter Backtalk.
+
+/flav defined {
+  sessions {
+    `serverurl anon_url flav(/begin)'
+    /u 0 default {
+      % have login id - goto login page
+      /bounce xdef
+      (public/login) jump
+    } {
+      % no login ID - redirect to first page without logging in
+      /http_location xstore
+      % Kill any old session cookies
+      killsession
+      stop
+    } ifelse
+  } {
+    % construct flavor's entry URL and do location redirect to it
+    `serverurl   auth cvi {pw_url} {anon_url} ifelse
+      flav(/begin)' /http_location xstore
+    (Wow, your browser is <EM>so</EM> stupid that it doesn't know how to do
+    redirects.  You probably should find another browser.  To enter the
+    conferencing system, click <A HREF=)http_location(>here</A>\n)
+    stop
+  } ifelse
+} if
+
+% Scan for available interfaces and build an array of their descriptions
+[
+  (.) firstdir pop nextdir pop nextdir		% skip '.' and '..'
+  { dup ! {pop break} if
+    dup directory {
+      dup (/interface.bt)+ dup readable {
+        [
+	3 1 roll	% make the directory name the 0th element
+        call		% execute interface.bt to load rest of description
+	]
+      } {
+        pop pop		% discard directory with no interface.bt file
+      } ifelse
+    } {
+      pop		% discard non-directory
+    } ifelse
+    nextdir
+  } loop
+]
+dup length 0 eq {(No interfaces installed!!) stop} if
+% Sort interfaces by their sort codes
+1 1 asort
+/interfaces xdef
+
+(<HTML>
+<HEAD>
+<TITLE>) bbsname ( BackTalk Welcome Page</TITLE>
+</HEAD>
+<BODY BGCOLOR="FFFFFF">
+) bbslogo (<BR>
+)version(<BR>)copyright(
+
+<H1>Welcome to )bbsname('s Backtalk Conferencing System!</H1>
+<P>
+)bbsname( is proud to provide a system that will permit public
+discussion on topics of interest to our community.
+<P>
+<FORM METHOD=POST ACTION=)SCRIPT_NAME(>
+<TABLE BORDER=1 CELLPADDING=5 WIDTH=100%>
+<TR>\n)
+sessions {
+  (<TD WIDTH=39%><TABLE>
+  <TR><TD ALIGN=right><FONT SIZE=+1>Login:</FONT></TD>
+  <TD><INPUT TYPE=text NAME=u SIZE=20></TD></TR>
+  <TR><TD ALIGN=right><FONT SIZE=+1>Password:</FONT></TD>
+  <TD><INPUT TYPE=password NAME=p SIZE=20></TD></TR>
+  </TABLE>\n)
+  allowanon {
+    (<CENTER>Leave blank to read anonymously</CENTER>\n)
+  } if
+  (</TD>)
+} {
+  allowanon {
+    (<TD WIDTH=39%><FONT SIZE=+1>
+    <STRONG>Login:</STRONG><BR>
+    <INPUT TYPE=radio NAME=auth VALUE=1 CHECKED> Login to your account<BR>
+    <INPUT TYPE=radio NAME=auth VALUE=0 > Read anonymously<BR></FONT>
+    </TD>)
+  }{
+    (<INPUT TYPE=hidden NAME=auth VALUE=1>)
+  } ifelse
+} ifelse
+(<TD><FONT SIZE=+1>
+<STRONG>Interface:</STRONG><BR>
+)
+/first 1 def
+interfaces {
+  /iface xdef
+  (<INPUT TYPE=radio NAME=flav VALUE=)iface 0 get
+  first {( CHECKED) /first 0 def} if
+  (> )iface 2 get cap(<BR>\n)
+} forall
+(</FONT>
+</TD><TD ALIGN=CENTER WIDTH=39%><FONT SIZE=+1>
+<INPUT TYPE=submit VALUE="Enter Conferences"></FONT>
+</TD></TR><TR><TD COLSPAN=3 ALIGN=CENTER>
+<FONT SIZE=+2><STRONG><A HREF=)register_url
+(>Create a New Account</A></STRONG></FONT>
+</TD></TR></TABLE>
+</FORM>
+<P>
+<H2>Logging In</H2>
+
+To participate in the conferences, you need an account.  To get an account,
+just <A HREF=)register_url(>fill in the form</A>.\n)
+allowanon {(<P>
+  If you prefer, you can read the conferences without logging in by\n)
+  sessions {
+    (leaving the login box blank above.)
+  } {
+    (checking the "read anonymous" box above.)
+  } ifelse
+  (\nIf you do this, you will not be able to post
+  and Backtalk will not remember what you have already seen.\n)
+} if
+(
+<H2>Interfaces</H2>
+
+Backtalk can support multiple interfaces to the same conferences, called
+``flavors''.  The flavors installed at this site are:
+<UL>
+)
+interfaces {
+  /iface xdef
+  (<LI> <A HREF=)sessions{anon_url}{pw_url}ifelse iface 0 get (/begin>)
+  iface 2 get cap (</A><BR>\n) iface 3 get
+  browser iface 4 get lt {
+    ( <STRONG>Note: Your browser does not appear to be fully capable of handling )
+    iface 2 get(.</STRONG>)
+  } if
+} forall
+(</UL>
+</BODY></HTML>
+)

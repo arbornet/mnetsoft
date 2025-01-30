@@ -1,0 +1,911 @@
+<HTML>
+<HEAD><TITLE>Customizing Backtalk Authentication</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Customizing Backtalk Authentication</H1>
+Version 1.3.30
+<P>
+&copy; 2002-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk is an advanced web-based computer conferencing system written
+and distributed by Jan Wolter and Steve Weiss.  For general information
+about Backtalk, see the
+<A HREF="http://www.izzy.net/~janc/backtalk">Backtalk</A> home page.
+This document describes methods for customizing Backtalk's authentication
+system.
+<P>
+It is common for administrators to want to integrate a conferencing system
+like Backtalk with web-based applications that might be running on their
+site.  They may already have some sort of database with user names and
+passwords, and they may want those logins and passwords to work with Backtalk
+as well.  This kind of integration is generally difficult, because there are
+lots of different kinds of authentication systems on the web, but Backtalk
+is far easier to adapt to some foreign authentication systems than most
+packages of similar complexity.
+<P>
+Backtalk can be configured to use a large variety of different databases
+and techniques for authentication simply by using different options on the
+<TT>configure</TT> command.  These are described in the
+<A HREF=install.html>installation manual</A>.
+These cover a wide range of options, and may suffice to integrate Backtalk
+with many pre-existing authentication databases.
+However, in many cases some customization the Backtalk will be required.
+<P>
+Starting with release 1.1.7, we have made a concerted effort to modularize
+the Backtalk authentication system to make it simple to add new authentication
+options or customize existing ones.
+In general this will still require at least a modest amount of programming.
+The beginings of a flexible SQL interface has also been
+added which should eventually make it possible to integrate Backtalk
+with just about any SQL database without doing much programming.
+<P>
+All of this is still at a somewhat immature stage.  It will continue to
+improve with time.
+<P>
+<H2>1. User Databases</H2>
+<P>
+Conceptually, user information in Backtalk is divided over several databases.
+In some configurations they may not all really be separate, but it is useful
+to think of them as such.  Backtalk has built-in support for multiple
+different implementations of most of these.  We'll compare them to the
+Unix equivalents, just to give a clearer idea of what each database is.
+In most cases, actually using the Unix database is one possible (though
+unusual) option.
+<UL>
+<P>
+<LI><STRONG>Authentication Database</STRONG><BR>
+The authentication database contains all login names and their passwords.
+The <TT>/etc/shadow</TT> database is the analogous Unix database.
+Apache's <TT>htpasswd</TT> files are also authentication databases.
+<P>
+<LI><STRONG>Identity Database</STRONG><BR>
+The identity database associates a login name with a user ID number, a
+primary group ID number, a full name, and sometimes a home directory path.
+It is analogous to the <TT>/etc/passwd</TT> database in Unix.
+<P>
+In some configurations authentication and identity
+information will be stored in the
+same file or database, like older Unix <TT>/etc/passwd</TT> files which
+countained encrypted passwords as well as fullnames and uid numbers.
+<P>
+<LI><STRONG>Next UID Database</STRONG><BR>
+Backtalk internally assigns a unique number to each user, in a manner similar
+to Unix uid numbers.  To facilitate this, it keeps track of the next uid number
+to be used.  (Technically this isn't really needed - we could instead just
+scan the identity database for an unused value, but it's easier to keep a
+record.)
+<P>
+<LI><STRONG>Group Database</STRONG>
+The group database associates group names with each group ID number, and
+lists secondary group memberships, telling which group other than their
+primary group each login is a member of.
+This is analogous to the Unix <TT>/etc/group</TT> file.
+<P>
+In a few configurations the primary group id, normally stored in the identity
+database, is stored instead in the group database.
+<P>
+<LI><STRONG>Session Database</STRONG>
+This keeps track of which users are currently logged in, mapping the various
+active session ID strings to users.  It is used only with form-based login
+configurations.
+</UL>
+<P>
+There are some databases that are not yet in modules, but which will probably
+be in future releases.  These include users' settings (corresponding to the Unix
+<TT>.plan</TT> file and other "dot files" normally kept in the home directory),
+and user's participation files, which record which portions of the conferences
+they have read.  It'll probably be a lot longer before the actual conference
+data is modularized.
+<P>
+Installers who wish to
+share user information between Backtalk and another program
+will need to decide which databases they actually want to share.  If
+you are using basic authentication (<TT>--login=basic</TT>), then the
+authentication database is a must, because the user must be looked up in
+the authentication every time he or she tries to access Backtalk.  If
+you are using form-based authentication (<TT>--login=form</TT>) then the
+session database is more important,
+because Backtalk must be able to look the session ID up in the
+session database on each hit.  You don't necessarily need to share the
+authentication database in that case, since you can use the other program's
+login page to generate the session cookies.  If you share the authentication
+database but not the session database, users would have to re-login when
+moving to Backtalk, though their password would always be the same.
+<P>
+The identity database is generally nice
+to share, so a person doesn't have to change their full name in two different
+places if they get married and take their wive's last names.  Since you will
+not want to have multiple account creation tools, there would be little use
+in sharing the next uid database.  The group database may be useful.
+<P>
+<H2>2. Sharing Stock Authentication and Session Databases</H2>
+<P>
+We'll start with a discussion of the most important of the shared databases:
+the authentication database.  This is influenced significantly by the type
+of authentication system you are using.  For lots of information on this,
+see <A HREF=http://www.unixpapa/auth.html>Jan Wolter's Guide to Web
+Authentication</A>.
+<P>
+<H3>2.1. Basic Authentication Systems</H3>
+<P>
+Basic authentication is a user login system that is built into virtually all
+browsers and http servers.  Typically the user will see a pop up box appear
+with a login/password prompt when he tries to access a secure area.  Actual
+authentication will be done by the HTTP server, not by CGI programs like
+Backtalk.  With Apache, the authentication will be handled by some standard
+authentication module, like <TT>mod_auth</TT>,
+<TT>mod_auth_dbm</TT> or <TT>mod_auth_db</TT>, or by some similar third
+party module, like
+<TT>mod_auth_external</TT>, <TT>mod_auth_pam</TT> or any of zillions of
+similar things.
+<P>
+Generally, in such configurations, the format of the authentication database
+will be dictated by the HTTP daemon's authentication module, which must be
+able to read it to do authentication.  Backtalk fully supports the formats
+used by <TT>mod_auth</TT>, <TT>mod_auth_dbm</TT> and <TT>mod_auth_db</TT>
+as well as a combination of <TT>mod_auth_external</TT> and <TT>pwauth</TT>
+that authenticates out of a Unix password file.
+<P>
+Note that with basic authentication, the user's browser remembers his login
+and password and resends them with every request.  So every page must be
+able to check authentications, and thus must be able to read the authentication
+database.  Thus if want user to be able to access two applications both
+running basic authentication then they need to share an authentication
+database.
+<P>
+Luckily, this is probably easy, because the actual authentication checking
+is done by the HTTP server.  So you just have to use the same authentication
+module pointing to the same authentication database, and everything will be
+peachy.  You'll need some administration and account creation tools that
+work with the database, but very likely either those from Backtalk or from
+the other application will do just fine.
+<P>
+Sharing session databases in basic authentication systems is even easier,
+since there aren't any.
+<P>
+<H3>2.2. Form-Based Authentication Systems</H3>
+<P>
+Basic authentication systems have an often shabby looking pop-up box, and
+do not allow a user to logout without exiting all browser windows, so sites
+seeking a professional look and feel often avoid them, prefering some form
+of form-based authentication.
+<P>
+In these systems, the users find a login and password box in a form on the
+main browser window.  When he submits his login info it is passed to the CGI
+program, which checks that the password is correct, and gives access to the
+next page only if it was.  To avoid forcing the user to login again for every
+new page thereafter, the CGI sends back to the browser not only the page,
+but some form of certificate that will be automatically resubmitted to the
+browser with each future request.  Normally it will either be contained in
+a cookie, or will be passed from page to page as a CGI argument.  In the
+simplest case the certificate could just be the user's login and password,
+but that has obvious security problems.  Most commonly the certificate is
+simply a random string of characters called a session ID.  The CGI maintains
+a database that tells which user each session ID was issued to, so that when
+a session ID comes back, it can easily identify the user.  Session IDs usually
+expire after a short time of not being used.  Logging out is handled by
+invalidating the session ID.
+<P>
+Note that such systems typically have only one page that actually checks
+logins and passwords and thus only one page needs to have access to the
+authentication database.  This can be handled by either Backtalk or the
+other application, whichever is handy, so the authentication database does
+not have to be shared.  Obviously, whichever application is handling logins
+should probably also be handling account creation and administration.
+<P>
+However, all secure pages will need to check the session database, so that
+must be shared between applications.  This is going to be a bit more of
+a challenge to accomplish than sharing the authentication database under
+basic authentication was.  In that case the HTTP server imposes some
+regularity on the database formats, while in this case an application could
+use any database format you'd care to imagine, and the odds that one program
+will be able to read the other's database are low.  However, if it is in
+an SQL table, it may prove fairly easy to teach Backtalk to read it.
+<P>
+Another issue is the passing of the session IDs.  Backtalk currently supports
+only the cookie option.  If your other application passes it as a CGI variable,
+this is a problem that probably isn't very hard to solve but that we haven't
+addressed yet.  The easiest solution may be to modify the login program to
+put the session ID in a cookie as well as passing it as a CGI variable.
+<P>
+You'll want to check <TT>SESSION_ID_SIZE</TT> in <TT>incl/sess.h</TT> to make
+sure that it is bigger than the session IDs generated by the other application.
+Otherwise Backtalk will truncate the session IDs passed to it, and fail to
+find them in the session database.
+<P>
+If you are going to use the foreign program to handle logins and authentication
+then you'll probably want to build Backtalk with the <TT>--auth=none</TT>
+option so it can't authentication.  You'll want to set <TT>register_url</TT>
+in the <TT>script/config.bt</TT> so that Backtalk's "register" links will
+point to the foreign creation program.
+Also change <TT>script/public/login.bt</TT> to something like:
+<PRE>
+ /http_location (http://www.site.com/cgi-sys/otherprogram/login.cgi) store
+</PRE>
+With the URL pointing to the login page for the other site.  This way if
+they hit Backtalk with a bad or expired session ID, they will be directed to
+the correct login page.  This will probably break Backtalk's ability to get
+back to the page you originally requested after a re-login, unless the
+foreign login program has support for that and you can figure out how to tie
+into it.
+<P>
+<H2>3. Customizing The SQL Modules</H2>
+<P>
+If you are trying to share an SQL database with some application other than
+Backtalk, then you'll have problems with the fact that Backtalk's
+default SQL tables are likely to have different table names, field names and
+field sizes.  They tables may even be structured differently.  Thus, you may
+want to change the table definitions used by Backtalk to make them agree with
+your other applications.  If you know SQL, this isn't difficult.
+<P>
+Backtalk does two things to achieve portability between different SQL systems.
+First, there is a collection of interface modules that give a common interface
+to different SQL servers.  These include:
+<BLOCKQUOTE><TT>
+src/sql_pgsql.c<BR>
+src/sql_mysql.c<BR>
+src/sql_msql.c<BR>
+src/sql_none.c
+</TT></BLOCKQUOTE>
+(At the time of this writing, only the <TT>src/sql_pgsql.c</TT>,
+<TT>src/sql_mysql.c</TT> and 
+<TT>src/sql_none.c</TT> modules are fully implemented and tested.)  These
+modules are designed to let Backtalk submit queries and get results from
+different SQL servers in a uniform way.  Unless you want to support an
+SQL server not yet supported by Backtalk, you shouldn't have to fiddle with
+these.
+<P>
+However, different SQL servers also have small syntactical differences in
+the query languages that they understand.  Thus, the queries submitted to
+different SQL servers might also have to be different.  So Backtalk does
+not embed the SQL queries used for different operations in the C code.
+Instead, they are extracted at compile time from SQL query files stored
+in the <TT>sql</TT> subdirectory of the distribution.  These will eventually
+include:
+<BLOCKQUOTE><TT>
+sql/pgsql/*<BR>
+sql/mysql/*<BR>
+sql/msql/*
+</TT></BLOCKQUOTE>
+Within each of these directories will be found the files containing the queries
+used to access each database.  These include:
+<BLOCKQUOTE><TT>
+sql/pgsql/auth.sql<BR>
+sql/pgsql/auth_ident.sql<BR>
+sql/pgsql/group.sql<BR>
+sql/pgsql/ident.sql<BR>
+sql/pgsql/session.sql<BR>
+sql/pgsql/nextuid.sql
+</TT></BLOCKQUOTE>
+The <TT>auth_ident.sql</TT> query set is used instead of the
+separate <TT>auth.sql</TT> and <TT>ident.sql</TT> if those are to be in
+the same table.
+Each of these files includes a set of definitions for the SQL queries to
+be used to execute different operations on the databases.  By changing
+the queries, different database structures can be supported.
+<P>
+Note that if any changes are made to these files, then Backtalk must be
+recompiled.  These are read only at compile-time, not at run-time.
+<P>
+Instead of formally documenting the format of these, we'll just look
+through some examples.
+
+<H3>3.1. Macros</H3>
+
+As an example, we'll start with the <TT>sql/pgsql/auth.sql</TT> file, which
+defines the default SQL commands to be used to create, access and update
+the SQL authentication database under PostgreSQL.
+The file starts with some macro definitions:
+<PRE>
+    &amp;tab_auth = bt_user
+    &amp;col_auth_login = login
+    &amp;col_auth_pass = password
+</PRE>
+Any name starting with an ampersand is a macro.  It is defined by assignment
+commands like the ones above.  If the name appears anywhere later in the file,
+the value will be substituted.
+These three definitions define the name of the table and the two fields in it.
+If your table differs only in some field names
+(<EM>e.g.</EM>, <TT>passwd</TT> instead
+of <TT>password</TT>), then it may be sufficient just
+to redefine these macros to make Backtalk work with it.
+
+<H3>3.2. Create Query</H3>
+
+Next we define the first of the queries.  This is a query to create the
+authentication table:
+<PRE>
+    auth_create()
+    {
+        -DROP TABLE &amp;tab_auth;
+        CREATE TABLE &amp;tab_auth (
+               &amp;col_auth_login     &amp;type_login PRIMARY KEY,
+               &amp;col_auth_pass      &amp;type_pass
+        );
+    }
+</PRE>
+Note that this is full of macros.  The macros named <TT>&amp;type_login</TT>
+and <TT>&amp;type_pass</TT> are defined in the <TT>sql/pgsql/types.sql</TT>
+file.  When they are all substituted in, this query look like:
+<PRE>
+    auth_create()
+    {
+        -DROP TABLE bt_user;
+        CREATE TABLE bt_user (
+               login        varchar(32) PRIMARY KEY,
+               password     varchar(16)
+        );
+    }
+</PRE>
+This sequence of SQL statements is executed whenver we want to create the
+authentication databasse.  This actually only happens during the installation
+process when you do '<TT>make install-users</TT>', so if you aren't using
+the Backtalk install scripts to create your database, then there is no need
+to actually define this.  You could just do
+<PRE>
+    auth_create()
+    {
+    }
+</PRE>
+The first SQL statement in the <TT>auth_create()</TT> query is prefixed with
+a dash.  This means that it is OK if these query fails (normally this would
+be because the <TT>bt_user</TT> doesn't exist, so dropping it doesn't work,
+but that's fine).
+
+<H3>3.3. Getpass Query</H3>
+
+Next we define a more commonly used SQL query.  This one is given a login
+name, and returns one row with one column containing the encrypted password
+for that account.  It is used by Backtalk to authenticate users in
+form-based authentication systems.
+<PRE>
+    auth_getpass($login)
+    {
+          SELECT &amp;col_auth_pass FROM &amp;tab_auth WHERE &amp;col_auth_login=$'login;
+    }
+</PRE>
+Here we see another kind of variable.  In addition to macros, which are
+expanded at compile time, we have parameters, which aren't expanded until
+the query is executed at run-time.  These parameters have names that start
+with dollar signs.  So after macro expansion, the <TT>auth_getpass()</TT>
+function would look like:
+<PRE>
+    auth_getpass($login)
+    {
+          SELECT password FROM bt_user WHERE login=$'login;
+    }
+</PRE>
+If this is run with the login <TT>joe</TT> then any instance of the variable
+<TT>$login</TT> would be replaced with the value <TT>joe</TT>.  In this case
+we have instead <TT>$'login</TT> which is replaced with the value quoted as
+an SQL string (typically enclosed in single quotes with any internal single
+quotes doubled, though this can vary on different SQL servers).  Thus the
+actual query executed will be:
+<PRE>
+          SELECT password FROM bt_user WHERE login='joe';
+</PRE>
+After submitting this query to the SQL server, Backtalk will fetch results
+back, expecting to find one row of data containing just one column.
+Since the <TT>login</TT> field is defined as a <TT>PRIMARY KEY</TT> there will
+never be more than one row that satisfies this query.
+<P>
+It's perfectly possible to have more complex queries.  If I had two tables,
+one with uid numbers and passwords and one with uid numbers and login names,
+then I could use a join:
+<PRE>
+    auth_getpass($login)
+    {
+          SELECT passtab.pass FROM passtab,nametab
+             WHERE nametab.name=$'login AND passtab.uid=nametab.uid;
+    }
+</PRE>
+It doesn't matter that the field name for the result is different
+(<TT>pass</TT> instead of <TT>password</TT>).  Backtalk never pays attention
+to field names, only to column numbers.
+<P>
+If you wanted to give only some the accounts in the database access to
+Backtalk, the query could be restricted, for example:
+<PRE>
+    auth_getpass($login)
+    {
+          SELECT password FROM bt_user WHERE login=$'login
+             WHERE enable_backtalk=1;
+    }
+</PRE>
+
+
+<H3>3.4. Authentication and Identity Add Query</H3>
+
+Further down, we find a query to add a new entry to the authentication table,
+which is used when creating new user accounts.
+<PRE>
+    auth_add($login,$pass,$uid,$gid,$fname,$dir)
+    {
+          INSERT INTO &amp;tab_auth (&amp;col_auth_login,&amp;col_auth_pass)
+            VALUES ($'login, $'pass);
+    }
+</PRE>
+Note that this is passed several arguements that aren't stored in the table.
+In some installations the authentication and identity databases are shared,
+and thus stored in the same table.  Then the <TT>auth_add()</TT> query
+actually adds all the data, while the <TT>ident_add()</TT> query, which
+normally creates new rows in the identity database, does nothing.  So, if we
+look at the definitions in the <TT>sql/pgsql/auth_ident.sql</TT> file, we
+see:
+<PRE>
+    auth_add($login,$pass,$uid,$gid,$fname,$dir)
+    {
+          INSERT INTO &amp;tab_auth
+            (&amp;col_ident_login,&amp;col_ident_pass,&amp;col_ident_uid,&amp;col_ident_gid,
+             &amp;col_ident_fname)
+            VALUES ($'login, $'pass, $uid, $gid, $'fname);
+    }
+
+    ident_add($login,$uid,$gid,$fname,$dir)
+    {
+    }
+</PRE>
+Thus, though the UID value is always passed to the query function, it isn't
+always used.
+<P>
+Note that in the shared <TT>auth_add()</TT> function, the insert statement
+refers to <TT>$uid</TT> instead of <TT>$'uid</TT>.  We don't have any kind
+of typing here, so the query compiler doesn't actually know that the UID is
+a numeric value, not a string value.  We need to be explicit about telling
+it which strings to quote and which not to.
+
+<H3>3.5. Identity List Query</H3>
+
+As a final example, the <TT>ident_users()</TT> query in
+<TT>sql/pgsql/ident.sql</TT> is used to list users in the identity
+database.  Sometimes we don't want to list more than N users displayed per
+page, so this takes a optional argument:
+<PRE>
+    ident_users($n)
+    {
+          SELECT &amp;col_ident_login,NULL,&amp;col_ident_uid,
+                 &amp;col_ident_gid,&amp;col_ident_fname,NULL
+            FROM &amp;tab_ident
+            ORDER BY &amp;col_ident_login
+            $[n LIMIT $n];
+    }
+</PRE>
+This query is expected to return six columns of data, the first with the
+login name, the second with the password (or NULL if the databases aren't
+shared), the third with the uid, the fourth with the gid, the fifth with
+person's full name, and the sixth with the directory name.
+Again, it is the column positions, not the field names that matter to
+Backtalk.
+<P>
+This also shows how optional clauses can be included.  The <TT> LIMIT $n</TT>
+clause is only included in the query if the $n varible is defined.
+<P>
+Most likely, at least some of these fields will not exist in your identity
+database.  Luckily, you don't really need them all.
+<DL>
+<DT>login
+<DD>Backtalk does need a login name.  Some sites use an email address as
+the login name.  This is fine for Backtalk.  In any case, be sure that you
+have Backtalk configured with <TT>MAX_LOGIN_LEN</TT> at least as big as
+the biggest login that can stored in the database.
+<DT>password
+<DD>Return NULL if you don't have it or if in encrypted in some way Backtalk
+doesn't understand.
+<DT>uid
+<DD>Many systems don't assign unique ID numbers to users.  With some SQL
+servers, you may be able to use the <TT>OID</TT> number of the database row.
+MySQL doesn't support this though, and they can change if the database is
+copied carelessly.  Adding an auto-increment field to the database might
+work, if the other application is written so it won't be confused by added
+fields (a basic of good SQL programming, if you ask me).  But if all else
+fails, just return a constant 1 for all users.  Backtalk won't really mind
+much if users don't have unique uid numbers, so long as you aren't enabling
+direct execution, which you wouldn't do unless you are using Unix accounts
+anyway.  The only loss is that if a user 'fred' gets his account deleted,
+and a new user takes out a new login with the name 'fred', then the new 'fred'
+will be able to edit the old one's postings.
+<DT>gid
+<DD>The foreign system may have no idea of groups.
+By default, Backtalk uses the group number 0 to indicate an admin account
+and 1 to indicate a user account.  So if you don't need a Backtalk admin
+account, you could just return a constant 1 for this.  Or you could do
+something like <TT>IF(username=='mike',0,1)</TT>.  This would make user
+'mike' a cfadm, and everyone else a normal user.
+<DT>fname
+<DD>I've never seen an identity database that didn't have this, but often
+it is split into first and last names (a good practice, actually).  Just
+return something like <TT>CONCAT(firstname,' ',lastname)</TT>.
+<DT>directory
+<DD>Hardly any foreign systems will have home directories for their users.
+If you return NULL, Backtalk will concoct a suitable one based on the login
+name.  This only solves half the problem though - the home directory probably
+was not created by the foreign registration program.  So build Backtalk with
+the <TT>AUTO_CREATE_DIR</TT> option, and it will check for the existance of
+the directory every time a user logs in, and create it if it doesn't exist.
+</DL>
+
+<H2>4. Writing Custom Database Modules</H2>
+
+If you want to authenticate out of a database of a different type than those
+already supported by Backtalk, then you'll have to write some C code.  In
+most cases this is relatively easy to do.  Let's consider, for example,
+writing a new session database interface.  If you look in the <TT>src</TT>
+subdirectory of the distribution, you'll find three existing session modules:
+<PRE>
+   src/sess_none.c
+   src/sess_file.c
+   src/sess_sql.c
+</PRE>
+Only one of these files will be linked in on any given build of Backtalk.
+The '<TT>src/sess_none.c</TT>' file is used when we aren't using a session
+database.  To create a new session module, you just need to write a new file,
+named something like '<TT>src/sess_foo.c</TT>' and say '<TT>--session=foo</TT>'
+on the <TT>configure</TT> comand.  The '<TT>src/sess_foo.c</TT>' file would
+need to provide implementions of three functions:
+<UL>
+<LI><TT>char *new_session(char *user, char *ip)</TT><BR>
+  The user with the given user name has just logged in from the given IP
+  address.  This function creates a session database entry and returns a
+  session id string.
+<LI><TT>int session_lookup(char *sid, char *ip, char *user)</TT><BR>
+  A user has just tried to return to the system with the given session ID
+  from the given IP address.  Return 0 if it is valid, 1 if it isn't.  
+  If it is valid, save the user's login ID to the buffer pointed to by
+  the <TT>user</TT> argument.
+<LI><TT>void session_delete(char *sid)</TT><BR>
+  Delete the given session ID from the database.
+</UL>
+(Actually, it's generally smarter to ignore the IP addresses these days.)
+<P>
+Most other database interfaces are similar.  The authentication and identity
+modules are a bit more complex, however, since they interact (sometimes
+being shared) and since not all interfaces implement all functions.
+<P>
+Each of these modules has both a source file and header file:
+<PRE>
+   src/auth_db.c         incl/auth_db.h
+   src/auth_dbm.c        incl/auth_dbm.h
+   src/auth_none.c       incl/auth_none.h
+   src/auth_passwd.c     incl/auth_passwd.h
+   src/auth_shadow.c     incl/auth_shadow.h
+   src/auth_sql.c        incl/auth_sql.h
+   src/auth_text.c       incl/auth_text.h
+
+   src/ident_hash.c      incl/ident_hash.h
+   src/ident_passwd.c    incl/ident_passwd.h
+   src/ident_shadow.c    incl/ident_shadow.h
+   src/ident_sql.c       incl/ident_sql.h
+   src/ident_tagfile.c   incl/ident_tagfile.h
+   src/ident_text.c      incl/ident_text.h    
+   src/ident_yapp.c      incl/ident_yapp.h
+</PRE>
+
+For the most part, the headers just define which of the functions are actually
+implemented by any given module.  If <TT>src/auth_text.c</TT> defines a
+<TT>auth_getpass(login)</TT> function, then <TT>src/auth_text.c</TT> will
+defined the symbol <TT>HAVEAUTH_GETPASS</TT>.
+<P>
+At compile time, Backtalk will figure out which of the available routines
+it actually will use in any given configuration, which depends on the
+combination of identity and authentication modules installed and on various
+other system configuration settings.
+<P>
+The complete set of functions and defines is summarized in the table below.
+(Sorry, This table is huge and not very Lynx-readable).
+<P>
+The modules included in the distribution are designed to be flexible and so
+implement as many different routines as possible, but custom modules can often
+be much simpler.  If you have an existing database, you probably already have
+tools to create, edit and destroy settings, so you typically won't need any
+of the edit function.  Mostly it will suffice to implement just one of the
+three "walk" functions.
+<P>
+<TABLE BORDER=1>
+<TR><TH>function</TH><TH>define</TH><TH>what it does</TH><TH>needed?</TH>
+<TH>auth_text</TH><TH>auth_db<BR>auth_dbm</TH><TH>auth_sql</TH>
+<TH>auth_passwd</TH><TH>auth_shadow</TH><TD ROWSPAN=8 COLSPAN=2>&nbsp;</TD></TR>
+
+<TR><TD><TT>auth_getpass(login)
+</TT></TD><TD><TT>HAVEAUTH_GETPASS
+</TT></TD><TD>Returns&nbsp;the&nbsp;encrpyted&nbsp;password&nbsp;for&nbsp;the&nbsp;user,
+or NULL if the user is not found.
+</TD><TD>Optional.  Without it we can't check passwords or status, unless the
+auth file is shared with the ident file, in which case we'll use
+ident_getpwnam instead.
+</TD><TD ALIGN=CENTER>Yes
+</TD><TD ALIGN=CENTER>Yes
+</TD><TD ALIGN=CENTER>Yes
+</TD><TD ALIGN=CENTER>No. Use Default.</TD><TD ALIGN=CENTER>No.
+</TD></TR>
+
+<TR><TD><TT>auth_checkpass(login,pass)
+</TT></TD><TD><TT>HAVEAUTH_CHECKPASS
+</TT></TD><TD>Given a login and a plain text password, return true if they
+are valid.
+</TD><TD>This&nbsp;is&nbsp;only&nbsp;used&nbsp;with&nbsp;<TT>--login=cookie</TT>.&nbsp;In&nbsp;that case 
+we must have either <TT>auth_checkpass()</TT> or <TT>auth_getpass()</TT>.
+If <TT>auth_checkpass()</TT> is not implemented, we compare the result of
+<TT>auth_getpass()</TT> with the result of running <TT>crypt()</TT> on the
+password.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>auth_walk(flag)
+</TT></TD><TD><TT>HAVEAUTH_WALK
+</TT></TD><TD>If flag is 0, return the login name for the "first" user in
+the authentication database.  Otherwise, return the "next" user in the database.
+</TD><TD>Required only if neither <TT>ident_walk()</TT> nor
+<TT>ident_walkpw()</TT> is defined.
+</TD><TD ALIGN=CENTER>Yes
+</TD><TD ALIGN=CENTER>Yes
+</TD><TD ALIGN=CENTER>Yes
+</TD><TD ALIGN=CENTER>No. Use Default.</TD><TD ALIGN=CENTER>No. Use Default.
+</TD></TR>
+
+<TR><TD><TT>auth_seek(login)
+</TT></TD><TD><TT>HAVEAUTH_SEEK
+</TT></TD><TD>Arrange things so that the next call to <TT>auth_walk(1)</TT>
+will return the user after the given user.
+</TD><TD>Used only if neither <TT>ident_walk()</TT> nor
+<TT>ident_walkpw()</TT> is defined, and optional even then.
+If it is missing, we use <TT>auth_walk()</TT> to go
+sequentially through the database until the desired login is found.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No. Use Default.</TD><TD ALIGN=CENTER>No. Use Default.
+</TD></TR>
+
+<TR><TD><TT>auth_newpass(login,encpw)
+</TT></TD><TD><TT>HAVEAUTH_NEWPASS
+</TT></TD><TD>Change a user's password, given his login and encrypted password.
+</TD><TD>Optional.  If not implemented, Backtalk cannot change passwords.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD></TR>
+
+<TR><TD><TT>auth_add(login,password, status,uid,gid,fname,dir)
+</TT></TD><TD><TT>HAVEAUTH_ADD
+</TT></TD><TD>Add a user to the authentication database.
+The <TT>uid</TT> ,<TT>gid</TT> ,<TT>fname</TT>  and <TT>dir</TT>
+arguments should be ignored if the authentication and identity databases are
+not shared.   Otherwise they should be saved too.
+</TD><TD>Optional.  If not implemented, Backtalk cannot create users.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD></TR>
+
+<TR><TD><TT>auth_del(login)
+</TT></TD><TD><TT>HAVEAUTH_DEL
+</TT></TD><TD>Delete a user from the authentication database.
+Return non-zero if the user does not exist, 0 on success.
+</TD><TD>Optional.  If not implemented, Backtalk cannot delete users.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD></TR>
+
+<TR><TH>function</TH><TH>define</TH><TH>what it does</TH><TH>needed?</TH>
+<TH>ident_text</TH><TH>ident_hash</TH><TH>ident_sql</TH>
+<TH>ident_passwd</TH><TH>ident_shadow</TH>
+<TH>ident_tagfile</TH><TH>ident_yapp</TH></TR>
+
+<TR><TD><TT>&nbsp;
+</TT></TD><TD><TT>IDENT_STOREDIR
+</TT></TD><TD>Defined if the identity database stores a home directory
+for each user.  If true, <TT>ident_getpwnam()</TT>, <TT>ident_getpwuid()</TT>,
+and <TT>ident_walkpw()</TT> should return the stored value.
+If not, they should return <TT>pw_dir=NULL</TT>.
+</TD><TD>Optional.
+If directories are not stored, they are computed from the login name.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD></TR>
+
+<TR><TD><TT>&nbsp;
+</TT></TD><TD><TT>IDENT_STOREEMAIL
+</TT></TD><TD>Defined if the identity database stores an email address for
+each user.  This is normally not done - email addresses are normally kept
+in a different database, but the Yapp ident module does it for compatibility
+reasons.
+If true, <TT>ident_getpwnam()</TT>, <TT>ident_getpwuid()</TT>,
+and <TT>ident_walkpw()</TT> should return the stored value in the 
+<TT>pw_shell</TT> field, which is otherwise not used.
+</TD><TD>Optional.
+If email addresses are not stored in the ident database, then they are stored
+in the user's <TT>.backtalk</TT> file.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>ident_getpwnam(login)
+</TT></TD><TD><TT>HAVEIDENT_GETPWNAM
+</TT></TD><TD>Given a login name, return a '<TT>struct passwd</TT>'
+(see `<TT>man getpwent</TT>') with at least
+<TT>pw_uid</TT>, <TT>pw_gid</TT>, and <TT>pw_gecos</TT> (fullname) fields set.
+<TT>pw_name</TT>, <TT>pw_passwd</TT>, <TT>pw_dir</TT>, and <TT>pw_shell</TT>
+may be either set to something,
+or NULL.  Return NULL if no user with that name exists.
+</TD><TD>Always required.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>ident_getpwuid(uid)
+</TT></TD><TD><TT>HAVEIDENT_GETPWUID
+</TT></TD><TD>
+Same as getidnam, but finds the user with the given UID number
+instead of the given login and the returned passwd structure must
+have both <TT>pw_name</TT> and <TT>pw_uid</TT> defined.
+</TD><TD>Required only if built with <TT>--enable-exec</TT> option.
+(Which is only useful if using Unix accounts, with
+<TT>ident_passwd.c</TT> and <TT>ident_shadow.c</TT>).
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD></TR>
+
+<TR><TD><TT>ident_walkpw(flag)
+</TT></TD><TD><TT>HAVEIDENT_WALKPW
+</TT></TD><TD>
+If flag is 0, return the passwd structure for the "first" user in
+the database.  Otherwise, return the "next" user in the database.
+Returned password structure
+should have <TT>pw_name</TT>,
+<TT>pw_uid</TT>, <TT>pw_gid</TT>, and <TT>pw_gecos</TT>.
+</TD><TD>Either <TT>ident_walkpw()</TT>,
+<TT>ident_walk()</TT> or <TT>auth_walk()</TT>
+is required.  If this is not defined we do
+<TT>ident_getpwnam(ident_walk(flag))</TT> or
+<TT>ident_getpwnam(auth_walk(flag))</TT>
+so unless you can do better you don't need to implement this.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD></TR>
+
+<TR><TD><TT>ident_walk(flag)
+</TT></TD><TD><TT>HAVEIDENT_WALK
+</TT></TD><TD>
+If flag is 0, return the login name for the "first" user in
+the database.  Otherwise, return the "next" user in the database.
+</TD><TD>Either <TT>ident_walkpw()</TT> or <TT>ident_walk()</TT> is required.
+If <TT>ident_walk()</TT> is not defined we do <TT>auth_walk()</TT> or 
+<TT>ident_walkpw(flag)->pw_name</TT>, so this need only be provided if we
+can do something faster.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No. Use Default.</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD></TR>
+
+<TR><TD><TT>ident_seek(login)
+</TT></TD><TD><TT>HAVEIDENT_SEEK
+</TT></TD><TD>
+Arrange things so that the next call to <TT>ident_walk(1)</TT> will return the
+user after the given user.
+</TD><TD ALIGN=CENTER>Optional. 
+If not provided, we do <TT>ident_walk(0)</TT> followed by
+<TT>ident_walk(1)</TT>  until we arrive at the given login.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No. Use Default.</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD><TD ALIGN=CENTER>No. Use Default.
+</TD></TR>
+
+<TR><TD><TT>ident_newfname(pwd,fname)
+</TT></TD><TD><TT>HAVEIDENT_NEWFNAME
+</TT></TD><TD>
+Change the user's full name.  <TT>pwd</TT> will have the full set of old
+identity information including login name.
+</TD><TD ALIGN=CENTER>Optional. 
+If not provided, fullnames cannot be editted through Backtalk.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>ident_newgid(pwd,gid)
+</TT></TD><TD><TT>HAVEIDENT_NEWGID
+</TT></TD><TD>
+Change the user's primary group id.  <TT>pwd</TT> will have the full set of old
+identity information including login name.
+</TD><TD ALIGN=CENTER>Optional. 
+If not provided, gids cannot be editted through Backtalk.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>ident_newemail(pwd,email)
+</TT></TD><TD><TT>HAVEIDENT_NEWEMAIL
+</TT></TD><TD>
+Change the user's stored email address.
+<TT>pwd</TT> will have the full set of old
+identity information including login name.
+Never called unless
+<TT>IDENT_STOREEMAIL</TT> is defined.
+</TD><TD ALIGN=CENTER>Optional. 
+If not provided, stored email addresses cannot be editted through Backtalk.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>ident_add(login,uid,gid, fname,dir)
+</TT></TD><TD><TT>HAVEIDENT_ADD
+</TT></TD><TD>
+Add a new entry into the identity database.
+</TD><TD ALIGN=CENTER>Optional. 
+If not provided, users cannot be created.  Not required if
+identity database is shared with the authentication database.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+<TR><TD><TT>ident_del(login)
+</TT></TD><TD><TT>HAVEIDENT_DEL
+</TT></TD><TD>
+Delete the named user from identity database.
+</TD><TD ALIGN=CENTER>Optional. 
+If not provided, users cannot be deleted.  Not required if
+when the identity database is shared with the authentication database.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>No.</TD><TD ALIGN=CENTER>No.
+</TD><TD ALIGN=CENTER>Yes.
+</TD><TD ALIGN=CENTER>Yes.
+</TD></TR>
+
+</TABLE>
+<HR>
+<ADDRESS>
+<A HREF="mailto:backtalk@hvcn.org">backtalk@hvcn.org</A>
+Wed Feb 26 16:33:42 EST 2003
+</ADDRESS>
+</BODY></HTML>

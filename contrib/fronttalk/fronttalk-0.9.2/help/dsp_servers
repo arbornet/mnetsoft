@@ -1,0 +1,7 @@
+                   Fronttalk Display Value:  SERVERS
+
+Usage:  DISPLAY SERVERS
+        DISPLAY SYSTEMS
+
+Display a list of Backtalk servers known to Fronttalk.  You can use the
+SERVER command to connect to any of these servers.

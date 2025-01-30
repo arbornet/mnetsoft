@@ -1,0 +1,18 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% Macros for constructing URLs linking to confernences, items, or responses.
+
+/format_conf 
+{pop pop /format_c xdef
+ `(browse?conf=) format_c'
+} def
+
+/format_item
+{pop cvs /format_i xdef /format_c xdef
+ `(read?conf=) format_c (&item=) format_i (&rsel=all)'
+} def
+
+/format_resp
+{cvs /format_r xdef cvs /format_i xdef /format_c xdef
+ `(read?conf=) format_c (&item=) format_i (&rsel=) format_r'
+} def

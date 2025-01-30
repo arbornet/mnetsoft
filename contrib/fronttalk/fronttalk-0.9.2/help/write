@@ -1,0 +1,10 @@
+                       Fronttalk Command:  WRITE
+
+Usage:  WRITE
+        CHAT
+
+Talk to another user on the local server.  This is just an alias for the
+Unix "write" command included for Picospan compatibility.
+
+The SET WRITE and SET NOWRITE control whether other users can write to you.
+Of course, those are just aliases for the Unix "mesg y" and "mesg n" commands.

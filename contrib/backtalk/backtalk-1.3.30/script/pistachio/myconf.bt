@@ -1,0 +1,134 @@
+% Backtalk Pistachio Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% myconf script
+%
+% This script allows the user to set personal conference options, including
+% the color scheme.
+%
+% Query Parameters:
+%    conf=	    name of conference we are configuring
+%    csel=          current conference selector, if any
+%    msg=	    text message to display near top of page.
+
+% "state" is a standard part of links to other pages
+/state [(conf=)conf csel {(&csel=)csel} if] def
+
+flavor(config)+ include
+
+% page header
+(<HTML><HEAD>
+<TITLE>Set )id('s Settings for )
+/conftitle `( )Conference cap(</TITLE>
+)/metatags(</HEAD>\n)'
+
+% open the conference
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+global_header
+
+(<H1>)id('s Settings for the )conftitle`( )Conference cap(</H1>
+)'
+
+% print any message returned from helper scripts
+/msg defined {
+ msg(<HR>\n)
+} if
+
+% load various buttons
+/butsel 5 defconstant flavor(buttondef)+ include
+
+(<P>
+Return to <A HREF=confhome?)state(>)confhome_button(</A> or
+<A HREF=begin>)entrance_button(</A>.
+)
+
+/bgimage () def
+
+% Extract individual values from bodytags line
+bodytags {
+  /bodytags ( )bodytags+ def
+  bodytags << BGCOLOR="([^"]*)">> sgrep { aload /bgcolor xdef pop} if
+  bodytags << BACKGROUND="([^"]*)">> sgrep { aload /bgimage xdef pop} if
+  bodytags << TEXT="([^"]*)">> sgrep { aload /textcolor xdef pop} if
+  bodytags << LINK="([^"]*)">> sgrep { aload /linkcolor xdef pop} if
+  bodytags << VLINK="([^"]*)">> sgrep { aload /vlinkcolor xdef pop} if
+  bodytags << ALINK="([^"]*)">> sgrep { aload /alinkcolor xdef pop} if
+} if
+
+% Set default colors if none defined (these are netscape defaults)
+bgcolor ! {/bgcolor (COCOCO) def} if
+textcolor ! {/textcolor (000000) def} if
+linkcolor ! {/linkcolor (0000EE) def} if
+vlinkcolor ! {/vlinkcolor (551A8B) def} if
+alinkcolor ! {/alinkcolor (FF0000) def} if
+
+/favfirst /nofavfirst get_conf_note ! def
+/bnewfirst dup get_conf_note def
+/bnewlast dup get_conf_note def
+/reverse dup get_conf_note def
+
+(<H2>Default Read Order</H2>
+
+The following settings control the order in which )Items( are displayed when
+reading this )Conference(.  Combinations mostly work.
+You can read in a different order than you set here by using the
+read command on the )Item( list page.
+<P>
+<FORM ACTION=setorder METHOD=post>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<INPUT TYPE=hidden NAME=csel VALUE=)csel(>
+<INPUT TYPE=checkbox NAME=favfirst VALUE=1 )favfirst{( CHECKED)}if(>
+  Read favorite )Items( before other )Items(.<BR>
+<INPUT TYPE=checkbox NAME=bnewfirst VALUE=1 )bnewfirst{( CHECKED)}if(>
+  Read brand new )Items( before previously seen )Items(.<BR>
+<INPUT TYPE=checkbox NAME=bnewlast VALUE=1 )bnewlast{( CHECKED)}if(>
+  Read previously seen )Items( before brandnew )Items(.<BR>
+<INPUT TYPE=checkbox NAME=reverse VALUE=1 )reverse{( CHECKED)}if(>
+  Read )Items( in reverse numerical order.<BR>
+<INPUT TYPE=submit VALUE=update>
+</FORM>
+
+<H2>Colors and Buttons</H2>
+
+The following settings allow you to select the colors you will see in the )
+conf( )Conference(.
+)
+amfw {(<P>
+  As a fairwitness, you may want to <A HREF=confopt?)state(>set the default
+  colors that everyone sees</A> instead of changing them only for yourself.
+)} if
+(<P>
+&nbsp;<A HREF=color?)state(&what=bgcolor&old=)bgcolor(&user=1>)button(</A>
+Change Background Color.<BR>
+&nbsp;<A HREF=setbg?user=1&)state(>)button(</A>
+Change Background Image.<BR>
+&nbsp;<A HREF=color?)state(&what=textcolor&old=)textcolor(&user=1>)button(</A>
+Change Text Color.<BR>
+&nbsp;<A HREF=color?)state(&what=highcolor&old=)highcolor(&user=1>)button(</A>
+Change <FONT COLOR=")highcolor(">Highlit Text</FONT> Color.<BR>
+&nbsp;<A HREF=color?)state(&what=linkcolor&old=)linkcolor(&user=1>)button(</A>
+Change <FONT COLOR=)linkcolor(><U>Unused Link</U></FONT> Color.<BR>
+&nbsp;<A HREF=color?)state(&what=vlinkcolor&old=)vlinkcolor(&user=1>)button(</A>
+Change <FONT COLOR=)vlinkcolor(><U>Used Link</U></FONT> Color<BR>
+&nbsp;<A HREF=color?)state(&what=alinkcolor&old=)alinkcolor(&user=1>)button(</A>
+Change <FONT COLOR=)alinkcolor(><U>Clicked Link</U></FONT> Color
+(if this one is illegible, it doesn't matter).<BR>
+&nbsp;<A HREF=buttonmenu?)state(&what=regbutton&old=)regbutton(&user=1>)button(</A>
+Change Standard Button Color (used for most buttons you see).<BR>
+&nbsp;<A HREF=buttonmenu?)state(&what=offbutton&old=)offbutton(&user=1>)no_button(</A>
+Change Disabled Button Color (used for buttons that won't work).)
+amfw {
+(<BR>
+&nbsp;<A HREF=buttonmenu?)state(&what=admbutton&old=)admbutton(&user=1>)fw_button(</A>
+Change )Fairwitness cap+( Button Color (should contrast to standard button).
+)+} if
+(<P>
+&nbsp;<A HREF=setmyconf?)state(&what=reset>)button(</A>
+Revert to Default Settings.
+)
+
+global_footer
+(</BODY></HTML>
+)

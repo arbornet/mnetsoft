@@ -1,0 +1,50 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% openconf script
+%
+% This is a header file that takes care of entering a conference.
+%
+% This script is meant to be invoked with some script like:
+%    flavor(openconf)+ stopped {
+%       ( Backtalk internal error: )exch(\n) halt
+%    } if
+% Note that it "stops" with an error message on failure.
+
+conf ! {`(No )/Conference constant{Conference}{(conference)}ifelse
+         ( name given)' stop} if
+
+% open the conference
+open_conf {
+  flavor(noconf)+ jump
+  stop
+} if
+
+% for conferences that need passwords, keep passwords in cookies
+secret {
+  /dunno defined {
+    % User has said he doesn't know password, remember that in a cookie
+    (pass.)conf+ (Dunno!) 0 setcookie
+  } {
+    secret 1 eq {
+      % We used password to get in - stash it in cookie for future use
+      amfw ! {
+        (pass.)conf+ dup getcookie {
+           cpass 0 setcookie
+        } {
+           cpass eq {pop}{cpass 0 setcookie}ifelse
+        } ifelse
+      } if
+    } {
+      % We needed password, but didn't get it - try getting one from the cookie
+      (pass.)conf+ getcookie ! {
+         dup (Dunno!) eq {
+           pop /dunno 1 def
+         } {
+	   /cpass xstore
+	   close_conf
+	   open_conf {flavor(noconf)+ jump} if
+         } ifelse
+      } if
+    } ifelse
+  } ifelse
+} if

@@ -1,0 +1,140 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% buttondef header script
+%
+% This is a header script used to include definitions of buttons into Pistachio
+% scripts.  Before calling it, you should define the a constant called "butsel"
+% to some sum of the following integers.  This selects which buttons to define.
+%    1 -- plain buttons
+%    2 -- READNEW and NEXTCONF
+%    4 -- ENTRANCE, CONFHOME, ITEMLIST, HELP
+%    8 -- HIDE, SHOW, ERASE, EDIT
+%   16 -- NEXTITEM, FORGET
+%   32 -- Checkboxes
+%   64 -- POST, ENTER, PREVIEW
+% You always get the LOGOUT button if sessions is defined.
+%
+% Correct syntax to call this is like:
+%   /butsel 19 defconstant flavor(buttondef)+ include
+
+flavor(config)+ include
+
+/regbutton defined ! {/regbutton regbut_dflt def} if
+/offbutton defined ! {/offbutton offbut_dflt def} if
+/admbutton defined ! {/admbutton admbut_dflt def} if
+
+/breg `(<IMG SRC=)imghost(/)flavor regbutton(/)' def
+/boff `(<IMG SRC=)imghost(/)flavor offbutton(/)' def
+/badm `(<IMG SRC=)imghost(/)flavor admbutton(/)' def
+
+% Basic plain buttons
+butsel 1 band {
+/button_src `(SRC=)imghost(/)flavor regbutton
+  (/button.gif HEIGHT=16 WIDTH=16 BORDER=0 ALT=-&gt;>)' def
+/button `(<IMG )button_src' def
+/fw_button_src `(SRC=)imghost(/)flavor admbutton
+  (/button.gif HEIGHT=16 WIDTH=16 BORDER=0 ALT="=&gt;">)' def
+/fw_button `(<IMG )fw_button_src' def
+/no_button
+  `boff(button.gif HEIGHT=16 WIDTH=16 BORDER=0 ALT="--">)' def
+} if
+
+% LOGOUT
+sessions {
+/logout_button
+  breg(logout.gif HEIGHT=16 WIDTH=48 BORDER=0 ALT="Logout">)+ def
+/logout_link
+  `(<A HREF=")backtalkurl(/public/logout">)logout_button(</A>\n)' def
+} if
+
+% READNEW and NEXTCONF
+butsel 2 band {
+/readnew_button
+  breg(readnew.gif HEIGHT=16 WIDTH=65 BORDER=0 ALT="Read New">)+ def
+/noreadnew_button
+  boff(readnew.gif HEIGHT=16 WIDTH=65 BORDER=0 ALT="No Read New">)+ def
+/nextconf_button
+  `breg(nextconf.gif HEIGHT=16 WIDTH=62 BORDER=0 ALT="Next )Conference cap(">)'
+   def
+/nonextconf_button
+  `boff(nextconf.gif HEIGHT=16 WIDTH=71 BORDER=0 ALT="No Next )Conference cap
+  (">)' def
+} if
+
+% Destination Buttons
+butsel 4 band {
+/entrance_button
+  breg(entrance.gif HEIGHT=16 WIDTH=57 BORDER=0 ALT=Entrance>)+ def
+/confhome_button
+  `breg(confhome.gif HEIGHT=16 WIDTH=68 BORDER=0 ALT=")Conference cap( Home">)'
+  def
+/itemlist_button
+  `breg(itemlist.gif HEIGHT=16 WIDTH=54 BORDER=0 ALT=")Item cap( List">)' def
+/help_button breg(help.gif HEIGHT=16 WIDTH=32 BORDER=0 ALT=Help>)+ def
+} if
+
+% Read Text Buttons
+butsel 8 band {
+/hide_button
+    breg(hide.gif HEIGHT=16 WIDTH=32 BORDER=0 ALT=)+Hide cap+(>)+ def
+/fw_hide_button
+    badm(hide.gif HEIGHT=16 WIDTH=32 BORDER=0 ALT=)+Hide cap+(>)+ def
+/show_button
+    breg(show.gif HEIGHT=16 WIDTH=37 BORDER=0 ALT=)+Show cap+(>)+ def
+/fw_show_button 
+    badm(show.gif HEIGHT=16 WIDTH=37 BORDER=0 ALT=")+Show cap+(">)+ def
+/erase_button   
+    breg(erase.gif HEIGHT=16 WIDTH=38 BORDER=0 ALT=")+Erase cap+(">)+ def
+/fw_erase_button
+    badm(erase.gif HEIGHT=16 WIDTH=38 BORDER=0 ALT=")+Erase cap+(">)+ def
+/edit_button
+    breg(edit.gif HEIGHT=16 WIDTH=30 BORDER=0 ALT=Edit>)+ def
+/fw_edit_button 
+    badm(edit.gif HEIGHT=16 WIDTH=30 BORDER=0 ALT=Edit>)+ def
+/unseen_button  
+    breg(unseen.gif HEIGHT=16 WIDTH=49 BORDER=0 ALT=")+MarkUnseen+(">)+ def
+} if
+
+% Read Panel Buttons
+butsel 16 band {
+/nextitem_button
+  `breg(nextitem.gif HEIGHT=16 WIDTH=60 BORDER=0 ALT="Next )Item cap(">)' def
+/nonextitem_button
+  `boff(nextitem.gif HEIGHT=16 WIDTH=60 BORDER=0 ALT="No Next )Item cap(">)' def
+/forget_button
+  breg(forget.gif HEIGHT=16 WIDTH=42 BORDER=0 ALT=Forget>)+ def
+/noforget_button
+  boff(forget.gif HEIGHT=16 WIDTH=42 BORDER=0 ALT="Can't Forget">)+ def
+/remember_button
+  breg(remember.gif HEIGHT=16 WIDTH=65 BORDER=0 ALT=Remember>)+ def
+/favor_button
+  breg(favor.gif HEIGHT=16 WIDTH=37 BORDER=0 ALT=Favor>)+ def
+/nofavor_button
+  boff(favor.gif HEIGHT=16 WIDTH=37 BORDER=0 ALT="Can't Favor">)+ def
+/disfavor_button
+  breg(disfavor.gif HEIGHT=16 WIDTH=51 BORDER=0 ALT=Disfavor>)+ def
+} if
+
+% Check Boxes
+butsel 32 band {
+/unchecked_box `(<IMG SRC=)imghost
+  (/)flavor(uncheck.gif HEIGHT=10 WIDTH=10 BORDER=0 ALT="[ ]">)' def
+/checked_box `(<IMG SRC=)imghost
+  (/)flavor(check.gif HEIGHT=10 WIDTH=10 BORDER=0 ALT="[X]">)' def
+} if
+
+% Response Box Buttons
+butsel 64 band {
+/post_button_src
+  `(SRC=)imghost(/)flavor regbutton(/)
+  (post.gif HEIGHT=16 WIDTH=31 BORDER=0 ALT="Post">)' def
+/enter_button_src
+  `(SRC=)imghost(/)flavor regbutton(/)
+  (enter.gif HEIGHT=16 WIDTH=36 BORDER=0 ALT="Enter">)' def
+/preview_button_src
+  `(SRC=)imghost(/)flavor regbutton(/)
+  (preview.gif HEIGHT=16 WIDTH=52 BORDER=0 ALT="Preview">)' def
+/spelling_button_src
+  `(SRC=)imghost(/)flavor regbutton(/)
+  (spelling.gif HEIGHT=16 WIDTH=50 BORDER=0 ALT="Spelling">)' def
+} if

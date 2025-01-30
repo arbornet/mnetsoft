@@ -1,0 +1,67 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+
+% Find participants of a conference.
+%   conf=   name of conference
+%   users=  comma separated list of users to scan [optional]
+
+/http_content_type (text/plain) store
+
+open_conf
+{(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+/users dup () default def
+
+/i 0 def
+users {
+  {
+    users () eq {break} if
+    users (,) parse /uname xdef /users xdef
+    /pushuser defined {
+      % Backtalk 1.4 and later
+      uname [/usrid /usrname /dirpath /usrstat] pushuser pop
+      /status xdef /dir xdef /ufname xdef /uuid xdef
+    } {
+      % Backtalk 1.3 and earlier
+      uname userinfo /status xdef pop /dir xdef /ufname xdef pop /uuid xdef
+    } ifelse
+    dir ! {
+      (<ERROR ID=)uname( MSG="does not exist">\n)
+      print
+      continue
+    } if
+    uname check_partic /lastin xdef
+    lastin {
+      (<USER ID=)uname( NAME=")ufname quote(" UID=)uuid( LASTIN=)lastin cvi
+      ( STATUS=)status { status 1 eq {(U)} {(I)} ifelse } {(V)} ifelse
+      (>\n)
+      /i inc
+    } {
+      (<ERROR ID=)uname( MSG="is not a participant">\n)
+    } ifelse
+    print
+  } loop
+} {
+  () first_partic
+
+  { {break} if
+    /uname xdef
+    /lastin xdef
+    /pushuser defined {
+      % Backtalk 1.4 and later
+      uname [/usrid /usrname /usrstat] pushuser pop
+      /status xdef /ufname xdef /uuid xdef
+    } {
+      % Backtalk 1.3 and earlier
+      uname userinfo /status xdef pop pop /ufname xdef pop /uuid xdef
+    } ifelse
+    (<USER ID=)uname( NAME=")ufname quote(" UID=)uuid( LASTIN=)lastin cvi
+     ( STATUS=)status { status 1 eq {(U)} {(I)} ifelse } {(V)} ifelse
+     (>\n)
+    print
+    /i inc
+    next_partic
+  } loop
+} ifelse
+
+(<COUNT N=)i(>\n)

@@ -1,0 +1,37 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_killall script
+%
+% Generate the pop-up kill confirm box for the 'killall' command
+
+flavor(config)+ include
+
+(<HTML>\n)
+
+mainwin!{
+  (<HEAD><SCRIPT Language="Javascript">\n<!--
+function inmain() {
+opener.location=document.pop.action+'?conf=)conf(&isel=)isel(&list=)list(';
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>\n)
+isel {
+  (You have asked to delete item)isel -1 count_sel 1 ne {(s)}if ( )isel
+  (. This operation is not reversable.<P>
+  <FORM NAME=pop ACTION=")backtalkurl(/)flavor(killall" METHOD=POST)
+  mainwin!{( onSubmit="return inmain();")} if (>
+  <INPUT TYPE=hidden NAME=conf VALUE=")conf(">
+  <INPUT TYPE=hidden NAME=isel VALUE=")isel(">
+  <INPUT TYPE=hidden NAME=list VALUE=")list(">
+  Really Delete? <INPUT TYPE=submit VALUE="Yes">)
+  mainwin!{
+    (<INPUT TYPE=submit VALUE="No" onClick="window.close(); return false;">)
+  }if 
+} {
+  (No )Items( to delete were selected from the list of )Items(.\n)
+} ifelse
+(</FORM></BODY></HTML>\n)

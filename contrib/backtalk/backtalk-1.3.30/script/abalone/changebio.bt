@@ -1,0 +1,72 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% changebio script
+%
+% The changebio script processes submissions of new personal information from
+% the "bio.bt" script.  It can update either the tags in the .backtalk file
+% or the body of the .plan file.  It can be used either by users to change
+% their own files, or by the administrator to change other people's fields.
+%
+% After changing the contents of the user database, this page chains back to
+% the "bio.bt" page.
+%
+% Query Parameters (if /useplan is defined):
+%    login=	Login name of the user whose bio we are changing
+%    plan=      New body of .plan file
+%
+% Query Parameters (if /useplan is not defined):
+%    login=	Login name of the user whose bio we are changing
+%    privacy=   User wants information to be secret if this is defined as 1
+%    birth=	User's birthdate
+%    email=	User's email address
+%    sex=       User's gender
+%    telephone= User's phone number
+%    bio=       User's biography text
+%    url=       User's home page url
+
+% lookup old fullname and home directory from the password info
+login userinfo
+   /status xdef
+   /laston xdef
+   /userdir xdef
+   /ofullname xdef
+   pop	% discard group id number
+   pop	% discard user id number
+
+% userinfo returns () if there is no such user
+userdir ! {
+  (Internal error, )login( no longer appears to have an account.)
+  halt
+} if
+
+/useplan constant {
+  % switch to user if we are adm
+  amadm {login selectuser} if
+
+  % update .plan file
+  plan (*.plan) write
+} {
+  % Check information using generic user information routines
+  (lib/userinfo) include
+  checkinfo {/errmsg xdef flavor(bio)+ jump} if
+
+  % switch to user if we are adm
+  amadm {login selectuser} if
+
+  % update .backtalk file
+  saveinfo
+} ifelse
+
+% if there is a new full name given, do the change
+fullname ofullname ne nopwedit ! and {
+  fullname changename
+  dup {(Fullname not changed: )exch + /errmsg xdef} {pop} ifelse
+} if
+
+% reset the user
+amadm {() selectuser} if
+
+% now go display it via "bio"
+/bio login store
+/noedit (Y) def
+flavor(bio) + jump

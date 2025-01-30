@@ -1,0 +1,82 @@
+% Backtalk PostLog Script -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% These are macro functions for reading posting logs.
+%
+% It defines two functions:
+%
+%  <string> parse_postlog <date> <conf> <item> <resp> <authorid> <authorname>
+%                         <itemtitle>
+%
+%      Given a line from the postlog file, return the separate data fields in
+%      it.  If this is an 'item entry' event rather than a 'response entry'
+%      event, then <respno> will be zero.  The <date> is in ctime format.
+%      Input line should not have a trailing newline character.
+%
+%  <n> <dir> <proc> for_postlogs -
+%
+%      This find the last <n> lines of the postlog, and runs proc once for
+%      each of them.  If <dir> is positive, it processes the lines in
+%      sequential order (oldest first).  If <dir> is negative, it processes
+%      the lines in reverse order (newest first).  Before running proc each
+%      time it pushes the same seven values on the stack that parse_postlog
+%      outputs.
+
+% ========= Backtalk-style postlog file =========
+
+/bt_post_log constant {
+
+   % Items:
+   %   <date>\t<conf>\t<item>\t0\t<authorid>\t<authorname>\t<title>
+   % Responses:
+   %   <date>\t<conf>\t<item>\t<respno>\t<authorid>\t<authorname>:<title>
+
+ /parse_postlog {
+   (\t) clip 0 12 substr exch % date
+   (\t) clip exch % conf
+   (\t) clip cvi exch % item
+   (\t) clip cvi exch % resp
+   (\t) clip exch % authorid
+   (\t) clip quote exch % authorname
+   quote % title is remainder
+ } def
+
+} if
+
+% ========= Yapp-style resplog file =========
+
+/yapp_post_log constant {
+
+ /parse_postlog {
+   <<^\<[^>]*\>(.{24}) (.*) [(]([^ ]+)[)] (responded to|entered) ([^ ]+) ([0-9]+)( | [0-9]+ )[(](.+)[)]\</a\>$>> sgrep {
+     /pla xdef
+     pla 1 get 4 15 substr % date
+     pla 5 get % conf
+     pla 6 get cvi % item
+     pla 4 get (entered) eq {0} {pla 7 get 1 100 substr cvi} ifelse % resp
+     pla 3 get % authorid
+     pla 2 get % authorname
+     pla 8 get % title
+     /pla undef
+   } {
+     % bad line - push a bunch of nulls
+     () () 0 0 () () ()
+   } ifelse
+ } def
+
+} if
+
+% ------- FOR_POSTLOGS --- Log tailing procedure -------
+
+/for_postlogs {
+   dict begin
+   /proc xdef
+   /dir xdef
+   post_log_file exch tail [ exch (\n) split ] /lines xdef
+   /n lines length 1 - def
+   dir 0 lt {n -1 0} {0  1  n} ifelse
+   {
+     lines exch get parse_postlog
+     proc exec
+   } for
+   end
+} def

@@ -1,0 +1,82 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% buttondef header script
+%
+% This is a header script used to include definitions of buttons into BubbleGum
+% scripts.
+
+flavor(config)+ include
+
+/bsrc (SRC=")button_url+ defconstant
+/bimg (<IMG )bsrc+ defconstant
+/bsiz `( HEIGHT=)button_h( WIDTH=)button_w( BORDER=0 )' defconstant
+
+/spacer button_sep 0 gt {
+    `(<IMG SRC=")imghost(/)flavor(empty.gif" BORDER=0 HEIGHT=)button_sep
+     ( WIDTH=)button_w(><BR>)'
+  } {
+    ()
+  } ifelse
+defconstant
+
+/showlogo 
+  /widelogo constant {
+  `(<IMG SRC=")widelogo(" HEIGHT=)widelogo.h( WIDTH=)widelogo.w( BORDER=0>)'
+  } {
+  `(<CENTER><IMG SRC=")logo(" HEIGHT=)logo.h( WIDTH=)logo.w
+  ( BORDER=0></CENTER>)'
+  } ifelse
+defconstant
+
+/nexttopic_button
+  `bimg(nexttopic.gif")bsiz(ALT="Read Next )Item cap(">)'
+  defconstant
+/nonexttopic_button
+  `bimg(nonexttopic.gif")bsiz(ALT="No Next )Item cap(">)'
+  defconstant
+/nextforum_button
+  `bimg(nextforum.gif")bsiz(ALT="Read Next )Conference cap(">)'
+  defconstant
+/entrance_button
+  `bimg(entrance.gif")bsiz(ALT="Return to Entrance">)'
+  defconstant
+/forumhome_button
+  `bimg(forumhome.gif")bsiz(ALT="Return to )Conference cap( Home">)'
+  defconstant
+/readnew_button
+  `bimg(readnew.gif")bsiz(ALT="Read New )Responses cap(">)'
+  defconstant
+/nonew_button
+  `bimg(nonew.gif")bsiz(ALT="No New )Responses cap(">)'
+  defconstant
+/password_button
+  `bimg(password.gif")bsiz(ALT="Change Password">)'
+  defconstant
+/allforums_button
+  `bimg(allforums.gif")bsiz(ALT="List All )Conferences cap(">)'
+  defconstant
+/myforums_button
+  `bimg(myforums.gif")bsiz(ALT="List My )Conferences cap(">)'
+  defconstant
+/newtopic_button
+  `bimg(newtopic.gif")bsiz(ALT="Start New )Item cap(">)'
+  defconstant
+/search_button
+  `bimg(search.gif")bsiz(ALT="Search This )Conference cap(">)'
+  defconstant
+/link_button
+  `bimg(link.gif")bsiz(ALT="Share )AnItem cap(">)'
+  defconstant
+/forumpass_button
+  `bimg(forumpass.gif")bsiz(ALT="Change )Conference cap( Password">)'
+  defconstant
+/logout_button
+  `bimg(logout.gif")bsiz(ALT="Logout">)'
+  defconstant
+
+/postcomment_button_src
+  `bsrc(postcomment.gif" )bsiz(ALT="Post My Comment">)' defconstant
+/postedit_button_src
+  `bsrc(postedit.gif" )bsiz(ALT="Post Editted Comment">)' defconstant
+/entertopic_button_src
+  `bsrc(entertopic.gif" )bsiz(ALT="Enter New Topic">)' defconstant

@@ -1,0 +1,25 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% validate script
+%
+% This script allows a system administrator (only) to validate or invalidate
+% a Backtalk account. It only works on systems where "nopwedit" is false.
+%
+% Query Parameters:
+%    login=     login id of user to validate or invalidate.
+%    flag=      0 to invalidate, 1 to validate.
+
+/flag flag cvi def
+
+amadm {
+  login flag validate
+  flag
+    {(Account Validated.)}
+    {(Account Invalidated.)} ifelse
+}{
+  (Only administrators can validate or invalidate accounts)
+} ifelse
+
+/errmsg xdef
+
+flavor(/bio)+ jump

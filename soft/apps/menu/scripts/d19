@@ -1,0 +1,13 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: chown <userid> <filename>
+
+File to change? "
+read file
+echo -n "New owner? "
+read owner
+chown $owner $file
+echo "
+Done..."

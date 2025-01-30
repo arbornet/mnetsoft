@@ -1,0 +1,5 @@
+party makenoise=/usr/local/etc/party/noisetab wrap firstchar norepeat seecontrol seebs idleout=15
+party_ makenoise=/usr/local/etc/party/noisetab wrap firstchar norepeat seecontrol seebs idleout=15
+silicon makenoise=/usr/local/etc/party/noisetab wrap firstchar norepeat seecontrol seebs idleout=15
+cafe makenoise=/home/nephi/noisetab wrap firstchar norepeat seecontrol seebs idleout=15
+pwho userlist

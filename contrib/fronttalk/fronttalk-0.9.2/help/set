@@ -1,0 +1,61 @@
+                       Fronttalk Command:  SET
+
+Usage:  SET <flag>...
+
+Set various configuration values.  Possible settings include:
+
+   FORGET      - Don't show forgotten items.  (default)
+   NOFORGET    - Show forgotten items.
+   HIDE        - Don't show hidden responses.  (default)
+   NOHIDE      - Show hidden responses.
+   DATE        - Show dates of postings.  (default)
+   NODATE      - Don't show dates of postings.
+   UID         - Show uid numbers of response authors.
+   NOUID       - Don't show uid numbers of response authors.  (default)
+   NUMBERED    - Show line numbers on responses.
+   NONUMBERED  - Don't show line numbers on responses. (default)
+   REMOTE      - Execute all commands from remote RC files.
+   SOMEREMOTE  - Execute only some commands from remote RC files.  (default)
+   NOREMOTE    - Do not execute remote RC files at all.
+   IGNOREEOF   - Do not exit when a control-D is entered at the "Ok:" prompt.
+   NOIGNOREEOF - Control-D works to exit Fronttalk.  (default)
+   STAY        - Return to the "Respond or pass?" prompt after responding.
+   NOSTAY      - Display next item after responding.  (default)
+   SOURCE      - Source rc files.  (default)
+   NOSOURCE    - Don't Source rc files.
+   NAME        - Change your name in the current conference.
+   LIST        - Change your conference hotlist.
+   CFRC        - Change your .cfrc file.
+   CFONCE      - Change your .cfonce file.
+   READLINE    - Enable command line editing (default)
+   NOREADLINE  - Disable command line editing
+   SANE        - Reset settings and defines set by conference rc file.
+   SUPERSANE   - Reset settings and defines to compiled in defaults.
+   DEFAULT     - Automatically join the default conf when staring. (default)
+   NODEFAULT   - Don't automatically join a conference when starting.
+   RESIGN      - Resign from the current conference.
+   PASSWORD    - Change your password on the server.
+   DEBUG       - Display gobs of weird debug info.
+   NODEBUG     - Don't display gobs of weird debug info.  (default)
+
+The following settings can only be changed by the fairwitnesses of the
+current conference:
+
+   BULLETIN    - Change conference bulletin file.
+   LOGIN       - Change conference login screen.
+   LOGOUT      - Change conference logout screen.
+   INDEX       - Change conference index file.
+   RC          - Change conference rc file.
+   ULIST       - Change conference user list.
+   GLIST       - Change conference group list.
+
+The following settings are not yet implemented:
+
+   JOIN        - Change from observer to participant.
+   SECRET      - Change conference password.
+   NODEFAULT   - Don't join the default conference on startup.
+
+You can do things like "HELP SET SOMEREMOTE" to get more information about
+these flags.
+
+Synonyms:  CHANGE

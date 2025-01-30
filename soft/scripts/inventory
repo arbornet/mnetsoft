@@ -1,0 +1,2 @@
+#!/bin/sh
+lynx -cfg=/c/i/n/invent/invent.cfg

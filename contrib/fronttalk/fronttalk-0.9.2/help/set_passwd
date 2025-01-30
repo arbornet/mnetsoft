@@ -1,0 +1,11 @@
+                       Fronttalk Setting:  PASSWORD
+
+Usage:  SET PASSWORD
+        SET PASSWD
+	PASSWD
+
+Any of these command will change the user's password on the server to which
+they are currently connected to.  If that is a local server to which we are
+directly connected, this just runs the unix 'passwd' program.  If it is a
+remote server this only works if it is configured to use Backtalk accounts,
+not user accounts.

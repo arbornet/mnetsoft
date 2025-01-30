@@ -1,0 +1,41 @@
+
+Welcome to Grex, a service of Cyberspace Communications, Inc.
+
+   Note: Grex does not allow bots of ANY kind--they will not work
+         here.  IRC only works for verified users.  Bringing over
+         your own copies WILL NOT WORK.  Do not copy IRC/bots to
+         Grex.  EGGDROP WILL NOT WORK HERE.  BOUNCERS WILL NOT WORK
+         HERE.
+
+Grex is a virtualized x86 system running BSD and is maintained by
+an all-volunteer staff.
+
+You may be wondering what kind of place Grex is.  To help explain
+that, here is the Grex Declaration of Principles:
+
+{pause}#
+{include("principles")}#
+{pause}#
+{include("limits")}#
+{pause}#
+
+Right then, let's get started.
+
+You will be asked a series of questions and have an account created
+for you on this computer.  After that is finished, you will have a
+public login name of your chosing that will uniquely identify you
+to the system.  A (secret) password will be randomly generated and
+emailed to you at an address you provide, allowing you to login.
+In future sessions, you will login using that login name, rather
+than 'newuser.'
+
+You will have a chance to revise anything you write when answering
+the following questions, so don't worry if you make a typing mistake
+or something like that.
+
+Almost anywhere on the system where you are asked to type a variable
+number of lines, you will end your input by typing a period ('.')
+character on a line by itself.  That is, hit RETURN or ENTER, type
+a period by itself, and hit RETURN or ENTER again.
+
+{pause}

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+umask 027
+
+if [ ! -d $HOME/.cfdir ]; then
+	mkdir $HOME/.cfdir
+	chmod 711 $HOME/.cfdir
+	[ -e $HOME/.cfonce ] && mv $HOME/.cfonce $HOME/.cfdir
+	[ -e $HOME/.cflist ] && mv $HOME/.cflist $HOME/.cfdir
+	mv $HOME/.??*.cf $HOME/.cfdir 2>/dev/null || true
+	mv $HOME/.??*.cfx $HOME/.cfdir 2>/dev/null || true
+fi
+
+cat <<EOF
+
+***WARNING***  You are invoking the 'picospan' command to read the BBS.
+Please note that this command is explicitly deprecated and the picospan
+program has been removed from Grex.  Press <RETURN> to invoke the
+'fronttalk' command instead.  ***WARNING***
+
+Hit <RETURN> to continue.
+EOF
+read dummy
+
+exec ft "$@"

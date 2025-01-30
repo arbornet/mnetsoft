@@ -1,0 +1,99 @@
+#!/bin/ksh
+#Figlet front-end
+#Copyright 1996  Brian Rahn
+
+clear
+echo "
+              _                                
+            /' '\                /'          /'
+          /'   ._)             /'        --/'--
+       ,/'       O  ____     /' ____     /'    
+      /'---,   /' /'    )  /' /'    )  /'      
+    /'       /' /'    /' /' /(___,/' /'        
+(,/'        (__(___,/(__(__(________(__        
+                  /'  User Interface Ver. 2.0
+            (___,/' Copyright 1996 Brian Rahn
+"
+
+# Script wide variables
+alias figlet=/usr/games/figlet
+FDIR="/usr/local/share/figlet"
+FLIST=`ls $FDIR | sed 's/.flf//g'`
+PS3="
+Which font ('q' to quit)? "
+
+# Pause function
+pause () {
+echo -n "Press return to continue... "
+read opt
+}
+
+column () {
+awk '{ printf("%-25s", $0) ; if (getline) printf("%-25s", $0)
+  if (getline) print }'
+}
+
+while :
+do
+  echo -n "
+Please select one of the following options:
+L) List fonts
+S) Sample individual fonts
+A) Sample all of the fonts
+C) Create a message
+Q) Quit
+
+Option: "
+  read opt
+
+  case "$opt" in
+   l|L) # List all fonts
+     echo "$FLIST" | column | grexmore ;;
+   s|S) # Test one font
+     echo -n "Test message: "
+     read msg
+     select opt in $FLIST
+     do
+       if [ -n "$opt" ]
+       then
+         echo "$msg" | figlet -f $opt.flf | grexmore
+         pause
+         echo
+       else
+         break
+       fi
+     done ;;
+   a|A) # Test all fonts
+     echo -n "Test message: "
+     read msg
+     for opt in $FLIST
+     do
+       echo "$opt:"
+       echo "$msg" | figlet -f $opt.flf
+     done | grexmore ;;
+   c|C) # Create a figlet
+     select opt in $FLIST
+     do
+       break
+     done
+     if [ -n "$opt" ]
+     then
+       echo "You may now type your message.  Use ^D to end."
+       msg=`figlet -f $opt.flf`
+       echo "$msg" | grexmore
+       echo -n "
+What do you want to save this as (blank to abort)? "
+       read opt
+       if [ -n "$opt" ]
+       then
+         echo "$msg" > $opt
+       fi
+     fi ;;
+   q|Q) # Quit
+     exit ;;
+   *) # Invalid
+     echo "Invalid option." ;;
+  esac
+  pause
+  clear
+done

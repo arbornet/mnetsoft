@@ -1,0 +1,162 @@
+.\"	@(#)zapuser.8	
+.\"
+.TH ZAPUSER 8 "Feb 23, 2000"
+.AT 3
+.SH NAME
+zapuser \- delete a Grex user account
+.SH SYNOPSIS
+.B zapuser
+[-dimsvv] [-r reason] [login...]
+.SH DESCRIPTION
+.I Zapuser
+deletes Grex user accounts.
+It removes the entry from the passwd file database, the home directory and
+all files underneath it, the mail directory, and any
+.IR layers (1),
+.IR screen (1)
+and
+mathom files.
+It can only be run by root.
+.PP
+Any number of login names may be listed on the command line.
+If no logins are listed on the command line or a '-' is given among the
+logins on the command line, then logins will be read from standard input,
+one login id per line.
+There is no upper limit to the number of logins that may be handled by a
+single
+.I zapuser
+invocation.
+.I Zapuser
+has been optimized to do large batches of deletions efficiently.
+.PP
+A record of each deletion is saved to a log file.
+This includes the time, the person who invoked the command, the /etc/passwd
+file entry of the deleted account (with encrypted password), and any
+reason given for the deletion.
+.PP
+The following command-line options may be given:
+.TP
+.B \-d
+Delete the home directory and mail files instead of saving them.
+The default action is to move the directory to the 'deleted' subdirectory
+on the same disk partition where the user's home directory used to be,
+and to copy any mailbox file into the moved directory with the name
+'UNREAD_MAIL'.
+This makes recovery of the account possible.
+
+If the
+.B \-d
+flag is given however, then the directory and mail files are deleted
+immediately.
+The screens, layers, and mathom files are always deleted.
+.TP
+.B \-i
+Don't ask for confirmation of each deletion.
+The default action is to display a small amount of information about each
+account to be deleted, and ask you if you really want to delete it.
+If the
+.B \-i
+flag is given, then no information is printed, and confirmation is not
+asked for.
+.TP
+.B \-m
+Allow deletion of users in protected groups (normally members and staff).
+The default action is to refuse to delete users who are in any of the
+protected groups listed in the configuration file.
+If the
+.B \-m
+flag is given, then those users can be deleted too.
+.TP
+.B \-r
+Give reason for deletion.
+The next argument after a
+.B \-r
+flag will be taken as the reason why the account was deleted.
+If no
+.B \-r
+flag is given on the command line,
+.I zapuser
+will prompt for a reason.
+.TP
+.B \-s
+Run silent.
+Normally any error messages will be printed to standard error as well
+as being logged to the error log file.
+If the
+.B \-s
+flag is given, then most errors are only logged and not printed.
+.TP
+.B \-v
+Run verbose.
+If the
+.B \-v flag
+is given, a few messages are printed to indicate what is going on.
+If the flag is given twice, a whole mess of messages are printed as a
+debugging aid.
+
+.SH EXAMPLES
+
+Normal deletion of a single account might be done as:
+.LP
+zapuser -v deadman
+.PP
+You will be prompted for the reason, and asked for confirmation.  The user's
+files will be stashed under the deleted directory rather than being removed.
+Some progress information will be printed to keep you entertained while it
+runs.
+.PP
+If you have a file named
+.B ptk.123
+containing a list of accounts to delete (one per line), then you might do
+.LP
+zapuser -dirs "not used for 90 days" < ptk.123
+.PP
+You will not be prompted for anything, scarcely anything will be printed, and
+all files will be removed, not saved.
+
+.SH CONFIGURATION
+The
+.B /usr/local/etc/zapuser.conf
+file contains configuration information for
+.IR zapuser .
+Lines starting with '#' and blank lines are ignored.  Other lines
+contain the commands listed below:
+.IP "logfile <path>" 1i
+The full path name of the file where deletions are logged.
+.IP "errfile <path>" 1i
+The full path name of the file where error messages are logged.
+.IP "immortalfile <path>" 1i
+The full path name of the file where 'immortal' users are listed.
+These users will not be deleted by
+.IR zapuser .
+They should be listed one per line.
+Alphabetical order is prefered, but not required.
+.IP "mathomdir <path>" 1i
+The full path name of the directory where mathom is stored.  If there
+is no mathom, comment this out.
+.IP "minuid <uid>" 1i
+This is the lowest UID value that
+.I zapuser
+will be willing to delete.
+logins with uids that have lower numbers cannot be deleted with
+.IR zapuser .
+.IP "protectgroup <groupname>..." 1i
+Don't allow deletion of users who are members of the named group unless the
+.B \-m flag is given on the command line.
+You can put multiple names on one protectgroup command, or you can have
+multiple protectgroup commands in the configuration file.
+.IP "homedirprefix <path>..." 1i
+Delete only accounts whose home directory path begins with one of the given
+strings.  Multiple prefixes can be given on the same homedirpath command,
+or multiple homedirpath commands can be given in the configuration file.
+.SH AUTHOR
+Jan Wolter
+.SH BUGS
+Log file entries are made before the deletion process begins.  If the
+deletion fails for any reason, the log file entry will still be there, and
+there is no guarantee that there will be an error log entry.
+.PP
+For security, directory deletions are done as the user.
+This ensures that nothing inappropriate can be deleted by accident.
+But it also means that a user directory containing a directory
+belonging to another user may not be successfully deleted.

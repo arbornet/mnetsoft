@@ -1,0 +1,125 @@
+#!/bin/sh
+#
+# Originally written by Valerie Mates in 1997 with hardcoded
+# terminal escape sequences.  Rewritten to use "tput" and a
+# "frame" function in 2010.
+#
+# $Id: macarena 1024 2010-12-30 11:56:57Z cross $
+#
+
+cat <<EOF
+
+Reason #173 To Fear Technology:
+
+
+          
+              o        
+             ^|\      
+              /\      
+          
+
+
+EOF
+tput md
+echo '  Mr. email does the Macarena.'
+tput me; tput up; tput up
+
+frame() {
+
+	sleep 1
+	tput up; tput up; tput up; tput up; tput up; tput up
+	echo "$@"
+}
+
+frame '
+              o      
+             ^|^     
+              >\      
+
+' 
+frame '
+              o
+             v|^     
+             /<       
+          
+'
+frame '
+              o
+             v|v     
+              >\       
+          
+'
+frame '
+              o      
+             |/v     
+             /<        
+          
+'
+frame '
+              o      
+             |X|     
+              >\        
+          
+'
+frame '
+             <o      
+              \|     
+              /<         
+          
+'
+frame '
+             <o>             
+              |             
+              >\             
+          
+'
+frame '
+              o>              
+              \               
+             /<               
+          
+'
+frame '
+              o              
+              x              
+              >\             
+          
+'
+frame '
+              o              
+             </              
+             /<              
+          
+'
+frame '
+              o              
+             <|>             
+              >\             
+          
+'
+frame '
+              o              
+             </>             
+             /<              
+          
+'
+frame '
+              o              
+             <\>             
+              >\             
+          
+'
+frame '
+              o               
+             <)>              
+              >>              
+          
+'
+frame '
+              o        
+              |\        
+              L        
+
+
+
+'

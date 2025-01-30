@@ -1,0 +1,90 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editfile script
+%
+% This is the form handler for the "editform.bt" script, which provides a
+% generic interface for editing several different types of files.
+%
+% Query Parameters:
+%   target=	which file to edit.  Possible values are:
+%                .cflist	- user's conference hot list
+%                dflt.cflist	- system default conference hot list
+%                ulist		- list of users for a closed conferencer
+%                login		- conference login screen
+%   conf=       which conference (for ulist and login only)
+%   csel=       current conference selector (not used, just passed along)
+%   goto=	if defined, script to execute when done
+%   text=       new contents for file
+
+flavor(config)+ include
+
+(<HTML><HEAD>
+<TITLE>Edited )target( File</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+</HEAD>\n)
+
+% open the conference, if one is specified
+conf {
+  flavor(openconf)+ stopped {
+     (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+  secret 2 eq /dunno defined ! and {
+    [/conf /target /csel /goto /text] flavor(confpass)+ jump
+  } if
+} {
+  flavor(config)+ include
+  (<BODY )background(>\n)
+} ifelse
+
+global_header
+
+(<H1>Edited )target( File</H1>\n)
+
+/tag () def
+
+% set "hdl" to handle of target file
+% for tag files, also set "tag" to the name of the tag to store the data in
+
+target (.cflist) eq {
+  /hdl (*.cflist) def
+} if
+
+target (dflt.cflist) eq {
+  /hdl (*dflt.cflist) def
+} if
+
+target (ulist) eq {
+  /hdl (*ulist) def
+} if
+
+target (login) eq {
+  /hdl (*login) def
+} if
+
+target (login.html) eq {
+  /hdl (*settings) def
+  /tag /login def
+} if
+
+% check if we have write access
+hdl writable ! {(Cannot write to )target(.) stop} if
+
+tag {
+  % save into a tag in a tag file
+  tag text def
+  hdl tag savevar
+} {
+  % save into a regualar file
+  text hdl write
+} ifelse
+
+% if we have a "goto" defined, jump there
+/goto defined {
+  clear
+  (bubblegum/)goto+ jump
+} if
+
+% page footer if no goto
+(Update completed.)
+global_footer
+(</BODY></HTML>
+)

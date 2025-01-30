@@ -1,0 +1,49 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide:
+Getting to the Admin Menu</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Getting to the Admin Menu</H2>
+Version 1.1.2
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Most administrative tasks using the web interface start at the administrative
+menu.
+Getting there the first time is a bit non-obvious.  Once you are there,
+you should bookmark the page, so you can jump directly there in the future.
+<P>
+The URL of the adminstration page is printed at the end of the install process.
+If you didn't note it then, here are some clues for figuring it out (the
+exact URL is going to be somewhat installation dependent).
+The URL typically looks something like:
+<PRE>
+   http://your.host.name/cgi-bin/adm/backtalk/admin/begin
+</PRE>
+One way to figure it out is to log into backtalk as you normally would,
+and edit the URL that shows up in your browser's "Location" box.  It will
+normally have "/pw/backtalk/" somewhere in the middle.  Replace everything
+after the "/backtalk/" with "admin/begin".  Then replace the "/pw/" with
+"/adm".  Go there.
+<P>
+When you goto this URL, you will be asked to login again.  You'll need to
+login using an account that has administrative powers.  The install
+scripts create one such account, always named "cfadm" and prompts you to
+set its password.  We recommend using that, but it is possible to created
+more administrative accounts (any account in group 'cfadm' is an administrative
+account).
+<P>
+Note that "adm/backtalk" and "pw/backtalk" are two identical programs in
+different locations.  The only function of having two is that it becomes
+possible to be logged into two different accounts at the same time, which
+is convenient if you suddenly want to do some administrative stuff when
+you were already logged into your own account.  Without this, you'd have
+to log out of your own account before logging into the administrative account.
+Since logging out requires exiting all browser windows, this would be
+annoying.
+<P>
+Once logged in, you should see the administrative menu.
+</FORM>
+</BODY></HTML>

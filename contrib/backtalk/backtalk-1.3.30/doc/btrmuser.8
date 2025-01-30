@@ -1,0 +1,29 @@
+.\"	@(#)btrmuser.8	
+.\"
+.TH BTRMUSER 8 "Mar 26, 2000"
+.AT 3
+.SH NAME
+btrmuser \- create a Backtalk user account
+.SH SYNOPSIS
+.B btrmuser
+[-f] username...
+.SH DESCRIPTION
+.I Btrmuser
+completely deletes one or more Backtalk conferencing system user accounts.
+It can only be run by a superuser or from the Backtalk administration
+account (usually called 'backtalk').
+.PP
+Normally, you will be asked to confirm each deletion.
+If the
+.B \-f
+flag is given, the accounts will be deleted without asking for confirmation.
+.PP
+Accounts can also be deleted using the web-based Backtalk Administration
+pages.
+.SH AUTHORS
+Jan Wolter and Steve Weiss
+(backtalk@hvcn.org)
+.SH "SEE ALSO"
+.IR btmkuser (8),
+.IR btpasswd (8),
+.IR btvalid (8)

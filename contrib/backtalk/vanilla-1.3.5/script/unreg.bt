@@ -1,0 +1,43 @@
+% Backtalk Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% unreg script
+%
+% This header file is part of a system that was installed on Grex because
+% many users didn't want unregistered users to be able to see their responses.
+% Thus we wrap the "read_text" call which fetchs item or response text with
+% one of two macros that work differently for registered and unregistered
+% users.
+%
+%  form_text    REGISTERED:  do "(<PRE>) 0 read_text expand (</PRE>)"
+%             UNREGISTERED:  If author shy, return message.  Otherwise as above.
+%
+%  raw_text     REGISTERED:  do "0 read_text"
+%             UNREGISTERED:  If author shy, return null.  Otherwise as above.
+
+id {
+
+   /form_text { (<PRE>) 0 read_text expand (</PRE>) } def
+
+   /raw_text { 0 read_text } def
+
+} {
+
+  /shylist shyfile read def
+
+   /form_text {
+      authorid shylist (\n) inlist {
+	(<I>text hidden from unregistered users by author's request.</I>)
+      } {
+	(<PRE>) 0 read_text expand (</PRE>)
+      } ifelse
+   } def
+
+   /raw_text {
+      authorid shylist (\n) inlist {
+	()
+      } {
+	0 read_text
+      } ifelse
+   } def
+
+} ifelse

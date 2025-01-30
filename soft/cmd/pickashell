@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+$SIG{'INT'} = 'IGNORE';
+$SIG{'TERM'} = 'IGNORE';
+$SIG{'TSTP'} = 'IGNORE';
+
+sub greeting {
+	print "Congratulations: Your account has been validated!\n";
+	print "\n";
+	print "Now, you need to pick a real shell to use.\n";
+}
+
+our @shells = (
+	[ 'menu', 'A menu-oriented shell (default)', '/cyberspace/bin/menu' ],
+	[ 'bbs',  'The Grex BBS system as a shell',  '/cyberspace/bin/bbsh' ],
+	[ 'bash', 'The GNU Bourne-again shell',      '/usr/local/bin/bash'  ],
+	[ 'tcsh', 'The TENEX C-shell',               '/usr/local/bin/tcsh'  ],
+	[ 'zsh',  'The Z shell',                     '/usr/local/bin/zsh'   ],
+	[ 'ksh',  'The Korn shell',                  '/bin/ksh'             ],
+	[ 'rc',   'The Plan 9 shell',                '/usr/local/bin/rc'    ],
+	[ 'psh',  'The Perl shell',                  '/usr/local/bin/psh'   ],
+	[ 'csh',  'The traditional BSD C shell',     '/bin/csh'             ],
+	[ 'sh',   'The traditional Bourne shell',    '/bin/sh'              ]
+);
+our $default_shell = 'menu';
+
+sub menu {
+	print "Please choose from one of the following: \n";
+	print "\n";
+	foreach my $array (@shells) {
+		printf "    %-4s - %s.\n", $array->[0], $array->[1];
+	}
+	print "\n";
+	print "Your choice [menu]? ";
+}
+
+sub shellpath {
+	my $shell = shift;
+	foreach my $array (@shells) {
+		if ($array->[0] eq $shell) {
+			return $array->[2];
+		}
+	}
+	return '';
+}
+
+sub getshell {
+	my $path = '';
+	do {
+		menu;
+		my $shell = <>;
+		chomp $shell;
+		$shell = lc $shell;
+		$shell =~ s/\s+//g;
+		if ($shell eq '') { $shell = $default_shell; }
+		$path = shellpath $shell;
+	} while ($path eq '');
+	return $path;
+}
+
+sub setshell {
+	my $path = shift;
+	my $pid = fork;
+	if ($pid < 0) {
+		die "fork failed: $!\n";
+	}
+	if ($pid == 0) {
+		exec "/suid/people/setmyshell", "-v", $path;
+	} else {
+		my $child = wait;
+		die "Wrong child: $!\n" if ($child != $pid);
+	}
+}
+
+sub execshell {
+	my $shell = (getpwuid($<))[8];
+	print "Executing ", $shell, "....\n";
+	$ENV{'SHELL'} = $shell;
+	exec $shell, "-l";
+}
+
+greeting;
+setshell getshell;
+execshell;

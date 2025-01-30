@@ -1,0 +1,7 @@
+                       Fronttalk Command:  LEAVE
+
+Usage:  LEAVE                                          ("Ok:" prompt only)
+
+Leave the the current conference, but don't exit Fronttalk.  This leaves
+you in a funny conference-less mode with a "(no conf):" prompt.  You can
+then use "join" to join another conference.

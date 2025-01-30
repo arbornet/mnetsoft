@@ -1,0 +1,78 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% confname script
+%
+% Set your name in this conference
+%
+% Query Parameters:
+%    newname=	new name to set (if not defined, show form).
+%    conf=	name of conference
+%    csel=	current conference selector
+%    nextnew=	
+
+flavor(config.bt)+ include
+
+/abalone.menujump 0 def
+
+flavor(openconf)+ stopped {
+  (Backtalk internal error: )exch(\n) halt} if
+
+`bbsname( )conf( )Conference cap' (C)
+[/conf /csel /newname]
+[/abalone.menujump] []
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+/newname dup () default def
+
+(<TR><TD CLASS=mast><SPAN CLASS=big>)
+
+newname {
+  newname conf_alias
+  (Your default name in )conftitle quote
+  ( has been changed to )newname quote(.\n)
+} {
+  (Change Default Name in )conftitle quote
+} ifelse
+(</SPAN></TD><TD CLASS=mast VALIGN=TOP ALIGN=RIGHT>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+(<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>\n)
+csel {(<OPTION VALUE=nextconf>Visit Next )Conference cap(</OPTION>\n)} if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=confhome SELECTED>Goto )Conference cap( Home Page</OPTION>\n)
+sessions { id { (<OPTION VALUE=logout>Logout</OPTION>\n)} if } if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR>
+</FORM>
+</TABLE>
+)
+
+newname ! {
+  (<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+  <TR><TD CLASS=navbar>
+  The default name to be attached to each of your )Responses
+  ( can be different in each Backtalk )Conference
+  (.  To change your name in the )conftitle quote( )Conference(,
+  edit the box below and submit.
+  <FORM METHOD=POST ACTION=confname>
+  <INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+  /nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+  (<INPUT TYPE=text SIZE=50 NAME=newname VALUE=")alias quote(">
+  <INPUT TYPE=submit VALUE=Change>
+  </FORM>
+  </TD></TR>
+  </TABLE>
+  )
+} if
+
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,64 @@
+#!/bin/sh
+
+PATH=/cyberspace/bin:/usr/local/bin:/bin:/usr/bin:/cyberspace/bin
+export PATH
+
+echo 'Script to change your .plan file'
+echo 'Written by Valerie Mates (popcorn@cyberspace.org) 7/31/96'
+echo ' '
+echo 'Your .plan file is the information people see when they finger you.'
+
+# This script is released into the public domain.
+# If you run this script on your own system, I'd appreciate an e-mailed note.
+# I'm curious about where my scripts travel to. - valerie@cyberspace.org
+
+while true
+do
+	echo ' '
+	echo '	E)dit your plan'
+	echo '	P)rivate -- make your plan readable only by' $USER
+	echo '	R)eadable -- make your plan readable by everybody'
+	echo '	F)inger' $USER
+	echo '	Q)uit program'
+	echo ' '
+	echo -n 'Your choice: '
+	read choice
+	echo ' '
+
+	case $choice in
+	e|E)
+		echo -n "Note that you don't need to keep the original"
+		echo " format."
+		echo "You can put whatever you want in your .plan."
+		echo -n "Press Enter to continue..."
+		read junk
+		${EDITOR:-pico} $HOME/.plan
+		;;
+	p|P)
+		chmod 600 $HOME/.plan
+		echo 'Your .plan file is now readable to only you.'
+		echo -n 'Note that *you* can see it with finger, but'
+		echo ' nobody else can.'
+		;;
+	r|R)
+		chmod 644 $HOME/.plan
+		echo 'Your .plan file is now readable to everyone.'
+		;;
+	f|F)
+		finger $USER | grexmore
+		;;
+	!*)
+		# This case sends !commands to the shell.
+		prog=`echo $choice | sed 's/^!//'`
+		echo ' '
+		eval $prog
+		echo ' '
+		;;
+	q|Q)
+		exit
+		;;
+	esac
+
+	echo -n "Press Enter to continue..."
+	read stuff
+done

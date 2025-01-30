@@ -1,0 +1,11 @@
+                       Fronttalk Command:  RESIGN
+
+Usage:  RESIGN                                          ("Ok:" prompt only)
+        SET RESIGN
+
+Resign from the the current conference, permanently deleting records of
+which items and responses you have seen.
+
+You will still be in the conferences after you resign.  If you read any
+more items after you resign, you will automatically rejoin the conference
+as a new participant.

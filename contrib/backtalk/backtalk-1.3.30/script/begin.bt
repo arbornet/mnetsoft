@@ -1,0 +1,53 @@
+% Backtalk Begin Script -- (c) 2001, Jan Wolter, Steve Weiss
+%
+% This is a 'begin' script for users who can't decide which flavor they want.
+% It runs the begin script for the lowest score interface that works for the
+% user's browser.  For interface to work with this, they must have an
+% interface.bt script in their directories.
+
+browser 0 lt {(Not a browser)} if
+
+% Find best interface and stupidest interface
+
+(.) firstdir pop nextdir pop nextdir		% skip '.' and '..'
+/bestsort 999999 def
+/dumbbrow 999999 def
+{ dup ! {pop break} if
+  dup directory {
+    dup (/interface.bt)+ dup readable {
+      [
+      3 1 roll		% make the directory name the 0th element
+      call		% execute interface.bt to load rest of description
+      ]
+      /curr xdef
+      /minbrow curr 4 get def
+      /thissort curr 1 get def
+      % If this can be used by a dumber browser, record it as 'dumb'
+      minbrow dumbbrow lt {
+        /dumbbrow minbrow def
+	/dumb curr def
+      } if
+      % If usable by our browser, and better than any previous, record as 'best'
+      browser minbrow ge thissort bestsort lt and {
+        /bestsort thissort def
+	/best curr def
+      } if
+    } {
+      pop pop		% discard directory with no interface.bt file
+    } ifelse
+  } {
+    pop			% discard non-directory
+  } ifelse
+  nextdir
+} loop
+
+/best defined ! {
+  /dumb defined {
+    % found no interface dumb enough for our browser - use dumbest
+    /best dumb def
+  } {
+    (No interfaces installed!!) stop
+  } ifelse
+} if
+
+best 0 get (/begin)+ jump

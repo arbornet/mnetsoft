@@ -1,0 +1,245 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% color script
+%
+% This script generates a form select a color.  It tries to display many
+% possible colors at once, which doesn't work very well, because most browsers
+% won't show that many different colors all at the same time.  Need something
+% better here.  Like a Java applet even.
+%
+% Query Parameters
+%    conf=	conference whose color scheme we are working on
+%    what=	which color we are editing.  This may be any of:
+%                   bgcolor	- the screen background color
+%                   textcolor	- normal text
+%                   highcolor	- highlit text
+%                   linkcolor	- color of unused links
+%                   vlinkcolor  - color of used links
+%                   alinkcolor  - color of links while being clicked
+%    user=      defined if we are changing the user's color, not the conf color
+
+% Construct a name for what we are changing
+what (bgcolor) eq {(Background)} if
+what (textcolor) eq {(Text)} if
+what (highcolor) eq {(Highlit Text)} if
+what (linkcolor) eq {(Unvisited Link)} if
+what (vlinkcolor) eq {(Visited Link)} if
+what (alinkcolor) eq {(Clicked Link)} if
+/op xdef
+
+/user dup 0 default def
+
+flavor(config.bt)+ include
+
+% display the form
+(<HEAD>
+<TITLE>Set )op( Color</TITLE>
+</HEAD>
+<BODY BGCOLOR=white>
+) global_header
+(<H1>Set )op( Color</H1>
+<FORM METHOD=POST ACTION=set)user{(my)}if(conf>
+<INPUT TYPE=HIDDEN NAME=conf VALUE=)conf(>)
+csel {(<INPUT TYPE=HIDDEN NAME=csel VALUE=)csel(>)} if
+(<INPUT TYPE=HIDDEN NAME=what VALUE=)what(>
+Note:  This color table is very misleading!  Many computers can't display
+this many different colors at the same time, so they will make different
+colors look the same, though if you try using them they will look different.
+)
+user !{
+(Also the same colors look different on different computers, so combinations
+that look great to you, may be completely illegible to other people.
+) } if
+(The hues marked with *'s are some of the more basic colors that can be relied
+to look pretty much like their names on most computers.
+<P>
+<input type=submit value="use selected color">
+<P>
+<input type=radio name=color value=""> Use default color (depends on user's
+browsers settings).
+<P>
+<input type=radio name=color value=custom checked> Use custom color:
+<input type=text name=custom value=)old( size=6> (Six-digit hexidecimal number.)<BR>
+<P>
+Use color from table:<BR>
+<TABLE CELLPADDING=6 CELLSPACING=1 BORDER=4 WIDTH=100%>
+<TR>
+<TD BGCOLOR=#FFFFFF><input type=radio name=color value=FFFFFF> white*</TD>
+<TD BGCOLOR=#FFFAFA><input type=radio name=color value=FFFAFA> snow</TD>
+<TD BGCOLOR=#F0FFFF><input type=radio name=color value=F0FFFF> azure</TD>
+<TD BGCOLOR=#F0F8FF><input type=radio name=color value=F0F8FF> alice blue</TD>
+</TR><TR>
+<TD BGCOLOR=#FFFFF0><input type=radio name=color value=FFFFF0> ivory</TD>
+<TD BGCOLOR=#FFFAF0><input type=radio name=color value=FFFAF0> floral white</TD>
+<TD BGCOLOR=#F8F8FF><input type=radio name=color value=F8F8FF> ghost white</TD>
+<TD BGCOLOR=#F5F5F5><input type=radio name=color value=F5F5F5> white smoke</TD>
+</TR><TR>
+<TD BGCOLOR=#F5FFFA><input type=radio name=color value=F5FFFA> mint cream</TD>
+<TD BGCOLOR=#FFF5EE><input type=radio name=color value=FFF5EE> seashell</TD>
+<TD BGCOLOR=#F5F5DC><input type=radio name=color value=F5F5DC> beige</TD>
+<TD BGCOLOR=#E6E6FA><input type=radio name=color value=E6E6FA> lavender</TD>
+</TR><TR>
+<TD BGCOLOR=#FDF5E6><input type=radio name=color value=FDF5E6> old lace</TD>
+<TD BGCOLOR=#FFE4E1><input type=radio name=color value=FFE4E1> misty rose</TD>
+<TD BGCOLOR=#FAF0E6><input type=radio name=color value=FAF0E6> linen</TD>
+<TD BGCOLOR=#FFF8DC><input type=radio name=color value=FFF8DC> cornsilk</TD>
+</TR><TR>
+<TD BGCOLOR=#F0FFF0><input type=radio name=color value=F0FFF0> honeydew</TD>
+<TD BGCOLOR=#FFF0F5><input type=radio name=color value=FFF0F5> lavender blush</TD>
+<TD BGCOLOR=#FFFFE0><input type=radio name=color value=FFFFE0> light yellow</TD>
+<TD BGCOLOR=#FAEBD7><input type=radio name=color value=FAEBD7> antique white</TD>
+</TR><TR>
+<TD BGCOLOR=#EEE8AA><input type=radio name=color value=EEE8AA> pale goldenrod</TD>
+<TD BGCOLOR=#FFEBCD><input type=radio name=color value=FFEBCD> blanched almond</TD>
+<TD BGCOLOR=#FFFACD><input type=radio name=color value=FFFACD> lemon chiffon</TD>
+<TD BGCOLOR=#FFEFD5><input type=radio name=color value=FFEFD5> papaya whip</TD>
+</TR><TR>
+<TD BGCOLOR=#FAFAD2><input type=radio name=color value=FAFAD2> light goldenrod</TD>
+<TD BGCOLOR=#F0E68C><input type=radio name=color value=F0E68C> khaki</TD>
+<TD BGCOLOR=#FFFF00><input type=radio name=color value=FFFF00> yellow*</TD>
+<TD BGCOLOR=#FFDEAD><input type=radio name=color value=FFDEAD> navajo white</TD>
+</TR><TR>
+<TD BGCOLOR=#FFD700><input type=radio name=color value=FFD700> gold</TD>
+<TD BGCOLOR=#F5DEB3><input type=radio name=color value=F5DEB3> wheat</TD>
+<TD BGCOLOR=#FFE4C4><input type=radio name=color value=FFE4C4> bisque</TD>
+<TD BGCOLOR=#FFE4B5><input type=radio name=color value=FFE4B5> moccasin</TD>
+</TR><TR>
+<TD BGCOLOR=#FFB6C1><input type=radio name=color value=FFB6C1> light pink</TD>
+<TD BGCOLOR=#FFC0CB><input type=radio name=color value=FFC0CB> pink</TD>
+<TD BGCOLOR=#FFDAB9><input type=radio name=color value=FFDAB9> peach puff</TD>
+<TD BGCOLOR=#F08080><input type=radio name=color value=F08080> light coral</TD>
+</TR><TR>
+<TD BGCOLOR=#BC8F8F><input type=radio name=color value=BC8F8F> rosy brown</TD>
+<TD BGCOLOR=#DEB887><input type=radio name=color value=DEB887> burlywood</TD>
+<TD BGCOLOR=#D2B48C><input type=radio name=color value=D2B48C> tan</TD>
+<TD BGCOLOR=#E0FFFF><input type=radio name=color value=E0FFFF> light cyan</TD>
+</TR><TR>
+<TD BGCOLOR=#AFEEEE><input type=radio name=color value=AFEEEE> pale turquoise</TD>
+<TD BGCOLOR=#00FFFF><input type=radio name=color value=00FFFF> cyan*</TD>
+<TD BGCOLOR=#B0E0E6><input type=radio name=color value=B0E0E6> powder blue</TD>
+<TD BGCOLOR=#ADD8E6><input type=radio name=color value=ADD8E6> light blue</TD>
+</TR><TR>
+<TD BGCOLOR=#87CEFA><input type=radio name=color value=87CEFA> light sky blue</TD>
+<TD BGCOLOR=#87CEEB><input type=radio name=color value=87CEEB> sky blue</TD>
+<TD BGCOLOR=#00BFFF><input type=radio name=color value=00BFFF> deep sky blue</TD>
+<TD BGCOLOR=#6495ED><input type=radio name=color value=6495ED> cornflower blue</TD>
+</TR><TR>
+<TD BGCOLOR=#1E90FF><input type=radio name=color value=1E90FF> dodger blue</TD>
+<TD BGCOLOR=#7B68EE><input type=radio name=color value=7B68EE> <font color=#FFFFFF>medium slate blue</font></TD>
+<TD BGCOLOR=#6A5ACD><input type=radio name=color value=6A5ACD> <font color=#FFFFFF>slate blue</font></TD>
+<TD BGCOLOR=#4169E1><input type=radio name=color value=4169E1> <font color=#FFFFFF>royal blue</font></TD>
+</TR><TR>
+<TD BGCOLOR=#0000CD><input type=radio name=color value=0000CD> <font color=#FFFFFF>medium blue</font></TD>
+<TD BGCOLOR=#0000FF><input type=radio name=color value=0000FF> <font color=#FFFFFF>blue*</font></TD>
+<TD BGCOLOR=#483D8B><input type=radio name=color value=483D8B> <font color=#FFFFFF>dark slate blue</font></TD>
+<TD BGCOLOR=#4B0082><input type=radio name=color value=4B0082> <font color=#FFFFFF>indigo</font></TD>
+</TR><TR>
+<TD BGCOLOR=#000080><input type=radio name=color value=000080> <font color=#FFFFFF>navy*</font></TD>
+<TD BGCOLOR=#00008B><input type=radio name=color value=00008B> <font color=#FFFFFF>dark blue</font></TD>
+<TD BGCOLOR=#191970><input type=radio name=color value=191970> <font color=#FFFFFF>midnight blue</font></TD>
+<TD BGCOLOR=#5F9EA0><input type=radio name=color value=5F9EA0> cadet blue</TD>
+</TR><TR>
+<TD BGCOLOR=#7FFFD4><input type=radio name=color value=7FFFD4> aquamarine</TD>
+<TD BGCOLOR=#48D1CC><input type=radio name=color value=48D1CC> medium turquoise</TD>
+<TD BGCOLOR=#40E0D0><input type=radio name=color value=40E0D0> turquoise</TD>
+<TD BGCOLOR=#00CED1><input type=radio name=color value=00CED1> dark turquoise</TD>
+</TR><TR>
+<TD BGCOLOR=#COFFE0><input type=radio name=color value=COFFE0> pistachio</TD>
+<TD BGCOLOR=#90EE90><input type=radio name=color value=90EE90> light green</TD>
+<TD BGCOLOR=#98FB98><input type=radio name=color value=98FB98> pale green</TD>
+<TD BGCOLOR=#00FA9A><input type=radio name=color value=00FA9A> medium spring green</TD>
+</TR><TR>
+<TD BGCOLOR=#ADFF2F><input type=radio name=color value=ADFF2F> green yellow</TD>
+<TD BGCOLOR=#00FF00><input type=radio name=color value=00FF00> lime*</TD>
+<TD BGCOLOR=#00FF7F><input type=radio name=color value=00FF7F> spring green</TD>
+<TD BGCOLOR=#7FFF00><input type=radio name=color value=7FFF00> chartreuse</TD>
+</TR><TR>
+<TD BGCOLOR=#7CFC00><input type=radio name=color value=7CFC00> lawn green</TD>
+<TD BGCOLOR=#BDB76B><input type=radio name=color value=BDB76B> dark khaki</TD>
+<TD BGCOLOR=#9ACD32><input type=radio name=color value=9ACD32> yellow green</TD>
+<TD BGCOLOR=#66CDAA><input type=radio name=color value=66CDAA> medium aquamarine</TD>
+</TR><TR>
+<TD BGCOLOR=#3CB371><input type=radio name=color value=3CB371> medium sea green</TD>
+<TD BGCOLOR=#32CD32><input type=radio name=color value=32CD32> lime green</TD>
+<TD BGCOLOR=#8FBC8F><input type=radio name=color value=8FBC8F> dark sea green</TD>
+<TD BGCOLOR=#20B2AA><input type=radio name=color value=20B2AA> <font color=#FFFFFF>light sea green</font></TD>
+</TR><TR>
+<TD BGCOLOR=#008B8B><input type=radio name=color value=008B8B> <font color=#FFFFFF>dark cyan</font></TD>
+<TD BGCOLOR=#4682B4><input type=radio name=color value=4682B4> <font color=#FFFFFF>steel blue</font></TD>
+<TD BGCOLOR=#008080><input type=radio name=color value=008080> <font color=#FFFFFF>teal*</font></TD>
+<TD BGCOLOR=#2E8B57><input type=radio name=color value=2E8B57> sea green</TD>
+</TR><TR>
+<TD BGCOLOR=#6B8E23><input type=radio name=color value=6B8E23> olive drab</TD>
+<TD BGCOLOR=#228B22><input type=radio name=color value=228B22> forest green</TD>
+<TD BGCOLOR=#008000><input type=radio name=color value=008000> <font color=#FFFFFF>green*</font></TD>
+<TD BGCOLOR=#006400><input type=radio name=color value=006400> <font color=#FFFFFF>dark green</font></TD>
+</TR><TR>
+<TD BGCOLOR=#808000><input type=radio name=color value=808000> <font color=#FFFFFF>olive*</font></TD>
+<TD BGCOLOR=#556B2F><input type=radio name=color value=556B2F> <font color=#FFFFFF>dark olive green</font></TD>
+<TD BGCOLOR=#B8860B><input type=radio name=color value=B8860B> dark goldenrod</TD>
+<TD BGCOLOR=#DAA520><input type=radio name=color value=DAA520> goldenrod</TD>
+</TR><TR>
+<TD BGCOLOR=#CD853F><input type=radio name=color value=CD853F> peru</TD>
+<TD BGCOLOR=#D2691E><input type=radio name=color value=D2691E> chocolate</TD>
+<TD BGCOLOR=#A0522D><input type=radio name=color value=A0522D> <font color=#FFFFFF>sienna</font></TD>
+<TD BGCOLOR=#A52A2A><input type=radio name=color value=A52A2A> <font color=#FFFFFF>brown</font></TD>
+</TR><TR>
+<TD BGCOLOR=#B22222><input type=radio name=color value=B22222> <font color=#FFFFFF>firebrick</font></TD>
+<TD BGCOLOR=#8B4513><input type=radio name=color value=8B4513> <font color=#FFFFFF>saddle brown</font></TD>
+<TD BGCOLOR=#800000><input type=radio name=color value=800000> <font color=#FFFFFF>maroon*</font></TD>
+<TD BGCOLOR=#8B0000><input type=radio name=color value=8B0000> <font color=#FFFFFF>darkred</font></TD>
+</TR><TR>
+<TD BGCOLOR=#EE82EE><input type=radio name=color value=EE82EE> violet</TD>
+<TD BGCOLOR=#FF00FF><input type=radio name=color value=FF00FF> fuchsia</TD>
+<TD BGCOLOR=#FF00FF><input type=radio name=color value=FF00FF> magenta*</TD>
+<TD BGCOLOR=#FF69B4><input type=radio name=color value=FF69B4> hotpink</TD>
+</TR><TR>
+<TD BGCOLOR=#DDA0DD><input type=radio name=color value=DDA0DD> plum</TD>
+<TD BGCOLOR=#FF1493><input type=radio name=color value=FF1493> deep pink</TD>
+<TD BGCOLOR=#DA70D6><input type=radio name=color value=DA70D6> orchid</TD>
+<TD BGCOLOR=#BA55D3><input type=radio name=color value=BA55D3> medium orchid</TD>
+</TR><TR>
+<TD BGCOLOR=#C71585><input type=radio name=color value=C71585> medium violetred</TD>
+<TD BGCOLOR=#DB7093><input type=radio name=color value=DB7093> pale violet red</TD>
+<TD BGCOLOR=#8A2BE2><input type=radio name=color value=8A2BE2> <font color=#FFFFFF>blue violet</font></TD>
+<TD BGCOLOR=#9932CC><input type=radio name=color value=9932CC> <font color=#FFFFFF>dark orchid</font></TD>
+</TR><TR>
+<TD BGCOLOR=#9400D3><input type=radio name=color value=9400D3> <font color=#FFFFFF>dark violet</font></TD>
+<TD BGCOLOR=#9370DB><input type=radio name=color value=9370DB> <font color=#FFFFFF>medium purple</font></TD>
+<TD BGCOLOR=#8B008B><input type=radio name=color value=8B008B> <font color=#FFFFFF>dark magenta</font></TD>
+<TD BGCOLOR=#800080><input type=radio name=color value=800080> <font color=#FFFFFF>purple*</font></TD>
+</TR><TR>
+<TD BGCOLOR=#FA8072><input type=radio name=color value=FA8072> salmon</TD>
+<TD BGCOLOR=#FFA500><input type=radio name=color value=FFA500> orange</TD>
+<TD BGCOLOR=#FFA07A><input type=radio name=color value=FFA07A> light salmon</TD>
+<TD BGCOLOR=#FF8C00><input type=radio name=color value=FF8C00> dark orange</TD>
+</TR><TR>
+<TD BGCOLOR=#F4A460><input type=radio name=color value=F4A460> sandy brown</TD>
+<TD BGCOLOR=#E9967A><input type=radio name=color value=E9967A> dark salmon</TD>
+<TD BGCOLOR=#FF7F50><input type=radio name=color value=FF7F50> coral</TD>
+<TD BGCOLOR=#FF0000><input type=radio name=color value=FF0000> red*</TD>
+</TR><TR>
+<TD BGCOLOR=#FF4500><input type=radio name=color value=FF4500> orange red</TD>
+<TD BGCOLOR=#FF6347><input type=radio name=color value=FF6347> tomato</TD>
+<TD BGCOLOR=#DC143C><input type=radio name=color value=DC143C> crimson</TD>
+<TD BGCOLOR=#CD5C5C><input type=radio name=color value=CD5C5C> indian red</TD>
+</TR><TR>
+<TD BGCOLOR=#D3D3D3><input type=radio name=color value=D3D3D3> light grey</TD>
+<TD BGCOLOR=#DCDCDC><input type=radio name=color value=DCDCDC> gainsboro</TD>
+<TD BGCOLOR=#B0C4DE><input type=radio name=color value=B0C4DE> light steel blue</TD>
+<TD BGCOLOR=#D8BFD8><input type=radio name=color value=D8BFD8> thistle</TD>
+</TR><TR>
+<TD BGCOLOR=#C0C0C0><input type=radio name=color value=C0C0C0> silver*</TD>
+<TD BGCOLOR=#778899><input type=radio name=color value=778899> <font color=#FFFFFF>light slate gray</font></TD>
+<TD BGCOLOR=#808080><input type=radio name=color value=808080> <font color=#FFFFFF>gray*</font></TD>
+<TD BGCOLOR=#708090><input type=radio name=color value=708090> <font color=#FFFFFF>slate gray</font></TD>
+</TR><TR>
+<TD BGCOLOR=#696969><input type=radio name=color value=696969> <font color=#FFFFFF>dim gray</font></TD>
+<TD BGCOLOR=#A9A9A9><input type=radio name=color value=A9A9A9> dark gray</TD>
+<TD BGCOLOR=#2F4F4F><input type=radio name=color value=2F4F4F> <font color=#FFFFFF>dark slate gray</font></TD>
+<TD BGCOLOR=#000000><input type=radio name=color value=000000> <font color=#FFFFFF>black*</font></TD>
+</TR>
+</TABLE></FORM>)
+global_footer
+(</BODY></HTML>
+)

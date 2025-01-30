@@ -1,0 +1,32 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% kill script
+%
+% This script kills one item.
+%
+% Query Paramters:
+%    conf=      conference to kill an item in
+%    item=      item number to kill
+%
+%    csel=      current list of conference (not used, just passed through)
+%    nextnew=   skip non-new conferences? (not used, just passed through)
+%    isel=      current item selector (not used, just passed through)
+%    rsel=      current response selector (not used, just passed through)
+%    since=     date we are reading since (not used, just passed through)
+
+flavor(config.bt)+include
+
+% open the conference
+open_conf {(Backtalk internal error: No such )Conference( \()conf(\)\n) halt} if
+
+kill_item
+
+% check error code
+{
+  (Backtalk error: could not kill )Item( )item( in the )conf
+  ( )Conference(.\n) halt
+} if
+
+/http_location `backtalkurl(/)flavor(confhome?conf=)conf(&csel=)csel
+  /nextnew defined{(&nextnew=)nextnew}if '
+  store

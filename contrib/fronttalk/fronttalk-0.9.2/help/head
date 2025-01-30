@@ -1,0 +1,5 @@
+                       Fronttalk Command:  HEAD
+
+Usage: HEAD                                 ("Respond or Pass?" prompt only)
+
+Redisplay the header of the item currently being read.

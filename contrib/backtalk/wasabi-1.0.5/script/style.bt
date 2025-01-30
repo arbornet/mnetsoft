@@ -1,0 +1,35 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Style sheet.  This shouldn't really be a script.
+
+(<style type="text/css">
+body {background:)bgcolor(; margin:0px 10px 0px 0px}
+td.sidebar {padding:2px}
+td.sidebar p {color:)textcolor(}
+td.sidebar dd {color:)textcolor(; margin-left:6px}
+td.sidebar center {color:)textcolor(}
+td.sidebar .heading {color:)textcolor(; font-weight:bold}
+td.sidebar a:link {color: )textcolor(; font-weight:bold}
+td.sidebar a:visited {color:orange; font-weight:bold}
+td.sidebar a:hover {color:yellow; font-weight:bold}
+td.topbar {padding:2px 0px; color:)textcolor(}
+td.topbar a:link {color:)textcolor(}
+td.topbar a:visited {color:)textcolor(}
+td.topbar a:hover {color:yellow}
+td.topbar .welcome {font-weight:bold}
+td.main {background:)wasabi.bgcolor(; padding:10px}
+td.main dd {margin-left:15px}
+h1.title {margin:0px; text-align:center}
+h2.title {margin:0px; text-align:center}
+p.author {margin:0px; font-weight:bold; text-align:center}
+p.date {margin:0px; text-align:center}
+td.botbar {padding:2px 0px; color:)textcolor(}
+.resphead {color: green; font-weight:bold}
+.respcntl {float: right}
+.toct:link {font-weight:bold; font-size:120%; font-color:green}
+.toct:visited {font-weight:bold; font-size:120%; font-color:purple}
+.tocs {font-style:italic}
+a.rss {border:1px solid;border-color:#FC9 #630 #330 #F96;padding:0 3px;font:bold 10px verdana,sans-serif;color:#FFF;background:#F60;text-decoration:none;margin: 0}
+a.atom {border:1px solid;border-color:#BEF #06C #035 #7DF;padding:0 3px;font:bold 10px verdana,sans-serif;color:#FFF;background:#09F;text-decoration:none;margin: 0}
+</style>
+)

@@ -1,0 +1,22 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+Party channels are:
+"
+ls -C /var/party/log
+echo ""
+echo -n "What party channel would you like to tail? (example 'party.log') "
+read channel
+echo ""
+if [ "$channel" = "" ]
+then
+	channel=party.log
+fi
+if [ -f /var/party/log/$channel ]
+then
+	tail /var/party/log/$channel
+else
+	echo "$channel: is not a valid party channel."
+	echo ""
+fi

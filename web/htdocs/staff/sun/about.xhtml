@@ -1,0 +1,1296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: About Grex</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1>Grex Staff Notes: About Grex's Hardware and Software</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <h5>NOTE: These notes are of historical value only!</h5>
+  <p>Please note that Grex has changed drastically since these
+  notes were written. In particular, it is no longer running on Sun
+  hardware, nor is it running SunOS. As of mid-2017, Grex is an
+  x86 machine based machine a modern BSD. Much of the software
+  listed below is installed, but much more recent versions, and
+  most of it through the OS ports collection. Notable exceptions
+  are things written by people close to Grex itself, such as the
+  Backtalk conferencing software.</p>
+
+  <p><a href="index.xhtml">[index]</a></p>
+
+  <p>This note describes briefly the hardware and software used on
+  Grex.  Cyberspace Communications has very little money to spend,
+  and we have a very large number of users on our systems, so,
+  although we don't have much, we work it very hard.</p>
+
+  <h2>Hardware</h2>
+
+  <p>The <a href="#">inventory database</a> gives a bare-bones list
+  of all the equipment we owned by Grex.  This document describes
+  the systems and their configurations in more detail.</p>
+
+  <h3>Main Grex Computer</h3>
+
+  <p>Our main computer is currently a <strong>Sun SPARCserver
+  4/670MP</strong>. This is a pretty decent machine by our
+  standards. We actually bought our first 4/670 system and had it
+  running at least a year before it got fashionable for companies
+  to stop using them and start pushing them off their loading
+  docks. Lately though, we've been lucky enough to catch a few
+  that were being dumped.</p>
+
+  <p>Sun's SPARC machines are all RISC (Reduced Instruction Set
+  Computer) architectures. This is sort of the opposite approach to
+  chip design from things like Intel's Pentium chips. The basic
+  idea behind RISC is to start with a very simple processor that
+  handles a small, orthogonal instruction set, and then work like
+  heck to make it do the simple things it does very fast. There are
+  several RISC architectures around, but Sun's SPARC architecture
+  is probably the most commercially successful.</p>
+
+  <p>Grex's actual 4/670 system consists of the following
+  components:</p>
+
+  <blockquote>
+    <table border="1">
+      <tr>
+        <td align="right">1</td>
+
+        <td>Sun</td>
+
+        <td>12-slot chassis with power supply and fans.</td>
+      </tr>
+
+      <tr>
+        <td align="right">1</td>
+
+        <td>Sun 501-1439</td>
+
+        <td>backplane with 12 VME card connectors.</td>
+      </tr>
+
+      <tr>
+        <td align="right">1</td>
+
+        <td>Sun 501-1686<br />
+        (Rev 06)</td>
+
+        <td>4/6xx VME motherboard with boot proms (version 2.10),
+        two Mbus connectors, three SBus connectors, a SCSI
+        controller, an ethernet interface, two serial ports and 32
+        sockets for 30-pin SIMMs.</td>
+      </tr>
+
+      <tr>
+        <td align="right">1</td>
+
+        <td>Sun 501-1901<br />
+        (Rev 06)</td>
+
+        <td>4/6xx VME memory expansion card with 64 sockets for
+        30-pin SIMMs.</td>
+      </tr>
+
+      <tr>
+        <td align="right">2</td>
+
+        <td>Sun 370-1388</td>
+
+        <td>SM100 Mbus module with two 40MHz Ross CPUs.</td>
+      </tr>
+
+      <tr>
+        <td align="right">1</td>
+
+        <td>Performance Technologies PT-SBS430</td>
+
+        <td>S-Bus SCSI Controller Daughterboard</td>
+      </tr>
+
+      <tr>
+        <td align="right">96</td>
+
+        <td>Various</td>
+
+        <td>4-Meg (80ns) SIMMs (30-pin).</td>
+      </tr>
+
+      <tr>
+        <td align="right">2</td>
+
+        <td>HP 3010</td>
+
+        <td>2.1 Gig Full Height SCSI Disks.</td>
+      </tr>
+
+      <tr>
+        <td align="right">3</td>
+
+        <td>Seagate ST42400N</td>
+
+        <td>2.1 Gig Full Height SCSI Disks.</td>
+      </tr>
+
+      <tr>
+        <td align="right">2</td>
+
+        <td>Seagate ST15150N</td>
+
+        <td>4.1 Gig Full Height SCSI Disks.</td>
+      </tr>
+
+      <tr>
+        <td align="right">1</td>
+
+        <td>Toshiba XM3401B</td>
+
+        <td>CD-ROM Drive.</td>
+      </tr>
+
+      <tr>
+        <td align="right">1</td>
+
+        <td>Exabyte Mammoth</td>
+
+        <td>8mm Tape Drive.</td>
+      </tr>
+    </table>
+  </blockquote>
+
+  <p>We are currently running on a two SM100 modules, so it is a
+  four processor system. We will probably experiment with removing
+  one module, giving us just two processors, because we aren't
+  convinced that the system wouldn't be faster that way. This is
+  because of the limitations of SunOS 4.1.4, which we will discuss
+  more below.</p>
+
+  <p>Our motherboard is fully populated with 32 4-Meg SIMMs, and
+  there are 64 more in the memory expansion board, so Grex has 384
+  Megs of total memory. (You could put in 16-Meg SIMMs instead,
+  which is actually more cost effective on a dollars per megabyte
+  basis, but we didn't have the money for them.) Unfortunately
+  30-pin SIMMS are no longer made, and are thus a bit scarce, so
+  the cost on these isn't coming down as much as other memory.</p>
+
+  <p>The 4/670 was designed around 1991 as an enterprise server
+  machine, one that will be simultaneously used by many users. It
+  is solidly over-engineered for robustness and stability. This is
+  in contrast to most Intel systems which are designed primarily to
+  work as single-user desktop workstations and are built as cheaply
+  as humanly possible. The difference is not so much in the speed
+  of the processor (probably most modern Pentium systems easily
+  could outrun the 4/670 at a single task), but in hardware
+  features that make it better able to juggle many tasks. For
+  example, Sun's servers have "hardware contexts" where the states
+  of many different running jobs can be stored in the processor, so
+  that the processor can jump almost instantaneously between them.
+  Pentium systems have only one hardware context - whatever is
+  being run at the moment. Our previous computer, a Sun 4/260, had
+  16 hardware contexts. The Sun 4/670 (with the SM100 processors
+  that we have) supports 4,096 hardware contexts in each processor.
+  Features like this mean that the 4/670 can deliver a lot better
+  performance in our application than you'd expect from four 40 MHz
+  processors.</p>
+
+  <p>We purchased this machine piecemeal, with money donated by our
+  users in a fundraiser. Since then, many spare parts and add-on
+  have been donated by various people. In January of 1997, we
+  bought a second-hand Sun 4/370 from the University of Michigan
+  property disposition for $212. We used only the chassis,
+  backplane and power supply from this for the new system. A
+  chassis is expensive to ship, so buying it locally was
+  advantagous. In Februrary of 1997, we purchased a second-hand
+  4/600MP board and a memory board from CRA, Inc for $718, an SM100
+  module from <a href="#">Piece by Piece</a> for $40 (plus $10
+  shipping) and 20 (two spares) 4-Meg memory chips from QuickerCAD
+  and Ken Olsen for $440. In December of 1997 we bought 16 additional
+  SIMMs for $248. Thus the total cost of the machine, not including
+  disk drives, was $1718. The CD-ROM was donated to Grex by Tod Plesco.</p>
+
+  <p>In January of 1999, two different donors gave us parts of two
+  different Sun 4/690 systems. A 4/690 is exactly like a 4/670, but
+  in a different box. It comes in a rack mount chassis that uses
+  220-volt power instead of 110-volt. One donor gave us a spare
+  motherboard, a rack, a VME card bay, and a drive bay. The other
+  donor gave us a motherboard, three more SM100 processor boards,
+  32 4-Meg SIMMs, 10 2.1 Gig differential SCSI drives, plus another
+  rack-mount drive bay, and various SBus cards. A pair of
+  processors and 16 memory chips were added. Then in February we
+  were about to collect another 16 4-Meg SIMMs from a number of
+  different donors, and brought Grex up to 256M of memory. Since
+  then, as the 4/670 continues it's slide toward total obsolesence,
+  more and more components have been appearing on our doorstep. In
+  July 2001, we added the SBus SCSI controller, so that a second
+  SCSI chain could be supported. We are building a second 4/670 for
+  use as a backup and development system.</p>
+
+  <h3>Routers</h3>
+
+  <p>Grex is currently connected to the internet by a 144K DSL
+  connection. The router is FlowPoint/2200-12 SDSL Router.  Very
+  conventional and even vaguely modern.</p>
+
+  <p>Before we had DSL, we had a 128K ISDN link and a pair of
+  Pipeline P50s. Before we had the ISDN link, Grex was connected to
+  the internet through a 28K dial-up PPP connection. Our router at
+  that time was a machine called "Gryps." It started as a 386
+  system running FreeBSD, then got upgraded to a 100 MHz Pentium
+  running OpenBSD. It still serves a few functions, like supporting
+  the terminal servers, and acting as a gateway machine for
+  staff.</p>
+
+  <h3>Modems and Terminal Server</h3>
+
+  <p>Grex maintains 7 of its own dial-in modems. The number has
+  been steadily decreasing as more and more of our users change
+  over to using the net connection instead of dialing direct. All
+  are 14.4 GVC modems that look identical, but since they were
+  bought at two different dates, they have two different chipsets
+  in them. All modems connect to a <a href="#">Chase IOLan</a>
+  terminal server called "groupie", which interfaces up to 16
+  modems to our local ethernet. It is configured to be transparent,
+  so that dial-in users are automatically given telnet connections
+  to Grex, without going through any kind of menu. We have a spare
+  Chase IOLan called "groovy" which is not currently being used.
+  Groupie and Groovy were donated to Grex by Rob Argy.</p>
+
+  <h2>System Software</h2>
+
+  <h3>Operating System</h3>
+
+  <p>Grex runs SunOS version 4.1.4. Sun has changed over to a new
+  operating system called Solaris 2 (and retroactively renamed
+  SunOS 4.1.4 to Solaris 1.1.2), and is rumored to be close to
+  ending their support of SunOS 4. At the time that we were
+  setting up Grex, Solaris 2 had a somewhat poor reputation among
+  computer gurus - it was generally thought to run slower and less
+  reliably then SunOS 4 did. Since we had a very heavily loaded
+  machine, we felt that we couldn't afford the slower speed or
+  lower reliability, and thus choose SunOS.  (Actually, since we
+  were on a Sun 2 at the time, I suspect Solaris wasn't even
+  available.)</p>
+
+  <p>At this point Solaris has probably improved enough so that it
+  would be possible to change over to using it, but changing over
+  from SunOS to Solaris is a very big job. We've made many
+  modifications to our system, including modifications to the
+  kernel, and converting them over to a new operating system would
+  be difficult.</p>
+
+  <p>As it is, SunOS 4.1.4 has worked very well for us. We've been
+  placing our machines under extremely high loads for many years,
+  and the robustness and performance of the system have been
+  genuinely impressive (though to the casual user who doesn't
+  appreciate the capacity of the hardware and the size of the load
+  it has sometimes seemed impressively pathetic). Much as we'd like
+  to have access to source code for the operating system, we feel
+  that none of the free Unix versions currently available would
+  perform as well under these conditions as SunOS.</p>
+
+  <p>Sun still regularly releases new patches for SunOS 4.1.4. We
+  regularly check the <a href="#">current
+  patch report</a> and try to keep Grex current. A list of
+  installed patches is in the <code>/etc/patchlist</code> file.</p>
+
+  <p>Unfortunately, SunOS 4.1.4 wasn't really designed to work with
+  multiprocessor systems like the Sun 4/670. Many kernel functions
+  depend on the assumption that only one processor is executing
+  them at a time. To make SunOS 4.1.4 work at all on multiprocessor
+  systems, Sun took a drastic approach - they allow only one
+  processor in the kernel at a time. This is simple, but it has a
+  big performance penalty. If one user's process has done a kernel
+  call to read a file from the disk, and another user's process
+  wants to call the kernel to send a packet out on the net, then
+  the second process must wait for the first one to get out of the
+  kernel. This is obnoxious. On Grex most processes spend almost
+  50% of their time in the kernel, so if you have two processors
+  and the system is fully loaded, then there is a processor in the
+  kernel almost 100% of the time. If we added any more processors,
+  they would probably spend most of their time waiting around, and,
+  since interprocessor communication isn't done all that
+  efficiently under SunOS 4.1.4, it's quite possible that adding
+  more processors to communicate between would actually slow the
+  system down. These problems are fixed in Solaris, which has a
+  true multi-threaded kernel so processors spend <em>much</em> less
+  time waiting for each other.</p>
+
+  <p>The Sun 4/670 appears to be the last machine Sun made which
+  could run SunOS 4.1.4 at all. So if Grex ever wants to move to a
+  more powerful machine, we will have to move away from SunOS.
+  However, we are currently thinking that the future of Grex lies
+  not in building faster and faster machines, but in going to a
+  distributed system consisting of multiple machines.</p>
+
+  <h3>Kernel Modifications - Internet Blocks</h3>
+
+  <p>Most Unix system administrators are very interested in
+  keeping strangers off of their computers, but have no problem
+  letting users of their machines access the internet. At Grex,
+  our requirements are different. We let anyone at all onto our
+  computer, but since we don't want it used as just a stepping
+  stone for people who want to attack other servers on the net, we
+  limit the ways in which people can connect to the net from our
+  machine.</p>
+
+  <p>To enforce this, we have made some modifications to our SunOS
+  kernel that prevent most users from making most kinds of outbound
+  internet connections from our host. The kernel of a Unix
+  operating system is the part that schedules all processes and
+  organizes and controls access to all devices (disk, memory, CPU,
+  ethernet, serial ports, etc), so putting these blocks there means
+  that they cannot be bypassed. For detailed information on how
+  this works, see the <a href="blocks.xhtml">kernel blocks</a>
+  page.</p>
+
+  <h3>Kernel Modifications - Fork Killer</h3>
+
+  <p>We also have occasional problems with users running fork
+  bombs on Grex. A fork bomb is simple a program that endlessly
+  launches copies of itself, each of which also endlessly launches
+  copies of itself.  Fork bombs can slow the system down badly,
+  and can be hard to kill because new processes are created faster
+  than anyone can type kill commands.</p>
+
+  <p>SunOS has the ability to limit the maximum number of
+  simultaneous processes any one user can have running. Setting
+  this limit to a low number (32 processes on Grex) reduces the
+  annoyance of fork bombs, but doesn't eliminate it. So we modified
+  the kernel so that if any user tries to use more than 32
+  processes then that user is instantly logged out and all his
+  processes killed. We also modified the kernel's kill logic so
+  that processes can be killed while they are forking. This pretty
+  much eliminates all problems with fork bombs.</p>
+
+  <h3>Free Software</h3>
+
+  <p>There is a huge amount of public domain or
+  Gnu-license software available for Unix systems, and a lot of it
+  is installed on Grex. The Gnu project especially is steadily
+  working away at creating a complete free Unix system. They have
+  developed very good versions of most of the Unix utilities, and
+  these are widely used by all the free Unix versions (Linux,
+  FreeBSD, etc). We have installed most of these in the
+  <code>/usr/local/bin</code> directory on Grex, so that most of the
+  commands you'll find there are actually Gnu versions rather than
+  SunOS versions, though the Sun versions are still available.</p>
+
+  <p>The following is an incomplete (and probably soon to be
+  obsolete) list of the freely distributed software installed on
+  Grex:</p>
+
+  <blockquote>
+    <table border="1">
+      <tr>
+        <th>Program</th>
+
+        <th>Version</th>
+
+        <th>Description</th>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.apache.org">apache</a></td>
+
+        <td>1.3.26</td>
+
+        <td>Apache HTTP Server Daemon</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/bash/">bash</a></td>
+
+        <td>2.05</td>
+
+        <td>Gnu Borne-Again Shell (enhanced sh shell)</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/bison/">bison</a></td>
+
+        <td>1.25</td>
+
+        <td>Gnu Yacc clone (yet another compiler compiler)</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.nongnu.org/cvs/">cvs</a></td>
+
+        <td>1.10</td>
+
+        <td>Gnu Concurrent Versions System</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/diffutils/">diffutils</a></td>
+
+        <td>2.7</td>
+
+        <td>Gnu File Comparison Tools</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.instinct.org/elm/">elm</a></td>
+
+        <td>2.5.2</td>
+
+        <td>Elm Electronic Mail Program</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/emacs/">emacs</a></td>
+
+        <td>20.3</td>
+
+        <td>Gnu Emacs Text Editor</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/fileutils/">fileutils</a></td>
+
+        <td>3.16</td>
+
+        <td>Gnu File Utilities (ls, chmod, mv, rm,
+        <em>etc</em>)</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/findutils/">findutils</a></td>
+
+        <td>4.1</td>
+
+        <td>Gnu Find Utility</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/gawk/">gawk</a></td>
+
+        <td>3.0.3</td>
+
+        <td>Gnu Awk</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/gcc/">gcc</a></td>
+
+        <td>2.95.3</td>
+
+        <td>Gnu Compiler Collection (C, C++, Fortran 77, Objective
+        C, CHILL, but not Java)</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/gdb/">gdb</a></td>
+
+        <td>5.0</td>
+
+        <td>Gnu Debugger</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/grep/">grep</a></td>
+
+        <td>2.4.2</td>
+
+        <td>Gnu Grep</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/gzip/">gzip</a></td>
+
+        <td>1.2.4</td>
+
+        <td>Gnu File Compresser</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/ispell/">ispell</a></td>
+
+        <td>3.2.04</td>
+
+        <td>Gnu International Spell Checker</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://joe-editor.sourceforge.net/">joe</a></td>
+
+        <td>2.8</td>
+
+        <td>Joe's Own Editor</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/less/">less</a></td>
+
+        <td>332</td>
+
+        <td>Gnu Pager</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.softwarepreservation.org/projects/c_plus_plus/library/libg_plus_plus">libg++</a></td>
+
+        <td>2.7.2</td>
+
+        <td>Gnu C++ Library</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://lynx.browser.org/">lynx</a></td>
+
+        <td>2.8.4</td>
+
+        <td>Text Based Web Browser</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/make/">make</a></td>
+
+        <td>3.76.1</td>
+
+        <td>Gnu Make Program</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.hughes.com.au/products/msql/">msql</a></td>
+
+        <td>2.0.3</td>
+
+        <td>Hughes Technologies Mini SQL</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.mysql.com/">mysql</a></td>
+
+        <td>3.23.39</td>
+
+        <td>mySQL SQL</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/ncurses/">ncurses</a></td>
+
+        <td>5.2</td>
+
+        <td>New Curses screen management package</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.nethack.org/">nethack</a></td>
+
+        <td>3.3.0</td>
+
+        <td>Net-Created Dungeon Game</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.openssl.org/">openssl</a></td>
+
+        <td>0.9.6b</td>
+
+        <td>Secure Sockets Layer Toolkit</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://savannah.gnu.org/projects/patch/">patch</a></td>
+
+        <td>2.5</td>
+
+        <td>Gnu Patch Program</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.perl.org">perl</a></td>
+
+        <td>5.004_004</td>
+
+        <td>Perl Interpreter</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.washington.edu/alpine/">pine</a></td>
+
+        <td>3.96</td>
+
+        <td>Pine Mailer</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.procmail.org/">procmail</a></td>
+
+        <td>3.10</td>
+
+        <td>Mail Processor</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/screen/">screen</a></td>
+
+        <td>3.7.4</td>
+
+        <td>Gnu Screen Manager</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/shellutils/shellutils.html">sh-utils</a></td>
+
+        <td>1.16</td>
+
+        <td>Gnu Shell Utilities (date, echo, who, stty,
+        <em>etc</em>)</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.openssh.com/">ssh</a></td>
+
+        <td>1.2.20</td>
+
+        <td>Secure Shell Remote Login Program</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/tar/">tar</a></td>
+
+        <td>1.12</td>
+
+        <td>Gnu Tape Archiver</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.tcl.tk/">tcl</a></td>
+
+        <td>8.3.3</td>
+
+        <td>Tcl Programming language</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.tcsh.org/">tcsh</a></td>
+
+        <td>6.10.00</td>
+
+        <td>Extended C Shell</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/texinfo/">texinfo</a></td>
+
+        <td>3.9</td>
+
+        <td>Gnu Documentation System</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/textutils/textutils.html">textutils</a></td>
+
+        <td>1.22</td>
+
+        <td>Gnu Text Utilities (cat, head, wc, sum,
+        <em>etc</em>)</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.unixtop.org/">top</a></td>
+
+        <td>3.5beta7</td>
+
+        <td>Top CPU Usage Display</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.vim.org/">vim</a></td>
+
+        <td>5.8</td>
+
+        <td>Improved VI editor</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://w3m.sourceforge.net/">w3m</a></td>
+
+        <td>0.1.10</td>
+
+        <td>Text-based Web Browser</td>
+      </tr>
+
+      <tr>
+        <td><a href="https://www.gnu.org/software/wget/">wget</a></td>
+
+        <td>1.5.3</td>
+
+        <td>Noninteractive Downloading Utility</td>
+      </tr>
+
+      <tr>
+        <td><a href="http://www.zsh.org/">zsh</a></td>
+
+        <td>3.0.5</td>
+
+        <td>Z shell</td>
+      </tr>
+    </table>
+  </blockquote>
+
+  <p>We have both the Gnu gcc compiler and the Sun C
+  compiler, but most of our software is built with the Gnu
+  compiler, which conforms with the ANSI standards and generally
+  produces better code.</p>
+
+  <p>In a few cases we've found the Gnu versions of commands
+  unsatisfactory. Their "df" command behaved oddly on unmounted
+  disks, reporting partitions that didn't exist, so we pulled it
+  out. Newer versions of their "who" command do DNS lookups on each
+  IP address of each user. Since we have users from many different
+  domains, and many are not resolvable, this is very slow, so we
+  fell back to an older version of the Gnu "who" program.</p>
+
+  <h3>Password Database</h3>
+
+  <p>SunOS 4.1.4 uses a flat password file with encrypted
+  passwords stored in the publicly readable file.  This is totally
+  inadequate for our needs. With over 28,000 lines in the password
+  file, searching it is much too slow. Also, since untrusted users
+  can easily get onto our system, and password cracking technology
+  is pretty good these days, leaving encrypted passwords in a
+  publicly readable password file would be a very large security
+  problem. We have installed a much-modified version of the JFH
+  password system to give us a hashed password database for quick
+  look-ups and a protected shadow file to keep encrypted passwords
+  in. For more information about this, see the <a
+  href="passwd.xhtml">Grex staff notes on the password
+  database</a>.  To support this, we have rebuilt many programs
+  with our own shadow library, and have installed our own versions
+  of such programs like passwd, chfn, chsh, etc.</p>
+
+  <h3>Queuing Telnet Daemon</h3>
+
+  <p>The vast majority of Grex users connect into the system via
+  telnet connections. To keep the system from being too slow to
+  use, we limit the number of simultaneous telnet sessions that
+  can be established. Originally this was done by limiting the
+  number of psuedo-tty devices (ptys) installed, but this approach
+  had many problems. Telnetting into the system became a lottery:
+  when you tried to telnet in, you either succeeded or failed. If
+  you failed, you tried again and kept trying again until you
+  happened to hit it when there was a psuedo-tty available.
+  Rejecting all these repeated attempts slowed down the system,
+  especially as users started developing "attack telnet scripts"
+  to telnet repeatedly until a connection succeeded. People could
+  only get on by being lucky or persistant.  Furthermore, we
+  wanted to use the terminal server for dial-in users, but dial-in
+  users effectively telnet in from the terminal server, and we
+  didn't have any way to reserve connections for those dial-in
+  users. Finally, when the system is full of users, there were no
+  psuedo-ttys left available, so programs like "<code>screen</code>"
+  could not be used.</p>
+
+  <p>Marcus Watts largely solved these problems with the
+  development of his queuing telnet daemon. With this, users
+  telnetting in from the terminal server always get a connection,
+  but users telnetting in from anywhere else must pass through the
+  queue. If the maximum allowed number of users is already on, then
+  additional users are placed on a queue, where they see a
+  count-down showing their progress through the queue. Actual
+  telnet connections are given to users as space is available, in
+  the order that they telnetted in.</p>
+
+  <p>The queuing telnet daemon solves most of our telnet problems.
+  Users can get connections in a fair and predictable fashion,
+  "attack telnet" programs are useless, and plenty of pseudo-ttys
+  are left available for dial-in and "<code>screen</code>" users. Users
+  on the queue do still cost some processing to maintain, so having
+  a long queue can contribute to slowing down the system.</p>
+
+  <p>We are also running a queuing version of the rlogin daemon.
+  Unfortunately, there was no good way to build queuing into the
+  ssh daemon, but we have modified it so that it can't be used as a
+  way around the queue. This means that it mostly can't be used at
+  all when the system is full.</p>
+
+  <p>For more information about the queuing telnet daemon, contact
+  <a href="mailto:mdw@grex.org">Marcus Watts</a>.</p>
+
+  <h3>Idle Zapper</h3>
+
+  <p>Because telnet connections are a scarce quantity on Grex, we
+  run an idle daemon to automatically log out users who aren't
+  doing anything on their connections. We use Michael Crider's
+  freeware "<code>idled</code>" program, with a few small
+  modifications and bug fixes. We have set it to warn idle users
+  after 15 minutes and then log them out if they are still idle 5
+  minutes later. If a user logs into Grex more than once and Grex
+  has more than a certain number of users logged in, idled sends
+  warnings to their oldest connections, asking the users to please
+  log out. Some programs (including some versions of
+  "<code>less</code>") like to read and write from <code>/dev/tty</code>
+  instead of from the user's actual tty device. This means that
+  activity in those programs may not be noticed by
+  "<code>idled</code>". We have fixed some of those programs on Grex.
+  <a href="mailto:valerie@grex.org">Valerie Mates</a> has been the
+  main person responsible for maintaining the idled on Grex.</p>
+
+  <h3>Process Monitor</h3>
+
+  <p>Since we primarily regulate load by limiting the number of
+  simultaneous users, we try to prevent people from leaving
+  processes running after they log off, because otherwise you can
+  accumulate an awful lot of running processes even if you keep
+  the number of users low.</p>
+
+  <p>To enforce this, and to generally keep a watch on the process
+  table, we run a program called "<code>robocop</code>". This was
+  originally written as a shell script named
+  "<code>kill_orphans</code>" by Greg Cronau, and has evolved into a
+  much faster and more sophisticated C program written by Jan
+  Wolter.</p>
+
+  <p>"<code>Robocop</code>" regularly scans the list of users currently
+  logged on and the process table, and then kills any process left
+  behind by a user who has logged off. That includes all processes
+  which fail all the following tests:</p>
+
+  <ul>
+    <li>The real user ID of the process is not one of the system
+    accounts like "root", "daemon" or "nobody".</li>
+
+    <li>The control tty is not the console and does not have either
+    someone logged into it, or a "<code>screen</code>" or
+    "<code>layer</code>" process running on it.</li>
+
+    <li>The process is not a "<code>sendmail</code>" or "<code>ftpd</code>"
+    process, nor is it a descendent of a "<code>sendmail</code>" or
+    "<code>ftpd</code>" process.</li>
+  </ul>
+
+  <p>"<code>Robocop</code>" also does some simple tests to try to
+  detect users using excess resources (mainly people running fork
+  bombs and other denial of service attacks). If a user has too
+  many processes, or the processes are using too much memory, it
+  automatically kills all the user's processes. This function has
+  been partly obsoleted by the kernel modifications which kill fork
+  bombs more quickly than robocop does.</p>
+
+  <p>"<code>Robocop</code>" also cleans up "<code>ftpd</code>" processes
+  that are more than 6 hours old. These are often left behind when
+  people's ftp connections are broken, and we don't want them
+  cluttering up the process table forever.</p>
+
+  <p>In all its tasks, "<code>robocop</code>" is designed to err on the
+  side of not killing processes that might be OK, so it is not by
+  any means impossible to fool. However, Grex staff monitor things
+  pretty closely, so what "<code>robocop</code>" misses is usually
+  cleaned up by a human pretty fast.</p>
+
+  <p>Note also that "<code>robocop</code>" is very tuned toward Grex
+  and SunOS 4.1. Porting it to another system would be
+  non-trivial.</p>
+
+  <h3>Hierarchical Home Directories</h3>
+
+  <p>On most Unix systems, all users are given home directories
+  under a single parent directory.  Typically, the home directory
+  for user "<code>bubbles</code>" would be someplace like
+  "<code>/home/bubbles</code>." But Grex has over 28,000 users, so our
+  "<code>/home</code>" directory would have more than 28,000 entries
+  in it. Any time anyone accesses their home directory by its full
+  path, the operating system would have to search the 28,000 entry
+  parent directory. On average, it would have to look through
+  14,000 directory entries. This is seriously slow.</p>
+
+  <p>We have restructured our home directories into a two level
+  hierarchy. Instead of the directory for "<code>bubbles</code>" being
+  "<code>/a/bubbles</code>" it is now "<code>/a/b/u/bubbles</code>", where
+  "<code>b</code>" and "<code>u</code>" are the first and second letters of
+  the user's login name respectively. This way the operating system
+  has to search the top level directory (with 26 entries), the
+  second-level directory (another 26 directories) and the the
+  third-level directory (with an average of 28,000/(26*26) = 41
+  directories). On average it should have to look at about 47
+  directory entries (that is 26/2 + 26/2 + 41/2), which is a big
+  improvement on 14,000. For further optimization, we carefully
+  created the intermediate directories for the most common letters
+  first, so that the average search times are actually even lower
+  than the estimate above.</p>
+
+  <p>Some users' accounts are now being created on the new /c disk
+  instead of /a. These users have home directories like
+  <code>/c/b/u/bubbles</code> instead.</p>
+
+  <h3>Hierarchical Mail Directories</h3>
+
+  <p>Unix normally stores the unread mail for all users in a
+  single directory, such as <code>/var/spool/mail</code>. On Grex
+  roughly two-thirds of our users have mail files in that
+  directory, so this was another huge directory that needs to be
+  searched every time a piece of mail was delivered or a mail
+  reader was started. So, as another trick to speed up the system,
+  we set up the same two-level directory hierarchy on the mail
+  spool directory as we set up for users' home directories.</p>
+
+  <p>Making this work required modifications to our
+  "<code>mail.local</code>" program, to make it deliver to the correct
+  place ("<code>mail.local</code>" is the program that
+  "<code>sendmail</code>" invokes to do local mail delivery). The
+  configuration file <code>/etc/mailfmt</code> tells where mail should
+  be delivered by "<code>mail.local</code>".</p>
+
+  <p>Modifications were also made to the "<code>login</code>" program
+  to correctly set the <code>MAIL</code> environment variable to the
+  location of the user's mail file, and to all the mail reading
+  programs that did not respect the <code>MAIL</code> environment
+  variable (notably "<code>pine</code>").</p>
+
+  <h3>Mailbox Directory Permissions</h3>
+
+  <p>On standard SunOS systems, the <code>/var/spool/mail</code>
+  directory is permitted 2777, which allows anyone to create or
+  delete their own mailboxes, but not to delete other people's
+  mailboxes. Unfortunately, it's also possible for vandals to
+  create someone else's mailbox, which gives you access to their
+  mail. So when we switched to heirarchical mail directories we
+  also changed the directory permissions to 755 - so people can't
+  create or delete their own mailboxes, though they can empty
+  them. Mailboxes are created by "<code>mail.local</code>" and we
+  don't delete them until the account is deleted. Changes were
+  also made to the kind of locking used when reading or writing
+  mailboxes (<code>flock</code> is now used).</p>
+
+  <p>This was a problem for some mail programs. Sun's
+  "<code>Mail</code>" mail reader bombs if it can't delete mail files.
+  Since we didn't have source to it, Marcus Watts extended
+  "<code>mailx</code>" to give it the same features as "<code>Mail</code>"
+  and we now use that instead. If you run "<code>pine</code>" before
+  you have ever received mail, it complains that you haven't got a
+  mail box and that it can't create one. This is harmless, but the
+  message confuses some users. Someday we need to kill this error
+  message, but figuring out "<code>pine</code>" source is amazingly
+  painful. We have modified the error message to be less
+  alarming.</p>
+
+  <h3>Mailbox Size Quotas</h3>
+
+  <p>Grex has had problems with users who take out an account,
+  sign up for high traffic mailing lists, and then never log in
+  again. Huge quantities of mail pile up, jamming our net
+  connection as it comes in and filling our mail spool partition
+  once it is here. Once the mail partition is full, nobody can
+  receive mail. Similar problems are caused by people mailing in
+  huge files, often gif images or executable programs.</p>
+
+  <p>To limit these problems, Grex has set limits on mail. Messages
+  that are longer than 600K are refused so that they bounce back to
+  the sender. If a user's mailbox grows larger than one megabyte,
+  then we bounce all new messages for that user in a similar
+  manner.</p>
+
+  <p>This was implemented by Marcus Watts. The
+  "<code>mail.local</code>" program which does local mail delivery
+  detects when a mailbox is too full, and adds that user's login
+  name to the file <code>/var/adm/badmail</code>. "<code>Sendmail</code>"
+  was taught to reject all mail to people who are listed in that
+  file. A new program called "<code>umailck</code>" deletes users from
+  the badmail file if they are no longer over quota. It is run
+  hourly by "<code>cron</code>". "<code>Login</code>" warns users if they
+  are near or over quota, and runs "<code>umailck</code>" on them if
+  they are in the <code>/var/adm/badmail</code> file.</p>
+
+  <p>Marcus's original idea was that we would reject mail sent to
+  accounts which were overquota with a "temporary" error. This
+  tells the machine sending the mail to Grex to try again later, by
+  which time the user might have emptied out the mailbox enough so
+  that the message could be delivered. This was nice in theory
+  because this way no mail would be lost. In practice we discovered
+  that some mail hosts try again <em>immediately</em> so Grex would
+  end up rejecting the same mail message many times a minute. We
+  couldn't afford this, so we changed it to reject over-quota mail
+  with a "permanent" error, so it would be bounced immediately to
+  the sender.</p>
+
+  <h3>Spam Filters</h3>
+
+  <p>"Spammers" are people who send huge amounts of unsolicited
+  E-mail to tens of thousands of people, usually advertising
+  various forms of worthless garbage. Spamming is an attractive
+  way to advertise because you can reach a lot of people very
+  cheaply. However, most people don't like receiving this kind of
+  mail, so in the early days it was common for people who had
+  received unwanted spam to apply poetic justice by sending back
+  thousands of E-mail messages in reply, thus flooding the
+  spammer's systems with junk E-mail.</p>
+
+  <p>Because of this, modern spammers try very hard to send their
+  E-mail in such a way that nobody can reply to it, or otherwise
+  easily trace it back to them. They use forged return addresses,
+  so that replies go to the wrong place, or they relay their
+  messages through machines belonging to other people, thus using
+  some unknowing person's machine to send out their spam.</p>
+
+  <p>We at Grex, like many other people on the net, are
+  philosophically opposed to people doing nefarious things so they
+  can send E-mail without being held accountable for it, and we are
+  even more strongly opposed to letting people use our already
+  overburdened machine for this purpose. Like many other systems on
+  the net, we've been steadily instituting new measures to try to
+  block spam mail while still passing through legitimate mail.
+  Meanwhile, of course, spammers have been steadily inventing new
+  ways around the new defenses.</p>
+
+  <p>Recent versions of "<code>sendmail</code> " contain many new
+  features designed to limit spam. Unfortunately, we've made so
+  many modifications to our "<code>sendmail</code>" for various other
+  purposes that upgrading to the newest version is rather
+  difficult. So Grex staff member Marcus Watts has been waging his
+  own war against spam, monitoring the spam that passes through the
+  system, building defenses against common spammer tricks into our
+  version of "<code>sendmail</code>", and blocking all mail from sites
+  that regularly seem to be originating spam.</p>
+
+  <h3>Un-POP Server</h3>
+
+  <p>Grex doesn't run a POP server. Providing mail service to the
+  universe is not our primary goal, even if it is much of what we
+  end up doing. We want people to get involved in our virtual
+  community, so we want them actually get on the system to get
+  their mail.</p>
+
+  <p>But lots of people try accessing their mail via a POP client
+  and then send us mail asking why it doesn't work. So we set up a
+  fake POP server that simply rejects all POP connections with an
+  error message that explains that Grex does not support POP. This
+  little program was written for Grex by Jared Mauch.</p>
+
+  <h3>Disk Space Quotas</h3>
+
+  <p>Grex policy sets a limit on 1 megabyte of disk space per
+  user. SunOS 4.1.4 contains software to enforce such quotas, but
+  we do not use it here. It would slow down the system
+  considerably to have to be constantly checking quotas.  Instead
+  we police disk usage manually.</p>
+
+  <h2>Application Software</h2>
+
+  <h3>Newuser Program</h3>
+
+  <p>The "<code>newuser</code>" program creates new accounts for
+  people. Grex runs two versions of this. The one that you run by
+  telnetting or dialing Grex and typing "<code>newuser</code>" at the
+  login prompt was originally written by Marcus Watts for M-Net in
+  1983, and has been slowly and steadily evolving ever since. The
+  web-based one that you run by pointing your browser at
+  <a href="/newuser/">www.grex.org/newuser/</a>
+  is a new interface to Marcus's same old account creation code,
+  that was developed by Jan Wolter. More than two hundred people
+  run one or the other newuser program on Grex every day.</p>
+
+  <h3>PicoSpan Conferencing System</h3>
+
+  <p>Grex's main reason for existing is to host a virtual
+  community, based primarily on the PicoSpan conferencing system.
+  We have over 100 active conferences on Grex, with a wide range
+  of subject areas. The PicoSpan program, which is accessed by the
+  Unix "<code>bbs</code>" command, allows user to join any of these
+  conferences (except the "staff" conference which is restricted
+  to Grex's staff members and used only for technical discussions
+  and coordination of efforts among staff). Users can read, post
+  new responses to existing discussion items, or start new items.
+  It keeps track of what you have read in files saved in your home
+  directory and called "participation files", so you only see new
+  material when you come by again.</p>
+
+  <p>PicoSpan was written by grex staff member Marcus Watts around
+  1983. It is the same conferencing system made famous on "The
+  Well".</p>
+
+  <h3>Backtalk Conferencing System</h3>
+
+  <p>More recently Grex staff members Jan Wolter and Steve Weiss
+  have developed the web-based Backtalk conferencing system. On
+  Grex, Backtalk is set up to access the same conferences as
+  PicoSpan and use the same participation files, so that it
+  doesn't really matter which interface you use, or if you mix and
+  match them. Backtalk is
+  <a href="http://www.unixpapa.com/backtalk/">available free</a>
+  to other systems.</p>
+
+  <p>Users log into Backtalk using their usual Grex logins and
+  passwords. This is a bit tricky, because neither Backtalk nor the
+  httpd run as root and the encrypted passwords are stored in the
+  shadow file which is readable only by root. To get around this,
+  we have the http daemon run an external authentication module
+  called "<code>pwauth</code>". Since this does run as root, it can
+  check passwords. This authentication system is
+   <a href="http://www.unixpapa.com/mod_auth_external.html">available
+   for free</a>.</p>
+
+  <h3>Party Program</h3>
+
+  <p>Grex's party program is real-time chat program where you can
+  hold live conversations with whatever other users are currently
+  running it. It's vaguely like IRC, except it only has Grex users
+  on it and there are no "channel operators".  Party was
+  originally written by Marcus Watts around 1983. Jan Wolter
+  started modifying it around 1985, and eventually completely
+  rewrote it, adding many features.</p>
+
+  <h3>Orville Write Program</h3>
+
+  <p><a href="http://unixpapa.com/write.html">Orville Write</a> is
+  a much extended version of the Unix <code>write</code>
+  program written by Jan Wolter. Among other things, it supports
+  the sending of "telegrams" between users, and allows users to
+  designate themselves as "helpers". Doing "<code>write help</code>"
+  connects you to any available user who has designated themselves
+  as a "helper."</p>
+
+  <h3>Vote Program</h3>
+
+  <p>Grex is run democratically, with members electing board
+  members, and voting on referenda. Since we run lots of
+  elections, we need a vote program. Ours was written by Grex
+  staff member John Remmers. It has both a command-line interface
+  and a web interface.</p>
+
+  <h3>Menu Shell</h3>
+
+  <p>Since Unix commands are often difficult for new users to
+  learn, Dave Parks developed a menu system for M-Net long ago.
+  This system is designed to give users an easy interface to
+  commonly used Unix commands, and also to teach the users what
+  those commands are, so that one day they will be able to switch
+  from menu shell to a more standard Unix shell. Grex's menu shell
+  was a version of Dave Parks's menu shell, installed on Grex by
+  Dave Parks and modified by Valerie Mates in the years since.</p>
+
+  <p>The whole thing was implemented as one giant sh script. We
+  weren't entirely happy with the maintainability and efficiency of
+  this implementation.</p>
+
+  <p>Michelangelo Giansiracusa re-wrote the shell scripts into a C
+  program template design, which means configuring menu templates
+  is easy and can be done by some menu-admin person who is
+  programming-illiterate. Some new features, back-end scripts, and
+  improved help messages were also added to the newmenu system in
+  this project undertaken by Mic. A template format debugger
+  program was also written by Mic, which may be more helpful to
+  Grex users if we someday decide they can construct their own
+  customizable menu template files.</p>
+
+  <p>Most of our users are not any kind of Unix gurus, and being
+  able to offer an interface that is more approachable for novice
+  users is important.</p>
+
+  <h3>Lynx Shell</h3>
+
+  <p>Grex staffers Steve Weiss, Rob Henderson, and Carl Miller
+  have also developed a shell based on the lynx that gives a more
+  hypertext-flavored menu interface. This is a good concept, but
+  Steve says it probably needs more work.</p>
+
+  <h3>Help System</h3>
+
+  <p>When you type "help" at a shell prompt on Grex, this runs
+  Grex's help system. The help system is an archive of various
+  files of Grex documentation. You can also go from the help
+  system into either of Grex's menu systems, or you can request a
+  chat with a volunteer helper. Valerie Mates wrote and maintains
+  the help system; it is a shell script.</p>
+
+  <h3>The Change Program</h3>
+
+  <p>When you type <code>change</code> at a shell prompt, or select
+  "Change password, etc" from a menu, this runs Grex's Change
+  program. This program is a user friendly collection of shell
+  scripts, awk programs, Perl programs, and C code that users can
+  use to change settings on their accounts without needing to
+  memorize cryptic acronyms like <code>chfn</code> (<em>ch</em>ange
+  <em>f</em>ull <em>n</em>ame), or needing to know that if you switch
+  to a shell that uses different startup files than your current
+  shell then you must also create the startup files for your new
+  shell or your account will be broken. The <code>change</code>
+  program was written and is maintained by Valerie Mates.</p>
+  </div>
+
+  <div id="history">
+  <h4>Document History:</h4>
+  <p>
+    Apr 4, 1998: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Initial revision.<br />
+
+    Apr 10, 1998: Valerie Mates
+      (<a href="mailto:valerie@grex.org">valerie</a>) -
+      Added sections about the <code>help</code> and <code>change</code> programs;
+      split the section about the <code>menu</code> programs into two sections
+      and expanded each section; many minor corrections and tweaks.<br />
+
+    Jun 19, 1998: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Minor updates. Deleted "DRAFT" disclaimor.<br />
+
+    Feb 4, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Replace section about "<code>kill_orphans</code>" with section about
+      "<code>robocop</code>".<br />
+
+    Feb 11, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Update description of 4/670 to reflect donated parts.<br />
+
+    Feb 18, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Added short section on kernel blocks.<br />
+
+    Mar 25, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Updated robocop info, added Orville Write info.<br />
+
+    Sep 19, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Added info about fork killer kernel modifiations.<br />
+
+    Oct 1, 1999: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      Expanded and corrected info on mail directories and quotas.<br />
+
+    Jul 7, 2000: Michelangelo Giansiracusa
+      (<a href="mailto:spooked@grex.org">spooked</a>) -
+      Added note on re-design of menu system.<br />
+
+    May 28, 2001: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      General update of hardware information.<br />
+
+    Jul 16, 2001: Jan Wolter (<a href="mailto:janc@grex.org">janc</a>) -
+      More updates of hardware information.<br />
+
+    Jul 20, 2008: Dan Cross (cross) - Convert to XHTML and deprecate.<br />
+  </p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: about.xhtml 1607 2017-05-31 16:16:21Z cross $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

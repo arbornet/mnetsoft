@@ -1,0 +1,15 @@
+/dev/wd0a /		ffs	rw,softdep			 		1 1
+/dev/wd0b none		swap	sw						0 0
+/dev/wd0d /suid		ffs	ro,nodev,softdep				1 2
+/dev/wd0p /usr		ffs	rw,nodev,softdep				1 2
+/dev/wd0e /usr/local	ffs	rw,nodev,softdep,wxallowed			1 2
+/dev/wd0f /var		ffs	rw,nodev,nosuid,softdep				1 2
+/dev/wd0g /tmp		ffs	rw,nodev,nosuid,noexec,userquota,softdep	1 2
+/dev/wd0h /a		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0i /u		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0j /c		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0k /w		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0l /x		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0m /y		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0n /z		ffs	rw,nodev,nosuid,userquota,softdep,wxallowed	1 2
+/dev/wd0o /cyberspace	ffs	rw,nodev,nosuid,softdep,wxallowed		1 2

@@ -1,0 +1,13 @@
+                       Fronttalk Command:  UNRETIRE
+
+Usage:  UNRETIRE <item range>
+
+Mark all selected items as not retired.  This undoes the effect of the
+RETIRE command.
+
+For a full description of item ranges, do "HELP RANGE".  If you just say
+"UNRETIRE" without arguments then the current item will be unretired.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to unretire it.

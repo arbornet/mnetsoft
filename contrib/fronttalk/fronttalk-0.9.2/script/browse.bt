@@ -1,0 +1,105 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to list items.  We pass in the following:
+%   conf          Conference name.
+%   isel          Item selector
+%   rsel          Response selector (all,new,brandnew,unseen,newresp)
+%   sincedate     If defined, read since the date in this string.
+%   pattern       If defined, select only items with this substring in title
+%   showforgotten If 1, also show forgotten.  If 2, show only forgotten.
+%   favonly       If defined, show only favorite items.
+%   by            If defined, show only items by users in comma sep list.
+%   reverse       If defined and nonzero, reverse the item selector.
+%   nofavfirst    If defined and nonzero, don't show favorites first
+%   bnewfirst     If defined and nonzero, show brandnew first
+%   bnewlast      If defined and nonzero, show brandnew last
+%   measure       If defined and nonzero, resp zero SIZE and LINES for items
+
+/http_content_type (text/plain) store
+
+open_conf
+{(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+% Reshuffle the item selector based on various flags
+isel
+/reverse 0 default {rev_sel} if
+/bnewlast 0 default dup /swap xdef {/bnewfirst 1 def} if
+/nofavfirst 0 default {0}{1} ifelse
+/bnewfirst 0 default {2}{0}ifelse + /ord xdef
+mark exch ord fav_sel swap{exch}if (,) jointomark
+/isel xstore
+
+% Fix up since
+/sincedate defined {
+  /since sincedate 0 1 dtime store
+  /rsel (since) store
+} if
+
+% Default rsel
+rsel () eq {
+   /rsel (all) store
+} if
+
+% If we have a pattern, compile it
+/pattern defined { () pattern 1 search pop } if
+
+/measure dup 0 default def
+
+{
+  % Find next item that fits query
+  isel next_item { stop } if
+  this_item { stop } if
+  read_item { stop } if
+  /nrs xdef /isel xdef
+
+  % Do favonly
+  /fav item /fav get_item_note def
+  /favonly defined fav ! and {continue} if
+
+  % Check if Title contains the given pattern, if any
+  /mytitle item /mytitle get_item_note def
+  /pattern defined {
+    title () 1 search -1 eq {
+        mytitle ! {continue} if
+        mytitle () 1 search -1 eq {continue} if
+      } if
+  } if
+
+  % Check if author matches author list, if any
+  /by defined {
+    authorid by in_sel ! { continue } if
+  } if
+
+  % send the info for that item
+  (<ITEM N=)item
+  ( TITLE=")title quote
+  mytitle {(" MYTITLE=")mytitle quote} if
+  (" LINKDATE=)linkdate cvi
+  ( LASTDATE=)lastdate cvi
+  ( READDATE=)readdate cvi
+  ( MAXRESP=)maxresp
+  ( NEWRESP=)nrs maxresp count_sel
+  fav {( FAVORITE)} if
+  forgotten {( FORGOTTEN)} if
+  frozen {( FROZEN)} if
+  retired {( RETIRED)} if
+  linked {( LINKED)} if
+  maypost ! {( NOPOST)} if
+  mayretitle {( MAYRETITLE)} if
+  maykill {( MAYKILL)} if
+  mayfreeze {( MAYFREEZE)} if
+  mayretire {( MAYRETIRE)} if
+  ( AUTHOR=")authorid(,)authoruid(,)authorname quote(")
+  measure {
+    resp {0 read_resp} if
+    /lines 1 def
+    ( SIZE=")0 read_text dup length exch (") exch
+    { (\n) clip pop
+      dup ! {break} if
+      /lines inc
+    } loop
+    ( LINES=")lines(")
+  } if
+  (>\n) print
+} loop

@@ -1,0 +1,32 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+What string (login, name etc...) would you like to look for? "
+read string
+if [ ! "$string" = "" ]
+then
+        echo ""
+        echo "Party channels are:"
+	echo ""
+        ls -C /var/party/log
+        echo ""
+        echo "What party channel would you like to look for this"
+        echo -n "string in? (example 'party.log') "
+        read channelname
+        if [ "$channelname" = "" ]
+        then
+                channelname=party.log
+        fi
+        echo ""
+	echo "*** looking for string: ($string) in channel: ($channelname)"
+        echo ""
+        echo ""
+        if [ -f /var/party/log/$channelname ]
+        then
+                grep -i -5 $string /var/party/log/$channelname | \
+                    menumore -I +/$string
+        else
+                echo "Channel $channelname not found"
+        fi
+fi

@@ -1,0 +1,131 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Changing Passwords</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Changing Passwords</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+If your Backtalk system is set up so that users use use real Unix login ids
+to log into Backtalk, then you won't be able to change their passwords with
+Backtalk.  You should use the Unix ``<TT>passwd</TT>'' command instead.
+<P>
+However, if you system is set up to only use Backtalk accounts, then
+system administrators can change the passwords on other user's
+Backtalk accounts using either the Pistachio Web interface or
+the <TT>btpasswd</TT> command.
+Just follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+
+<H2>Changing Password by using Web Interface's 'Edit User' tool</H2>
+
+This is convenient if you only want to change one user password
+know that user's login name.
+
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Follow the 'Edit User Account' link in the 'User' section of the menu.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Enter the user's login ID and click 'Edit'.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Click the "Change user's password" link at the bottom of the page.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Enter the new password, and click "Change Password".
+
+</OL>
+
+<H2>Changing Passwords by using Web Interface's 'User List' tool</H2>
+
+This is convenient if you don't know the login names of
+the users whose passwords you want to change.
+
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Follow the 'List Users' link in the 'User' section of the menu.
+<P>
+You will get a control panel for doing searches for users.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Select users to list.
+<P>
+Use the various controls to select which users you want to see,
+making sure the select the `Detailed Information and Edit Buttons' option
+at the bottom of the page.  If you leave the controls in their default setting,
+you will get a list of all users.
+Click the 'Do Scan' button to start your search.
+A listing of all selected users will appear below the control panel.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Goto the user screen.
+<P>
+Find the user or users you want to delete.  Click on their login name.
+You will get a user information screen.
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Click the "Change user's password" link at the bottom of the page.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Enter the new password, and click "Change Password".
+
+</OL>
+
+<H2>Changing Passwords by using <TT>btpasswd</TT> from Unix</H2>
+
+<OL>
+<LI><INPUT TYPE=checkbox> Log into the Unix conference administration account
+<P>
+This is the account that owns all the conference files, user database
+files, and Backtalk itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Run the <TT>btpasswd</TT> command
+
+<P>
+If you want to change the password for the user "<TT>agent86</TT>"
+then issue the following command:
+<PRE>
+    btpasswd agent86
+</PRE>
+It will ask you to enter the new password twice.
+It will not ask you to enter the old password.
+
+</OL>
+</FORM>
+</BODY></HTML>

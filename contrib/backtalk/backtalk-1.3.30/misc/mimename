@@ -1,0 +1,63 @@
+# Short descriptions of mime types
+# keep this file sorted.
+application/appledouble	macintosh file
+application/applefile	macintosh file
+application/excel  microsoft excel
+application/macbinary  macintosh macbinary
+application/mac-binhex-4.0  macintosh binhex file
+application/macwriteii  MacWrite II
+application/msword  microsoft word
+application/octet-stream	binary
+application/pdf	pdf
+application/postscript	postscript
+application/powerpoint  macintosh powerpoint
+application/rtf	rich text file
+application/sgml	sgml
+application/wordperfect6.0	wordperfect
+application/x-csh   csh script
+application/x-gzip  gzip compressed data
+application/x-latex   latex
+application/x-shar   shar
+application/x-sh   sh script
+application/x-tar   tar archive
+application/x-tcl   tcl
+application/x-texinfo   texinfo
+application/x-troff-man   unix man page
+application/x-troff   troff
+application/zip   zip compressed archive
+audio/basic 	audio
+audio/midi  	midi audio
+audio/mpeg  	mpeg audio
+audio/wav   	windows audio
+audio/x-midi	midi audio
+audo/x-pn-realaudio	realaudio
+audo/x-wav	windows audio
+image/bmp   	bmp image
+image/cgm   	computer graphics metafile
+image/cmu-raster   	cmu raster image
+image/gif   	gif image
+image/ief   	ief image
+image/jpeg  	jpeg image
+image/png   	png image
+image/tiff   	tiff image
+image/x-cmu-raster   	cmu raster image
+image/x-pict   	macintosh pict image
+image/x-portable-anymap  pbm image
+image/x-portable-bitmap  binary pbm image
+image/x-portable-graymap  grayscale pbm image
+image/x-portable-pixmap  color pbm image
+image/x-tiff   	tiff image
+image/x-win-bmp   	bmp image
+image/x-xbitmap   	x bitmap image
+text/css	css style sheet
+text/enriched	enriched text
+text/html   	html
+text/plain  	plain text
+text/richtext	rtf rich text
+text/sgml	sgml
+text/tab-separated-values	tab-delimited data
+video/mpeg  	mpeg video
+video/msvideo	avi video
+video/quicktime	quicktime video
+video/x-sgi-movie   sgi video
+video/x-msvideo	avi video

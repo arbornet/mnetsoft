@@ -1,0 +1,2 @@
+Severely restricted login shell; can only do a few basic things.  All commands
+(well, within limits) are built into the shell.

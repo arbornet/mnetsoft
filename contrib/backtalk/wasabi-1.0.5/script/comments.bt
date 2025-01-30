@@ -1,0 +1,114 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Display reader comments for an article.  This script is not called
+% directly.  We should have already called this_item to load in the
+% item to display.
+
+% maybe later we'll load this from conference config file
+/allowhtml 1 defconstant
+
+(<h1 class=title>)title expand(</h1>
+<h2 class=title>Reader Coments</h2>
+<center><a href="begin?show=text&item=)item confarg
+(">view article</a>\n)
+use_rss_icon expose_rss_item and {
+  (<P><A CLASS=rss TITLE="RSS feed for comments on )title quote(" HREF=")
+  anon_url(cinnamon?conf=)conf(&item=)item(">RSS</A>\n)
+} if
+use_atom_icon expose_rss_item and {
+  (<P><A CLASS=atom TITLE="Atom feed for comments on )title quote(" HREF=")
+  anon_url(cinnamon?conf=)conf(&item=)item("&fmt=Atom-1.0>ATOM</A>\n)
+} if
+(</center>\n)
+
+/n 0 def
+{
+  nrs next_resp {break} if
+  read_resp {pop break} if
+  /nrs xstore
+
+  erased {continue} if
+  hidden mayhide ! and { continue } if
+  0 n eq {
+    resp 1 gt {
+      (<center><a href="begin?show=all&item=)item confarg
+      (">view )resp 1 -( previous comment)resp 2 ne{(s)}if(</a></center><p>\n)
+    } if
+    (<p><dl>\n)
+  } if
+
+  /cntl mayhide mayerase mayedit or or def
+
+  cntl {
+    (<span class=respcntl>)
+    mayhide {
+      hidden {
+        (<a href="unhide_resp?conf=)conf cgiquote(&item=)item(&resp=)resp
+        (">unhide</a>\n)
+      } {
+        (<a href="hide_resp?conf=)conf cgiquote(&item=)item(&resp=)resp
+        (">hide</a>\n)
+      } ifelse
+    } if
+    mayerase erased ! and {
+      (<a href="erase_resp?conf=)conf cgiquote(&item=)item(&resp=)resp
+      (">erase</a>\n)
+    } if
+    % not yet implemented
+    %mayedit erased ! and {
+    %  (<a href="edit_resp?conf=)conf cgiquote(&item=)item(&resp=)resp
+    %  (">edit</a>\n)
+    %} if
+    (</span>)
+  } if
+  (<dt><span class=resphead>)authorname( on )date cdate(:</span>\n)
+  hidden {( (hidden))} if
+  (</dt><p><dd>)
+  1 read_text
+  (</dd><hr>\n)
+  /n inc
+} loop
+
+(</dl>
+)
+n 0 eq {
+  (<p><center><em>-- No Reader Comments Yet --</em></center><p>\n)
+} if
+
+mayresp {
+  (
+  <table border=0 cellspacing=0 cellpadding=0>
+  <form type=post action=post_resp>
+  <input type=hidden name=conf value=")conf(">
+  <input type=hidden name=item value=")item(">
+  <tr><td>)
+  id ! {
+    % We prompt for user name only if the poster is anonymous
+    anonposter /usrname pushuser ! { /alias xstore } if
+    alias ! {/alias (Anonymous User) store } if
+    (Name: <input type=text name=alias value=")alias(" size=30><br>\n)
+  } if
+  (Enter your own comments:</td>
+  <td align=right>
+  )
+  allowhtml {
+    (<select name=texttype>
+    <option value="text/plain">Plain Text</option>
+    <option value="text/html">Pure HTML</option>
+    <option value="text/html-blanks">lazy HTML</option>
+    </select>\n)
+  } {
+    (<input type=hidden name=texttype value="text/plain">\n)
+  }ifelse
+  ( <input type=submit value="Post"></td></tr>
+  <tr><td colspan=2><textarea name=text rows=12 cols=72 wrap=hard></textarea>
+  </td></tr>
+  </form>
+  </table>
+  )
+} {
+  id !{
+    (<center>To post your own comments, )
+    (<a href="#" onclick="poplogin(); return false">login</a> first.</center>\n)
+  } if
+} ifelse

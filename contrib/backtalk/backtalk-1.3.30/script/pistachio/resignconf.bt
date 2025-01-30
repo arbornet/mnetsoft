@@ -1,0 +1,54 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% resignconf script
+%
+% A form handler for the "resignconfirm.bt" script that actually resigns you
+% from the conference.
+%
+% Query Parameters:
+%    conf=	name of conference
+%    csel=	current conference selector
+%    really=    (Y) if user confirmed that he wants to resign
+
+flavor(config)+ include
+
+/really defined { really (Y) eq {
+  
+  (<HTML>\n<HEAD>\n)/metatags(</HEAD>\n)
+  flavor(openconf)+ stopped {
+    (Backtalk internal error: No such )Conference( \()conf(\)\n) halt} if
+  /butsel 4 defconstant flavor(buttondef)+ include
+
+  global_header
+
+  resign_conf
+
+  (You have resigned from )conftitle(.<P>\n)
+
+  % delete the conference from the user's hotlist, if it is there.
+  % we check the directory names, not the conference names, in case it is
+  % listed by an alias.
+  /deleted 0 def
+  /cftext () def
+  1 cflist_array {
+    /conf xdef
+    conf conf_dir confdir eq {
+      /deleted 1 def
+    } {
+      /cftext cftext conf (\n)++ def
+    } ifelse
+  } forall
+
+  deleted {
+    cftext (*.cflist) write
+    (The )conftitle( )Conference( has been removed from your hot list.<P>\n)
+  } if
+
+  (Return to <A HREF=begin>)entrance_button(</A>)
+  global_footer
+  (</BODY></HTML>
+  )
+  halt
+} if } if
+
+flavor(/confhome)+ jump

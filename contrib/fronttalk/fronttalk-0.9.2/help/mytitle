@@ -1,0 +1,16 @@
+                       Fronttalk Command:  MYTITLE
+
+Usage:  MYTITLE <item number>
+        MYTITLE <item number> "<title>"
+	MYTITLE
+	MYTITLE "<title>"
+
+Set a private title for an item.  Private titles are seen only by the user
+who sets them.
+
+If entered at the "Respond or pass?" prompt, then the item number can be
+omitted.  If the private title is not given on the command line, you will
+be prompted for it.
+
+To change the real title of an item, the one seen by all users, use the
+RETITLE command.

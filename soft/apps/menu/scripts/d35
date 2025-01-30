@@ -1,0 +1,16 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+#This is a slow command.  Is there any way to twig the C code for ps to
+#get around using grep?  I know, for example, on SunOS 5.6 you supply
+#ps -u <userid> and it's much quicker!! --mic (Dec. 27, 1998)
+
+echo -n "
+UNIX: ps -auU <userid>
+
+Check processes of what user? "
+read user
+echo "
+Please be patient.
+"
+ps -auU $user

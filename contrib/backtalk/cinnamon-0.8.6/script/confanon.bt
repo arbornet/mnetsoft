@@ -1,0 +1,252 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2004, Jan Wolter
+%
+% conference RSS script
+%
+% Generate a syndication feed describing the items in a conference.
+%
+% Query Parameters:
+%    conf=	conference name
+%    fmt=       'RSS-2.0' or 'RSS-0.91' etc.
+%    flav=      flavor to link to. 'pistachio' or 'wasabi' or whatever
+%    len=       number of characters to show from beginning of each item text.
+%               negative means full length, 0 means none.
+%    days=      show only items posted in the last n days.  0 means show all.
+%    login=     Y if we should link to authenticated page
+%    attrib=    N if we should not include author attribution in item titles.
+
+flavor(config)+ include
+
+% - get_item <error>
+%  Load the next item from isel.  If there is an error, or there are no
+%  more items, return non-zero.
+/get_item {
+  isel next_item { 1 } {
+    this_item { 2 } { pop /isel xstore 0 } ifelse
+  } ifelse
+} def
+
+
+% <string> <len> truncate <string>
+%  Shorten a string of text to be no longer than the given length.  Cuts it
+%  of after the end of a word and appends three dots.  Always leaves at least
+%  25 characters.
+
+/truncate {
+  dict begin
+    /n xdef
+    /s xdef
+    
+    n  s length lt {
+
+      % Loop from s[n] backwards
+      {
+        % stop if n is less than 25
+        n 25 le { break } if
+
+        % stop if s[n] is white space
+        ( \n\t)   s n 1 substr   0 search  0 ge { break } if
+
+        /n dec
+      } loop
+
+      % do the clip
+      s 0 n substr (...)+
+
+    } {
+      % string is already less than n characters
+      s
+    } ifelse
+  end
+} def
+
+
+% Set default description length
+/len defined {/len len cvi def} {/len default_item_len def} ifelse
+/days defined ! {/days 7 def} if
+/days days cvi def
+/horizon days { time days cvi 86400 * - } { 0 cvt } ifelse def
+/login defined {login caps (Y) eq } {0} ifelse /login xdef
+/attrib defined ! {/attrib default_attrib def} if
+/attrib attrib caps (N) ne def
+
+% If no conference specified, do default confernce
+conf ! { /conf (?) store } if
+
+open_conf {
+  (<error>No conference )conf(.</error>\n)
+  halt
+} if
+
+% Set up the proper RSS interface and flavor interface
+flavor(loadrss)+ include
+flavor(loadflavor)+ include
+
+% Output RSS header
+rss_start
+
+% Get conference title
+site_in_title {
+  /rss_title `site_name( )conftitle( )Conference cap' def
+}
+{
+  /rss_title conftitle def
+} ifelse
+
+% Get conference link
+/rss_link conf conf_link def
+
+% Get conference description - Painfully
+/rss_description () def
+/usepublic_txt constant {
+  % Load the "public.txt" file
+  bbsdir(/public.txt)+ read /remainder xdef
+  % Process the file, line-by-line
+  {
+    remainder (\n) parse
+      dup () eq {break} if
+      /work_line xdef
+      /remainder xdef
+
+    work_line pt_confline sgrep {
+      % found a conference line
+      aload /cd xdef /cn xdef pop
+      cn conf eq {
+         /rss_description cd def
+         break
+      } if
+    } if
+  } loop
+} {
+  % Load confmenu file
+  (*confmenu) read /remainder xdef
+  % Process the file, line-by-line
+  {
+    % get the next line
+    remainder (\n) parse exch /remainder xdef
+    dup ! {break} if
+    % skip comments
+    dup 0 1 substr (#) eq {pop continue} if
+    % parse apart line
+    (:) clip /cn xdef
+    (:) clip /ct xdef /cd xdef
+    cn conf eq {
+      /rss_description cd def
+      break
+    } if
+  } loop
+} ifelse
+
+% Get language
+/site_language constant {
+  /rss_language site_language def
+} if
+
+% Get copyright
+/site_copyright constant {
+  /rss_copyright site_copyright def
+} if
+
+% Get webmaster
+/site_webmaster_name constant {
+  /rss_webmaster_name site_webmaster_name def
+} if
+/site_webmaster_email constant {
+  /rss_webmaster_email site_webmaster_email def
+} if
+
+% Get managing editor
+/fw_is_managing_editor constant {
+  % use first fairwitness from list
+  fwlist (,) parse exch pop
+  /pushuser constant {
+    [/usrname /email] pushuser ! {
+       /rss_managingeditor_email xdef
+       /rss_managingeditor_name xdef
+       } if
+  } {
+    userinfo pop pop pop exch pop exch pop
+    dup { /rss_managingeditor_name xdef } {pop} ifelse
+  } ifelse
+} {
+  /site_managingeditor_name constant {
+    /rss_managingeditor_name site_managingeditor_name def
+  } if
+  /site_managingeditor_email constant {
+    /rss_managingeditor_email site_managingeditor_email def
+  } if
+} ifelse
+
+% Get most recent item
+/isel ($-1) store	% selector for all items
+/rsel (all) store	% show all items
+get_item {
+  % No items  Return empty channel
+  rss_start_channel
+} {
+  % Have at least one item.  Set lastbuilddate
+  /rss_lastbuilddate linkdate def
+
+  % Output Channel Header
+  rss_start_channel
+
+  % If we aren't doing descriptions, erase the variable
+  len 0 eq { /rss_description undef } if
+
+  % Loop through items, in reverse order
+  {
+    (0) read_item ! { pop
+
+      % If the item is from before our date horizon, stop
+      linkdate horizon lt {break} if
+
+      % Item title
+      attrib {
+        `title ( - )authorname
+	  /include_author_login constant { ( \()authorid(\)) } if '
+      } {
+        title
+      } ifelse /rss_title xdef
+
+      % Item links and date
+      /rss_link conf item item_link def
+      /rss_comments conf item (1-$) resp_link def
+      /rss_pubdate linkdate def
+
+      % Set author, unless all the author info is already in the title
+      attrib ! /email_suffix constant or {
+        /rss_author_name
+	  /include_author_login constant {
+	    `authorname( [)authorid(])'
+	  } {
+	    authorname
+	  } ifelse def
+        /email_suffix constant {
+           /rss_author_email authorid email_suffix+ def
+        } if
+      } if
+
+      % description - normally start of item text
+      len 0 ne {
+	/rss_description
+	  0 read_text
+	    len 0 gt { len truncate } if
+	  def
+      } if
+
+      % Output item
+      rss_item { break } if
+
+    } if
+
+    % get next item, if there is one
+    get_item { break } if
+
+  } loop
+
+} ifelse
+
+% Output Channel trailer
+rss_end_channel
+
+% Output RSS trailer
+rss_end

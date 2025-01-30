@@ -1,0 +1,61 @@
+% Backtalk Pistachio Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% setbg script
+%
+% This script prompts for a background image URL.  It is it's own form 
+%
+% Query Parameters:
+%    conf=	    name of conference we are configuring
+%    csel=          current conference selector, if any
+%    user=	    if nonzero we are setting the user one, not the cf one.
+
+flavor(config)+ include
+
+/user dup 0 default def
+
+(<HTML><HEAD>
+<TITLE>Select )user{(Your )}if( Background Image for the )
+/conftitle( )Conference cap(</TITLE>
+)/metatags(</HEAD>
+)
+
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+global_header
+
+(<H1>Select )user{(Your )}if( Background Image for the )conftitle
+( )Conference cap(</H1>
+)
+
+user ! amfw ! and {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+ stop
+} if
+
+/bodytags () def
+/bgimage () def
+
+user {
+  /bodytags get_conf_note dup { /bodytags xdef } { pop } ifelse
+} {
+  (*settings) [ /bodytags /bgimage ] loadvar pop
+} ifelse
+
+/bgimage defined ! {
+  bodytags << BACKGROUND="([^"]*)">> sgrep { aload /bgimage xdef pop} if
+} if
+
+(<FORM METHOD=POST ACTION=set)user{(my)}if(conf>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<INPUT TYPE=hidden NAME=csel VALUE=)csel(>
+<INPUT TYPE=hidden NAME=what VALUE=bgimage>
+Background image URL:
+<INPUT TYPE=text NAME=to VALUE=")bgimage quote(" SIZE=50>
+<INPUT TYPE=submit VALUE="Change">
+</FORM>
+)
+global_footer
+(</BODY></HTML>
+)

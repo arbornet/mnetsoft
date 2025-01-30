@@ -1,0 +1,35 @@
+% Backtalk Email Script -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% Welcome message.
+%
+% This is template for an email message sent out to newusers after an account
+% is created.  It expects the following to be defined:
+% 
+%   email    =  Address to send to
+%   fullname =  Full Name of new user
+%   login    =  Login name of new user
+
+dict begin
+
+/Subject `(Welcome to )bbsname' def
+/ReplyAddr () def
+/ReplyName () def
+
+/Type (text/plain) def
+/Text `(Welcome to )bbsname(!
+
+Your login )login( is ready to use.
+
+Just go to )backtalkurl( to log in.
+)' def
+
+
+% Send the message
+
+Subject ReplyAddr ReplyName email_new ! {
+  (T) email fullname email_recip pop
+  0 () Type Text email_body pop
+  email_send
+  email_close
+} if
+end

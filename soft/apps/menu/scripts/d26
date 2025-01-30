@@ -1,0 +1,9 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: man <manual-subject>
+
+Read manuals on what subject? "
+read man
+man $man

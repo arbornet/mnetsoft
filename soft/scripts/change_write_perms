@@ -1,0 +1,272 @@
+#!/bin/sh
+PATH=/usr/local/bin:/bin:/usr/bin;export PATH
+
+# This script is released into the public domain.
+# If you run this script on your own system, I'd appreciate an e-mailed note.
+# I'm curious about where my scripts travel to. - valerie@cyberspace.org
+
+echo 'Set message permissions.'
+echo 'Last update: Jan 18, 2011'
+echo ' '
+echo "Background info:"
+echo " "
+echo "  Grex has four interactive ways users can communicate with each other:"
+echo " "
+echo "   * 'write' sends text to the other person's screen one line at a time."
+echo "   * 'chat' sends text to the other person's screen one letter at a time."
+echo "   * 'tel' sends one line of text to the other person's screen."
+echo "   * 'talk' splits the screen in half, so both people can type at once."
+echo " "
+echo "  Write, chat, and talk are interactive: to have a conversation, both "
+echo "  people run the program at the same time.  Tel is non-interactive: it"
+echo "  sends a one-line message to the other person's screen, without any"
+echo "  need for a reply."
+echo ' '
+
+at_all=x
+while [ "$at_all" = "x" ]
+do
+	echo "You have four options.  Would you like:"
+	echo " "
+	echo "   1) Everybody on the system can send you write/talk/chat/tels."
+	echo "   2) Same as 1), but with an exception list of people who can't reach you."
+	echo "   3) Nobody on the system can send you write/talk/chat/tels."
+	echo '   4) Same as 3), but with an exception list of people who *can* reach you.'
+	echo " "
+	echo -n "Your choice (1/2/3/4)> "
+	read at_all
+	if [ "$at_all" = "1" ]
+	then
+		perm_string=y
+	elif [ "$at_all" = "2" ]
+	then
+		perm_string=ye
+		exception_file=$HOME/.nowrite
+	elif [ "$at_all" = "3" ]
+	then
+		perm_string=n
+	elif [ "$at_all" = "4" ]
+	then
+		perm_string=ne
+		exception_file=$HOME/.yeswrite
+	else
+		at_all=x
+	fi
+done
+
+if [ "$at_all" = "2" -o "$at_all" = "4" ]
+then
+
+	if test -f $exception_file
+	then
+		echo "You already have a list of exceptions.  Would you like"
+		echo -n "to change the the list? (y/n) "
+		read change_list
+		if [ "$change_list" = "y" -o "$change_list" = "Y" ]
+		then
+			${EDITOR:-pico} $exception_file
+
+			echo -n "Press Enter to continue"
+			read junk
+		fi
+	else
+		echo "Press enter to create your list of exceptions."
+		echo -n "List people's login IDs separated by spaces, or "
+		echo "carriage returns."
+		echo " "
+		echo -n "Example: If your exceptions are popcorn, rcurl, dang, "
+		echo "and glenda, enter:"
+		echo " "
+		echo "popcorn"
+		echo "rcurl"
+		echo "dang"
+		echo "glenda"
+		echo " "
+		echo -n "Press Enter to continue (don't enter your exceptions "
+		echo -n "yet -- press Enter first)"
+		read junk
+
+		${EDITOR:-pico} $exception_file
+
+		echo -n "Press Enter to continue"
+		read junk
+	fi
+fi
+
+echo ' '
+
+if [ "$at_all" != "3" ]
+then
+	tel_chat=i
+	while [ "$tel_chat" = "i" ]
+	do
+		echo -n 'Would you like people to send you '
+		echo 'only writes and chats, only tels, or both?'
+		echo ' '
+		echo '    W) only writes and chats'
+		echo '    T) only tels'
+		echo '    K) only talks'
+		echo '    X) writes/chats and tels (not talks)'
+		echo '    Y) writes/chats and talks (not tels)'
+		echo '    Z) tels and talks (not writes/chats)'
+		echo '    A) any (writes, chats, tels and talks)'
+		echo ' '
+		echo -n "(Helpers, please allow writes and chats - don't "
+		echo "select \"only tels\")"
+		echo ' '
+		echo -n 'Choice: '
+		read tel_chat
+		if [ "$tel_chat" = "w" -o "$tel_chat" = "W" ]
+		then
+			perm_string="$perm_string -pw"
+			ask_record=f
+		elif [ "$tel_chat" = "t" -o "$tel_chat" = "T" ]
+		then
+			perm_string="$perm_string -pt"
+			ask_record=t
+		elif [ "$tel_chat" = "k" -o "$tel_chat" = "K" ]
+		then
+			perm_string="$perm_string -pk"
+			ask_record=f
+		elif [ "$tel_chat" = "x" -o "$tel_chat" = "X" ]
+		then
+			perm_string="$perm_string -pw -pt"
+			ask_record=t
+		elif [ "$tel_chat" = "y" -o "$tel_chat" = "Y" ]
+		then
+			perm_string="$perm_string -pw -pk"
+			ask_record=f
+		elif [ "$tel_chat" = "z" -o "$tel_chat" = "Z" ]
+		then
+			perm_string="$perm_string -pt -pk"
+			ask_record=t
+		elif [ "$tel_chat" = "a" -o "$tel_chat" = "A" ]
+		then
+			perm_string="$perm_string -pa"
+			ask_record=t
+		else
+			tel_chat=i
+		fi
+	done
+
+	if [ "$ask_record" = "t" ]
+	then
+		echo ' '
+		record=x
+		while [ "$record" = "x" ]
+		do
+			echo -n 'Would you like incoming tels to be '
+			echo 'recorded so you can use the'
+			echo '"huh" command to re-read them?'
+			echo ' '
+			echo '    Y) yes, record tels'
+			echo "    N) no, don't record tels"
+			echo ' '
+			echo -n 'Choice: '
+			read record
+			if [ "$record" = "y" -o "$record" = "Y" ]
+			then
+				perm_string="$perm_string -ry"
+			elif [ "$record" = "n" -o "$record" = "N" ]
+			then
+				perm_string="$perm_string -rn"
+			else
+				record=x
+			fi
+		done
+
+		bells=x
+		while [ "$bells" = "x" ]
+		do
+			echo -n 'Normally when a tel arrives, your computer '
+			echo 'beeps to make sure you'
+			echo -n 'see it.  Would you like your computer to '
+			echo 'beep when tels arrive?'
+			echo ' '
+			echo '    Y) yes, send me tels with bells'
+			echo "    N) no, no bells for tels"
+			echo ' '
+			echo -n 'Choice: '
+			read bells
+			if [ "$bells" = "y" -o "$bells" = "Y" ]
+			then
+				perm_string="$perm_string -by"
+			elif [ "$bells" = "n" -o "$bells" = "N" ]
+			then
+				perm_string="$perm_string -bn"
+			else
+				bells=x
+			fi
+		done
+	fi
+
+	echo ' '
+
+	by_lines=x
+	while [ "$by_lines" = "x" ]
+	do
+		echo -n 'Would you like people to write you '
+		echo 'line-by-line, character-by-character'
+		echo 'or any of the above?'
+		echo ' '
+		echo '    C) character-by-character'
+		echo '    L) line-by-line'
+		echo '    A) any'
+		echo ' '
+		echo -n 'Choice: '
+		read by_lines
+		if [ "$by_lines" = "c" -o "$by_lines" = "C" ]
+		then
+			perm_string="$perm_string -mc"
+		elif [ "$by_lines" = "l" -o "$by_lines" = "L" ]
+		then
+			perm_string="$perm_string -ml"
+		elif [ "$by_lines" = "a" -o "$by_lines" = "A" ]
+		then
+			perm_string="$perm_string -ma"
+		else
+			by_lines=x
+		fi
+	done
+fi
+
+did_file=f
+if test -f $HOME/.login
+then
+	echo "Changing your .login file.  Saving old one as old.login."
+	awk -f /cyberspace/bin/set_write_perms.awk parameters="$perm_string" \
+		< $HOME/.login > $HOME/.login.new
+	mv $HOME/.login $HOME/old.login
+	mv $HOME/.login.new $HOME/.login
+	did_file=t
+fi
+if test -f $HOME/.profile
+then
+	echo "Changing your .profile file.  Saving old one as old.profile."
+	awk -f /cyberspace/bin/set_write_perms.awk parameters="$perm_string" \
+		< $HOME/.profile > $HOME/.profile.new
+	mv $HOME/.profile $HOME/old.profile
+	mv $HOME/.profile.new $HOME/.profile
+	did_file=t
+fi
+
+if [ "$did_file" = "f" ]
+then
+	echo "Oh oh... you have neither a .login nor a .profile file!"
+	echo "You need these files to be able to use Grex okay."
+	echo "The easiest way to get them is to change your shell."
+	echo "(You can change it right back again.)"
+	echo "Your permissions were not permanently changed."
+else
+	echo "Permissions permanently changed."
+fi
+
+echo " "
+echo -n "(Helpers: This program turns off the helper flag in your .login or"
+echo " .profile"
+echo "file.  You will need to edit the file to turn it back on.)"
+echo " "
+
+echo "Your current settings are:"
+mesg $perm_string -v
+echo " "

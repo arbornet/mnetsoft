@@ -1,0 +1,514 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editmenu script
+%
+% This is the form generator and query handler for editing the conference
+% menu.  If run without the "op" parameters, it just displays the list of
+% conferences, with controls for editting them.
+%
+% This makes no attempt at locking - if more than one person is editing the
+% conference menu at the same time, chaos reigns.
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (M) = move an item to a different position in the list
+%                   (E) = edit an item already in the list
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%                   (V) = just display the menu.
+%    oldn=	(M,E,D Only) Line number of source item.
+%    newn=      (M,A Only) Line number of destination (insert before this).
+%    cname=     (A,E Only) New name of conference.
+%    ctitle=    (A,E Only) New title of conference.
+%    cdes=      (A,E Only) New description of conference.
+%    tm=	Time file was last modifed.
+%    admhome=   URL of administrative menu
+
+flavor(config)+ include
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+
+% <verb> conf_form - :  generate a form for editing a conference.  Passes through
+% current values of global variables op and oldn.  Defaults fields to current
+% values of global variables cname, ctitle, cdes.
+/conf_form {
+  /verb xdef
+  (<FORM METHOD=post ACTION=)SCRIPT_NAME(/admin/editmenu>
+  <STRONG>Conference Name:</STRONG> (required)<BR>
+  <INPUT TYPE=hidden NAME=op VALUE=)op(>
+  <INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+  <INPUT TYPE=hidden NAME=tm VALUE=)filetime(>\n)
+  /oldn defined {(<INPUT TYPE=hidden NAME=oldn VALUE=)oldn(>\n)} if
+  (<INPUT TYPE=text NAME=cname VALUE=")cname(" SIZE=12><BR>
+  This is the conference name.
+  It should be one word, all lower case letters and digits, with no spaces.
+  It should be a name that matchs (or will match) a name in the
+  <A HREF=)SCRIPT_NAME(/admin/editalias>conference alias list</A>.<P>
+  <STRONG>Conference Title:</STRONG> (optional)<BR>
+  <INPUT TYPE=text NAME=ctitle VALUE=")ctitle(" SIZE=30><BR>
+  This is the conference name as printed on the conference list.
+  It can have spaces and mixed case.<P>
+  <STRONG>Conference Description:</STRONG> (optional)<BR>
+  <INPUT TYPE=text NAME=cdes VALUE=")cdes(" SIZE=75></INPUT><BR>
+  This is a short description of the conference.<P>
+  <INPUT TYPE=submit VALUE=")verb( Conference">
+  </FORM>\n)
+} def
+
+% <verb> head_form - :  generate a form for editing a header.  Passes through
+% current values of global variables op and oldn.  Defaults fields to current
+% values of global variables ctitle, cdes.
+/head_form {
+  /verb xdef
+  (<FORM METHOD=post ACTION=)SCRIPT_NAME(/admin/editmenu>
+  <INPUT TYPE=hidden NAME=op VALUE=")op(">
+  <INPUT TYPE=hidden NAME=admhome VALUE=")admhome(">
+  <INPUT TYPE=hidden NAME=tm VALUE=)filetime(>\n)
+  /oldn defined {(<INPUT TYPE=hidden NAME=oldn VALUE=)oldn(>\n)} if
+  (<STRONG>Heading Title:</STRONG> (required)<BR>
+  <INPUT TYPE=text NAME=ctitle VALUE=")ctitle(" SIZE=30><BR>
+  This is the text of the catagory heading. It may contain no colons.<P>
+  <STRONG>Heading Description:</STRONG> (optional)<BR>
+  <INPUT TYPE=text NAME=cdes VALUE=")cdes(" SIZE=75></INPUT><BR>
+  This is a description of the catagory.<P>
+  <INPUT TYPE=submit VALUE=")verb( Heading">
+  </FORM>\n)
+} def
+
+% <file> <index> oldvalues -
+% Given a memory image of the file and the index of a line in it, get that
+% line and pull the cname,ctitle,cdes values out of it.  If cname is null,
+% we undefine it.  If the line doesn't exist, we bomb.
+
+/oldvalues
+{
+   /target xdef
+   /cnt 0 def
+   {
+      /cnt inc
+      (\n) clip
+      cnt target eq {
+	 % parse apart the line
+	 (:) clip /cname xdef
+	 (:) clip /ctitle xdef
+		  /cdes xdef
+	 cname ! {/cname undef} if
+	 pop
+	 break
+      } {
+	 pop
+      } ifelse
+      dup ! {pop (No line number )oldn(\n</BODY></HTML>\n) stop} if
+   } loop
+} def
+
+
+% <name> check_cname <err>:  Return an error message if the given conference
+% name is illegal (must be all lower case).
+/check_cname {
+  dup {
+     () exch {
+        /ch xdef
+        (abcdefghijklmnopqrstuvwxyz0123456789-.+@#%) ch 0 search 0 lt {
+           pop (Conference name must be all lower case letters and digits.\n)
+           break
+        } if
+     } forall
+  }{
+    (Conference name not entered.\n)
+  } ifelse
+} def
+
+% <title> check_ctitle <err>:  Return an error message if the given conference
+% title is illegal (may contain no newlines or colons).
+/check_ctitle {
+  dup {
+     () exch {
+        dup (\n) eq
+           {pop pop (Title may not contain newlines.\n) break} if
+        (:) eq
+           {pop (Title may not contain colons.) break} if
+     } forall
+  }{
+    (Title not entered.\n)
+  } ifelse
+} def
+
+% <des> check_cdes <err>:  Return an error message if the given conference
+% title is illegal (may contain no newlines).
+/check_cdes {
+  () exch {
+     (\n) eq
+	{pop (Description may not contain newlines\n) break} if
+  } forall
+} def
+
+
+(<HTML><HEAD><TITLE>Edit Conference Menu</TITLE></HEAD>
+<BODY BGCOLOR=FFFFFF>
+)
+
+% set some defaults
+/cmds 1 def		% display commands on listing
+/rem 0 def		% don't kill anything
+/add 0 def		% don't add anything
+/edit 0 def		% don't edit anything
+/check 0 def		% don't check inputs
+/editted 0 def		% don't write out new listing
+/click 1 def		% click on conf titles to goto conf
+/err () def		% no error message
+/heading 0 def		% not adding a heading
+/op defined ! {/op (V) def} if
+/oldn defined {oldn cvi} {0} ifelse /oldn xdef
+/newn defined {newn cvi} {0} ifelse /newn xdef
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+% Load the conference menu into memory
+(*confmenu) read /cm xdef
+(*confmenu) filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt {
+      /op (V) def
+      /err (Ignoring reloaded query - don't want to do same thing twice.\n) def
+      /cname () def  /ctitle () def /cdes () def
+   } if
+} if
+
+% Do add case
+op (A) eq {
+   newn ! {
+      /cmds 0 def
+      /check 1 def
+   } {
+      % Do the insertion
+      /add 1 def
+      /check 1 def
+   } ifelse
+} if
+
+% Do move case
+op (M) eq {
+   oldn ! {
+      /op (V) def
+   } {
+   newn ! {
+      % Do the deletion, and ask for insertion location
+      /cmds 0 def
+      /rem 1 def
+   } {
+      % Do the insertion
+      /add 1 def
+      /check 1 def
+   } ifelse } ifelse
+} if
+
+
+% Do edit case
+op (E) eq {
+   oldn ! {
+      /op (V) def
+   } {
+   /cname defined /ctitle defined or {
+      % Do the edit
+      /edit 1 def
+      /check 1 def
+   } {
+      % Get the old values
+      cm oldn oldvalues
+
+      % Display the edit form
+      (Change) /cname defined {conf_form} {head_form} ifelse
+      (</BODY></HTML>)
+      stop
+   } ifelse } ifelse
+} if
+
+
+% Do deletion case
+op (D) eq {
+   oldn ! {
+      /op (V) def
+   } {
+      % Do the deletion
+      /rem 1 def
+   } ifelse
+} if
+
+
+% if "add" or "edit" flag set, check sanity of data to be inserted
+check {
+
+   /cname defined {
+      % We are inserting a conference
+      cname check_cname dup {err exch + /err xdef} {pop} ifelse
+
+      % If conference title not defined, use conference name
+      /ctitle defined {
+	 ctitle ! {
+	   /ctitle cname def 
+	 } if
+      } {
+        /ctitle cname def
+      } ifelse
+
+   } {
+      % We are inserting a heading
+      /cname () def
+      /heading 1 def
+   } ifelse
+
+   % Check title
+   /ctitle defined {
+      ctitle check_ctitle dup {err exch + /err xdef} {pop} ifelse
+   } if
+
+   % Check description
+   /cdes defined {
+      cdes check_cdes dup {err exch + /err xdef} {pop} ifelse
+   } {
+     /cdes () def
+   } ifelse
+
+   % If we had errors, cancel operation
+   err {/cmds 1 def /rem 0 def /add 0 def  /edit 0 def} if
+
+} if
+
+
+% if "rem" flag set, delete oldn
+rem {
+   /newcm () def
+   /cnt 0 def
+   % Loop through lines of the file
+   cm
+   {
+      /cnt inc
+      (\n) clip
+      cnt oldn eq {
+         op (M) eq {
+	    % parse apart the deleted line
+	    (:) clip /cname xdef
+	    (:) clip /ctitle xdef
+		     /cdes xdef
+	    cname ! {/cname undef /heading 1 def} if
+	 } {
+	    % discard the deleted line.
+	    pop
+	 } ifelse
+         % append rest of old file
+         newcm exch + /newcm xdef
+	 /editted 1 def
+         break
+      } if
+
+      % append line to new list
+      newcm exch + (\n) + /newcm xdef
+
+      dup ! {pop break} if
+   } loop
+   /cm newcm def
+} if
+
+% if "edit" flag set, replace oldn
+edit {
+   /newcm () def
+   /cnt 0 def
+   % Loop through lines of the file
+   cm
+   {
+      /cnt inc
+      (\n) clip
+      cnt oldn eq {
+         % discard old line
+	 pop
+	 % append newline
+	 newcm cname(:)+ctitle+(:)+cdes+(\n)+ +
+	 % append rest of file
+	 exch + /newcm xdef
+	 /editted 1 def
+         break
+      } if
+
+      % append line to new list
+      newcm exch + (\n) + /newcm xdef
+
+      dup ! {pop break} if
+   } loop
+   /cm newcm def
+} if
+
+% if "add" flag set, insert newn
+add {
+   /newcm () def
+   /cnt 0 def
+   % Loop through lines of the file
+   cm {
+      /cnt inc
+      cnt newn eq {
+	% insert the new line
+	newcm cname(:)+ctitle+(:)+cdes+(\n)+ +
+	% append rest of file
+	exch + /newcm xdef
+	/editted 1 def
+	break
+      } if
+
+      dup ! {pop break} if
+
+      (\n) clip
+
+      % append line to new list
+      newcm exch + (\n) + /newcm xdef
+
+   } loop
+   /cm newcm def
+} if
+
+
+editted {
+  cm (*confmenu) write
+  (*confmenu) filedate cvi /filetime xdef
+} if
+
+% display a heading
+cmds {
+  (<H1>Backtalk Admin Page: Edit Conference Menu</H1>
+  <A HREF=)admhome(>Return to adminstration page</A>.\n)
+} if
+
+% display any error messages
+err {
+   (<H2>Error:</H2>\n)
+   err {
+      (\n) clip
+      (<BR>\n) 3 -1 roll
+      dup ! {pop break} if
+   } loop
+} if
+
+% display a caption
+cmds {
+  (<H2>Current Menu of Conferences:</H2>
+  This is the current conference menu.
+  You can edit existing entries, move entries to different positions, or
+  delete them by using the colored buttons here.
+  To add new conferences or headings, use the forms below.<P>)
+} {
+  op (A) eq {
+     (<STRONG>Where do you want to insert the entry?</STRONG>\n)
+  } {
+     (<STRONG>To which location do you want to move the entry?</STRONG>\n)
+  } ifelse
+
+  /click 0 def
+  /url [SCRIPT_NAME(/admin/editmenu?op=)op(&tm=)filetime
+        /oldn defined {(&oldn=)oldn} if
+        heading ! {(&cname=)cname cgiquote} if
+        /ctitle defined {(&ctitle=)ctitle cgiquote} if
+        /cdes defined {(&cdes=)cdes cgiquote} if
+        ] def
+ 
+} ifelse
+
+(<TABLE BORDER=1 CELLPADDING=2>\n)
+
+cm ! {(No Conferences Listed\n)} if
+
+0 /cnt xdef
+
+% Print out the current contents of the file
+{
+   /cnt inc
+
+   cm (\n) clip exch /cm xdef
+
+   % Skip comment lines
+   dup 0 1 substr (#) eq {pop continue} if
+
+   % Pick apart the line
+   (:) clip /conf xdef
+   (:) clip /title xdef
+            /description xdef
+
+   (<TR>)
+   cmds {
+      (<TD BGCOLOR=00FF00><A HREF=)
+         SCRIPT_NAME(/admin/editmenu?op=E&oldn=)cnt(&tm=)filetime(&admhome=)
+	 admhome(>Edit</A></TD>)
+      (<TD BGCOLOR=FFFF00><A HREF=)
+          SCRIPT_NAME(/admin/editmenu?op=M&oldn=)cnt(&tm=)filetime(&admhome=)
+	  admhome(>Move</A></TD>)
+      (<TD BGCOLOR=FF0000><A HREF=)
+          SCRIPT_NAME(/admin/editmenu?op=D&oldn=)cnt(&tm=)filetime(&admhome=)
+	  admhome(>Delete</A></TD>)
+   } {
+      (<TD BGCOLOR=FFFF00><A HREF=)url(&newn=)cnt(&admhome=)admhome
+      (>here =></A></TD></TR>\n<TR><TD></TD>)
+   } ifelse
+
+   conf {
+     % a conference name
+     (<TD>)
+     click {
+	(<A HREF=)SCRIPT_NAME(/)helper(/confhome?conf=)conf(>)title quote
+	(</A>)
+     } {
+	title quote
+     } ifelse
+     (</TD><TD>)description {description quote} {(&nbsp;)} ifelse (</TD>\n)
+   }{
+     % a subheading
+     (<TD COLSPAN=2><STRONG>)title quote(: </STRONG>)description quote(</TD>\n)
+   } ifelse
+   (</TR>\n)
+
+   cm ! {break} if
+
+} loop
+cmds ! {
+   (<TR><TD BGCOLOR=FFFF00><A HREF=)url(&newn=)cnt 1 +(>here =></A>\n)
+} if
+(</TABLE>\n)
+
+cmds {
+
+  (<P><HR><H2>Add a Conference:</H2>
+  Use this section to add a new conference to your conference menu.
+  Adding a conference to the conference menu doesn't
+  create the conference \(you need to use the <A HREF=)SCRIPT_NAME
+  (/admin/makeconf?admhome=)admhome(>conference creation page</A> to do that\),
+  it just provides an easy way for users to find the conference.  
+  Not all conferences need to be on the menu.
+  It is also perfectly legal for the same conference to appear on the
+  menu more than once, perhaps under different names.\n)
+  /op (A) def
+  /cname defined ! { /cname () def} if
+  dict begin
+  err ! cname ! or { /cname () def /ctitle () def /cdes () def } if
+  (Add) conf_form
+  end
+
+  (<HR><H2>Add a Heading:</H2>
+  Use this section to add a catagory heading to the conference menu.
+  Catagory headings don't really do anything,
+  but they may make it easier to find a particular conference on a long menu.\n)
+  err ! cname or { /ctitle () def /cdes () def } if
+  (Add) head_form
+
+} if
+
+(</BODY>
+</HTML>
+)

@@ -1,0 +1,136 @@
+% Backtalk Cinnamon Syndication Interface -- (c) 2005, Jan Wolter
+%
+% Output Script - RSS 1.1 Version
+%
+% NOTES
+%
+%    - This is based on a draft of the spec from
+%      http://inamidst.com/rss1.1/#any
+
+flavor(config)+ include
+
+% <fullnamevar> <emailvar> usrstr <string>
+%  Given a full name and an email address, make a string like
+%  "<name> (mailto:<email>)"
+
+/usrstr {
+   dict begin
+   dup defined {exec} {pop ()} ifelse /em xdef
+   dup defined {exec} {pop ()} ifelse /fn xdef
+   `
+   fn {
+     fn quote
+   } if
+   em {
+     fn { ( ) } if
+     (\(mailto:)em quote(\))
+   } if
+   '
+} def
+
+
+/rss_start {
+   /http_content_type (text/xml) store
+
+   (<?xml version="1.0" encoding="utf-8"?>
+)
+} def
+
+
+/rss_start_channel {
+
+   /rss_language defined ! {/rss_language (en-us) def} if
+
+   (  <Channel xmlns="http://purl.org/net/rss1.1#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  rdf:about=")
+   	`backtalkurl(/)flavor scriptname(?)cgiquery'quote(">\n)
+
+(    <title>)rss_title quote(</title>
+    <link>)rss_link quote(</link>
+    <description>)rss_description quote(</description>
+)
+
+  /rss_language defined {
+    (    <dc:language>)rss_language quote(</dc:language>\n)
+  } if
+
+  /rss_copyright defined {
+    (    <dc:rights>)rss_copyright quote(</dc:rights>\n)
+  } if
+
+  /rss_managingeditor_name defined  /rss_managingeditor_email defined or {
+    (    <dc:publisher>)
+      /rss_managingeditor_name /rss_managingeditor_email usrstr
+    (</dc:publisher>\n)
+  } if
+
+% Haven't found an RSS-1.1 equivalent of this
+% /rss_webmaster_name defined  /rss_webmaster_email defined or {
+%   (    <webMaster>)/rss_webmaster_name /rss_webmaster_email usrstr
+%	(</webMaster>\n)
+% } if
+
+  /rss_pubdate defined {
+    (    <dc:date>)rss_pubdate itime(</dc:date>\n)
+  } if
+
+% Haven't found an RSS-1.1 equivalent of this
+% /rss_lastbuilddate defined {
+%   (    <lastBuildDate>)rss_lastbuilddate itime(</lastBuildDate>\n)
+% } if
+
+  /rss_image_url defined {
+    (  <image rdf:parseType="Resource">\n)
+    (    <title>)rss_image_title quote(</title>\n)
+    (    <url>)rss_image_url quote(</url>\n)
+    (  </image>\n)
+  } if
+
+  (  <items rdf:parseType="Collection">\n)
+
+} def
+
+
+/rss_item {
+
+  % output item
+  (  <item rdf:about=")rss_link quote(">
+    <title>)rss_title quote(</title>
+    <link>)rss_link quote(</link>
+)
+  /rss_description defined {
+    (    <description>)rss_description quote(</description>\n)
+  } if
+
+  /rrs_guid defined {
+    (    <dc:identifier>)rss_guid quote(</dc:identifier>\n)
+  } if
+
+  /rss_author_name defined /rss_author_email defined or {
+    (    <dc:creator>)/rss_author_name /rss_author_email usrstr
+    	(</dc:creator>\n)
+  } if
+
+  /rss_pubdate defined {
+    (    <dc:date>)rss_pubdate itime(</dc:date>\n)
+  } if
+
+  (  </item>\n)
+
+  % No maximum number of item.  Always return false
+  0
+
+} def
+
+
+/rss_end_channel {
+   (  </items>\n)
+   (</Channel>\n)
+} def
+
+
+/rss_end {
+  % do nothing
+} def

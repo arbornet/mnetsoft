@@ -1,0 +1,139 @@
+% Backtalk Gumdrop Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% config script
+%
+% NOTE:  This is only the configuration file for the Gumdrop Interface.
+% The configuration file for backtalk as a whole has the same name but is in
+% the top level script directory.
+%
+% This is identical to the Bubblegum configuration file.  Having a separate
+% copy means that Gumdrop can be configured separate from Bubblegum.
+
+flavor(version)+ include
+
+% Default background colors for Gumdrop:
+/bg_color (FFFF99) defconstant
+/text_bg  (FFFFCC) defconstant
+/background `( BGCOLOR=")bg_color(" )' defconstant
+
+% Button Set:
+%   button_url is the URL of the image directory to use for bubblegum images.
+%      It ends with a backslash.
+%   button_h and button_w are the standard sizes of those buttons.
+%   button_sep is the number of pixels between vertically stacked buttons.
+
+/button_url `imghost(/bubblegum/gumball/)' defconstant
+/button_h 72 defconstant
+/button_w 100 defconstant
+/button_sep 3 defconstant
+
+%/button_url `imghost(/bubblegum/book/)' defconstant
+%/button_h 72 defconstant
+%/button_w 112 defconstant
+%/button_sep 8 defconstant
+
+% Global page header:
+%   This macro is executed at the top of every Gumdrop page.  By default, it
+%   does nothing.  It's a sensible place to put ads (yuck).  If you define it,
+%   set /global_header_height to the approximate height in pixels of your
+%   global header.  This is used to enlarge the frame on the top of the page
+%   enough to hold the header.
+%
+%   For example, a typical ad rotator might be done like this:
+%   /global_header {
+%     (<A HREF="http://ad.doubleclick.net/jump/www.hsx.com/;sz=468x60;ord=x">
+%     <IMG SRC="http://ad.doubleclick.net/ad/www.hsx.com/;sz=468x60;ord=x"
+%     WIDTH="468" HEIGHT="60" BORDER=0></A><P>\n)
+%   } defconstant
+%   /global_header_height 72 defconstant
+
+/global_header {
+} def
+/global_header_height 0 defconstant
+
+% Global page footer:
+%   This macro is executed at the bottom of every Gumdrop page.  It normally
+%   generates some HTML footer text.   The default is a Backtalk copyright
+%   message, but you are welcome to take that out if you want to put something
+%   else here, say, links to other parts of your web site.
+
+/global_footer {
+  (<P><TD><FONT SIZE=-2>- )version
+  ( / )if_version( - )copyright(</FONT>)
+} def
+
+% Booktalk Customizations
+%   The Canton Public Library Booktalk system makes a few non-standard
+%   customizations to the bubblegum interface.
+%
+% booktalk_cflist
+%   In booktalk, users normally don't have their own .cflist files, and
+%   instead use a somewhat rigidly structured dflt.cflist with two tags
+%   in it (endclass and endpublic) that are treated specially.  This is
+%   enabled by defining booktalk_cflist as 1.
+%
+% booktalk_buttons
+%   Booktalk deletes the 'read new' button from begin, and the 'next forum'
+%   button from the confhome page.  Defining booktalk_buttons as 1 does this.
+%
+% booktalk_nolink
+%   Booktalk deletes the 'link' button that normally allows fairwitnesses
+%   to share items with other conferences.  Defining booktalk_nolink as 1
+%   does this.
+%
+% booktalk_teachtools
+%   The booktalk administrative tool set includes a page for teachers to
+%   administer student accounts.  If booktalk_teachtools is 1, then teachers
+%   will see a link to their admin page on their conference home page.
+
+/booktalk_cflist 0 defconstant
+/booktalk_buttons 0 defconstant
+/booktalk_nolink 0 defconstant
+/booktalk_teachtools 0 defconstant
+
+% Names for Things:
+%   Backtalk by default uses some slightly odd names for things.  Most of these
+%   are inherited from Picospan.  The following definitions let you rename
+%   them.  You might prefer 'host' to 'fairwitness', or 'topic' to 'item', or
+%   or 'forum' to 'conference'.  Note that this doesn't redefine the words
+%   that appear on the buttons.  You'll have to edit the buttons the hard way.
+%   Note that the defined values should be all lower case.
+
+/Fairwitness (fairwitness) defconstant
+/AFairwitness (a fairwitness) defconstant
+/Fairwitnesses (fairwitnesses) defconstant
+/Item (item) defconstant
+/AnItem (an item) defconstant
+/Items (items) defconstant
+/Conference (conference) defconstant
+/AConference (a conference) defconstant
+/Conferences (conferences) defconstant
+/Response (response) defconstant
+/AResponse (a response) defconstant
+/Responses (responses) defconstant
+
+%/Fairwitness (moderator) defconstant
+%/AFairwitness (a moderator) defconstant
+%/Fairwitnesses (moderators) defconstant
+%/Item (topic) defconstant
+%/AnItem (a topic) defconstant
+%/Items (topics) defconstant
+%/Conference (bookchat) defconstant
+%/AConference (a bookchat) defconstant
+%/Conferences (bookchats) defconstant
+%/Response (comment) defconstant
+%/AResponse (a comment) defconstant
+%/Responses (comments) defconstant
+
+%/Fairwitness (host) defconstant
+%/AFairwitness (a host) defconstant
+%/Fairwitnesses (hosts) defconstant
+%/Item (topic) defconstant
+%/AnItem (a topic) defconstant
+%/Items (topics) defconstant
+%/Conference (forum) defconstant
+%/AConference (a forum) defconstant
+%/Conferences (forums) defconstant
+%/Response (posting) defconstant
+%/AResponse (a posting) defconstant
+%/Responses (postings) defconstant

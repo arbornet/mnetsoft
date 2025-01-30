@@ -1,0 +1,38 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% nextconf - a web script to check each conf in your cflist for activity,
+%            and to stop and read the first item with new responses.
+%   (authenticated users only)
+
+(new) /rsel xstore
+
+% loop through each conf - stop on error, done, or found a new response
+
+{ csel next_conf /conf xstore /csel xstore
+  csel ! {100 /rc xdef break} if
+  open_conf /rc xdef
+  mayread ! {101 /rc xdef} if
+  rc {break} if
+  
+  % see if there are any items to look at
+  (1-$) next_item {() () 0} {} ifelse /item xstore /nrs xstore /isel xstore
+  item {break} if
+  (There are no new responses in the )conf( conference.<hr>)
+} loop
+
+rc 100 eq {
+  (<TITLE>) bbsname ( - No More Conferences</TITLE>)
+  (There are no more conferences left.<hr>)
+  flavor (begin.x) + jump
+} if
+
+rc {
+  (<TITLE>) bbsname ( - Conference List Error</TITLE>)
+  conf
+  rc 1 eq {( does not exist)} if
+  rc 2 eq {( reguires a password (not supported in conference lists) )} if
+  rc 101 eq {( cannot be read )} if
+  ( \(error code )rc(\) <p> Delete ")conf(" from your conference list.\n)
+} {
+  flavor (read) + jump
+} ifelse

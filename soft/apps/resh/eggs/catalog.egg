@@ -1,0 +1,20 @@
+
+?I/O ERROR
+
+]CALL -126
+
+?OVERFLOW ERROR IN 2600
+
+]LIST
+
+2 REM *** RSTS/E version
+3 REM *** Ported to the PDP-11 by KRK
+^C
+
+]CATALOG
+
+I/O ERROR
+
+*DEAD BEEF
+
+*^C

@@ -1,0 +1,7 @@
+#!/bin/sh
+DIR=/cyberspace/grex/docs/archives/minutes
+echo 'Grex Board Minutes:'
+ls -1 ${DIR} | column
+echo -n 'Type one of the above dates: '
+read date
+grexmore $DIR/$date

@@ -1,0 +1,17 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Retire an article designated by conf and item arguments
+
+% Open a conference
+open_conf {
+  (Error: Could not open conference ')conf('.\n)
+  halt
+} if
+
+% retire the item
+1 retire_item dup {
+  dup 2 eq {pop (Article )item( not found) halt} if
+  3 eq {(Permission to retire denied) halt} if
+} if pop
+
+flavor(begin)+ jump

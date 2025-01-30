@@ -1,0 +1,6 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "Here are the files in the party log directory..."
+echo ""
+ls -C /var/party/log

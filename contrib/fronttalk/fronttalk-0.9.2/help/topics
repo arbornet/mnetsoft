@@ -1,0 +1,84 @@
+                           List of Help Topics
+
+The following keywords may be entered after the "help" command.  Topic
+names can be abbreviated.
+
+General Topics:
+   INTRO       - Introduction to OK prompt commands
+   RP          - Introduction to respond prompt commands.
+   DIFFERENCES - Summary of differences between Fronttalk and Picospan.
+   RANGES      - Syntax of item ranges used on many commands.
+
+OK Prompt Commands:
+   HELP      - Get help.
+   SERVER    - Change to a different server.
+   JOIN      - Change to a different conference.
+   READ      - Read messages in the current conference.
+   BROWSE    - List items in the current conference.
+   ENTER     - Enter a new item in the current conference.
+   CHECK     - Summarize activity in your hotlist conferences.
+   NEXT      - Skip to the next hotlist conference with new material in it.
+   REWIND    - Reset 'NEXT' command to start from beginning of hotlist again.
+   PART      - List participants in conference.
+   HELP      - Display help text.
+   FIND      - Search for text strings.
+   DISPLAY   - Display various system information.
+   SET       - Set various flags effecting Fronttalk's behavior.
+   DEFINE    - Set various variables effecting Fronttalk's behavior.
+   RETITLE   - Change the title on an item.
+   MYTITLE   - Set a private title for an item.
+   FORGET    - Mark items that you don't want to see again.
+   REMEMBER  - Unforget items.
+   FAVOR     - Mark items as favorites to be shown first.
+   DISFAVOR  - Unmark favorites.
+   LINK      - Link an item from another conference into current conference.
+   KILL      - Delete an item.
+   FREEZE    - Prevent further responses from being posted to items.
+   THAW      - Unfreeze items.
+   RETIRE    - Mark an item so it won't be shown to users by default.
+   UNRETIRE  - Unretire items.
+   FIXSEEN   - Mark items as seen.
+   RESIGN    - Resign from the current conference.
+   LEAVE     - Leave the current conference.
+   LOGIN     - Login to the server if you are reading anonymously.
+   PRINT     - Read, but format for printer output.
+   ECHO      - Display some text.
+   DATE      - Display a date.
+   QUIT      - Exit Fronttalk.
+
+Respond Prompt Commands:
+   PASS      - Go to next item without responding (hitting return does this).
+   RESPOND   - Post a new response to the current item.
+   PSEUDONYM - Post a new response using an alias.
+   AGAIN     - Display the current item again.
+   HEADER    - Display current item header again.
+   ONLY      - Display one particular response again
+   QUIT      - Stop reading items and return to OK prompt.
+   NEW       - Stop reading items, but leave current item marked unread.
+   POSTPONE  - Goto next item, but leave current item marked unread.
+   HIDE      - Mark a particular response so it won't be shown by default.
+   SHOW      - Undo hide.
+   ERASE     - Erase a particular response.
+   RETITLE   - Change title of current item.
+   FORGET    - Don't show current item ever again.
+   REMEMBER  - Undo forget.
+   FAVOR     - Mark current item as a favorite to be shown first.
+   DISFAVOR  - Mark current item as a non-favorite.
+   FREEZE    - prevent anyone from posting any more responses to current item.
+   THAW      - Undo freeze.
+   RETIRE    - Mark current item so it won't be shown to users by default.
+   UNRETIRE  - Undo retire.
+   LOGIN     - Login to the server if you are reading anonymously.
+   FIND      - Search for text strings.
+   PART      - List participants in conference.
+   SET       - Set various flags effecting Fronttalk's behavior.
+   DEFINE    - Set various variables effecting Fronttalk's behavior.
+   RETITLE   - Change the title on an item.
+
+General Information on Seperators:
+   SEP       - Introduction to item and conference separators.
+   ITEMFUNC  - Item separator functions.
+   ITEMCOND  - Item separator conditions.
+   CONFFUNC  - Conference separator functions.
+   CONFCOND  - Conference separator conditions.
+   DATESEP   - Date output formats.

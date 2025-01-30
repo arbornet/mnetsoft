@@ -1,0 +1,159 @@
+#!/bin/sh
+#
+# This is a script to install backtalk.  It should be usable for
+# upgrades as well as for initial installs.
+
+
+BACKTALK=backtalk-1.3.30
+FRONTTALK=fronttalk-0.9.2
+BUBBLEGUM=bubblegum-1.2.4
+CINNAMON=cinnamon-0.8.6
+GUMBALL=gumball-0.1.0
+PAPAYA=papaya-1.1.5
+VANILLA=vanilla-1.3.5
+WASABI=wasabi-1.0.5
+
+SRCDIR=`pwd`
+
+DOCDIR=/cyberspace/www/htdocs/$BACKTALK
+LIBDIR=/cyberspace/lib/$BACKTALK
+LIBEXECDIR=/cyberspace/libexec/$BACKTALK
+SCRIPTDIR=$LIBDIR/script
+
+PARTUTIL=`echo $BACKTALK | sed 's/backtalk/partutil/'`
+
+# Install images and scripts
+(cd $BACKTALK/image && make install-scripts docdir=/cyberspace/www/htdocs/$BACKTALK)
+(cd $BACKTALK/script && make install-scripts docdir=/cyberspace/www/htdocs/$BACKTALK)
+(cd $BACKTALK/css && make install-scripts docdir=/cyberspace/www/htdocs/$BACKTALK)
+
+# Update browser list, and mime names from distribution
+mkdir -p $LIBDIR
+chown cfadm $LIBDIR
+chmod 755 $LIBDIR
+install -c -o cfadm -m 644 $BACKTALK/misc/browser_list $LIBDIR/browser_list
+install -c -o cfadm -m 644 $BACKTALK/misc/mimename $LIBDIR/mimename
+
+# Update shylist and backtalk.conf from previous install, if there is one
+touch $LIBDIR/shylist
+chown cfadm $LIBDIR/shylist
+chmod 644 $LIBDIR/shylist
+install -c -o cfadm -m 644 $BACKTALK/misc/backtalk.conf $LIBDIR/backtalk.conf
+
+# Install Backtalk binary
+install -c -o cfadm -g cfadmg -m 6711 src/backtalk /suid/libexec/$BACKTALK
+
+# Install Partutil binary
+install -c -o root -g cfadmg -m 4711 src/partutil /suid/libexec/$PARTUTIL
+
+# Install Backtalk Compiler
+mkdir -p $LIBEXECDIR
+chown cfadm $LIBEXECDIR
+chmod 755 $LIBEXECDIR
+install -c -o cfadm -m 700 src/btc $LIBEXECDIR/btc
+
+# Install 'shy' program - this one we overwrite
+install -c -o cfadm -g cfadmg -m 4711 src/shy /suid/bin/shy
+
+# symbolic links to Partutil and shy
+ln -sf /suid/libexec/$PARTUTIL $LIBEXECDIR/partutil
+ln -sf /suid/bin/shy /cyberspace/bin/shy
+
+# make Backtalk authenticated directories, if needed
+if test \! -f /cyberspace/www/cgi-bin/adm/.htaccess
+then
+	mkdir -p /cyberspace/www/cgi-bin/pw
+	mkdir -p /cyberspace/www/cgi-bin/adm
+	chown cfadm /cyberspace/www/cgi-bin/pw /var/www/cgi-bin/adm
+	chmod 755 /cyberspace/www/cgi-bin/pw /var/www/cgi-bin/adm
+	chmod 644 /cyberspace/www/cgi-bin/pw/.htaccess
+	chmod 644 /cyberspace/www/cgi-bin/adm/.htaccess
+fi
+
+# symbolic links to Backtalk cgis
+ln -sf /suid/libexec/$BACKTALK /cyberspace/www/cgi-bin/$BACKTALK
+ln -sf /suid/libexec/$BACKTALK /cyberspace/www/cgi-bin/backtalk
+ln -sf /suid/libexec/$BACKTALK /cyberspace/www/cgi-bin/pw/$BACKTALK
+ln -sf /suid/libexec/$BACKTALK /cyberspace/www/cgi-bin/pw/backtalk
+ln -sf /suid/libexec/$BACKTALK /cyberspace/www/cgi-bin/adm/$BACKTALK
+ln -sf /suid/libexec/$BACKTALK /cyberspace/www/cgi-bin/adm/backtalk
+
+# Create crash log file
+touch /var/log/bt_crash.log
+chown cfadm /var/log/bt_crash.log
+chmod 600 /var/log/bt_crash.log
+
+# Patch global, pistachio and abalone config.bt scripts
+
+cd $SCRIPTDIR/pistachio
+echo "Patching pistachio config.bt script"
+rm -f *.rej
+patch -Np1 < $SRCDIR/patches/pistachio.config.bt.patch
+if test `ls *.rej 2>/dev/null`
+then
+	echo "Patch failed in in $SCRIPTDIR/pistachio"
+	echo "HALTING"
+	exit 1;
+fi
+
+cd $SCRIPTDIR/abalone
+echo "Patching abalone config.bt script"
+rm -f *.rej
+patch -Np1 < $SRCDIR/patches/abalone.config.bt.patch
+if test `ls *.rej 2>/dev/null`
+then
+	echo "Patch failed in in $SCRIPTDIR/abalone"
+	echo "HALTING"
+	exit 1;
+fi
+
+BTINSTALL=$SRCDIR/$BACKTALK/misc/btinstall
+chmod 755 $BTINSTALL
+
+# install bubblegum
+cd $SRCDIR/$BUBBLEGUM && env docdir=$DOCDIR $BTINSTALL
+cd $SCRIPTDIR/bubblegum
+echo "Patching bubblegum config.bt script"
+rm -f *.rej
+patch -Np1 < $SRCDIR/patches/bubblegum.config.bt.patch
+if test `ls *.rej 2>/dev/null`
+then
+	echo "Patch failed in in $SCRIPTDIR/bubblegum"
+	echo "HALTING"
+	exit 1;
+fi
+
+# install gumball
+cd $SRCDIR/$GUMBALL && env docdir=$DOCDIR $BTINSTALL
+
+# install papaya
+cd $SRCDIR/$PAPAYA && env docdir=$DOCDIR $BTINSTALL
+cd $SCRIPTDIR/papaya
+echo "Patching papaya config.bt script"
+rm *.rej
+patch -Np1 < $SRCDIR/patches/papaya.config.bt.patch
+if test `ls *.rej 2>/dev/null`
+then
+	echo "Patch failed in in $SCRIPTDIR/papaya"
+	echo "HALTING"
+	exit 1;
+fi
+
+# install vanilla
+cd $SRCDIR/$VANILLA && env docdir=$DOCDIR $BTINSTALL
+
+# install cinnamon RSS scripts
+cd $SRCDIR/$CINNAMON && env docdir=$DOCDIR $BTINSTALL
+cd $SCRIPTDIR/cinnamon
+echo "Patching cinnamon config.bt script"
+rm -f *.rej
+patch -Np1 < $SRCDIR/patches/cinnamon.config.bt.patch
+if test `ls *.rej 2>/dev/null`
+then
+	echo "Patch failed in in $SCRIPTDIR/cinnamon"
+	echo "HALTING"
+	exit 1;
+fi
+
+# install wasabi
+cd $SRCDIR/$WASABI && env docdir=$DOCDIR $BTINSTALL 

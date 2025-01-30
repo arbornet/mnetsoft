@@ -1,0 +1,19 @@
+% Copyright 2005, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to change a user's password
+%   new          new passwoard
+% Response:
+%   <DONE>
+% or
+%   <ERROR MSG=whatever>
+
+/http_content_type (text/plain) store
+
+nopwedit {(<ERROR MSG="Password editing not enabled on this server">\n) stop} if
+id ! {(<ERROR MSG="User not authenticated">\n) stop} if
+
+new changepass
+dup { (<ERROR MSG=")exch(">\n) stop }  if
+pop
+
+(<DONE>\n)

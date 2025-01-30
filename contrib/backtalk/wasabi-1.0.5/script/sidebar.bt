@@ -1,0 +1,138 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Display the sidebar.  This script is not called directly.  We should have
+% already called this_item to load in the current item, however by the time
+% we are done, it likely won't be the current item any more.
+
+flavor(config)+ include
+
+login(
+<p>
+)
+
+% <text> winged ...
+% Output a winged caption with the given text
+/winged {
+  /t xdef
+  (<center><table border=0 cellpadding=0 cellspacing=3><tr>
+  <td><img src=")imghost(/)flavor(lwing.gif"></td>
+  <td class=heading>)t(</td>
+  <td><img src=")imghost(/)flavor(rwing.gif"></td>
+  </tr></table></center>\n)
+} def
+
+% list related items
+max_related related_items /related xdef
+related maxitem count_sel {
+
+  (<p>) (Related&nbsp;Articles) winged (<dl>)
+
+  /rsel (0) def
+  /isel related def
+  {
+    isel next_item {break} if
+    this_item {continue} if
+    itemid ! {read_item {continue} if } if pop
+    /isel xdef
+
+    (<p><dt><a href="begin?item=)item confarg(">)
+    title quote(</a>\n)
+    (<dd>)summary quote(</dd>\n)
+  } loop
+  (</dl>\n)
+
+} if
+
+id {
+  /isel ($-1) def
+  /rsel (new) def
+  /newcomment () def  /nnc max_new_comment def
+  /brandnew () def    /nbn max_brand_new def
+  {
+    isel next_item {break} if
+    this_item {break} if
+    pop /isel xstore
+    /nnew maxresp maxread - def
+    nnew ! {continue} if
+    itemid ! {read_item {continue} if pop } if
+
+    maxread {
+      /nnc dec
+      nnc ! { nbn {continue} {break} ifelse } if
+      /newcomment ` newcomment
+       (<p><dt><a href="begin?show=new&)
+    } {
+      /nbn dec
+      nbn ! { nnc {continue} {break} ifelse } if
+      /brandnew ` brandnew
+      (<p><dt><a href="begin?)
+    } ifelse
+
+    (item=)item confarg(">)title quote(</a></dt>\n)
+    (<dd>)
+    maxread {nnew( new comments)}{summary quote} ifelse
+    (</dd>\n) ' def
+  } loop
+
+  (<p>) (New&nbsp;Articles) winged (<p>)
+  brandnew {
+    (<dl>\n)
+    brandnew
+    (</dl>\n)
+  } {
+    (<center><em>None</em></center>\n)
+  } ifelse
+
+  (<p>) (New&nbsp;Comments) winged (<p>)
+  newcomment {
+    (<dl>\n)
+    newcomment
+    (</dl>\n)
+  } {
+    (<center><em>None</em></center>\n)
+  } ifelse
+} {
+
+  % list recent items
+  (<p>) (Recent&nbsp;Articles) winged
+
+  /isel ($-1) def
+  /rsel (0) def
+  (<dl>)
+  /n 0 def
+  {
+    isel next_item {break} if
+    this_item {continue} if
+    itemid ! {read_item {continue} if } if pop
+    /isel xdef
+
+    % skip items we already listed in the related section
+    item related in_sel { continue } if
+
+    (<p><dt><a href="begin?item=)item confarg
+    (">)title quote(</a></dt>\n)
+    (<dd>)summary quote(</dd>\n)
+
+    /n inc
+    n max_recent ge {break} if
+  } loop
+
+  n 0 eq {
+    (<p><center><em>None</em></center>\n)
+  } if
+  (</dl>\n)
+  
+} ifelse
+
+use_rss_icon use_atom_icon or expose_rss_conf and {
+  (<P><CENTER>)
+  use_rss_icon {
+    (<A CLASS=rss TITLE="RSS feed for )conftitle( Articles" HREF=")
+      anon_url(cinnamon?conf=)conf(">RSS</A> )
+  } if
+  use_atom_icon {
+    (<A CLASS=atom TITLE="Atom feed for )conftitle( Articles" HREF=")
+      anon_url(cinnamon?conf=)conf("&fmt=Atom-1.0>ATOM</A>)
+  } if
+  (</CENTER>\n)
+} if

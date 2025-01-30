@@ -1,0 +1,37 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% retitle script
+%
+% This script retitles items.
+%
+% Query Paramters:
+%    conf=      conference to retitle an item in
+%    item=      item number to retitle
+%    newtitle=  new title.
+%
+%    csel=      current list of conference (not used, just passed through)
+%    nextnew=   skip non-new conferences? (not used, just passed through)
+%    isel=      current item selector (not used, just passed through)
+%    rsel=      current response selector (not used, just passed through)
+%    since=     date we are reading since (not used, just passed through)
+
+flavor(config.bt)+include
+
+% open the conference
+open_conf {(Backtalk internal error: No such )Conference( \()conf(\)\n) halt} if
+
+newtitle retitle_item
+
+% check error code
+{
+  (Backtalk error: could not retitle )Item( )item( in the )conf
+  ( )Conference(.\n) halt
+} if
+
+/http_location `backtalkurl(/)flavor(read?conf=)conf(&csel=)csel
+  (&item=)item(&isel=)isel(&rsel=)rsel
+  /nextnew defined{(&nextnew=)nextnew}if
+  since {(&since=)since}if
+  showforgotten {(&showforgotten=)showforgotten}if '
+  store
+

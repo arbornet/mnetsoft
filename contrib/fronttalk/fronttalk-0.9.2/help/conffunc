@@ -1,0 +1,45 @@
+                          Fronttalk Separators:
+                 Functions Used in Conference Separators
+
+For general information about separators see "HELP SEP".  This page just
+describes the function codes that can be used in conference separators:
+
+   %y    - number of unseen items.
+   %b    - number of brandnew items.
+   %r    - number of newresponse items.
+   %n    - number of brandnew or newresponse items.
+   %u    - user's full name in current conference.
+   %v    - user's login id.
+   %f    - number of first item.
+   %l    - number of last item.
+   %i    - number of items in current conference.
+   %s    - full conference name.
+   %q    - name conference was joined under.
+   %t    - numeric conference type code.
+   %D    - text conference type description.
+   %h    - short server name.
+   %H    - full server name.
+   %k    - total number.  See "HELP PARTMSG".
+
+The following functions return a date and time.  If a <count> is given,
+like '%3o', then it controls the format.  See "HELP DATESEP":
+
+   %o    - date/time user was last in this conference.
+   %N    - current time.
+
+The following functions return the content of one of the conference files:
+
+   %0g   - login file
+   %1g   - logout file
+   %2g   - index file
+   %3g   - bull file
+   %4g   - welcome file
+   %5g   - conference rc file
+   %6g   - ulist file
+   %7g   - glist file
+
+The following Picospan separators are NOT implemented in Fronttalk:
+
+   %d    - full path name of conference directory.
+   %w    - user's working directory.
+   %Q    - fail with a "Not in a conference!" message if not in a conference.

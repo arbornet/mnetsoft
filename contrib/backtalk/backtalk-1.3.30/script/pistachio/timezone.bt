@@ -1,0 +1,240 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% timezone script
+%
+% Let a user set a timezone to be used when displaying dates to him.  This
+% both generates the form and handles it.
+%
+% The bulk of this script is a list of countries/region names with the Unix TZ
+% variables appropriate to that region.  Thus, the line:
+%   <LI>)href(Brazil/DeNoronha>Fernando De Noronha</A>
+% means that for the region of Brazil called "Fernando de Noronha" (which is
+% apparantly part of Pernambuco in Eastern Brazil), the timezone value to use
+% is "Brazil/DeNoronha".  Similarly
+%   <LI>)href(GMT%2B1>Algeria</A>
+% means that for Algeria you use the timezone setting "GMT+1" since it is one
+% hour off of Greenwich time.  Here the + sign has been turned into a %2B in
+% accordance with the usual cgi quoting rules.
+%
+% Unfortunately, time zones names aren't as well standardized as one might
+% wish.  The newer fashion is to name each time zone after a (more or less)
+% arbitrarily selected city in the time zone, so the old "US/Eastern" zone is
+% now called "America/New_York".  However, most newer installations support the
+% older names too, so I'm using the old names here for maximum portability.
+%
+% Time zone information is constantly changing, as various governments around
+% the world do battle with the clock.  Luckily the Timezone Caballeros are
+% out there recording it all in zic files that you can install on your system.
+% Look for the latest tzdata file at ftp://elsie.nci.nih.gov/pub.  The comments
+% in the files in those archives make interesting reading.
+%
+% Query Parameters:
+%    zone=        Unix TZ environment variable setting to use.
+%    login=       User whose time zone we are to set.
+
+/butsel 4 defconstant flavor(buttondef)+ include
+
+/login defined ! {/login id def} if
+/mine login id eq def
+
+/zone defined {
+  % new zone to be set
+  mine ! amadm and { login selectuser } if
+  /timezone zone store
+  (*.backtalk) /timezone savevar
+  amadm {() selectuser} if
+} {
+  % no zone set - get existing zone
+  (*.backtalk) /timezone loadvar pop
+} ifelse
+
+% page header
+(<HTML><HEAD>
+<TITLE>Set Time Zone for )login(</TITLE></HEAD>
+<BODY)body_tags(>)
+global_header
+(<H1>Set Time Zone for ") login ("</H1>
+Goto <A HREF=begin>)entrance_button(</A> or
+<A HREF=bio?login=)login(>Personal Info Page</A>.
+<P>
+Normally Backtalk displays all dates using whatever time zone the host
+computer happens to be in.
+This page can be used to set a different time zone to be used for )
+mine {(your)}{(the )login}ifelse ( account.
+<P>
+)
+
+% warn off unauthorized users
+amadm mine or ! {
+ (Only )login( or an administrator can change )login('s timezone.
+ </BODY></HTML>\n)
+ stop
+} if
+
+(<BLOCKQUOTE><STRONG>
+)
+timezone {
+  (Currently your timezone is set to ")timezone("\n)
+}{
+  (You currently have no time zone set.\n)
+} ifelse
+
+(<P>
+The current time is:  )time ztime(
+</STRONG></BLOCKQUOTE>
+)
+
+/href `(<A HREF=timezone?login=)login(&zone=)' def
+
+(You can set a different time zone by clicking on one of the
+time zones listed below.  If you live someplace else, complain to the
+management.
+)
+
+(<UL>
+)
+
+timezone {
+  (<LI>)href(>Restore to default time zone</A>\n)
+} if
+
+(<LI>Africa:
+  <UL>
+  <LI>)href(GMT%2B1>Algeria</A>
+  <LI>)href(GMT%2B1>Angola</A>
+  <LI>)href(GMT%2B1>Congo</A>
+  <LI>)href(Egypt>Egypt</A>
+  <LI>)href(GMT%2B3>Ethiopia</A>
+  <LI>)href(GMT%2B3>Kenya</A>
+  <LI>)href(GMT>Liberia</A>
+  <LI>)href(Libya>Libya</A>
+  <LI>)href(GMT>Morocco</A>
+  <LI>)href(GMT%2B1>Nigeria</A>
+  <LI>)href(GMT>Senegal</A>
+  <LI>)href(GMT%2B2>South Africa</A>
+  <LI>)href(GMT%2B2>Zimbabwe</A>
+  </UL>
+<LI>America:
+  <UL>
+  <LI>)href(GMT-3>Argentina</A>
+  <LI>)href(GMT-5>Bahamas</A>
+  <LI>)href(GMT-6>Belize</A>
+  <LI>)href(GMT-4>Bolivia</A>
+  <LI>Brazil:
+    <UL>
+    <LI>)href(Brazil/Acre>Acre</A>
+    <LI>)href(Brazil/DeNoronha>Fernando De Noronha</A>
+    <LI>)href(Brazil/East>East</A>
+    <LI>)href(Brazil/West>West</A>
+    </UL>
+  <LI>Canada:
+    <UL>
+    <LI>)href(Canada/Atlantic>Atlantic</A>
+    <LI>)href(Canada/Central>Central</A>
+    <LI>)href(Canada/East-Saskatchewan>East Saskatchewan</A>
+    <LI>)href(Canada/Eastern>Eastern</A>
+    <LI>)href(Canada/Mountain>Mountain</A>
+    <LI>)href(Canada/Newfoundland>Newfoundland</A>
+    <LI>)href(Canada/Pacific>Pacific</A>
+    <LI>)href(Canada/Yukon>Yukon</A>
+    </UL>
+  <LI>)href(Chile/Continental>Chile</A>
+  <LI>)href(GMT-5>Columbia</A>
+  <LI>)href(GMT-6>Costa Rica</A>
+  <LI>)href(Cuba>Cuba</A>
+  <LI>)href(GMT-6>Guatemala</A>
+  <LI>)href(GMT-5>Haiti</A>
+  <LI>)href(GMT-6>Honduras</A>
+  <LI>Mexico:
+    <UL>
+    <LI>)href(Mexico/BajaNorte>Baja California Norte</A>
+    <LI>)href(Mexico/BajaSur>Baja California Sur</A>
+    <LI>)href(Mexico General>General</A>
+    </UL>
+  <LI>)href(GMT-6>Nicaragua</A>
+  <LI>)href(GMT-5>Panama</A>
+  <LI>United States:
+    <UL>
+    <LI>)href(US/Aleutian>Aleutian</A>
+    <LI>)href(US/Alaska>Alaska</A>
+    <LI>)href(US/Arizona>Arizona</A>
+    <LI>)href(US/Central>Central</A>
+    <LI>)href(US/Eastern>Eastern</A>
+    <LI>)href(US/East-Indiana>East-Indiana</A>
+    <LI>)href(US/Hawaii>Hawaii</A>
+    <LI>)href(US/Michigan>Michigan</A>
+    <LI>)href(US/Mountain>Mountain</A>
+    <LI>)href(US/Pacific>Pacific</A>
+    <LI>)href(US/Samoa>Samoa</A>
+    <LI>)href(US/Yukon>Yukon</A>
+    </UL>
+  <LI>)href(GMT-4>Venezuela</A>
+  </UL>
+<LI>Asia:
+  <UL>
+  <LI>)href(GMT%2B6>Bangladesh</A>
+  <LI>)href(GMT%2B7>Cambodia</A>
+  <LI>)href(PRC>China</A>
+  <LI>)href(Hongkong>Hongkong</A>
+  <LI>)href(India5:30>India</A>
+  <LI>)href(Iran>Iran</A>
+  <LI>)href(Japan>Japan</A>
+  <LI>)href(ROK>Korea, North</A>
+  <LI>)href(GMT%2B9>Korea, South</A>
+  <LI>)href(GMT%2B8>Malaysia</A>
+  <LI>)href(GMT%2B10>Papua New Guinea</A>
+  <LI>)href(GMT%2B8>Philipines</A>
+  <LI>)href(Singapore>Singapore</A>
+  <LI>)href(GMT%2B8>Taiwan</A>
+  <LI>)href(GMT%2B7>Thailand</A>
+  <LI>)href(GMT%2B7>Vietnam</A>
+  </UL>
+<LI>Austrialia:
+  <UL>
+  <LI>)href(Australia/LHI>Lord Howe Island</A>
+  <LI>)href(Australia/NSW>New South Wales</A>
+  <LI>)href(Australia/North>Northern Territory</A>
+  <LI>)href(Australia/Queensland>Queensland</A>
+  <LI>)href(Australia/South>South Australia</A>
+  <LI>)href(Australia/Tasmania>Tasmania</A>
+  <LI>)href(Australia/Victoria>Victoria</A>
+  <LI>)href(Australia/West>Western Australia</A>
+  <LI>)href(Australia/Yancowinna>Yancowinna</A>
+  </UL>
+<LI>Europe:
+  <UL>
+  <LI>)href(WET>Western Europe (WET)</A>
+  <LI>)href(CET>Central Europe (CET)</A>
+  <LI>)href(EET>Eastern Europe (EET)</A>
+  <LI>)href(GB-Eire>Great Britain/Eire</A>
+  <LI>)href(W-SU>Western Soviet Union</A>
+  <LI>)href(Iceland>Iceland</A>
+  <LI>)href(Poland>Poland</A>
+  </UL>
+<LI>Middle East:
+  <UL>
+  <LI>)href(Afghan4:30>Afghanistan</A>
+  <LI>)href(GMT%2B4>Armenia</A>
+  <LI>)href(GMT%2B4>Georgia</A>
+  <LI>)href(Israel>Israel</A>
+  <LI>)href(GMT%2B3>Kuwait</A>
+  <LI>)href(GMT%2B3>Saudi Arabia</A>
+  <LI>)href(Turkey>Turkey</A>
+  </UL>
+<LI>Pacific:
+  <UL>
+  <LI>)href(US/Samoa>American Samoa</A>
+  <LI>)href(NZ-CHAT>Chatham Island</A>
+  <LI>)href(Chile/EasterIsland>Easter Island</A>
+  <LI>)href(GMT%2B12>Fiji</A>
+  <LI>)href(GMT%2B10>Guam</A>
+  <LI>)href(US/Hawaii>Hawaii</A>
+  <LI>)href(GMT%2B12>Tonga</A>
+  <LI>)href(NZ>New Zealand</A>
+  </UL>
+</UL>
+)
+
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../style/default.css";
+  </style>
+
+  <title>Troubleshooting: network</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>Network Connectivity</a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="../contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+    <ol>
+    <li>Access your Command Prompt
+
+      <p><b>In Windows:</b> Click: <tt class="menu">Start</tt> [bottom
+      left corner] and <tt class="menu">Run</tt>; type: <tt>cmd.exe</tt>
+      and press the <tt>ENTER</tt> key. A dark black window should open
+      - this is the Microsoft Windows <em>DOS command prompt</em>.</p>
+
+      <p><b>In UNIX:</b> Login to UNIX; if you are using the UNIX
+      Graphical User Interface (GUIs - KDE, GNOME, X Windows) then you
+      need to start a terminal emulator (look for the following
+      key-words within your Desktop's menu: 
+      <em>Konsole, Rxvt, Eterm, Xterm, Terminal and Gnome Terminal</em>.
+      </p></li>
+
+    <li>Ping &amp; Traceroute
+      <p>Within the terminal emulator window, type:
+      <tt>ping grex.org</tt>. You should see ping output similar to 
+      this:</p>
+
+      <pre>
+        localhost> ping cyberspace.org
+        PING cyberspace.org (216.86.77.194) 56(84) bytes of data.
+        64 bytes from grex.cyberspace.org (216.86.77.194): icmp_seq=1 ttl=240 time=292 ms
+        64 bytes from grex.cyberspace.org (216.86.77.194): icmp_seq=2 ttl=240 time=296 ms
+        64 bytes from grex.cyberspace.org (216.86.77.194): icmp_seq=3 ttl=240 time=295 ms
+      </pre>
+      
+      <p>Note that our server IP Address, as of this writing, is: 
+      <strong>216.86.77.194</strong>.</p> 
+
+<!--Our current IP Address can be found <a href="/cgi-bin/sysinfo.cgi">here</a>.</p -->
+      
+      <p>If you are able to resolve grex.org and view our server
+      IP through ping, this it means DNS (Domain Name Service) is 
+      configured properly and is working. </p>
+
+      <p><strong>64 bytes from grex</strong> implies that your ping 
+      command received a response from our server - this implies that
+      network-connectivity between your computer and our <q>Grex</q>
+      server exists.</p></li>
+    </ol>
+    <hr />
+
+
+    <h4>If DNS is not working:</h4>
+      <p>You know that your DNS is not configured properly if you don't
+      see grex.org's IP Address when you ping our server (Step 2). There
+      are a number of reasons for this:</p>
+
+      <ol>
+      <li><p><b>If browsing works</b>, this means that your browser is 
+        using a "Proxy Server" and DNS was never configured on your 
+        computer.</p>
+
+        <p>You need to check your <q>Network Settings</q> and add a DNS
+        server. <a href="http://opendns.org">OpenDNS.org</a> is a free
+        DNS server and uses the following IP addresses:
+        <strong>208.67.222.222, 208.67.220.220</strong>.This step is
+        essential if you are using <em>ssh</em>.  If for some
+        reason you are not able to configure DNS, you can still connect
+        by using the Grex server's IP address instead of its
+        hostname.</p> 
+      
+        <p>To SSH you would type the following: 
+
+          <samp>
+           <tt>ssh jsmith@216.86.77.194</tt><br /> 
+           <tt>ssh newuser@216.86.77.194</tt> 
+          </samp></p>
+
+        <p>Note: You must replace <strong>216.86.77.194</strong> with
+        our <!--a href="/cgi-bin/sysinfo.cgi"-->current IP Address<!--/a-->.</p>
+        </li>
+      
+      <li><p><b>If you are using Java &amp; MindTerm</b> to connect to
+        the Grex UNIX shell using your web browser:</p> 
+        
+        <p>if the Java applet window appears, this implies that the
+        browser was able to locate the Java Runtime Environment (JRE)
+        and download, load and execute the applet.</p>
+        
+        <p>Click on: <tt class="menu">Settings</tt> [menu - top], 
+        <tt class="menu">Proxy...</tt>. 
+        A <tt class="menu">MindTerm - Proxy Settings</tt> box should 
+        open; specify the <tt>Proxy type:</tt> you are using - this 
+        information can be found in your web-browser settings. Then 
+        specify your <tt>Server:</tt>, <tt>Port:</tt>, proxy 
+        <tt>Username:</tt>, and proxy <tt>Password:</tt>, if any.</p>
+
+        <p>Note: that when the MindTerm applet successfully opens,
+        <tt>SSH Server/Alias: cyberspace.org</tt> will be visible and
+        you would need to click within the window and press the
+        <tt>Enter</tt> key to connect. If you are able to connect to our
+        Grex server, you will see output similar to this:</p>
+
+        <pre>
+        SSH Server/Alias: cyberspace.org
+        Connected to server running SSH-2.0-OpenSSH_5.6
+
+        Server's hostkey (ssh-rsa) fingerprint:
+        openssh md5:  75:cc:a7:b5:b8:6a:6a:cc:a6:71:20:8d:ed:df:62:72
+        bubblebabble: xuhaf-vohof-zydum-gacuz-medek-zivef-kyvol-bacal-gupan-nyhyk-texux
+
+        File operations disabled, server identity can't be verified
+
+        cyberspace.org login: jsmith
+        </pre></li>
+        </ol>
+    <hr />
+ 
+
+    <h4>Local firewall blocks access to Grex</h4>
+      <p>It is possible that your firewall at work, or on your home
+      computer, blocks our SSH server port (port number 22).  If it cannot
+      be unblocked, then you'll need to try another computer which allows
+      SSH connections.
+      </p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: networkconnectivity.xhtml 1018 2010-12-13 16:32:00Z veek $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

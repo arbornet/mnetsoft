@@ -1,0 +1,14 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% missing script
+
+flavor(config.bt)+ include
+
+bbsname (S)
+[] [] []
+flavor(header.bt)+ include
+(</TABLE>
+<P>
+Command not yet implemented.
+</BODY></HTML>
+)

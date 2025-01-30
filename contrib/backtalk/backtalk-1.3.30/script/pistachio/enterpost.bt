@@ -1,0 +1,94 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% enterpost script
+%
+% A script to enter new items.  This is the form handler for the "enter.bt"
+% script.  This jumps to the read.bt screen after you enter the item.
+%
+% Query Paramters:
+%   conf=       name of conference to post to
+%   csel=       list of conferences to read (not used, just passed along)
+%   text=	text of the item to post
+%   texttype=   type of content posted (text/plain or text/html)
+%   title=	title of the item to post
+%   pseudo=	pseudonym to use (if not defined, use user's conference alias)
+%   enter.x=    defined if "enter" button was pushed.
+%   preview.x=    defined if "enter" button was pushed.
+%
+%   atch	defined to 1 if we should get another attachment
+%   attachments list of attachments so far
+%   baa_file    a new attachment
+%   desc        and it's description
+
+% if previewing, run another script
+/preview.x defined {
+  flavor(item_preview)+ jump
+} if
+
+% If requested an attachment, go get it
+canattach { /atch defined { atch (1) eq {
+  flavor(itemattach)+ jump
+} if } if } if
+
+% we accumulate multiple error messages in the "bad" variable
+() /bad xdef
+
+flavor(config)+ include
+(lib/postlog) include
+
+flavor(openconf)+ stopped
+ {`Conference cap( )conf( does not exist.<P>)' /bad xdef} if
+
+secret 2 eq /dunno defined ! and {
+  [/conf /csel /text /texttype /title /pseudo] flavor(confpass)+ jump
+} if
+
+/body xdef
+
+% If have an attachment, index it
+canattach { /atch defined { baa_file {
+  /item maxitem 1 + def
+  baa_file desc 0 make_attach /baa_file xdef
+  /attachments `attachments {attachments (,)} if baa_file' def
+} if } if } if
+
+/allowhtml dflt_html def (*settings) [/allowhtml /allowgraphics] loadvar pop
+allowhtml cvi ! /texttype defined ! or {
+  /texttype (text/plain) def
+} if
+
+maypost !
+ {`bad(Cannot write )Conference( )conf(.<P>)' /bad xdef} if
+
+text !
+ {bad(Your message was empty. There is nothing to post.<P>)+ /bad xdef} if
+
+title !
+ {bad(Your title was empty. You must have a title.<P>)+ /bad xdef} if
+
+bad {(<HTML>)body(\n)bad(</BODY></HTML>) halt} if
+
+pseudo {pseudo /alias xstore} if
+
+texttype (text/plain) eq
+{
+   % rewrap the text
+   text 79 wrap /text xstore
+} if
+
+texttype (text/html-blanks) eq
+{
+   % convert blank lines into <P> directives
+   text (\r) () 0 replace (\n\n) (\n<P>\n) 0 replace /text xstore
+   /texttype (text/html) store
+} if
+
+% do the post
+post_item
+
+% go read the whole item - location redirect prevents
+/http_location `backtalkurl(/)flavor(read?conf=)conf(&csel=)csel
+ (&item=)item(&rsel=all)
+ /nextnew defined{(&nextnew=)nextnew}if '
+ store
+Item cap(Posted.  If you see this message, you need a smarter browser.\n)

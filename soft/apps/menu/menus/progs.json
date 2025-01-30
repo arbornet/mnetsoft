@@ -1,0 +1,14 @@
+{
+    "title":"*** MISCELLANEOUS PROGRAMS ***",
+    "entries": [
+        {"key":"M", "exec":"@/scripts/d8", "desc":"Talk (chat live to a user)"},
+        {"key":"T", "exec":"@/scripts/d71", "desc":"Telnet around the world"},
+        {"key":"R", "exec":"/usr/local/bin/trn", "desc":"Read Usenet news"},
+        {"key":"I", "exec":"/usr/local/bin/irssi", "desc":"Run IRC (Internet Relay Chat)"},
+        {"key":"X", "exec":"/usr/local/bin/lynx; clear", "desc":"Lynx (textual WWW browser)"},
+        {"key":"U", "exec":"@/scripts/d53", "desc":"Upload/Download Files"},
+        {"key":"L", "exec":"@/scripts/d60", "desc":"Lock your terminal"},
+        {"key":"V", "exec":"clear; /cyberspace/bin/vote; clear", "desc":"Voting Program"},
+        {"key":"E", "exit":true, "desc":"Exit this menu"}
+    ]
+}

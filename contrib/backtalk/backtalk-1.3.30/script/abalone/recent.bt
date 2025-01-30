@@ -1,0 +1,121 @@
+% Backtalk Abalone Interface -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% recent script
+%
+% This shows the last N postings.
+
+/abalone.menujump 0 def
+
+/dflt_recent_page constant !{/dflt_recent_page 50 defconstant} if
+
+/nrecent dup dflt_recent_page default def
+
+flavor(config.bt)+ include
+(lib/readpostlog) include
+
+% We need to cache conference titles to avoid reading the same conference
+% config file multiple times.  The following functions inplement this.
+/cft dict def
+
+% <conf> <conftitle> set_cf_title -
+% Add a title to the cache
+/set_cf_title {
+  cft 3 1 roll put
+} def
+
+% <conf> get_cf_title <title>
+% Get a title from a cache, if there.  Look it up otherwise.
+/get_cf_title {
+  dup /cf xdef cft exch known {
+    % get title from cache
+    cft cf get
+  } {
+    % get title from conference config file
+    /conf cf store snoop_conf { cf cap } {conftitle close_conf} ifelse
+    % add to cache
+    dup cf exch set_cf_title
+  } ifelse
+} def
+
+% Show page header
+`(Last )nrecent( Postings to )bbsname' dup /titl xdef (S)
+[/nrecent]
+[/abalone.menujump] []
+flavor(header.bt)+ include
+
+% Show pulldown menu
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop.bt)+ include
+
+(
+<FORM METHOD=post ACTION=recent>
+<TR><TD CLASS=mast VALIGN=bottom><SPAN CLASS=big>
+Last <INPUT TYPE=text NAME=nrecent VALUE=")nrecent(" SIZE=3> Postings to )
+bbsname(</SPAN></TD>
+</FORM>
+<TD CLASS=mast VALIGN=bottom>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>\n)
+id {(<OPTION VALUE=edithot>Edit Your )Conference cap( Hotlist</OPTION>
+  <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(<OPTION VALUE=@0help:recent>Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM>
+)
+print
+
+post_log_file ! {
+  (Postings are not logged on this server</BODY></HTML>\n)
+  halt
+} if
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR>
+<TD CLASS=colhead>Posting</TD>
+<TD CLASS=colhead>)Item cap( Title</TD>
+<TD CLASS=colhead>Author</TD>
+<TD CLASS=colhead>Date</TD>
+</TR>
+)
+
+/odd 0 def
+
+nrecent cvi -1 {
+  /pl_title xdef /pl_fn xdef /pl_id xdef /pl_resp xdef /pl_item xdef
+  /pl_conf xdef /pl_date xdef
+
+  /class odd {(odd)}{(even)}ifelse def
+  (<TR><TD CLASS=)class(><A HREF="read?&conf=)pl_conf(&item=)pl_item(&rsel=)
+    pl_resp(-$&noskip&showforgotten=1&seeno=2">)
+    pl_conf get_cf_title(&nbsp;)Item(&nbsp;)pl_item
+    pl_resp {(&nbsp;)Response(&nbsp;)pl_resp} if
+    (</A></TD>)
+
+  (<TD CLASS=)class(>)pl_title(</TD>) 
+
+  (<TD CLASS=)class(><A HREF=")
+    /extern_bio constant {pl_id extern_view_bio }
+      { (bio?login=)pl_id cgiquote } ifelse (">)
+    pl_fn 0 30 substr ( )(&nbsp;)0 replace
+    pl_fn 31 100 substr(</A></TD>)
+
+  (<TD CLASS=)class(>)pl_date ( )(&nbsp;)0 replace(</TD></TR>\n)
+
+  /odd 1 odd - def
+
+} for_postlogs
+  
+(</TABLE>)
+
+
+(</TABLE>\n)
+
+global_footer
+(</BODY></HTML>
+)

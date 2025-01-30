@@ -1,0 +1,88 @@
+.\"
+.\" skel.1 -- Skeleton manual page.  XXX
+.\"
+.\" $Id: skel.1 1006 2010-12-08 02:38:52Z cross $
+.\"
+.TH SKELETON 1
+.SH NAME
+.B skeleton
+\- Skeleton manual page
+.SH SYNOPSIS
+.B skeleton
+[
+.B -u
+.I user
+]
+.B -r
+file
+.PP
+.B skeleton
+[
+.B -u
+.I user
+]
+.B -w
+file
+.SH DESCRIPTION
+.I skeleton
+is a utility or application used to do something useful.  This document
+is a sample manual page that should be used as a template for Unix manual
+pages that are developed for utilities and applications using this
+skeletal framework.
+.PP
+This is a new paragraph.  To reference other manual pages, use the following
+macro.  Utilities such as
+.IR ls (1)
+are a big help in locating files.
+.PP
+If you reference the program name again, set it into italics using the
+``.I macro''.  For instance, such as when I talk about
+.I skeleton
+again.
+.SH OPTIONS
+.PP
+.IP -v
+Produce verbose output while processing.
+.IP -?
+Obtain a help summary.  Note that this should is a standard option for
+all applications written using our framework.  Note also that this
+paragraph should exceed one line.
+.\"
+.\" The following are optional for small programs, but are useful and
+.\" should be provided for large ones:
+.\"
+.\" ---
+.SH EXAMPLES
+.PP
+daemon -r -u root /path/to/a/file
+.SH DIAGNOSTICS
+.I skeleton
+will produce an error message if it can't fork, or if it runs out
+of memory or file descriptors.
+.SH ENVIRONMENT
+.IP SHELL
+If the environment variable SHELL is set, use it to do something.
+.IP TZ
+If the environment variable TZ is set, it is used to set the current
+timezone.
+.\" ---
+.\"
+.\" Etc.
+.SH FILES
+.I /path/to/a/file
+.br
+.I /path/to/another/file
+.SH SOURCE
+grexsoft/cmd/daemon.c
+.SH "SEE ALSO"
+.I daemon
+in
+.IR daemon (8)
+.br
+.IR ls(1)
+.br
+.IR utils(3)
+.SH HISTORY
+Created 27-Feb-2005 by Dan Cross <cross@cyberspace.org>.
+.SH BUGS
+None known.

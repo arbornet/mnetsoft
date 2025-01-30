@@ -1,0 +1,33 @@
+                       Fronttalk Command:  DISPLAY
+
+Usage:  DISPLAY <option>...
+
+The DISPLAY command can be used to display various Fronttalk state information
+and settings.  You can get more information on any option with the command
+"HELP DISPLAY <option>".
+
+Possible options include:
+
+   SERVERS     - List of Backtalk servers.
+   CONFERENCES - List of conferences on the current server.
+   NEW         - Number of new items and responses in the current conference.
+   THISCONF    - Information about the current conference.
+   THISSERVER  - Information about the current server.
+   NAME        - Your name in the current conference.
+   LOGIN       - Login screen for the current conference.
+   LOGOUT      - Logout screen for the current conference.
+   LOGMESSAGES - Login and logout screens for the current conference.
+   INDEX       - Index for the current conference.
+   ULIST       - User list for the current conference.
+   GLIST       - Group list for the current conference.
+   WELCOME     - Welcome message for the current conference.
+   RC          - RC file for the current conference.
+   READLINE    - Status of READLINE setting and name of ReadLine module.
+   FORGET      - Status of FORGET setting.
+   UID         - Status of UID setting.
+   NUMBERED    - Status of NUMBERED setting.
+   MODESTAY    - Status of MODESTAY setting.
+   STAY        - Status of STAY setting.
+   SOURCE      - Status of SOURCE setting.
+   IGNOREEOF   - Status of IGNOREEOF setting.
+   VERSION     - Software version numbers of client and current server.

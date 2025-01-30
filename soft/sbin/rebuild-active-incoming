@@ -1,0 +1,16 @@
+#!/bin/sh
+b=/usr/local/sbin
+d=/etc/postfix
+f=active_incoming
+a=$d/$f
+o=/cyberspace/etc/mail.optout
+awk -F: '
+$1 == "rt" || $NF !~ /(nologin|nonexistent|resh)/ {
+	print $1
+}
+' /etc/passwd |
+sort |
+comm -23 - $o |
+sed 's/$/ local/' > $a &&
+cd $d &&
+$b/postmap $f

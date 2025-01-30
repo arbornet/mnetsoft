@@ -1,0 +1,13 @@
+% These are macros for converting references like "item:3" into urls.
+
+/format_conf { pop pop
+ `(begin?conf=)3 2 roll'
+} def
+   
+/format_item { pop
+ `(begin?conf=) 4 2 roll (&item=) exch'
+} def
+ 
+/format_resp {
+ `(begin?conf=) 5 2 roll (&item=) 3 1 roll (&show=) exch'
+} def

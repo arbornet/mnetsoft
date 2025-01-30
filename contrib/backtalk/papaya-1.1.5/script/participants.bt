@@ -1,0 +1,54 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% participants script
+%
+% This script lists participants in a conference.
+%
+% This script is it's own handler.
+
+flavor(config)+ include
+
+(<HTML>
+<HEAD>
+<TITLE>)bbsname(: Participants in the )/conftitle( )Conference(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">\n)
+(U) flavor(meta)+ include
+(</HEAD>\n)
+
+% open the conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+global_header
+(<TABLE><TH ALIGN=right>login</TH><TH>&nbsp;&nbsp;</TH>
+<TH ALIGN=center>last time on</TH><TH>&nbsp;&nbsp;</TH>\n)
+mayseefname {(<TH ALIGN=center>name</TH>)} if
+print
+
+% goto the first participant
+() first_partic
+
+% loop through the rest of the users
+{ {break} if
+  /uname xdef
+  /lastin xdef
+  /loaduser defined {
+    uname [/usrname /usrstat] loaduser pop
+  } {
+    uname userinfo /usrstat xdef pop pop /usrname xdef pop pop
+  } ifelse
+  (<TR><TD ALIGN=right><A HREF="bio?login=)uname cgiquote(">)uname(</A></TD>)
+  (<TD></TD><TD>)lastin ztime(</TD><TD></TD>)
+  mayseefname {(<TD>)usrname quote(</TD>)} if
+  usrstat {
+    (<TD>&nbsp;) usrstat 1 eq {( [u)} {( [i)} ifelse (nvalidated]</TD>)
+  } if
+  (</TR>\n)
+  print
+  next_partic
+} loop
+
+(</TABLE><P>\n)
+
+flavor(footer)+ chain

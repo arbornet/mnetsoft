@@ -1,0 +1,7 @@
+                       Fronttalk Setting:  DATE
+
+Usage:  SET UID
+        SET NOUID
+
+The UID flag controls whether or not the uid number of the author is printed
+in the header of each item and response.  NOUID is the default.

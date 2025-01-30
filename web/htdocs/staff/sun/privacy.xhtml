@@ -1,0 +1,295 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: Privacy on Grex</title>
+</head>
+
+<body>
+  <div id="wrap">
+  <div id="header">
+    <h1>Grex Staff Notes: Privacy on Grex</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <p><a href="index.xhtml">[index]</a></p>
+
+  <p>The Grex staff very strongly believes in protecting the privacy
+  of our users. Users should feel reasonably confident that their
+  files and E-mail will not be looked at either by other users or by
+  the Grex staff. It is not possible, however, for us to give any
+  unconditional promises that the Grex staff will never look at a
+  user's files.</p>
+
+  <p>This document is meant to describe our thinking about the
+  kinds of circumstances under which staff might look at, or
+  distribute, private information about our users. Rather then
+  describe a rigid set of rules, it is a fairly exhaustive list of
+  the situations under which staff does use root access to look at
+  user's data. From time to time new situations come up that the
+  staff hasn't ever had to think about before. Such situations are
+  handled in a manner generally consistent with the examples listed
+  here.</p>
+
+  <p>These situations <em>always</em> require judgment. There are
+  some things that are clearly OK, and some things that are clearly
+  not, but there are wide gray areas, where a staff member must use
+  judgment. Often there is not time for staff members to discuss
+  the situation, and whichever staff member is on the spot must
+  make a judgment call.</p>
+
+  <p>Grex's situation is in some ways unique:</p>
+
+  <ul>
+    <li>Many users are hard to identify with certainty.</li>
+
+    <li>Grex has more than the usual number of hostile users.</li>
+
+    <li>Staff is volunteer, and does not always have time to handle
+    crises.</li>
+  </ul><p>There are several common situations may require a staff
+  member to look at a user's mail or files.</p>
+
+  <h2>Lost Passwords</h2>
+      <p>Every day, several users forget their passwords and ask staff
+      to reset them. Before resetting a password and mailing the
+      new password out to someone, it is necessary to be reasonably
+      sure that the person the password is sent to is the same
+      person who originally created the account. Since many people
+      give very little real information when they create an
+      account, determining this can be challenging.</p>
+
+      <p>In all cases, staff first tries to authenticate the person
+      using public information (<tt>.plan</tt> files,
+      <tt>.forward</tt> files, web pages, etc) or information
+      explicitly given to staff (the newuser log files). They don't
+      go further unless the user expresses some urgent desire to
+      get back on the account (usually to access email sent there).
+      Then, if the staff member feels inclined to believe that the
+      user is who he claim and if that user requests it, a staff
+      member may check to see if non-publicly readable files have
+      the contents the user says they have, or if there are other
+      clues to the owner's identity on the account.</p>
+
+      <p>When a staff member does this, it is important to keep the
+      search as narrow as possible, and not to repeat or reproduce
+      any information found, no matter how trivial, particularly
+      not to the presumed "owner" of the account.</p>
+
+  <h2>User Assistance</h2>
+      <p>Sometimes a user will have problems with their account, such
+      as a screwed up <tt>.login</tt> or mailbox file. In such
+      cases, users sometimes request a root to go in and fix it for
+      them, either because their accounts are so broken that they
+      can't access them or because they lack the knowledge to do it
+      themselves.</p>
+
+      <p>This is one of the clearest of the OK situations, but some
+      caution is still required. The staff member should get
+      <em>explicit</em> permission from the user, and should make
+      clear to the user what kinds of stuff the staff member is
+      likely to be looking at in the course of making repairs. The
+      staff member should be reasonably confident that this is the
+      real owner of the account, should try to look only at what
+      needs to be looked at, and should not repeat or reproduce
+      anything seen.</p>
+
+  <h2>Users Causing Problems on Grex</h2>
+      <p>Some users cause problems on the system by doing things like
+      running programs that place a heavy load on the system or
+      attempting to break into the system. When staff notices such
+      things (which may be things with obvious effects on the
+      usability of the system, or may just be subtle things that
+      show up in our logs), it is often somewhat urgent to find and
+      fix the problem. This may require looking into a user's
+      directory without any form of permission from the user.</p>
+
+      <p>NOTE: By "causing problems" we mean technical problems,
+      not social problems. No degree of rudeness and unpleasantness
+      would justify any staff investigation of a user's private
+      files or mail. Only actions that appear to undermine system
+      security or performance may do so.</p>
+
+      <p>In many cases it is unclear if the user is causing
+      problems deliberately or accidentally. If the user is running
+      a program that slows down the system, for example, a staff
+      member may have to look at the program to try to determine if
+      it could be the cause of a problem, and if it is deliberately
+      so or accidentally so. When staff looks at such a program,
+      the goal should be exclusively to determine its intent and
+      its impact on Grex. Copies should not be "borrowed"
+      (exception: Grex staffers sometimes collect copies of
+      programs designed to crash or crack the system for use in
+      testing our system security), and detailed information about
+      the program should not be repeated to anyone except other
+      staffers.</p>
+
+      <p>In cases where the problem appears accidental, staff
+      generally tries to contact the user and advise him on how to
+      avoid the problem in the future. Details of what staff may
+      have seen are not repeated to anyone except other
+      staffers.</p>
+
+      <p>In cases where the problem appears deliberate, staff may
+      look more broadly through the user's files to try to get a
+      complete picture of what he may have been doing. Quite often
+      relevant information is compiled and passed on to
+      administrators of the sites the user uses to connect to Grex,
+      and to other sites that may have been compromised by the
+      user. Copies are likely to go to national organizations like
+      CERT that track security problems. Grex staff may leave such
+      accounts active, and may do more than the usual amount of
+      monitoring of the activities of such users. However, even in
+      these situations, staff will try to keep information
+      unconnected with the problem private.</p>
+
+  <h2>Users Causing Problems on Other Systems</h2>
+      <p>Sometimes staff receives complaints about our users causing
+      problems on other systems on the internet. All such
+      complaints are taken with a degree of skepticism. The staff
+      always tries to figure out who is doing the complaining, and
+      insists on having enough details to judge the validity of the
+      complaint. Staff does not necessarily launch an investigation
+      every time someone somewhere complains about someone. There
+      must be some kind of evidence that the problem is not
+      completely imaginary.</p>
+
+      <p>Among the most common complaints are those about users
+      sending email that bothers someone. Staff will readily help
+      people figure out if the email really came from Grex, and
+      will give out information about Grex accounts that is
+      publicly accessible to any Grexer (NOTE: this includes
+      records of from where that user connects to Grex). Staff will
+      not look into any private information in response to such
+      complaints.</p>
+
+      <p>Complaints of Grex users attempting to crack other systems
+      may trigger a more thorough investigation of their accounts
+      on Grex, along the lines described in the previous
+      section.</p>
+
+    <h2>System Problems</h2>
+      <p>Under very rare circumstances, problems with the system might
+      lead us to more-or-less inadvertently see private files. For
+      example, if Grex had a serious disk crash, and staff members
+      were inspired to go to extreme lengths to recover user data
+      from the dead disk, they might need to see some of that data
+      in the course of reconstructing it. Similarly, a really ugly
+      failure of the mail system might require that staff look at
+      the mail that it failed on.</p>
+
+      <p>In this kinds of situations, staff members should make an
+      effort to find ways of dealing with system problems that do
+      not require actually looking at private information, and they
+      should not divulge any information they might run across.</p>
+
+  <h2>System Usage Research</h2>
+      <p>To do a good job of supporting our users, the staff needs to
+      have a good idea of how they use Grex. So staff sometimes
+      gathers of data about how people are using Grex. For example,
+      if Grex were considering eliminating a particular service,
+      the staff might collect information about which users are
+      using it. They might use the list of names to contact the
+      users asking for their input or advising them of a change.
+      They might publish statistics about how many users use a
+      service. However, staff would not publish a list of names of
+      people using a service.</p>
+
+      <p>This kind of research should be done only when it serves
+      some direct end. It shouldn't be just to satisfy idle
+      curiosity.</p>
+
+  <h2>Cooperation with Legal Authorities</h2>
+      <p>If Grex's staff is contacted by law enforcement officials
+      they will cooperate with any legal search for information on
+      Grex. Grex staff will freely give out any public information
+      that is already available to any Grex user (including records
+      of when people logged in and from where they did so) and will
+      assist in the understanding and interpretation of such
+      information. Private information, such as the contents of a
+      user's personal files and mail, would be made available only
+      if a valid search warrant were provided.</p>
+
+      <p>Grex's staff will not normally try to act on their own
+      judgments on issues like libel and slander. People with
+      problems of that sort should work through the proper legal
+      authorities, and Grex's staff will cooperate with those
+      authorities.</p>
+
+      <p>Though generally the Grex staff tries to keep anything
+      they see when looking at private files secret, a staff member
+      might someday see something that he or she feels must be
+      reported to the authorities. This would be a difficult
+      decision depending very much on the particulars of the case.
+      Grex has no fixed policy on how such cases should be dealt
+      with.</p>
+
+  <p>Staff's actions will also in general be influenced by their
+  judgment of how private a piece of data might be. Generally, one
+  should assume that any file that is not permitted to be readable
+  by all users is meant to be private. However, if it is something
+  like a <tt>.login</tt> file (a file full of Unix commands that is
+  automatically executed when the logs in) then staff tends to be
+  less scrupulous about privacy issues than if it is something like
+  a mail file. However, staff members need to be careful even in
+  looking at things that don't seem very sensitive. Things that
+  don't seem very private to us could still seem that way to the
+  user.</p>
+
+  <p>When staff does have to look at private information, the basic
+  principle is to look as narrowly as possible. For example,
+  instead of looking at a person's entire mail file, one would use
+  a program to extract and display <em>only</em> the information
+  being sought.</p>
+
+  <p>Remember, it is always possible for new situations to come up,
+  and it is always possible for staff members to make mistakes.
+  However scrupulous the staff tries to be, users are advised to
+  protect their privacy by <em>not</em> storing or sending
+  extremely sensitive private information through Grex (or any
+  other computer that you personally don't completely control).</p>
+  </div>
+
+  <div id="history">
+  <h6>Document History:</h6>
+  <p>Jun 2, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Initial Revision for staff review based on staff discussion.</p>
+
+  <p>Jun 8, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Updated with staff comments. Posted for user discussion.</p>
+
+  <p>Aug 21, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Updated to reflect user and staff comments.</p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: privacy.xhtml 1454 2014-03-26 23:24:04Z kentn $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

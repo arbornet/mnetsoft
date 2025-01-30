@@ -1,0 +1,19 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Unhide the response designated by conf, item, resp arguments
+
+% Open a conference
+open_conf {
+  (Error: Could not open conference ')conf('.\n)
+  halt
+} if
+
+% unhide the response
+0 hide_resp dup {
+  0 eq {(Response already erased or unhidden) halt} if
+  (Response not found) halt
+} if pop
+
+% go back to comments page
+/http_location
+  `backtalkurl(/)flavor(begin?show=all&item=)item(&conf=)conf' store

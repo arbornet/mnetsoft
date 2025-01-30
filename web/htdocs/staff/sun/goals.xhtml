@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: Security Goals</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1>Grex Staff Notes: Security Goals</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <p><a href="index.xhtml">[index]</a></p>
+  <p>The security problems on Grex are a little different than those
+  other systems have to deal with. On most systems, the first layer of
+  security is preventing unauthorized people from logging in to the
+  computer. But the whole point of Grex is to give away free accounts
+  to total strangers. We <em>want</em> unauthorized people to log into
+  our system.</p>
+
+  <p>From a security standpoint, this is both a blessing and a
+  curse. On the positive side, we don't have to worry about
+  mysterious people somehow logging into our system, because that
+  happens all the time anyway. Some things that are considered
+  secret on other systems aren't secret here.</p>
+
+  <p>For example, on most Unix systems, the login program responds
+  to all errors with the message "Login incorrect". They don't
+  differentiate between a bad login name or a bad password for a
+  perfectly good login name, because they don't want to give
+  hackers any clue about which login names exist. But Grex's login
+  program has been modified to give messages like "Password
+  Incorrect" and "No Such Login". Since anyone can get on our
+  system, the full list of login names is no secret. Making the
+  messages more helpful means staff gets fewer requests for help
+  and the requests we get are less confused.</p>
+
+  <p>On the negative side, we don't have that first layer of
+  security that other systems do, and we do still have things we
+  need to keep secure. To understand our approach to security, it
+  is important to first understand what our goals are. We need
+  security for several reasons:</p>
+
+  <ul>
+    <li>
+      <strong>Protecting the privacy of users.</strong>
+
+      <p>Our users should feel reasonably confident their mail and
+      their files are not being read by other people. They should
+      also know that other people can't log into their accounts and
+      pretend to be them. To ensure this, we need to do our best to
+      protect the <a href="passwd.xhtml">security of the
+      passwords</a>, and of the root account (which has access to
+      everything).</p>
+    </li>
+
+    <li>
+      <strong>Restricting net access.</strong>
+
+      <p>We are happy to give people anonymous access to our
+      system, and we are prepared to deal with having mysterious
+      people doing mysterious things on our system, but most of the
+      rest of the Internet doesn't feel this way. Because of this,
+      we allow anonymous people to come into Grex from the net, but
+      we restrict who can go out to the net from Grex. This
+      discourages people from using Grex as an anonymizer while
+      attacking other systems. Having those restrictions means we
+      must enforce them. This is done on Grex through
+      <a href="blocks.xhtml">modifications of the Unix
+      kernel</a>.</p>
+    </li>
+
+    <li>
+      <strong>Prevent resource hogging.</strong>
+
+      <p>Grex has very limited resources spread over an awful lot
+      of people. One user hogging a disproportionate amount of our
+      net bandwidth or CPU can prevent hundreds of other users from
+      using Grex at all. Unfortunately, technical fixes to these
+      kinds of problems usually cost too much in overall system
+      performance, or in limiting legitimate use of the system to
+      be desirable. In most cases, we deal with such problems on a
+      case-by-case basis, often simply by talking to people instead
+      of installing technical fixes. For example, we don't use the
+      disk quota systems built into SunOS because they slow down
+      the system too much. Instead we manually send mail to people
+      asking them to reduce their usage, and manually reduce disk
+      space for any users who aren't cooperative. However, when
+      dealing with things manually becomes too much of a burden on
+      our limited staff time, we do install hard resource limits,
+      notably we (mainly Marcus Watts) have modified our mail
+      software to limit the sizes of mailboxes.</p>
+    </li>
+
+    <li>
+      <strong>Prevent harassment of users.</strong>
+
+      <p>Occasionally one user will decide that he or she needs to
+      interfere with another user's use of Grex, perhaps by
+      flooding their screens with messages or otherwise messing
+      things up for them. This kind of behavior is never welcome on
+      Grex, and we believe in providing people with tools that
+      allow them to shut out unwelcome messages. The standard Unix
+      messaging programs "write" and "talk" have been modified here
+      to limit abuse.</p>
+    </li>
+
+    <li>
+      <strong>Tracking problem users.</strong>
+
+      <p>From time to time we have users who come in and "try the
+      locks," that is, attempt to break our security. We consider
+      such people rather puzzling. Many of them pretend to be some
+      kind of "information freedom fighters," but the only secrets
+      on Grex are the personal mail and files of our users. Taking
+      advantage of the free access we give away to try to pry into
+      the private business of other users, sneak into other systems
+      on the net, or harass people is downright rude. So we like to
+      be able to track such rude people and turn them in to the
+      proper authorities for suitable chastisement. That means we
+      log everything, monitor the logs continually, and keep the
+      logs for a long, long time. If you want to "test the locks"
+      purely to satisfy your own curiosity, please do send mail to
+      <a href="mailto:help@grex.org">help@grex.org</a>
+      <em>first</em>, and please do advise us if you notice any
+      problems. Thanks.</p>
+    </li>
+  </ul>Grex's staff operates with a certain amount of secrecy.
+  Staff meetings, unlike board meetings, are not open to the
+  public. The staff conference is the only closed conference on
+  Grex. This is done for several reasons. First, we sometimes have
+  to discuss the activities of individual users who may be causing
+  problems of the sort described above. We don't want to discuss
+  people's usage in public, particularly if they turn out to be
+  engaged only in innocent activities. Second, there is usually
+  some time lag between the time we discover a security problem and
+  the time we fix it. We'd like to keep the existance of problems
+  secret for that time period, if possible.
+
+  <p>In general, however, we do not believe in keeping our security
+  arrangements secret. This is why we have published detailed
+  descriptions of most of our security arrangements on the web. We
+  also maintain a public discussion forum on technical issues
+  related to the operation of Grex in the
+  <a href="/cgi-bin/backtalk/peek%3Agarage">garage conference</a>. As a general
+  principle, security by obscurity is generally very poor security.
+  People who want to crack your security to steal things are often
+  highly motivated, and secrets will leak out. By publishing our
+  methods, we put nice people who are merely interested in security
+  systems on an equal footing with the bandits. The nice people
+  will probably let us know if they notice any weaknesses. The
+  bandits probably won't. Thus publishing our security arrangements
+  should make them more secure in the long run.</p>
+
+  <p>Grex runs SunOS 4.1.4, but has made many modifications to the
+  basic software. Other technical notes give more detailed
+  information about security-related aspects of these modifications
+  to Grex:</p>
+
+  <ul>
+    <li><a href="passwd.xhtml">The Password Database</a> -
+    description of how passwords are stored and accessed.</li>
+
+    <li><a href="blocks.xhtml">The Kernel Blocks</a> - descriptions
+    of kernel modifications to restrict outgoing net access.</li>
+  </ul>
+
+  <div id="history">
+  <h4>Document History:</h4>
+  <p>
+  Mar 30, 1998: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+  Minor updates and corrections.<br />
+
+  Nov 19, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+  Expansion of discussion of secrecy.<br />
+
+  Aug 13, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+  Initial Revision.<br /></p>
+  </div>
+  </div>
+
+</div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+</body>
+</html>

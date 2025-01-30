@@ -1,0 +1,149 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk is an advanced web-based computer conferencing system written
+and distributed by Jan Wolter and Steve Weiss.  For general information
+about Backtalk, see the
+<A HREF="http://www.unixpapa.com/backtalk">Backtalk</A> home page.
+This document describes the procedure for installing Backtalk on a Unix
+system.
+The <A HREF=glossary.html>Backtalk Glossary</A> will help you with some
+of the terminology used here.
+<P>
+We have expended substantial effort to make the installation process for
+Backtalk as simple as possible, but it is still more complex than most other
+packages.  There is more to it than just doing
+"<TT>./configure; make install</TT>".
+(Though that might be all it takes in a few cases.)
+<P>
+The complexity of installing Backtalk is partly due to Backtalk's high degree
+of configurability, and partly due to the necessity of interacting with
+your http server, which may be configured many different ways.
+The installation process is not, however, as complex as the bulk of this
+installation manual would suggest (because we do rather run on, don't we?).
+However we do recommend reading through this manual as you do the installation.
+If you have questions or problems, please
+contact us at <A HREF="mailto:backtalk@hvcn.org">backtalk@hvcn.org</A>,
+so that we can help you and refine this installation guide.
+<P>
+Backtalk must run on a host running some brand of Unix.  Sorry, no Windows
+or Macintosh OS9 versions are available (or likely to be any time soon).
+Our objective is to make it work on any flavor of Unix.
+It has actually been tested on a fair variety of Unixes,
+including (in decreasing order of thoroughness):
+<UL>
+<LI>Linux
+<LI>SunOS 4.1
+<LI>OpenBSD
+<LI>FreeBSD
+<LI>NetBSD
+<LI>Solaris
+<LI>Mach (NeXTStep)
+<LI>Ultrix
+</UL>
+It probably works on almost any other Unix as well, probably including
+Macintosh OSX.
+<P>
+One of the key decisions that you will have to make,
+and which will impact much of the installation process,
+is what kind of authentication you wish to use.
+When Backtalk users connect to your conferencing system, they will give a
+login name and a password to identify themselves.  Backtalk can be configured
+one of three main ways:
+<UL>
+<LI>
+<EM>Authenticate with Backtalk accounts.</EM>
+The login/password gives access to Backtalk,
+but does not let users log onto your system via telnet, rlogin, or ftp.
+The Backtalk accounts are not real Unix accounts, instead the
+authentication database is maintained directly by Backtalk.
+This is the simplest and most common way to set up Backtalk.
+(Note that Backtalk will maintain a directory for each user's files that it
+calls a "home directory" and it will assign a unique ID number to each user
+that it calls a "uid number" - but these values are <EM>not</EM> real Unix
+"home directories" or "uid numbers".)
+<P>
+<LI>
+<EM>Authenticate with real Unix accounts.</EM>
+The host system's /etc/passwd database will be used to authenticate
+Backtalk users.
+This way any user that can telnet to the system can use the same login
+and password to run Backtalk.
+Backtalk's files will be kept in the user's actual Unix home directory,
+and will be owned by the user instead of Backtalk,
+so they can be shared with Picospan or command-line Yapp.
+That is the primary reason you might prefer this configuration
+- if you want to allow your users
+a choice between conferencing with a telnet-based interface like Picospan
+or Yapp, or with a web-based interface like Backtalk.
+None of the account administration tools included in Backtalk will work
+in this configuration
+(you should use the standard Unix account administration tools to create,
+destroy and edit accounts).
+<P>
+Installation will be a bit more complex than the other option, and you
+will need to obtain the separately distributed
+<A HREF=http://www.unixpapa.com/mod_auth_external.html>mod_auth_external</A>
+package, and the "pwauth" program included in that package.  This is a free
+extension to the Apache http server which enables secure authentication from
+Unix shadow password files.
+<P>
+<LI>
+<EM>Some Other Existing Authentication System.</EM>
+If you already have some kind of authentication system running on your
+web site that lets users log in with password and login ID, then you might
+want those logins to work for Backtalk too instead of making your users
+login separately to use Backtalk.
+<P>
+Backtalk supports a fairly large number
+of moderately standard authentication databases, so there is at least a
+chance that one of the existing configurations will work for you without
+modification.  If your user database is in an SQL database, then it may be
+fairly easy to make Backtalk work with that database, as Backtalk's SQL
+interface is pretty easily customizable.  Otherwise, you may have to do
+some C coding to implement a new authentication module for Backtalk.
+This is a bit more challenging, but it's still probably going to be a lot
+easier to modify Backtalk to play nicely with your other applications than
+to modify them to play nicely with Backtalk.
+<P>
+These installation instructions won't tell you too much about how to customize
+the authentication system beyond the normal array of options built into
+Backtalk.  There is a separate document with <A HREF=auth.html>advice on how
+to customize Backtalk's authentication system</A> to work with pre-existing
+user databases.  Aside from that, the installation is probably going to be
+similar to the standard "backtalk accounts" installation procedure described
+here.
+</UL>
+<P>
+To set up Backtalk with real Unix accounts, you will need root access
+on your system.
+An installation with Backtalk accounts, however, can be done by anyone
+with enough access to install cgi-bin programs, though it is simpler if you
+have root access.
+<P>
+Backtalk can be convinced to cooperate nicely with web versions of Yapp, but
+it's a somewhat finicky process.  Getting along with command-line Yapp or
+Picospan is simpler.
+<P>
+Once you've decided which of these major variations you want, you are ready
+to start the installation process.  Separate pages describe each part of
+the installation process:
+<OL>
+<LI><A HREF="install1.html">Backtalk Configuration</A>.
+<LI><A HREF="install2.html">Compilation</A>.
+<LI><A HREF="install3.html">SQL Server Configuration</A>.
+<LI>Installation with <A HREF="install4a.html">Backtalk accounts</A>
+    or <A HREF=install4b.html>Unix accounts</A>.
+<LI>Apache Configuration for <A HREF="install5a.html">Backtalk accounts</A>
+    or <A HREF=install5b.html>Unix accounts</A>.
+<LI><A HREF="install6.html">Crontab Configuration</A>.
+<LI><A HREF="install7.html">Customization</A>.
+</OL>
+</BODY></HTML>

@@ -1,0 +1,198 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% twitlist script
+%
+% This is the form generator and query handler for editing the user's
+% twit list.  If run without the "op" parameters, it just displays
+% the twitlist, with controls for editing it
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%                   (V) = just display the menu.
+%    login=	User whose .cflist is to be edited - default is current user.
+%    twit=	(D,A Only) login name of user to be added or deleted.
+
+flavor(config)+ include
+/extern_bio constant {(lib/biolink) include} if
+
+% Do various access checks
+id ! {
+   (You must log in to be able to edit twit lists.\n)
+   stop
+} if
+
+/login defined ! {
+  /login id def
+  /whose (your) def
+} {
+  login id ne {
+    amadm {
+      % administrators can edit user's .backtalk files
+      login selectuser
+      /whose login('s)+ def
+    } {
+      (Only )login( or an administrator can change )login('s twit list.\n)
+      stop
+    } ifelse
+  } {
+    /whose (your) def
+  } ifelse
+} ifelse
+
+% Print the page header
+(<HTML>
+<HEAD>
+<TITLE>)bbsname(: Edit )whose( ignore list</TITLE>
+</HEAD>
+<BODY )background(>
+) global_header
+
+% set some defaults
+/edited 0 def		% don't write out new list
+/err () def		% no error message
+/op defined ! {/op (V) def} if
+/twit defined ! {/twit () def} if
+
+% Load the twitlist into memory
+/twitlist () def
+/loaduser defined {
+  () /twitlist loaduser pop
+} {
+  (*.backtalk) /twitlist loadvar pop
+} ifelse
+(*.backtalk) filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt {
+      /op (V) def
+      /err (Ignoring reloaded query.\n) def
+      /twit () def
+   } if
+} if
+
+% Do add case - sorts the list while inserting the new twit
+op (A) eq {
+  twit {
+    twit twitlist (,) inlist !  {
+      % Construct an array of arrays and asort it
+      [ [ twit ]
+      twitlist
+      { (,) parse 
+	dup ! {pop break} if
+	[ exch ] exch
+      } loop
+      pop
+      ] 0 1 asort
+
+      % form it back into a comma separated string
+      () exch
+      {
+	0 get
+	exch dup {(,)+} if
+	exch +
+      } forall
+      /twitlist xdef
+      /edited 1 def
+    } {
+      /err `(user )twit( is already in your ignore list.\n)' def
+    } ifelse
+  } {
+    /err (No username to add given.\n) def
+  } ifelse
+} if
+
+% Do deletion case
+op (D) eq {
+  twit {
+    `(,)twitlist(,)' `(,)twit(,)' (,) 0 replace
+    dup length 2 - 1 exch substr
+    /twitlist xdef
+    /edited 1 def
+  } if
+} if
+
+edited {
+  /saveuser defined {
+    () /twitlist saveuser (*.backtalk)
+  } {
+    (*.backtalk) dup /twitlist savevar
+  } ifelse
+  filedate cvi /filetime xdef
+} if
+
+(<P>
+)
+
+% display any error messages
+err {
+   (<H2>Error:</H2>)err(<P>\n)
+} if
+
+
+% display a caption
+(<H2>Edit )whose( Current Ignore User List:</H2>\n)
+amadm ! {
+  Responses cap( by users whose login id's appear in the following list\n)
+  (will be automatically hidden in all )Conferences(:<P>\n)+
+} if
+
+/url [(<A HREF=twitlist?tm=)filetime
+  /login defined {(&login=)login} if ] def
+
+print
+
+(<TABLE BORDER=1 CELLPADDING=2>\n)
+
+twitlist ! {(<TR><TD>No Users Listed</TD></TR>\n)} if
+
+% Print out the current contents of the list
+{
+   twitlist (,) parse
+   dup ! {pop break} if
+   /twit xdef /twitlist xdef
+
+   (<TR><TD BGCOLOR=RED>)url(&op=D&twit=)twit quote(>Remove</A></TD>\n)
+   (<TD><A HREF=")
+   /extern_bio constant { twit extern_view_bio }
+     { (bio?login=)twit cgiquote } ifelse
+   (">)twit quote(</A></TD>\n)
+   /pushuser defined {
+     % Backtalk 1.4 or later
+     twit /usrname pushuser {
+       pop (<TD BGCOLOR=YELLOW><EM>No Such User</EM>)
+     } {
+       (<TD>) exch dup {quote} {pop (&nbsp;)} ifelse
+     } ifelse
+   } {
+     % Backtalk 1.3 or earlier
+     twit userinfo pop pop ! {
+	pop pop pop (<TD BGCOLOR=YELLOW><EM>No Such User</EM>)
+     } {
+       exch pop exch pop (<TD>) exch dup {quote} {pop (&nbsp;)} ifelse
+     } ifelse
+   } ifelse
+   (</TD></TR>\n)
+} loop
+(</TABLE>\n)
+
+print
+
+(<P><HR><H2>Ignore Another User:</H2>
+To add a user to your ignore list,
+type their login name into the box below
+and click the "Add" button
+<P>
+<FORM METHOD=post ACTION=twitlist>
+<STRONG>Login name:</STRONG>
+<INPUT TYPE=hidden NAME=op VALUE="A">
+<INPUT TYPE=hidden NAME=tm VALUE=)filetime(>\n)
+/login defined {(<INPUT TYPE=hidden NAME=login VALUE=)login(>\n)} if
+(<INPUT TYPE=text NAME=twit SIZE=20>
+<INPUT TYPE=submit VALUE="Add">
+</FORM>
+)
+
+flavor(footer)+ chain

@@ -1,0 +1,363 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% hotlist script
+%
+% This is the form generator and query handler for editing the user's
+% conference hot list.  If run without the "op" parameters, it just displays
+% the cflist, with controls for editing it and a list of conferences that
+% can be added to it.
+%
+% This makes no attempt at locking.
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (M) = move an item to a different position in the list
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%                   (V) = just display the menu.
+%    login=	User whose .cflist is to be edited - default is current user.
+%    global=    If defined, edit global dflt.cflist instead of user list.
+%    oldn=	(M,D Only) Line number of source item.
+%    newn=      (M,A Only) Line number of destination (insert before this).
+%    cname=     (A Only) New conference
+%    tm=	Time file was last modifed.
+
+flavor(config.bt)+ include
+
+/abalone.menujump 0 def
+
+(Edit Hotlist) (S)
+[/op /login /global /oldn /newn /cname /tm]
+[/abalone.menujump] []
+flavor(header.bt)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop.bt)+ include
+
+% Do various access checks
+id ! {
+   (</TABLE>You must log in to be able to edit your hot list.</BODY></HTML>\n)
+   stop
+} if
+
+/global defined {
+   amadm ! {
+      (</TABLE>Only the conference administrator
+      can edit the default hot list.</BODY></HTML>\n)
+      stop
+   } if
+   /filehandle (*dflt.cflist) def
+   /mine 0 def
+   /whose (Global Default) def
+} {
+   /whose (Your) def
+   /login defined ! {
+      /login id def
+   } {
+      login id ne {
+	 amadm {
+	    % administrators can edit user's .cflist files
+	    login selectuser
+	    /whose login('s)+ def
+	 } {
+	    (</TABLE>Only )login( or an administrator can change )
+	    login('s hot list.</BODY></HTML>\n)
+	    stop
+	 } ifelse
+      } if
+   } ifelse
+   /mine 1 def
+   /filehandle (*.cflist) def
+} ifelse
+
+(<TR><TD CLASS=mast VALIGN=BOTTOM><SPAN CLASS=bigbold>Edit )
+whose( )Conference cap( Hot List</SPAN>
+<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+</TD><TD CLASS=mast ALIGN=RIGHT>
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>
+<OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+sessions { id { (<OPTION VALUE=logout>Logout</OPTION>\n)} if } if
+(<OPTION VALUE=@0help:hotlist>Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>
+)
+
+% set some defaults
+/cmds 1 def		% display commands on listing
+/rem 0 def		% don't kill anything
+/add 0 def		% don't add anything
+/edited 0 def		% don't write out new list
+/click 1 def		% click on conf titles to goto conf
+/op defined ! {/op (V) def} if
+/oldn defined {oldn cvi} {0} ifelse /oldn xdef
+/newn defined {newn cvi} {0} ifelse /newn xdef
+
+% Load the hotlist into memory
+mine cflist_array /cflist xdef
+filehandle filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt {
+      /op (V) def
+      /cname () def
+   } if
+} if
+
+% Do add case
+op (A) eq {
+   newn ! {
+      /cmds 0 def
+   } {
+      % Do the insertion
+      /add 1 def
+   } ifelse
+} if
+
+% Do move case
+op (M) eq {
+   oldn ! {
+      /op (V) def
+   } {
+   newn ! {
+      % Do the deletion, and ask for insertion location
+      /cmds 0 def
+      /rem 1 def
+   } {
+      % Do the insertion
+      /add 1 def
+   } ifelse } ifelse
+} if
+
+% Do deletion case
+op (D) eq {
+   oldn ! {
+      /op (V) def
+   } {
+      % Do the deletion
+      /rem 1 def
+   } ifelse
+} if
+
+/ncf cflist length def
+
+% if "rem" flag set, delete oldn
+rem {
+   /i oldn 1 - def
+   /cname cflist i get def  % save name of element we are deleting
+   cflist i () put
+   /edited 1 def
+   /ncf dec
+} if
+
+% if "add" flag set, insert newn
+add {
+   /i newn 1 - def
+   i cflist length ge {
+     % add to end of array
+     cflist cflist length cname put
+   } {
+     % prepend inserted name to array element
+     cflist i `cname (\n) cflist i get' put
+   } ifelse
+   /edited 1 def
+   /ncf inc
+} if
+
+% construct a newline separated list of conference names
+/cftext `cflist {dup {(\n)} if} forall' def
+
+edited {
+  cftext filehandle write
+  filehandle filedate cvi /filetime xdef
+} if
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=colhead>)
+
+% display a caption
+cmds {
+  (Delete or Move )Conferences cap( )
+  /global defined {
+     (in the Current Default Hot List for All Users:)
+  } {
+     (in )whose( Current Hot List:)
+  } ifelse
+
+  /url [(<A HREF=hotlist?tm=)filetime
+        /login defined {(&login=)login} if
+        /global defined {(&global=1)} if
+        ] def
+} {
+  op (A) eq {
+     (Where do you want to insert the )cname( )Conference(?\n)
+  } {
+     (To which location do you want to move the )Conference(?\n)
+  } ifelse
+
+  /click 0 def
+  /url [(<A HREF=hotlist?op=)op(&tm=)filetime
+        /login defined {(&login=)login} if
+        /global defined {(&global=1)} if
+        /oldn defined {(&oldn=)oldn} if
+        /cname defined {(&cname=)cname cgiquote} if
+        ] def
+ 
+} ifelse
+(</TD></TR>\n)
+
+print
+
+% print an image tag - give the gif name as an argument
+/img {
+  `(<IMG SRC=")imghost(/)flavor' exch(" BORDER=0 HEIGHT=7 WIDTH=23>)
+} def
+
+/odd 1 def
+
+cftext {
+  /nocf 0 def
+  /cnt 0 def
+
+  % Print out the current contents of the file
+  {
+     /cnt inc
+
+     cftext (\n) clip /cname xdef /cftext xdef
+
+     % Skip comment lines and blanks
+     cname { cname 0 1 substr (#) ne {
+
+       (<TR>\n)
+       cmds {
+	  /class odd{(odd)}{(even)}ifelse def
+	  /odd 1 odd - def
+	  (<TD CLASS=)class(>)
+	  url(&op=D&oldn=)cnt(>)(erase.gif)img(</A>&nbsp;\n)
+	  ncf 1 gt {url(&op=M&oldn=)cnt(>)(move.gif)img} if
+	  (</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n)
+       } {
+	  (<TD CLASS=odd>)url(&newn=)cnt(>)(here.gif)img
+	  (</A></TD></TR>\n<TR><TD CLASS=even>)
+	  (nothing.gif)img(\n)
+	  /odd 1 def
+       } ifelse
+
+       click {
+	  (<A HREF=confhome?conf=)cname(>)cname cap quote
+	  (</A>)
+       } {
+	  cname quote
+       } ifelse
+       (</TD></TR>\n)
+     } if } if
+
+     cftext ! {pop break} if
+
+  } loop
+  cmds {
+    (</TABLE>\n)
+    (click on )(erase.gif)img( to delete or )(move.gif)img( to move.)
+  } {
+    (<TR><TD CLASS=odd WIDTH=25>)url
+    (&newn=)cnt 1 +(>)(here.gif)img(</A></TD></TR>\n)
+    (</TABLE>\n)
+    (click on )(here.gif)img( to insert.)
+  } ifelse
+} {
+  /nocf 1 def
+  (<TR><TD CLASS=odd>No )Conferences cap( Listed</TD></TR></TABLE>\n)
+} ifelse
+
+print
+
+cmds {
+
+  (<P><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+  <TR><TD CLASS=colhead COLSPAN=2>Add a )Conference cap(:</TD></TR>
+  <FORM METHOD=post ACTION=hotlist>
+  <TR><TD CLASS=odd COLSPAN=2><STRONG>)Conference cap( name:</STRONG>&nbsp;
+  <INPUT TYPE=hidden NAME=op VALUE="A">\n)
+  nocf {(<INPUT TYPE=hidden NAME=newn VALUE=1>\n)} if
+  (<INPUT TYPE=hidden NAME=tm VALUE=)filetime(>\n)
+  /login defined {(<INPUT TYPE=hidden NAME=login VALUE=)login(>\n)} if
+  /global defined {(<INPUT TYPE=hidden NAME=global VALUE=1>\n)} if
+  (<INPUT TYPE=text NAME=cname SIZE=20>&nbsp;
+  <INPUT TYPE=submit VALUE="Add It">
+  </TD></TR></FORM>\n)
+  print
+
+  /usepublic_txt constant {
+
+    bbsdir(/public.txt)+ read /pt xdef
+    /odd 1 def
+
+    {
+      pt (\n) parse dup ! {break} if
+        /work_line xdef /pt xdef
+
+      work_line pt_confline sgrep {
+        % found a conference line
+	aload /work_line xdef     % conference description
+	      /cname xstore pop   % conference name
+        /class odd{(odd)}{(even)}ifelse def
+	/odd 1 odd - def
+        (<TR><TD CLASS=)class( WIDTH="20%">)url(&op=A&cname=)cname
+	nocf {(&newn=1)} if (>)(here.gif)img(</A>&nbsp;\n)
+        (<A HREF=confhome?conf=)cname(>)cname cap quote
+	(</A></TD><TD CLASS=)class(>)
+        work_line quote(</TD>)
+      } {
+        work_line pt_headline sgrep {
+          % found a header line
+	  1 get /work_line xdef
+          (<TR><TD CLASS=sechead COLSPAN=2><STRONG>)
+	  work_line quote(:</STRONG></TD>\n)
+	} if
+      } ifelse
+      (</TR>)
+    } loop
+  } {
+    (*confmenu) read /cm xdef
+
+    {
+      cm (\n) clip exch /cm xdef
+
+      % Skip comment lines
+      dup 0 1 substr (#) eq {pop continue} if
+
+      % Pick apart the line
+      (:) clip /cname xdef
+      (:) clip /ctitle xdef /cdes xdef
+
+      cname {
+	% a conference
+        /class odd{(odd)}{(even)}ifelse def
+	/odd 1 odd - def
+        (<TR><TD CLASS=)class( WIDTH="20%">)url(&op=A&cname=)cname
+        nocf {(&newn=1)} if
+	(>)(here.gif)img(</A>\n&nbsp;<A HREF=confhome?conf=)cname
+	(>)ctitle quote(</A></TD><TD CLASS=)class(>) cdes quote(</TD>\n)
+      } {
+	 % a heading
+        (<TR><TD CLASS=sechead COLSPAN=2><STRONG>)
+	ctitle quote(:</STRONG> )cdes quote(</TD>\n)
+      } ifelse
+      (</TR>)
+
+      cm ! {pop break} if
+
+    } loop
+  } ifelse
+  (</TABLE>\n)
+  (click on )(here.gif)img( to add.)
+
+} if
+
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "style/default.css";
+  </style>
+
+  <title>E-mail on Grex</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>E-mail on <span id="grex"><em>Grex</em></span></a></h1>
+  </div>
+  <div id="menu">                                                               
+    <ul>                                                                        
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>  
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>                  
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>  
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>                        
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>         
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>             
+    </ul>                                                                       
+  </div> 
+
+  <div id="content">
+  <p>Grex provides free email accounts to anyone who wants one.
+  This service is made available in the spirit of improving
+  people's ability to communicate with each other.</p>
+
+  <p>Once you have a validated Grex account, your E-mail address
+  is either <strong>accountname@grex.org</strong> or
+  <strong>accountname@cyberspace.org</strong>. You may use whichever
+  address you prefer.</p>
+
+  <p>Grex offers <strong>POP3 and IMAP E-mail</strong> connections
+  for use with an E-mail client supporting either of those protocols.
+  Grex requires a secure connection for this to work.  As an example,
+  here's how to connect with IMAP from your local computer running
+  an e-mail client, such as Thunderbird: Tell your client to use
+  <strong>grex.org</strong> or <strong>cyberspace.org</strong> as
+  the e-mail server.  Connect on <strong>port 143</strong> with
+  <strong>STARTTLS</strong> (SSL/TLS and port 993 will also work)
+  for security, and use your Grex username and password to
+  authenticate.</p>
+
+  <p>Grex does not support Web-based mail right now.</p>
+
+  <p>You may also use a text terminal to read or send E-mail from Grex.
+  To do this, you can <a href="ssh://grex.org">SSH to Grex</a>.
+  Note: this link will only work if your browser supports the SSH
+  protocol or if your browser has been configured to start an SSH 
+  client. If it doesn't work, you may need to change your browser's
+  preferences, or in some cases, <a href="ssh.xhtml">download an SSH 
+  client application</a> program.</p>
+
+  <p>Once you have connected by SSH and logged in, you can use any of
+  the mail clients available on Grex. Currently, we support <tt>alpine,
+  elm, mutt, nmh, and mail.</tt> We will consider installing 
+  other programs, upon request.</p>
+
+  <p>This process of connecting to read mail can be greatly simplified
+  and made more secure by the use of <a href="ssh.xhtml">public-key
+  cryptography with SSH</a>. <strong>SSH</strong> is a secure means
+  of communication because it uses data encryption.</p>
+
+  <p>E-mail is a very popular service, and so it is necessary for
+  Grex to establish an acceptable use policy for E-mail. Ideally,
+  we would not like to have many rules, but we have found that we
+  need to have a few in order to assure the smooth flow of mail to
+  so many users.</p>
+
+  <h3>Acceptable Use Policy for Grex E-mail</h3>
+
+  <ul>
+    <li><strong>Do not send unsolicited or unwanted mail</strong>. This
+    includes mail intended to harass other users.</li>
+
+    <li>Do not send or encourage anyone to send you messages longer
+    than <strong>100k</strong>. Usually mail that large contains an
+    attached file, often a binary file. If you must send or receive
+    attachments, make sure that they are small and infrequent.</li>
+
+    <li>If you choose to have your mail forwarded to another
+    machine, you must limit the forwarding to a single site. Do not
+    use the forwarding service to setup a mailing list.</li>
+
+    <li>If forwarding mail, do not forward any bulk mail. Bulk mail
+    is mail that comes from a list server. Instead, you must
+    unsubscribe your Grex account from the list server, and
+    subscribe to the list from where you wish to receive your
+    mail.</li>
+
+    <li><strong>Read your mail regularly.</strong> If you are receiving
+    mail from a list server that you do not have time to read,
+    unsubscribe from the mailing list. If your mailbox gets too big,
+    your mail will bounce.</li>
+  </ul>
+
+  <p>Users interested in using other mail clients should send email
+  to <a href="mailto:help@grex.org">help@grex.org</a>.</p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: email.xhtml 1407 2014-03-22 22:21:57Z kentn $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

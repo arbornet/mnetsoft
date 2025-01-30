@@ -1,0 +1,67 @@
+% Backtalk Pistachio Interface -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% itemattach script
+%
+% This script prompts for an attachment for an item.
+
+(<HTML>
+<HEAD>
+<TITLE>Attach a File to a Posting</TITLE>
+)/metatags(</HEAD>
+)
+
+flavor(config)+ include
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+global_header
+
+/aapost defined {
+   baa_file {
+     % Convert temporary attachment into a real attachment
+     % Item number may not prove correct - but who cares?
+     open_conf {(Conference )conf( does not exist) halt} if
+     /item maxitem 1 + def
+     baa_file desc 0 make_attach /baa_file xdef
+     % append to the attachment list
+     /attachments `attachments {attachments (,)} if baa_file' def
+   } if
+} {
+  /attachments () def
+} ifelse
+
+
+(<H2>Attach a File</H2>\n)
+/baa_file defined { baa_file get_attach ! {
+    /d xdef pop pop (Attached: )d quote(<P>\n)
+} if } if
+(<FORM NAME=f ACTION="enterpost" METHOD=POST ENCTYPE="multipart/form-data">
+<INPUT TYPE=hidden NAME=aapost VALUE="1">
+<INPUT TYPE=hidden NAME=pseudo VALUE=")pseudo quote(">
+<INPUT TYPE=hidden NAME=text VALUE=")text quote(">
+<INPUT TYPE=hidden NAME=title VALUE=")title quote(">
+<INPUT TYPE=hidden NAME=texttype VALUE=")texttype quote(">
+<INPUT TYPE=hidden NAME=conf VALUE=")conf quote(">
+<INPUT TYPE=hidden NAME=csel VALUE=")csel quote(">\n)
+/nextnew defined { (<INPUT TYPE=hidden NAME=nextnew VALUE=")nextnew(">\n) } if
+(<INPUT TYPE=hidden NAME=attachments VALUE=")attachments quote(">
+<TABLE BORDER=0><TR><TD>
+File&nbsp;to&nbsp;Attach:</TD><TD><INPUT TYPE=file NAME=baa_file SIZE=35>
+</TD></TR>
+<TR><TD>
+Description:</TD><TD><INPUT TYPE=text NAME=desc SIZE=55>
+</TD></TR>
+<TR><TD>
+Attach&nbsp;Another?</TD><TD>
+<INPUT TYPE=radio NAME=atch VALUE=1>&nbsp;Yes&nbsp;&nbsp;&nbsp;
+<INPUT TYPE=radio NAME=atch VALUE=0 CHECKED>&nbsp;No
+</TD></TR>
+<TD COLSPAN=2>
+</SELECT>
+<INPUT TYPE=submit VALUE="Continue">
+</TD></TR></TABLE>
+</FORM>
+</BODY>
+</HTML>
+)

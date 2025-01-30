@@ -1,0 +1,44 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_kill script
+%
+% For the kill command, generate a popup window asking for confirmation.
+
+flavor(config)+ include
+
+% Open conference and item, just to get info
+flavor(openconf)+ stopped { ( Backtalk internal error: )exch(\n) halt } if
+(1) item this_item {(No )Item+( )+item( in )conf( )Conference+ halt } if
+read_item {(No )Item+( )+item( in )conf( )Conference+ halt } if
+pop
+
+(<HTML>\n)
+
+mainwin !  {
+  (<HEAD><SCRIPT Language="Javascript">\n<!--
+function inmain() {
+opener.location=document.pop.action+'?conf=)conf(&csel=)csel(&item=)item
+  since {(&since=)since}if
+  /nextnew defined {(&nextnew=)nextnew}if
+  (';
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>
+<FORM NAME=pop ACTION=")backtalkurl(/)flavor(kill" METHOD=POST)
+mainwin!{( onSubmit="return inmain();")} if (>
+You have asked to delete item )item(, entitled ')title quote(', entered
+by ')authorid('.  This operation is not reversable.<P>
+<INPUT TYPE=hidden NAME=conf VALUE=")conf(">
+<INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+<INPUT TYPE=hidden NAME=item VALUE=")item(">\n)
+since {(<INPUT TYPE=hidden NAME=since VALUE=")since(">\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=")nextnew(">\n)} if
+(Really Delete? <INPUT TYPE=submit VALUE="Yes">)
+mainwin!{
+  ( <INPUT TYPE=submit VALUE="No" onClick="window.close(); return false;">)
+}if
+(</FORM></BODY></HTML>\n)

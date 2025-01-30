@@ -1,0 +1,518 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Conference Creation</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Conference Creation</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk conference creation can be done either through the web interface,
+or from Unix.
+Both procedures are described here.
+
+<H2>Conference Creation From Backtalk:</H2>
+
+To create a new Backtalk conference, follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> create the conference.
+<P>
+There is a link labelled "Make a New Conference" on the administration page.
+Click on this.
+<P>
+You will be shown a form with two boxes.  The first box asks for the name
+of the conference.  This should be one word, all lower case letters and
+digits.  We recommend using a name followed by a version number,
+like ``martian1'' for the first version of the Martian Conference,
+but this isn't necessary.
+<P>
+The second box asks for the full path of the Unix directory where the
+conference is to be stored.  It should default to a sensible value, and in
+most cases you should just leave that unchanged.
+Only if you are trying to balance space between different disk partitions,
+or something like that, should you use a different path here.
+<P>
+After you click on "Create It", the conference will be created.
+Initially it is set up as an open conference
+with the conference adminstrators as the only fairwitnesses.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> edit the conference configuration
+<P>
+After creating the conference, you will automatically be set to the
+conference editing page.
+This allows you to change the fairwitnesses, the conference access mode,
+and the conference title.
+<P>
+Conferences are created with the conference administration account listed
+as a fairwitness.  Since conference adminstrators are fairwitnesses of all
+conference whether they are actually listed or not, this is morally equivalent
+to having no fairwitness.
+If you want to assign some user the job of administering that particular
+conference, put that user's login name in the fairwitness list box.
+If you would like to grant fairwitness powers to more than one user, list
+all their login names, separated by commas (but not spaces).
+<P>
+The conference mode determines which people can join the conference.
+Open conferences can be read and posted to by any users.
+Only selected users can post to a fishbowl conference, but all users can
+still read it.
+In closed conferences, both the ability to post and to read are restricted.
+For closed conferences and fishbowl conferences, access can be restricted
+either by requiring people to be on a list maintained by the fairwitness,
+or by requiring them to give a conference password set by the fairwitness,
+or both.
+Note that the fairwitnesses don't have to be on the user list, and never
+have to give the password to join.
+<P>
+The conference title is the name of the conference as it should be displayed
+once people have joined the conference.  It should normally be capitalized,
+and should be quite short - usually one word, sometimes two or three.
+If no conference title is defined, then whatever name the user used to join
+the conference will be displayed.
+<P>
+When you are done, click the "Return to adminstration page" link to return
+to the main administrative menu.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> edit the conference aliases
+<P>
+Pick "Edit the Conference Aliases" from the menu on the admin page.
+This lets you edit the table containing all the conference aliases,
+that is all the names by which conference can be accessed.
+For example, if the user types a conference name into "Goto" text box in the
+Pistachio interface, the name typed will be matched against aliases in this
+file to find which conference to go to.
+<P>
+Each line of the table includes two pieces of information, and alias and
+a directory name.  The directory name is just the place where the conference
+is be stored.  The alias is a possible name by which the conference can be
+accessed.
+<P>
+The conference you created will already have one alias created for it, so
+if you just created version one of the martian conference, there
+should be a line in the table that looks something like this
+(the directory name, of course, will differ):
+<TABLE BORDER=1 CELLPADDING=2><TH>alias<TH>directory
+<TR><TD>martian1<TD>/usr/local/backtalk/conf/martian1</TABLE>
+This says if the user types "martian1", he will get into the conference.
+(It will also work if he types "Martian1" or "MARTIAN1" since Backtalk
+ignores the case of conference names users enter.)
+<P>
+Probably you want to let the user type more things than that.
+If you insert an underscore into the alias, like "mar_tian1" then abbreviations
+will be allowed, so long as at least all the characters before the underscore
+are entered.  Thus, a user could type "mar", "mart", "marti",
+"martia", "martian" or "martian1" to join the conference.
+To make this kind of change, click the green Edit button next to the table
+entry you want to change.  You will be asked for new values for the alias
+and directory.  Insert the underscore into the alias, and click "Change Alias".
+<P>
+You may also want to add some additional aliases.
+For example, you might also want to allow people to type "mars" to join the
+conference.
+You can do this with the "Add an Alias" form at the bottom of the screen.
+Just type in the new alias and cut-paste down the directory name.
+After you submit this, you will be asked were to insert the new entry into
+the list.
+After doing this, you table might include the lines:<BR>
+<TABLE BORDER=1 CELLPADDING=2><TH>alias<TH>directory
+<TR><TD>mar_tian1<TD>/usr/local/backtalk/conf/martian1
+<TR><TD>mars<TD>/usr/local/backtalk/conf/martian1</TABLE>
+<P>
+The order of entries in this table only matters if you have two entries
+matching the same input.  For example, if we also had an alias "mar_supials"
+for a different conference, and the user typed "mar" then the first
+conference listed in the alias file would be the one he goes to.
+Thus the "Move" buttons probably won't be used much, though it is helpful
+to keep the file in some logical format, like in alphabetical order.
+(If your conference list is extremely long, putting the most commonly used
+conferences near the front of the list may improve preformance.)
+<P>
+Note that the "Delete" buttons on this page delete only the aliases, not
+the conferences themselves.
+<P>
+When you are done adding aliases,
+the "Return to adminstration page" link at the bottom of the page will return
+to the main administrative menu.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> edit the conference menu
+<P>
+When a user asks for a list of conferences, a menu of conferences is
+displayed.
+Normally you'll also want to add your new conference to this
+(though you don't have to - if you want to hide a conference a bit, you
+can leave it unlisted so people have to join it by typing the name or putting
+it in their hotlists.)
+<P>
+To edit the conference menu, click "Edit the conference menu" on the front
+page.
+It will display the conference list, with whatever subheadings might be
+in it, in a table, with forms to add conferences and subheading below.
+<P>
+Use the "Add a Conference" form to add an entry for your new conference.
+The "conference name" should be some valid alias for the conference.
+If you want to display a different name to the users, set that as the
+conference title.
+Then supply a short description of the conference.
+After you submit it, you will be asked where to insert it into the existing
+menu.
+<P>
+The other functions on this page, to move, edit and delete lines from the
+menu, and to add subheading to the table work in fairly obvious ways.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Inform the fairwitnesses.
+<P>
+The conference is mostly ready to go.
+However, only one of the fairwitnesses can enter the first item, so they
+will need to get things started.
+<P>
+They should also do the rest of the configuration of the conference.
+They can set up login screens and edit other settings through Backtalk.
+If it is a closed conference, the fairwitnesses can maintain the user list
+via Backtalk too.
+<P>
+If you want to do these things as conference administrator,
+you can of course do so, since the conference administrator is a fairwitness
+in every conference.
+</OL>
+
+<H2>Conference Creation From Unix:</H2>
+
+The conference creation procedure used from is almost identical to that used
+for Picospan or Yapp 2.3 conferences.  The only differences are in editing
+<TT>confmenu</TT> file and creating the <TT>indexdir</TT> subdirectories.
+<P>
+To create a new Backtalk conference, follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log onto the Unix conference administration account.
+<P>
+This is the account that owns all the conference files and the backtalk
+program itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> change directory to the ``bbs'' directory.
+<P>
+This is the directory where the <TT>conflist</TT> file and all the conference
+directories normally reside.
+We will be creating a new conference directory here, placing some configuration
+file in it, and editing the <TT>conflist</TT> and <TT>public.txt</TT> files
+to point to the new conference.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> create the conference directory.
+<P>
+Suppose we want to create the ``Martian'' conference.
+First create a directory for it in the ``bbs'' directory
+and permitted it <TT>rwxr-xr-x</TT>.
+Thus, you should do:
+<PRE>
+        mkdir martian1
+        chmod 755 martian1
+</PRE>
+The directory name doesn't actually have to have any particular correspondence
+to the conference name, but obviously it is good practice to use something
+obvious.  Names are normally all lower case, without spaces or odd symbols,
+but any valid Unix directory name can be used.  We often append version numbers
+to the end of the name, in case we want to do a ``restart'' in the future.
+<P>
+Even directories for closed conferences should be permitted to be readable.
+The files containing the actual items will be depermitted automatically.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> create the indexdir subdirectory.
+<P>
+You should also create a subdirectory called "indexdir" in the conference
+directory.
+<PRE>
+        mkdir martian1/indexdir
+        chmod 755 martian1/indexdir
+</PRE>
+Backtalk used to run slower if it didn't have an indexdir.
+These days Backtalk will create it itself if it is missing, so it's OK to
+forget this step.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> create the <TT>config</TT> file
+
+<P>
+The <TT>config</TT> file should be inside the conference directory
+(e.g. ``<TT>martian1/config</TT>'').  It's usually easiest to copy one over
+from an existing conference and edit it into the shape you like.
+Or you can just make one from scratch, using any Unix text editor, such
+as
+<PRE>
+        vi martian1/config
+</PRE>
+A typical <TT>config</TT> file for a publically-readable conference
+looks like this:
+<PRE>
+    !&lt;pc02&gt;
+    .martian1.cf
+    0
+    marvin,carter
+</PRE>
+There are no blank spaces in the file.
+The four lines are:
+<P>
+<OL>
+<LI>``!&lt;pc02&gt;'' <BR>
+    The magic number.  This line should always look exactly like this.
+    It marks this as a version 2 picospan configuration file.  No other
+    versions are understood.
+<LI>``.martian1.cf'' <BR>
+    Participation file name.
+    This is the name of the file that will be created in the user's directory
+    to store information about which items he has seen in this conference.
+    It must be different that the name used for any other conference.
+    It is usual to use the same name as the conference directory, with a
+    ``.cf'' suffix.
+    If your system uses real Unix accounts for users, then adding a dot to
+    the front of the file name is very strongly recommended, since this
+    will make the files somewhat ``invisible'' to users.
+<LI>``0'' <BR>
+    This line should always be zero.  (It is actually ignored by Backtalk and
+    Yapp 2.3.  I don't know if Picospan does anything with it.)
+<LI>``marvin,carter'' <BR>
+    List of fairwitnesses.
+    These are the Backtalk login names of the users who will be fairwitnesses
+    of this conference.  They are all listed on one line, separated by commas,
+    but no spaces.
+</OL>
+<P>
+There is an optional fifth line, used for closed conferences.  It contains
+a decimal integer, or a sequence of keywords, which can be any of the following.
+<P>
+<BLOCKQUOTE><TABLE BORDER=1>
+<TR><TD>0</TD>
+<TD><STRONG>public</STRONG></TD>
+<TD>all users may read and post [default]</TD></TR>
+<TR><TD>4</TD>
+<TD><STRONG>ulist</STRONG></TD>
+<TD>only users in the ulist or glist may read and post</TD></TR>
+<TR><TD>5</TD>
+<TD><STRONG>password</STRONG></TD>
+<TD>only users who know the password may read or post</TD></TR>
+<TR><TD>6</TD>
+<TD><STRONG>paranoid</STRONG></TD>
+<TD>only users who are in the ulist or glist
+and know the password may read or post</TD></TR>
+<TR><TD>8</TD>
+<TD><STRONG>protected</STRONG></TD>
+<TD>all users may read and post (but item files not directly readable)</TD></TR>
+<TR><TD>20</TD>
+<TD><STRONG>ulist&nbsp;readonly</STRONG></TD>
+<TD>only users in the ulist or glsit may post / all may read</TD></TR>
+<TR><TD>21</TD>
+<TD><STRONG>password&nbsp;readonly</STRONG></TD>
+<TD>only users who know the password may post / all may read</TD></TR>
+<TR><TD>22</TD>
+<TD><STRONG>paranoid&nbsp;readonly</STRONG></TD>
+<TD>only users who are in the ulist or glist
+and know the password may post / all may read</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+Picospan and older versions of Yapp and Backtalk accept only numeric conference
+modes.
+Read-only conferences are not recognized by Picospan, though they
+are recognized by Yapp.  If you are using Backtalk with Picospan, don't
+use modes 20, 21, 22.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Permit the <TT>config</TT> file.
+<P>
+The <TT>config</TT> file should be permitted <TT>rw-r--r--</TT>.
+That is, you should do:
+<PRE>
+        chmod 644 martian1/config
+</PRE>
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the <TT>conflist</TT> file.
+<P>
+
+The <TT>conflist</TT> file resides in the top level "bbs" directory
+(not in the "<TT>martian1</TT>'' subdirectory.
+It is used to map typed names of conferences to the actual directory names.
+You can use any standard Unix text editor to edit it, such as:
+<PRE>
+        vi conflist
+</PRE>
+Normally you will just be adding some lines to this file, but we will describe
+the format of the entire file.
+Lines may be commented out by starting them with a # sign.
+A typical conflist file might look like this:
+<PRE>
+    !&lt;hl01&gt;
+    /usr/local/backtalk/bbs/general2
+    gen_eral2:/usr/local/backtalk/bbs/general2
+    general1:/usr/local/backtalk/bbs/general1
+    oldgen_eral:/usr/local/backtalk/bbs/general1
+    tes_t1:/usr/local/backtalk/bbs/test1
+    mar_tian1:/usr/local/backtalk/bbs/martian1
+    mars:/usr/local/backtalk/bbs/martian1
+    bar_soom:/usr/local/backtalk/bbs/martian1
+</PRE>
+The first line is always ``<TT>!&lt;hl01&gt;</TT>''.  This is a magic number.
+<P>
+The second line is the directory name of the default conference.  This is
+not used in Backtalk, but it is in Picospan and Yapp 2.3.
+<P>
+The remaining lines each consist of a conference name, a colon,
+and a conference directory.
+Conference names usually have an underscore inserted in them somewhere.
+When a user types the name of a conference, he may abbreviate it by leaving
+off letters after the underscore.   Thus, you could join version 2 of the
+general conference by typing ``gen,'' ``gene,'' ``gener,'' ``genera,''
+``general,'' or ``general2.''  To join version 1, you'd have to type
+``general1'' however, because there is no underscore in the name so no
+abbreviations are allowed.
+Note that there can be more than one line for the same conference.  Thus
+we can also go to version 1 of the general conference by using the name
+``oldgen.''
+<P>
+If ``/usr/local/backtalk/bbs/'' is the default location for conference
+directories (this is set during the installation process),
+then you can abbreviate directory names by replacing that part of the path
+with a % sign.
+Thus, the following file would be equivalent to the one above:
+<PRE>
+    !&lt;hl01&gt;
+    %general2
+    gen_eral2:%general2
+    general1:%general1
+    oldgen_eral:%general1
+    tes_t1:%test1
+    mar_tian1:%martian1
+    mars:%martian1
+    bar_soom:%martian1
+</PRE>
+This format is recommended, since it is easier to maintain.
+<P>
+So, to add our new conference, we just added at least one line pointing
+to the directory we just created, like the last three lines of the examples
+above.
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the <TT>confmenu</TT> or
+<TT>public.txt</TT> file.
+<P>
+The <TT>confmenu</TT> and <TT>public.txt</TT> files are alternative formats
+for keeping a list of conferences that is displayed to users when they
+request a list of conferences.
+Normally all conferences should be included here (though it is still possible
+to join a conference that isn't listed if you know it is there).
+Normally each conference would be listed only once, but you can certainly
+list the same conference multiple times, even under different names.
+<P>
+The <TT>public.txt</TT> file is the older format used by Picospan.  The
+<TT>confmenu</TT> file is an alternative format that is prefered by Backtalk.
+Which your system uses depends on a configuration option in the
+<TT>config.bt</TT> file.
+<P>
+<H4>How to edit the <TT>confmenu</TT> file</H4>
+
+A typical <TT>confmenu</TT> file looks something like this:
+<PRE>
+   :Various Conferences:These are general purpose test conferences.
+   general:General:General Conference
+   mars:Martian Oddessy:The Martian Conference
+   :Test conferences:
+   test:Test:A place to experiment 
+</PRE>
+Each line contains three fields separated by colons.
+<UL>
+<LI>The first field is the <STRONG>conference name</STRONG>, the name
+that will be used to join the conference if the user selects this.
+It must be one word, and would normally consist entirely of lowercase letters
+and numbers.
+It should match one of the lines that you put in the <TT>conflist</TT> file
+(though without any underscores in it).
+<LI>The second field is the <STRONG>conference title</STRONG>, the name for
+the conference that will be displayed to the user.
+Normally it will be the same as the conference name, or differ only in case,
+but it can actually include spaces.
+<LI>The last field is a description - a few words describing the conference.
+This field is always optional.
+</UL>
+Lines without a conference name (those starting with a colon),
+are conference catagories, not conferences.
+When conferences are listed, these will be printed as subheadings in the
+listing.
+
+<A NAME="publictxt">
+<H4>How to edit the <TT>public.txt</TT> file</H4></A>
+The <TT>public.txt</TT> file is a human-readable list of conferences.
+As far as Picospan is concerned, this is just some text file that is printed
+to the screen.  Backtalk parses it using some regular expressions defined
+in the config file.  You need to keep it's format matching those regular
+expressions.  We'll assume here that you used the default Grex-style format.
+<P>
+The format of the <TT>public.txt</TT> that will work with the regular
+expressions is something like this:
+<PRE>
+   This is a list of the conferences on Marvin's Backtalk conferencing system.  Click on a conference name to join it.
+
+   Various Conferences:
+    general      - General Conference
+    mars         - The Martian Conference
+
+   Test conferences:
+    test         - A place to experiment 
+</PRE>
+The first line of text is some kind of introductory paragraph.  It is
+completely ignored, so forget it.
+After this, lines with no leading spaces are sub-headings, giving catagories
+of conferences.
+Lines with a leading space have a conference name as the first word, followed
+by some spaces, a hyphen, a space, and a short description of the conference.
+Every conference that you want people to be able to join should have a line
+in this file.
+<HR>
+
+<LI><INPUT TYPE=checkbox> Inform the fairwitnesses.
+<P>
+The conference is mostly ready to go.
+However, only one of the fairwitnesses can enter the first item, so they
+will need to get things started.
+<P>
+They should also do the rest of the configuration of the conference.
+They can set up login screens and edit other settings through Backtalk.
+If it is a closed conference, the fairwitnesses can maintain the user list
+via Backtalk too.
+<P>
+If you want to do these things as conference administrator,
+you can of course do so, since the conference administrator is a fairwitness
+in every conference.
+</OL>
+</BODY></HTML>

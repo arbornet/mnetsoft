@@ -1,0 +1,52 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+
+% Open a conference
+open_conf {
+  (Error: Could not open conference ')conf('.\n)
+  halt
+} if
+
+/go defined {
+
+  newtitle retitle_item dup {
+    dup 1 eq {(Bad title) halt} if
+    2 eq {(Article )item( not found for retitle) halt} if
+    (Permission to retitle denied) halt
+  } if pop
+
+  newsummary newkeywords annotate_item dup {
+    2 eq {(Article )item( not found for annotate) halt} if
+    (Permission to annotate denied) halt
+  } if pop
+
+  flavor(begin)+ jump
+
+} if
+
+
+(0) item this_item { (Cannot access article )item halt } if
+read_item { (Error reading article )item halt } if
+
+(<html>
+<head>
+<title>)conftitle(: Edit Title, Keywords and Summary</title>
+</head>
+<body>
+<h1>Edit Title, Keywords and Summary</h1>
+<form method=post action=edit_meta>
+<input type=hidden name=conf value=")conf(">
+<input type=hidden name=item value=")item(">
+<input type=hidden name=go value=1>
+
+<strong>New Title:</strong><br>
+<input type=text name=newtitle value=")title quote(" size=70>
+<br><strong>New Summary:</strong><br>
+<textarea name=newsummary rows=3 cols=70>)summary quote(</textarea>
+<br><strong>Keywords:</strong><br>
+<textarea name=newkeywords rows=3 cols=70>)keywords quote(</textarea>
+<br>
+<input type=submit value="Post">
+</form>
+</body>
+</html>
+)

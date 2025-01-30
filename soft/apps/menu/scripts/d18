@@ -1,0 +1,10 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+UNIX: ls -al | more
+
+Listing Directory (`pwd`):
+"
+sleep 1
+ls -al | menumore

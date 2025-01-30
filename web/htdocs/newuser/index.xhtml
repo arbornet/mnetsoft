@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../style/default.css";
+  </style>
+
+  <title>Grex: New User Account Creation</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>Create an Account on <span id="grex"><em>Grex</em></span></a></h1>
+  </div>
+  <div id="menu">                                                               
+    <ul>                                                                        
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>  
+      <li><a href="../grex.xhtml" accesskey="2">About Us</a></li>                  
+      <li><a href="index.xhtml" accesskey="3">Get a Free Account</a></li>  
+      <li><a href="../faq.xhtml" accesskey="4">FAQ</a></li>                        
+      <li><a href="../member.xhtml" accesskey="5">Become a Member</a></li>         
+      <li><a href="../contact.xhtml" accesskey="6">Contact Us</a></li>             
+    </ul>                                                                       
+  </div> 
+
+  <div id="content">
+
+    <h3>The Short Answer</h3>
+
+    <p>You must create your own account by using SSH to login to
+    "newuser@grex.org". There is no password.  You can use a command
+    line ssh client or a client like PuTTY (in which case the username
+    is "newuser" and the host is "grex.org" and password is left
+    blank). Answer the questions and provide a valid e-mail address.
+    You'll receive an e-mail with a temporary password. Your new account
+    will be all but worthless for doing anything with Unix, so you'll
+    want to get "validated" and have a full Unix shell.  Send an e-mail
+    to porters@grex.org and request validation.  Be sure to include
+    in this e-mail your Grex user name from the account you created
+    when you ran the newuser program.  This user name will also be in
+    the e-mail you received with your temporary password. Do not send
+    requests to validate accounts which do not exist. Try logging in
+    with the temporary password before requesting validation. If
+    there are issues send them to help@grex.org.</p>
+
+    <p>Be patient.  The validation process is done by human beings.
+    It may take a day or more in some cases to validate your account.</p>
+
+    <h3>The Details</h3>
+
+    <p>With very few exceptions, Grex staff will not create accounts for
+    users!  Users create their own accounts by successfully completing
+    Step 1 below.  If you want access to more Unix commands, you need to
+    request it.  See Step 2 below.</p>
+
+    <p>If you are validly unable to set up your own account, let us know 
+    why and we can help.</p>
+
+    <p>BE AWARE: GREX DOES NOT ALLOW BOTS, BOUNCERS or PROXY
+    CONNECTIONS. Please don't ask us how to make these work. Grex
+    does allow the use of IRC clients. Grex has several such
+    clients installed, including epic, irssi, sirc, and ircII.  Please
+    see <a href="../faq.xhtml#irc">the Grex FAQ on IRC.</a> and
+    <a href="../faq.xhtml#sshproxy">the Grex FAQ on SSH proxy
+    connections.</a></p>
+
+    <h3>1. Create An Account</h3>
+
+    <p>Grex's web-based new account creation system is currently being
+    replaced. In the meantime, please create your own account on Grex
+    by using SSH to login to the "newuser@grex.org" account. Leave the
+    password blank, when prompted for one. If connecting with a terminal
+    application such a PuTTY, then the username is "newuser", the host
+    is "grex.org" and the password is left blank. Answer the questions
+    and be sure to provide a valid e-mail address. Failure to provide a
+    valid e-mail address will result in your account not being created.
+    A valid e-mail address helps later if you need a password reset
+    because we will look to see if the request comes from the e-mail
+    address used to register the account.
+    </p>
+
+    <p>Upon successful creation of your account, you will have very
+    limited access to Unix shell commands. You will receive an e-mail
+    with the login name you chose during the account creation process,
+    and a temporary password. If you do not have a user name and did not
+    receive an e-mail with your temporary password, then you did not
+    successfuly complete the new user process and your account was not
+    created on Grex.  Try Step 1 above again.</p>
+
+    <p>If you did create an account with a user name and received the
+    e-mail with your temporary password, make sure you can log in
+    with the temporary password.  If so, you are ready to get increased
+    access to more shell commands and other services.  Please follow
+    Step 2. below. </p>
+
+    <p>PLEASE NOTE: Grex staff will not create accounts for users!  Users
+    create their own accounts as noted above. If you have a reason why
+    you cannot follow the process listed here, let us know. We can, in
+    rare instances, help with account creation.</p>
+
+    <p>To see if the account you created exists, enter the login name
+    in the box below and submit it (this does a Unix "finger" command
+    on the username you enter). This will display public information
+    about the account, if it exists. </p>
+
+    <p>If no account information is returned, then your account does not
+    exist on Grex.  Go back to Step 1 and try again.</p>
+
+    <form action="/cgi-bin/ufinger" method="get" accept-charset="utf-8">
+      <p>login: <input type="text" name="u" id="u" />
+      <input type="submit" /></p>
+    </form>
+
+    <h3>2. Request Increased Access</h3>
+
+    <p>Do you have an existing login name on Grex with very limited
+    Unix command access, but want access to more commands and other
+    services?  In order to avoid abuse, we require new users to go
+    through a request process to get more access. By far the easiest
+    way to get full, unrestricted access to Grex is to simply become a
+    <a href="/member.xhtml">member</a> for a month for 2.00 USD (for
+    6.00 USD, you get a three month membership that includes voting
+    rights in the Grex organization.  For $18 you get a one year
+    membership.  See: <a href="https://grex.org/member.xhtml">
+    https://grex.org/member.xhtml</a>).</p>
+
+    <p>You can let your membership lapse, if you like, but your access
+    to Grex won't change unless you leave for an extended period of
+    time, or somehow abuse the system.</p>
+
+    <p>If you don't want to spend any money for more access, then you 
+    can send email to <a href="mailto:porters@grex.org">porters@grex.org</a> 
+    with an access request. You must have successfully completed the
+    new account creation process in Step 1 above in order to do this.
+    Don't forget to include your Grex login name in your e-mail request!
+    Without it, we cannot increase your access to Grex. Your account
+    will be restricted in outgoing access but you will still have
+    access to most commands and a regular Unix shell.</p>
+
+    <p>Our automated helpdesk ticket system will reply to your request
+    e-mail by sending a ticket number.  Please do not reply to this
+    automated response, or send additional e-mails for the same request
+    to porters@grex.org as these while only create new helpdesk tickets
+    (each of which will send you you an automated response).  The more
+    tickets we need to review will just slow down your answer more.</p>
+
+    <p>NOTE: Increased access is for accounts (with login names) which
+    already exist on Grex.  Requesting validation of non-existent
+    accounts will not result in a validated account.  If you do not
+    have a Grex login name, follow the account creation instructions
+    in Step 1 above. If you have a valid reason for not being able to
+    create an account, let us know why and we can help.</p>
+
+    <h3>Be Patient!</h3>
+
+    <p>While we do our best to validate accounts within 24 hours,
+    and often do so within minutes or a few hours, this is a volunteer
+    organization.  Real people do the validation, not some automated
+    system.  Our volunteers have lives and jobs that often consume
+    most of their time. Holidays and work may interfere with their time
+    available for Grex.  In some rare cases validation may take up to a
+    week.  Sometimes we forget, too, so it doesn't hurt to check after
+    a few days if your request is not completed. Thank you for your 
+    understanding.</p>
+
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: email.xhtml 1205 2011-12-06 20:15:03Z kentn $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

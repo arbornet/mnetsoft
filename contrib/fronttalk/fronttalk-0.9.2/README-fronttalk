@@ -1,0 +1,281 @@
+	      BACKTALK'S "FRONTTALK" COMMAND LINE INTERFACE
+		         (c) 2002   Jan Wolter
+
+			   Version 0.9.2
+	        Requires Backtalk Version 1.2.9 or later
+
+DESCRIPTION:
+************
+
+Backtalk was designed as web-based conferencing system.  However, some
+of us old-time Picospan users still enjoy a command-line interface to
+a conferencing system.  Fronttalk provides a command-line interface
+to Backtalk similar to that provided by Picospan (or by Yapp, a clone
+of Picospan).  To the best of my knowledge it is the only open source
+Picospan-clone in circulation.
+
+Though the interface provided by Fronttalk is very similar to Picospan,
+it's internal operation is totally different.  Instead of accessing
+the conference files directly, Fronttalk functions as a web browser.
+To fetch the contents of an item, Fronttalk makes an HTTP request to a
+Backtalk server, then parses and formats the returned data to display
+it just the way Picospan would.
+
+So there are two components to Fronttalk - a Perl client program which
+is the command line interpreter run by the user, and a set of Backtalk
+scripts that Backtalk executes to respond to requests from a Fronttalk
+client.  The Perl program can be installed on most any Unix system and
+can be used to read and post to any Backtalk system that has the Fronttalk
+script set installed (assuming that you have an account on that system).
+
+In the special case where Fronttalk and Backtalk are running on the same
+server and Backtalk is configured to use Unix logins, it is possible to
+configure Fronttalk and Backtalk to execute Backtalk directly instead of
+going through httpd to execute it.  This gives better performance, and
+avoids the need to login to the system you have already logged into.
+
+Fronttalk is also a fairly nice platform for people who want to modify
+a Picospan-like command-line interface.  Because much of the functionality
+is in a non-privileged Perl program, non-privileged users can make copies
+and customize it fairly easily.
+
+STATUS:
+*******
+
+Fronttalk is approaching the point where it is ready for production use.
+It works well for most ordinary conferencing applications, and includes
+virtually all features of Picospan/Yapp.
+
+It is substantially slower than Yapp or Picospan would be.  This is partly
+because of the client-server architecture and partly because it is written
+in Perl.  However, although the code is suboptimal, it is plenty fast
+enough on any reasonable server.
+
+REQUIREMENTS:
+*************
+
+On the server side, you need Backtalk (http://www.unixpapa.com/backtalk/).
+
+On the client side you need Perl, and libwww-perl (http://www.cpan.org).
+libwww-perl is also known as LWP.  You may already have it.  To be able
+to access "https" sites with this, you should also install either the
+Crypt::SSLeay module (preferred) or the IO::Socket::SSL module.
+
+If you have the Perl Term::ReadLine module and either Term::ReadLine::Gnu
+or Term::ReadLine::Perl, Fronttalk will be able use these to provide command
+line editting.
+
+Since Fronttalk does not (yet?) implement an internal text entry system, you
+need to use an external editor to enter your posts.  You could just use "vi"
+or "pico" or some such standard editor, but I recommend using "gate".  This
+lets you enter text in a less obtrusive environment (without clearing your
+screen, etc) and still fire up a full editor whenever you want.  Gate is
+approximate equivalent to the "red" program used with Picospan on the Well.
+Gate is available at http://www.unixpapa.com/gate.html .
+
+SERVER SCRIPT INSTALLATION:
+***************************
+
+(1) Make sure that you have the correct version of Backtalk installed on the
+    server.  The top of this file tells the minimum version of Backtalk needed
+    to support this scripts in this package.  Later versions of Backtalk may
+    or may not be compatible.  If we release a version of Backtalk not
+    compatible with this interface package, a new version of this package will
+    be released.
+
+(2) Unpack the Fronttalk distribution.
+
+    OK, if you hadn't already done that, you wouldn't be reading this, would
+    you?  We'll refer to the full path of the new directory containing the
+    distribution as DISTDIR.
+
+(3) Versions of Backtalk after 1.1.4 have a 'btinstall' script to simplify
+    the installation of seperately distributed interface packages.  Btinstall
+    assumes that the configuration of Backtalk hasn't radically changed since
+    you used Backtalk's 'make install' commands to install the system.  If
+    you've manually rearranged what goes where on the disk, btinstall will
+    need some editing, or you'll need to install the interface manually.
+
+    TO INSTALL USING BTINSTALL:
+
+    (a)  Login either as root or as the user that owns Backtalk's files on
+         your system.
+
+    (b)  Find where the 'btinstall' script was installed, so you can run it.
+         You want to be sure you get the installed copy of the program, which
+         has been modified with information about your installation, not
+         the one in the distribution directory.
+
+    (c)  cd into the unpacked distribution directory, DISTDIR.
+
+    (d)  Run 'btinstall'
+
+    TO INSTALL WITHOUT BTINSTALL:
+
+    The 'script' subdirectory of this distribution contains all the Backtalk
+    scripts that implement the interface.  This needs to be moved into a
+    directory named 'bubblegum' under Backtalk's script directory.  In a bit
+    more detail:
+
+    (a) Find the Backtalk script directory.  The default pathname is
+        /usr/local/backtalk/script, but it will vary on different systems.
+        Typically it will contain the config.bt script, the userinfo.bt script
+        subdirectories for all installed interfaces, and a 'public'
+        subdirectory.
+
+    (b) Create a new subdirectory under the script directory, called
+        'fronttalk'.  Make sure the directory is writable to the Backtalk
+        account, so that compiled copies of the scripts can be written into
+        it by Backtalk.
+
+    (c) Copy all the files in DISTDIR/script to the new fronttalk directory.
+
+    (d) Copy DISTDIR/fronttalk.bt into the public directory that is under the
+        script directory.
+
+CLIENT PROGRAM INSTALLATION:
+****************************
+
+This hasn't been automated very much yet.  Maybe later.  For now:
+
+(1)  Install Perl modules.  The following Perl modules are used by
+     Fronttalk's client program.  All are available from http://www.cpan.org
+     if they are not already on your system:
+
+         libwww (also known as LWP)
+	 Crypt::SSLeay  -or-  IO::Socket::SSL
+	 Term::Readline
+	 Term::Readline::Gnu -or- Term::ReadLine::Perl
+
+     The libwww module is required.  The others are optional.
+
+     Without one of the two SSL modules your client will not be able to
+     access "https" servers.  Without Term::ReadLine and one of the two
+     others, you will not get command line editting.
+
+(2)  Install Fronttalk libraries.  Pick a place to put fronttalk's libraries.
+     Using /usr/local/lib/fronttalk might make sense, but so would lots of
+     other possibilities.  We'll call that directory LIB here.  Create that
+     directory and copy over everything in the distribution's 'lib'
+     subdirectory.  That is:
+
+        mkdir LIB
+	chmod 755 LIB
+	cp DISTDIR/lib/* LIB
+
+(3)  Install help file.  Pick a place to put fronttalk's directory of help
+     file.  Using /usr/local/lib/fronttalk/help might make sense.  We'll call
+     that directory HELPDIR here.  Create that directory and copy over
+     everything in the distribution's 'help' subdirectory.  That is:
+
+        mkdir HELPDIR
+	chmod 755 HELPDIR
+	cp DISTDIR/help/* HELPDIR
+
+(4)  Edit config.pl script.  One of the files you just copied into the LIB
+     directory is named config.pl.  This needs to be editted.  The following
+     variables are defined there:
+
+     $SYSLIST - Location of the system list.
+
+         The system list is used by Fronttalk to find Backtalk servers.  The
+	 location can be in any any of three different formats:
+
+	     $SYSLIST= "/usr/local/lib/fronttalk/syslist";
+	     $SYSLIST= "file:/usr/local/lib/fronttalk/syslist";
+	     $SYSLIST= "http://www.unixpapa.com/syslist";
+
+         The first two are equivalent and give the full path name of a file
+	 on the local system.  The third form is a URL of a place on the
+	 web where a Fronttalk system list can be found.
+
+	 You'll normally want to use the first format to point to the syslist
+	 file in your LIB directory.
+
+    $HELPDIR - Location of the help directory.
+
+	 Set this to the path of the HELPDIR created in step 2.
+
+    $PROXY - URL of proxy server, if any.
+
+         If you have to use a proxy server to access the web, then the
+	 $PROXY variable can be set to it's URL.
+
+	 Otherwise, leave this undefined (comment the definition out with
+	 a # in column one).
+
+    $DEFAULT_EDITOR - Path name of editor.
+
+         This is the full path name of a program to do text entry.  You can
+	 use /bin/vi or something similar, but we recommend using the 'gate'
+	 program mentioned above.
+
+    $DEFAULT_PAGER - Default pager.
+
+         This is the default pager to use if none is defined by the system
+	 rc files.  This is set to "more" in the distribution, which is
+	 probably fine.
+
+    $BROWSE_SHORT - Do "browse short" by default.
+
+         The Picospan "browse" command has a short and a long version, and
+	 different sites use different defaults.  If you want to use the
+	 short version (recommended) then define "browse short".
+
+    $BUFFER - Name of temporary file for text entry.
+
+         You can leave this unchanged.  It's just name of a temp file in the
+	 user's home directory that is used to gather response text in and
+	 pass them to Fronttalk.  The default should be OK for most everyone.
+
+(5) Edit syslist script.  The default system list file looks like this:
+
+        <SYSTEM NAME=test HREF="http://localhost/cgi-bin/backtalk" DEFAULT>
+        My favorite system.
+        </SYSTEM>
+        <INCLUDE HREF="http://www.unixpapa.com/syslist">
+
+    The last part includes a system list provided by the Backtalk web site.
+    You can feed that URL to a browser if you want to see what is there.
+    The first three lines are an example of a system description which you
+    can edit to point to your favorite system.  In the first line, the NAME
+    is the name users type in to access the system.  The HREF is the URL
+    of the non-authenticated copy of the backtalk CGI for that system.  The
+    text on the second line is a description of the system.
+    
+    If your backtalk is configured to use Unix accounts, and the Fronttalk
+    client is installed on the same server as the Backtalk client, then it
+    is possible to configure the connection so that Fronttalk runs Backtalk
+    directly instead of accessing it through an http request.  This is
+    faster, and prevents the user from having to re-enter their passwords
+    when they are already logged in.  In this case, the HREF is a "file:"
+    URL giving the full path the the backtalk CGI program.  The default
+    entry in your syslist might look like this then:
+
+        <SYSTEM NAME=test HREF="file://var/www/cgi-bin/backtalk" DEFAULT>
+        Our local Backtalk server
+        </SYSTEM>
+
+(6) Install the Fronttalk program.
+
+    Copy the 'ft' file from the DISTDIR directory to an appropriate binary
+    directory, like /usr/local/bin.  For example,
+
+        cp DISTDIR/ft /usr/local/bin/ft
+	chmod 755 /usr/local/bin/ft
+
+(7) Edit the Fronttalk program.
+
+    You need to make two changes to the Fronttalk binary.  First, check the
+    first line:
+
+        #!/usr/bin/perl
+
+    This should be editted to be the pathname of the Perl interpretor on your
+    system.  Second, find the line that says:
+
+        use lib "/home/janc/src/backtalk/fronttalk/lib";
+    
+    and edit it to point to the LIB directory that was created in step 1.
+
+That should do it.

@@ -1,0 +1,17 @@
+LOGFILE=/var/users/board/procmail.log
+
+:0fw
+* < 256000
+| /usr/local/bin/spamc -u board
+
+:0e
+{
+EXITCODE=$?
+}
+
+:0:
+* ^X-Spam-Status: Yes
+/dev/null
+
+:0: /var/users/board/procmail.lock
+! cross, kentn, tod, tsty, walkman

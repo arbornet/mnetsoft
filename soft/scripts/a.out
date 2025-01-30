@@ -1,0 +1,14 @@
+#!/bin/sh
+
+grexmore << END
+
+---------------------------------------------------------------------------
+Hi -- You are trying to run a program called "a.out".  Probably you want to
+run an a.out file in your current directory.  To do that, type:
+
+				./a.out
+
+If you type just "a.out" you'll run this other a.out file instead.
+---------------------------------------------------------------------------
+
+END

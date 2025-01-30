@@ -1,0 +1,11 @@
+% Copyright 2005, Jan D. Wolter, All Rights Reserved.
+
+% Convert a date string to a unix date integer.  Arguments are
+%   dstr=  date string.
+
+/http_content_type (text/plain) store
+
+(<DATE>
+) dstr 0 1 dtime cvi(
+</DATE>
+)

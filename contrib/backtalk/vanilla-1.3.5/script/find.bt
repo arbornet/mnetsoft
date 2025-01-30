@@ -1,0 +1,117 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+
+/shyfile constant {flavor(unreg)+ include} if
+
+% if we can't see full names, then can't search on them
+mayseealias ! {/m_fname undef} if
+
+% shall we ignore case?
+/icase dup defined def
+
+% compile the pattern, set up search macros
+mode (re) eq
+{
+  % compile a regular expression
+  pattern icase{(im)}{(m)}ifelse regex
+  { % bad regular expression
+    (Regular Expression Error: )exch+ /err xdef
+    flavor(findform)+ chain
+  } {
+    % good regular expression
+    /reg xdef
+  } ifelse
+  % define a match function
+  /match {reg grep} def
+} {
+  % compile a plain text string
+  () pattern icase search pop
+  % define a match function
+  /match {() icase search 0 ge} def
+} 
+ifelse
+
+% macro print a successful match
+/presp {
+  ihead ! {
+    (<LI> Item )item(: )title(\n)
+    /ihead 1 def
+  } if
+  rhead ! {
+    (<UL>\n)
+    /rhead 1 def
+  } if
+  (<LI> <a href=view?conf=)conf(&item=)item(&resp=)resp
+  (>Response )resp(</a> by )
+  mayseealias {authorname( \()authorid(\)\n)} {authorid} ifelse
+  /cnt inc
+  print
+} def
+
+open_conf {(Conference )conf( does not exist!\n) halt} if
+
+(<HTML>
+<HEAD>
+<TITLE>Search Results</TITLE>\n)
+(C) flavor(meta)+ include
+(</HEAD>
+<BODY>Matches Found:
+<UL>
+)
+
+/isel (1-$) store
+/rsel (all) store
+/cnt 0 def
+/blindfold 1 store	% don't "see" the responses we search
+
+{ isel next_item {break} if
+  this_item {break} if
+  read_item {break} if
+  /nrs xdef
+  /isel xdef
+  /ihead 0 def
+  /rhead 0 def
+
+  % search title
+  /m_title defined {
+    title match {
+      (<LI> <a href=read?conf=)conf(&item=)item(&rsel=all>Item )item(</a>: )
+	title (\n)
+      /cnt inc
+      /ihead 1 def
+    } if
+  } if
+
+  % search item body
+  /m_text defined /m_fname defined /m_login defined or or {
+    {
+      % compare login name
+      /m_login defined {
+        authorid mode (re) eq {match} {pattern eq} ifelse { presp } if
+      } if
+
+      % search full name
+      /m_fname defined {
+        authorname match { presp } if
+      } if
+
+      % search response text
+      /m_text defined erased ! and {
+	/shyfile constant {raw_text}{0 read_text} ifelse match { presp } if
+      } if
+
+      % find next response
+      nrs next_resp {break} if 
+      read_resp {pop break} if
+      /nrs xdef
+    } loop
+  } if
+
+  % close any sublist
+  rhead {(</UL>\n)} if
+
+} loop
+(</UL>\n)
+cnt ! {(None\n)} if
+(</BODY></HTML>
+)

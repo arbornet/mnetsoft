@@ -1,0 +1,44 @@
+;
+; Zone files for grex.org and cyberspace.org.
+;
+; $Id: grex.org 1630 2017-10-30 18:12:08Z cross $
+;
+@		in	soa		dns.grex.org. hostmaster.grex.org. (
+					2017102701	; Serial
+					14400		; Refresh 4 hours
+					7200		; Retry   2 hour
+					3600000		; Expire  1000 hours
+					86400 )		; Minimum 24 hours
+
+		in	ns		dns.grex.org.
+		in	ns		dns.tonster.com.
+		in	ns		dns2.tonster.com.
+		;in	ns		dns.sfo.gibbard.org.
+		;in	ns		dns.oak.gibbard.org.
+		;in	ns		dns.dtw.gibbard.org.
+		;in	ns		babcom.argusarray.com.
+;
+		in	a		75.61.90.157
+		in	mx		10	grex.org.
+;		in	spf		"v=spf1 mx -all"
+		in	txt		"v=spf1 mx -all"
+		in	hinfo		i386 unix
+;
+dns		in	a		75.61.90.157
+;
+www		in	cname		grex
+ftp		in	cname		grex
+svn		in	cname		grex
+;
+grex		in	a		75.61.90.157
+		in	mx		10	grex.org.
+;		in	spf		"v=spf1 a:grex.org -all"
+		in	txt		"v=spf1 a:grex.org -all"
+		in	hinfo		i386 unix
+;
+		in	mx		10	new.grex.org.
+;		in	spf		"v=spf1 a:grex.org -all"
+		in	txt		"v=spf1 a:grex.org -all"
+		in	hinfo		amd64 unix
+;
+newgrex		in	a		162.202.67.147

@@ -1,0 +1,8 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo ""
+echo 'UNIX: echo $TERM'
+echo ""
+echo "Your terminal type is: $TERM"
+

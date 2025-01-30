@@ -1,0 +1,44 @@
+#!/bin/sh
+
+#
+# Easy way to turn on the twit filter in FrontTalk.
+# Written by Valerie Mates, 12/8/96.
+#
+
+# Replaced $test with [ ]
+
+PATH=/usr/local/bin:/bin:/usr/bin
+export PATH
+
+if [ -f $HOME/.cfdir/.cfonce ]
+then
+   cfonce=$HOME/.cfdir/.cfonce
+else
+   if [ -f $HOME/.cfonce ]
+   then
+      cfonce=$HOME/.cfonce
+   else
+      if [ -d $HOME/.cfdir ]
+      then
+         cfonce=$HOME/.cfdir/.cfonce
+         touch cfonce
+      else
+         cfonce=$HOME/.cfonce
+         touch cfonce
+      fi
+   fi
+fi
+
+echo '' >> $cfonce
+echo '# The following four lines set up a "twit filter" to skip' >> $cfonce
+echo '# responses entered by users:' "$@" >> $cfonce
+echo 'define rsep "!%l\n\n#%r of %n: by %a (%l) on %d:"' >> $cfonce
+echo 'define isep "!%l\n\nItem %i: %h\nEntered by %a%(U uid %u%) (%l) on %d:"' >> $cfonce
+echo 'define ishort "!%l\n%(B\nItem Resps Header (Author)\n\n%)%3i    %3n  %h (%l)"' >> $cfonce
+echo 'define pager "twit' "$@" "| less -dE -P 'Press Spacebar for more, or q to quit'" >> $cfonce
+
+echo "Ignoring responses from users:" "$@"
+echo "This will automatically take effect the NEXT time you run FrontTalk."
+echo 'If you ran this command from an "Ok:" prompt or a "Respond or pass?"'
+echo 'prompt, to start ignoring right away, you will need to type'
+echo 'the command "source' $cfonce'"'

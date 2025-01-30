@@ -1,0 +1,8 @@
+                       Fronttalk Setting:  NUMBERED
+
+Usage:  SET NUMBERED
+        SET NONUMBERED
+	SET UNNUMBERED
+
+The NUMBERED flag controls whether or not a line number is printed on each
+line of each response.  NONUMBER is the default.

@@ -1,0 +1,59 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+(Personal Information Page) (pistachio/help/header) include
+
+(<H2>The Personal Information Page:</H2>
+
+The personal information page displays information about a user,
+and, if the information is your own, allows you to edit it.
+<P>
+If you are viewing your own personal information,
+The information will all appear in )
+/useplan constant {(an input box)}{(input boxes)} ifelse
+( so that you can edit it.  You can change it, or leave it blank.  After
+you make your changes, however, be sure to click on the ``Submit changes''
+button.  Otherwise Backtalk will not record your edits.
+<P>
+)
+nopwedit {
+(You can't change your full name on this system.  You may be able to do so
+from your Unix account.
+)
+} {
+(Note that changing your full name here will not change your full name in
+all your )Conferences(.
+You have to change it separately in each )Conference(, using the box on
+the )hrefbegin(help/confhome>)Conference( home page</A>.  The name you set
+here will become your default alias in any new )Conferences( you join, however.
+)
+} ifelse
+
+(<P>
+There is a button that you can click that will prevent other users
+from seeing the information you enter here,
+while still allowing the system administrators to access it.
+It is usually a good idea to make some information available to the system
+administrators, in case there are problems with your account.
+<P>
+You can click on ``View this page as others will see it'' if you want to
+see how your information will appear to other users.
+If you have blocked access to your personal information, this shouldn't show
+anything.
+<P>
+If you are viewing your own page, there are also )
+nopwedit {(an additional button)}{(some additional buttons)} ifelse
+(at the bottom of the page.
+The ``set options'' button sends you to the )hrefbegin(help/optform>option
+setting page</A> where you can change things like whether pistachio uses
+frames or the maximum number of )Responses( displayed per page.\n)
+nopwedit ! {
+(There is a ``change password'' button that lets you change the password for
+your Backtalk account, and a ``delete'' button that lets you delete your
+Backtalk account (obviously the latter is not to be used lightly).
+)
+} if
+global_footer
+(</BODY></HTML>
+)

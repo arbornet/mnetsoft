@@ -1,0 +1,34 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% fix script
+%
+% This is the handler for the "mark everything as read" link on the confhome
+% page.
+%
+% Query Parameters:
+%    conf=	conference to forget an item in
+%    goto=      page to goto afterwards - (confhome) or (read)
+%
+%    csel=	current list of conference (not used, just passed through)
+%    list=      current confhome format (not used, just passed through)
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if pop
+
+/rsel (all) store
+/showforgotten 1 store
+/isel (1-$) store
+
+{
+  isel next_item {break} if
+  this_item {break} if
+  pop /isel xstore
+
+  maxresp 1 + item mark_unseen pop
+} loop
+
+% goto confhome page
+flavor (confhome)+ jump

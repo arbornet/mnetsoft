@@ -1,0 +1,253 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% begin script
+%
+% This is the front page for the bubblegum interface.  It shows the conference
+% logo, and some buttons to goto conferences or edit personal settings or
+% search for users.
+%
+% Query Parameters:
+%    display    either (all) for all items, or (hot) for hotlist items
+
+% Most of bubblegum uses relative links.  This page uses absolute links because
+% if you get here with a location redirect, then some browsers don't seem to
+% know where you are and thus screw up relative links.  Yuck.
+/our_url SCRIPT_NAME(/bubblegum/)+ def
+
+% load in the definitions for the buttons on this page
+flavor(buttondef)+ include
+
+% default display is 'hot' except for anonymous users, who get 'all'.
+/display defined ! {/display id {(hot)}{(all)} ifelse def} if
+
+% page header
+(
+<HTML><HEAD>
+<TITLE>)bbsname( Conferencing System Entrance</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+</HEAD>
+<BODY )background(>
+)global_header showlogo (
+<BR>
+)
+
+% If the browser looks stupid, warn the user.
+browser 2 lt {
+  (<STRONG>WARNING!  As far as we know, your browser )
+  /HTTP_USER_AGENT defined {
+    (\(which identifies itself as ")HTTP_USER_AGENT("\))
+  } {
+    ((which could not be identified))
+  } ifelse
+  ( is not capable of using tables.  If this is true,
+  then some of these pages may look really ugly.
+  If we're wrong, and your browser <EM>does</EM>
+  support tables, then please let us know so we can update our database.
+  </STRONG><P>)
+} if
+
+% if "show_motd" is true, show the contents of the /etc/motd file.
+% Otherwise just show bbs/motd.html file.
+/show_motd constant {
+
+  flavor(links)+ include
+
+  (<HR><CENTER><TABLE><TR><TD><PRE>)
+  (/etc/motd) read expand
+
+  % Grex has some additional motd files
+  bbsname (Grex) eq {
+    (/usr/local/lib/motd.birthday) read expand
+  } if
+
+  (</PRE></TD></TR></TABLE></CENTER>\n)
+} {
+  (*motd.html) read
+  dup {(<HR>) exch} if
+} ifelse
+(<HR>\n)
+
+(<TABLE CELLPADDING=8>
+<TR><TD VALIGN=top>)
+
+% A button to read new responses in your hotlist conferences
+
+/needsp 0 def
+booktalk_buttons ! {
+  (@0) next_conf /nconf xdef /csel xdef
+  nconf {
+    (<A HREF=)our_url(confhome?conf=)nconf(&csel=)csel(&nextnew=>)
+    readnew_button
+    (</A><BR>\n)
+    /needsp 1 def
+  } if
+} if
+
+% a button to toggle between all conferences and hotlist conferences
+id {
+  needsp {spacer} if
+  /needsp 1 def
+  (<A HREF=)our_url
+  display (hot) eq {
+    (begin?display=all>)allforums_button
+  } {
+    (begin?display=hot>)myforums_button
+  } ifelse
+  (</A><BR>\n)
+} if
+
+% a button to change passwords
+id {
+  needsp {spacer} if
+  (<A HREF=")our_url(chpwform?login=)id(">)password_button(</A>\n)
+
+   % a button to logout
+   sessions {
+     needsp {spacer} if
+     (<A HREF=")backtalkurl(/public/logout">)logout_button(</A>\n)
+   } if
+} if
+
+(</TD><TD VALIGN=TOP BGCOLOR=)text_bg(>)
+
+display (hot) eq {
+
+  % Show summary of active conferences
+
+  1 cache_conflist
+
+  /am_gradm amadm (gradm) () ingroup or def
+
+  `(<TABLE><TH COLSPAN=2></TH><TH>total<BR>)Items(</TH><TH>new<BR>)Items
+  (</TH><TH>active<BR>)Items(</TH><TH ALIGN=left>\n)'
+
+  % Read in the hotlist
+  3 cflist_array /cflist xdef
+  0 /cnt xdef
+  cflist {
+    /conf xstore
+
+    % Show comments as headings
+    conf 0 1 substr (#) eq {
+      conf 1 1 substr (:) eq {
+	% a tag
+	booktalk_cflist {
+	  % for booktalk, stop at endpublic tag unless we are a fairwitness
+	  conf (#:endpublic) eq am_gradm ! and {break} if
+	} if
+	% otherwise, ignore tags
+	continue
+      } {
+	% a heading - print it
+	(<TR><TD COLSPAN=2><FONT SIZE=+1><STRONG>)conf 1 9999 substr expand
+	(</STRONG></FONT></TD></TR>\n)
+      } ifelse
+      continue
+    } if
+
+    % display the line
+    /cnt inc
+    (<TR><TD>&middot;</TD><TD>)
+    snoop_conf {
+      conf cgiquote(</TD><TD COLSPAN=3 ALIGN=center><EM>does not exist!</EM>)
+    } {
+      (<A HREF=confhome?conf=)conf cgiquote(&csel=@)cnt(>)conftitle
+      (</A></TD><TD ALIGN=center>)
+      conf_new pop
+      (</TD><TD ALIGN=center>) 3 1 roll
+      (</TD><TD ALIGN=center>) exch
+    } ifelse
+    (</TD></TR>\n)
+
+  } forall
+  close_conf
+
+  cnt ! {
+    pop `(<BR>No )Conferences( on Hotlist\n)'
+  } {
+    (</TABLE>)
+  } ifelse
+
+  0 cache_conflist
+
+} {
+
+  /usepublic_txt constant {
+    % Load the "public.txt" file
+    bbsdir (/public.txt) + read /remainder xdef
+    0 /in_ul xdef
+
+    % Process the file, line-by-line
+    {
+      % get the next line
+      remainder (\n) parse
+	dup () eq {break} if
+	/work_line xdef
+	/remainder xdef 
+
+      % check if it is a conference line
+      work_line pt_confline sgrep {
+	 aload /work_line xdef /conf xstore pop
+	 in_ul ! {1 /in_ul xdef (<UL>)} if      % enter <UL> if needed
+	 (<LI><A HREF="confhome?conf=)conf(">)conf quote(</A> -\n)
+	 work_line quote
+      } {
+	 % check if it is a header line
+	 work_line pt_headline sgrep {
+	   1 get /work_line xdef
+	   in_ul {0 /in_ul xdef (</UL>)} if     % exit </UL> if needed
+	   (<H2>) work_line quote (</H2>)
+	 } if
+      } ifelse
+    } loop
+  } {
+    % Load the confmenu file
+    (*confmenu) read /remainder xdef
+
+    % Process the file, line-by-line
+    /in_ul 0 def
+    {
+      % get the next line
+      remainder (\n) parse exch /remainder xdef
+      dup ! {break} if
+
+      % skip comments
+      dup 0 1 substr (#) eq {pop continue} if
+
+      % parse apart the line
+      (:) clip /cname xdef
+      (:) clip /ctitle xdef /cdes xdef
+
+      cname {
+	% Format a conference name
+	in_ul ! {/in_ul 1 def (<UL>)} if	% enter <UL> if needed
+	(<LI><A HREF="confhome?conf=)cname(">)ctitle( )Conference cap(</A> - )
+	cdes(\n)
+      } {
+	% Format a header line
+	in_ul {/in_ul 0 def (</UL>)} if	% exit </UL> if needed
+	(<H2>)ctitle(:</H2>\n)
+	cdes {(<BLOCKQUOTE>)cdes(</BLOCKQUOTE>\n)} if
+      } ifelse
+
+    } loop
+  } ifelse
+
+  % Page footer
+  in_ul {/in_ul 0 def (</UL>)} if
+
+} ifelse
+(</TD></TR>\n)
+
+(</TD></TR></TABLE>
+)
+id sessions ! and {
+  (<P><CENTER><TABLE WIDTH=50%><TR><TD><FONT COLOR=RED>Warning:</FONT>
+  To ensure that no one else uses your )bbsname( account after you
+  leave your computer, be sure to <STRONG>close all browser windows</STRONG>
+  when you are done.</TR></TD></TABLE></CENTER>\n)
+} if
+global_footer
+(</BODY></HTML>
+)
+

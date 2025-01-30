@@ -1,0 +1,59 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% killuser script
+%
+% This script allows a user to delete his own account or it allows the system
+% administrator to kill another user's account.  It works only on systems
+% where "nopwedit" is false.  This is the handler for the "killconfirm" page,
+% and actually does the kill.
+%
+% Query Parameters:
+%    login=     login id of user to kill.
+%    really=    "Y" if he confirmed the kill
+
+/really defined { really (Y) eq {
+
+  flavor(config)+ include
+
+  login id ne {
+    amadm {
+       % check existence of target
+       login userinfo pop pop !
+         {pop pop pop(User )login( does not exist.\n) stop} if
+       pop pop pop
+       % if an administrator, select the user to kill
+       login selectuser
+    }{
+       % warn off people without the right access
+       (Only )login( or an administrator can delete )login
+       ('s account.</BODY></HTML>\n)
+       stop
+    } ifelse
+  } if
+
+  % kill the account
+  removeuser
+
+  % deselect user
+  amadm {() selectuser} if
+
+  % Print a page
+  (<HTML><BODY)body_tags(>\n)
+  global_header
+
+  amadm {
+   (Login )login( has been deleted.<P>
+   <A HREF=users>Return to list of users.</A>)
+  }{
+   (Your login has been deleted.)
+  } ifelse
+  
+  (
+  </BODY></HTML>
+  )
+  halt
+} if } if
+
+% if he didn't confirm, chain back to bio page
+/doedit (Y) def
+flavor(/bio)+ jump

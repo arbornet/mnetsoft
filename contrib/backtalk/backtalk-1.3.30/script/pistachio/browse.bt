@@ -1,0 +1,311 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% browse script
+%
+% The "browse" script lists items in a specified conference, in a manner
+% vaguely similar to the Picospan "browse" command.  In Pistachio, it offers
+% a fairly rich range of options for reading the items, as well as remember,
+% forget, freeze, thaw, kill and retire buttons.
+%
+% All of the read/forget/remember/freeze/kill/thaw/retire command buttons
+% direct us to the "dispatch.bt" script which will do the right thing.
+%
+% Query Parameters:
+%    conf=		Name of the conference to browse.
+%    csel=		Conference selector (list of conferences to read)
+%    list=		What to list: "all", "unforgotten", "new", "forgotten"
+
+% Function to generate two-column tables of control panel buttons
+/col 0 def    % next column: 0=not in table, 1=column 1, 2=column 2
+/nextbox {
+  col ! {
+    (<TABLE CELLSPACING=0 CELLPADDING=0 WIDTH=100%><TR>)
+    /col 2 def
+  } {
+    (</TD>)
+    col 1 eq {(</TR>\n<TR>)} if
+    /col 3 col - def
+  } ifelse
+  (<TD>)
+} def
+
+/endtable {
+  col {(</TD></TR></TABLE>\n)} if
+} def
+
+flavor(config)+ include
+
+% Page header
+(
+<HTML><HEAD>
+<TITLE>)bbsname( - )/conftitle( )Conference cap +
+showforgotten 2 eq {( Forgotten)+} if
+`( - )Item cap( List</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">\n)'
+use_rss_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference cap(" HREF=")
+  anon_url(cinnamon?conf=)conf(">\n)
+} if
+/metatags
+(</HEAD>)
+
+% Open the conference
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt}
+if
+
+% Get conference password, if we need it
+secret 2 eq /dunno defined ! and {
+  [/conf /csel /showforgotten] flavor(confpass)+ jump
+} if
+
+global_header
+
+% Load button definitions
+/butsel 37 defconstant flavor(buttondef)+ include
+
+% Check if the user has read access to the conference
+mayread ! {(You do not have access to the )conf( )Conference(.) stop } if
+
+% Set default 'list' parameter to default value
+/list defined ! {
+  id {
+    % logged in users
+    /dfltilist dflt_item_list def
+    (*.backtalk) /dfltilist loadvar pop
+    dfltilist
+  }{
+    % anonymous users see all unretired items
+    (unforgotten)
+  } ifelse
+  /list xdef
+} if
+list (all) eq {/showforgotten 1 def} if
+list (forgotten) eq {/showforgotten 2 def} if
+
+% title line
+(<H1>)conftitle quote`( )Conference cap( )Item cap( List</H1>
+<HR>)'
+
+[ (<A HREF=browse?conf=)conf(&csel=)csel ] /hrefbrowse xdef
+
+% form header
+(<FORM ACTION=dispatch>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+<INPUT TYPE=hidden NAME=list VALUE=)list(>
+)
+
+/nofavfirst get_conf_note {()}{( CHECKED)}ifelse /favfirst xdef
+/bnewfirst get_conf_note {( CHECKED)}{()}ifelse /bnewfirst xdef
+/bnewlast get_conf_note {( CHECKED)}{()}ifelse /bnewlast xdef
+/reverse get_conf_note {( CHECKED)}{()}ifelse /reverse xdef
+
+% make a control panel
+(<TABLE CELLSPACING=0 CELLPADDING=0>
+<TR><TD VALIGN=top>
+<INPUT TYPE=image NAME=read )button_src( Read...&nbsp;</TD>
+<TD VALIGN=top>
+<INPUT TYPE=radio NAME=rstyle VALUE=new CHECKED> New Responses<BR>
+<INPUT TYPE=radio NAME=rstyle VALUE=all> All Responses<BR>
+<INPUT TYPE=radio NAME=rstyle VALUE=unseen> Unseen Responses<BR>
+<INPUT TYPE=radio NAME=rstyle VALUE=since> Responses Since
+<INPUT TYPE=text SIZE=15 NAME=sdate VALUE="Yesterday"><BR>
+</TD><TD VALIGN=top>
+<INPUT TYPE=checkbox NAME=favfirst VALUE=1)favfirst(> Favorites First<BR>
+<INPUT TYPE=checkbox NAME=bnewfirst VALUE=1)bnewfirst(> Brand New First<BR>
+<INPUT TYPE=checkbox NAME=bnewlast VALUE=1)bnewlast(> Brand New Last<BR>
+<INPUT TYPE=checkbox NAME=reverse VALUE=1)reverse(> Backwards
+</TD></TR>
+<TR><TD VALIGN=top>
+<INPUT TYPE=image NAME=mark )button_src( Mark as Seen...
+</TD><TD VALIGN=top>
+<INPUT TYPE=radio NAME=mstyle VALUE=all CHECKED> All Responses<BR>
+<INPUT TYPE=radio NAME=mstyle VALUE=before> Responses Before
+<INPUT TYPE=text SIZE=15 NAME=bdate VALUE="Today">
+</TABLE>\n)
+
+nextbox
+id { (<INPUT TYPE=image NAME=favor )button_src }
+   { no_button } ifelse
+`( Favor Selected )Items cap(.)'
+
+nextbox
+id { (<INPUT TYPE=image NAME=disfavor )button_src }
+   { no_button } ifelse
+`( Disfavor Selected )Items cap(.)'
+
+% forget button only if we are showing some non-forgotten items
+showforgotten 2 ne {
+  nextbox
+  id { (<INPUT TYPE=image NAME=forget )button_src }
+     { no_button } ifelse
+  `( Forget Selected )Items cap(.)'
+} if
+
+% remember button only if we are showing some forgotten items
+showforgotten 0 ne {
+  nextbox
+  id { (<INPUT TYPE=image NAME=rem )button_src }
+     { no_button } ifelse
+  `( Remember Selected )Items cap(.)'
+} if
+
+% additional buttons for fairwitnesses
+amfw {
+  nextbox
+  (<INPUT TYPE=image NAME=freeze )fw_button_src
+  `( Freeze Selected )Items cap(.)'
+  nextbox
+  (<INPUT TYPE=image NAME=thaw )fw_button_src
+  `( Thaw Selected )Items cap(.)'
+  nextbox
+  (<INPUT TYPE=image NAME=kill )fw_button_src
+  `( Kill Selected )Items cap(.)'
+  showforgotten 2 ne {
+    nextbox
+    (<INPUT TYPE=image NAME=retire )fw_button_src
+    `( Retire Selected )Items cap(.)'
+  } if
+  showforgotten 0 ne {
+    nextbox
+    (<INPUT TYPE=image NAME=unretire )fw_button_src
+    `( Unretire Selected )Items cap(.)'
+  } if
+} if
+endtable
+
+% List the items
+
+(<HR>\n)
+
+% Buttons to select listing type - all except the current setting have
+% unchecked boxes which can be clicked to change the setting.  The current
+% setting has a non-clickable checked box
+id {
+  (<TABLE WIDTH=620><TR><TD ALIGN=left>Listing&nbsp;of:</TD><TD>)
+  list (new) ne
+    {hrefbrowse(&list=new>)unchecked_box(</A>)}
+    {checked_box} ifelse
+  `(&nbsp;&nbsp;New&nbsp;)Items cap(\n</TD><TD>)'
+  list (unforgotten) ne
+    {hrefbrowse(&list=unforgotten>)unchecked_box(</A>)}
+    {checked_box} ifelse
+  `(&nbsp;&nbsp;Unforgotten&nbsp;)Items cap(\n</TD><TD>)'
+  list (forgotten) ne
+    {hrefbrowse(&list=forgotten>)unchecked_box(</A>)}
+    {checked_box} ifelse
+  `(&nbsp;&nbsp;Forgotten&nbsp;)Items cap(\n</TD><TD>)'
+  list (all) ne
+    {hrefbrowse(&list=all>)unchecked_box(</A>)}
+    {checked_box} ifelse
+  `(&nbsp;&nbsp;All&nbsp;)Items cap
+  (</TD></TR></TABLE>\n)'
+} if
+
+% Header for the actual list of items
+mark
+(<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>\n)
+id {(<TH>new&nbsp;)} if
+`(</TH><TH>resp&nbsp;</TH><TH></TH><TH ALIGN=left>)Item(</TH>\n)'
+
+mark (1-$) 1 fav_sel (,) jointomark /isel xstore
+0 /cnt xdef			% initial counter for number of items
+1 /wasfav xdef			% was previous item a favorite?
+
+% begin loop for each item 
+{
+  % get the next item
+  isel next_item
+  {
+    break	% next_item failed - no more items
+  }{
+    this_item
+    {
+      break	% this_item failed - shouldn't happen
+    }{
+      % save new item selector
+      pop /isel xstore 
+
+      % Count new responses - skip non-new ones if only showing new stuff
+      id {
+        /nnew maxresp maxread - def
+        list (new) eq nnew ! and {continue} if
+      } if
+
+      /fav item /fav get_item_note def
+      fav ! wasfav and {(<TR><TD>&nbsp;</TD></TR>\n)} if
+      /wasfav fav def
+  
+      (<TR>)
+      % print number of new responses (not for anonymous users)
+      id {
+        (<TD ALIGN=right><A HREF="read?conf=)conf(&csel=)csel(&item=)item
+        (&rsel=new&noskip=1&showforgotten=2">)
+        maxread 0 lt {(all)} {nnew} ifelse
+        (</A>&nbsp;</TD>)
+      } if
+
+      % print total number of responses
+      (<TD ALIGN=right>)
+      (<A HREF="read?conf=)conf(&csel=)csel(&item=)item
+      (&rsel=all&noskip=1&showforgotten=2">)maxresp(</A>
+      &nbsp;</TD><TD><INPUT TYPE=checkbox NAME="isel" VALUE=)item
+      (> </TD><TD ALIGN=left>#)
+      item(: )
+    
+      % print item number and title
+      (0) read_item {pop (</TABLE></TT><B>Internal error "read_item") halt} if
+      item /mytitle get_item_note dup !{pop title} if quote
+      ( - )authorname quote( \()authorid quote(\))
+
+      % print status flags
+      fav {
+         ( <FONT COLOR=")highcolor(">[)fav 2 eq {(temp )}if(favorite]</FONT>)
+       } if
+      forgotten showforgotten 2 ne and {( [forgotten])} if
+      retired {( [retired])} if
+      frozen {( [frozen])} if
+      linked {( [linked])} if
+      (</TD></TR>\n)
+
+      % update count
+      /cnt inc
+    } ifelse
+  } ifelse
+} loop
+(</TABLE>)
+
+cnt 0 eq
+{
+  % if there were no items, print a message to that effect
+  cleartomark
+  (<STRONG>There are no )
+  list (new) eq {(new )} if
+  list (forgotten) eq {(forgotten )} if
+  list (unforgotten) eq {(unforgotten )} if
+  Items(.</STRONG>\n)
+} if
+
+% page footer
+
+(</FORM>
+<HR>
+)
+use_rss_icon expose_rss_conf and {
+  (<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD>)
+} if
+(Goto <A HREF="confhome?conf=)conf(&csel=)csel(">)confhome_button(</A> or
+<A HREF=begin>)entrance_button(</A> or
+<A HREF=help/browse>)help_button(</A>)
+sessions { id {( or )logout_link} if } if
+use_rss_icon expose_rss_conf and {
+  (</TD>\n<TD ALIGN=right><A TITLE="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference(" HREF=")
+  anon_url(cinnamon?conf=)conf("><IMG SRC=")rss_icon
+  (" BORDER=0></A></TD></TR></TABLE>\n)
+} if
+global_footer
+(</BODY></HTML>
+)

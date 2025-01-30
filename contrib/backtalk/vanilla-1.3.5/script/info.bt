@@ -1,0 +1,69 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% info - this script is pure text, describing the rules of the conference
+% system, and defining terms.
+
+(<HTML>
+<HEAD>
+
+<TITLE>) bbsname ( Conference Instructions</title>\n)
+(S) flavor(meta)+ include
+(</HEAD>
+<BODY>\n)
+
+bbslogo
+
+(<h1>Conference Instructions</h1>\n)
+
+id ! {(
+If you do not create a personal conference account, then the system
+will not know who you are. Under these circumstances you can do 
+little more than read the material posted by others. You will not
+be able to post your own comments, and the system will not remember
+what you have seen. This system has been set up so that it is very
+simple for you to create your own account for immediate use.
+You are strongly encouraged to <a href=")register_url(">fill
+out an account request</a> and obtain your account.
+The remainder of these instructions assume that you have already
+done so. <p>
+)} if
+
+(
+This system is made up of a number of conferences. There is a 
+<a href=conflist?>menu of these conferences</a> to choose from. 
+Each conference can have a 
+different topic, and you are free to pick and choose which ones
+are of interest to you.
+<p>
+Each conference is made up of items. Anyone may create a new item
+whenever they like. If you are going to create a new item,
+please try to select an appropriate conference for it
+so that items that fall within the same general topic area
+can all appear in the same conference.
+<p>
+When you are reading conferences, you may find some items are not
+of any interest. You are encouraged to "forget" these items,
+so that your conference reading can focus on only those items
+that are of interest to you.
+<p>
+Each item consists of a header which is entered by whoever creates the item,
+and this is followed by a linear stream of responses from others. It is a
+good idea to try to keep the discussion on topic, as defined in the header.
+
+<p>
+<h3>Responsible use</h3>
+Remember when you use this system that your responses will be seen by 
+all others who have access to this computer. You alone are responsible
+for the comments you post here. Your right to post here is granted with
+the understanding that you will not abuse it. If you post inappropriate
+material the system administrator(s) reserves the right to remove your
+comments, and if necessary, to withdraw your access to the system.
+Do not post vulgar or obscene material, threats or personal attacks.
+In short, do not use this system to diminish others' ability to
+enjoy it.
+
+<p><a href=begin>Return</a>.
+
+</body>
+</html>
+)

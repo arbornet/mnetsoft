@@ -1,0 +1,213 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% dispatch script
+%
+% The dispatch script handles button clicks on the control panel of the rather
+% complex "browse.bt" item list.  This handles some commands locally, and
+% passes others on to other scripts.
+%
+% Query parameters:
+%    conf=		name of current conference
+%    csel=		current conference selector if we are reading new
+%    nextnew=		set if we are reading new
+%    showforgotten=	is "browse" page showing forgotten items?
+%    isel=		comma separated list of items selected off item list
+%    forget.x=  	defined if the "forget" button was pressed
+%    rem.x=	  	defined if the "remember" button was pressed
+%    retire.x=	  	defined if the "retire" button was pressed
+%    unretire.x	  	defined if the "unretire" button was pressed
+%    freeze.x=	  	defined if the "freeze" button was pressed
+%    thaw.x=	  	defined if the "thaw" button was pressed
+%    kill.x=	  	defined if the "kill" button was pressed
+%    read.x=	  	defined if the "read" button was pressed
+%    rstyle=            read "new", "all", or "since"
+%    sdate=		date to read since, if rstyle=since
+%    reverse=           true to read backward
+%    favfirst=          true to read favorites first
+%    bnewfirst=         true to read brandnew first
+%    mark.x=	  	defined if the "mark" button was pressed
+%    mstyle=            mark "all", or "before"
+%    bdate=             date to mark before, if mstyle=before
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  Conference cap( ")conf(" does not exist!</BODY>\n) stop} if
+
+% Handle favor button
+/favor.x defined /disfavor.x defined or {
+  /rsel (0-$) store
+  /oldsf showforgotten def
+  /showforgotten 1 store
+
+  % loop through all selected items disfavoring
+  { isel next_item {break} if
+    exch pop exch /isel xstore
+    /fav /favor.x defined set_item_note
+  } loop
+
+  /showforgotten oldsf store
+  clear
+  flavor(browse)+ jump
+} if
+
+% Handle forget button
+/forget.x defined {
+  /rsel (0-$) store
+  /oldsf showforgotten def
+  /showforgotten 1 store
+
+  % loop through all selected items forgetting each one
+  { isel next_item {break} if
+    exch pop exch /isel xstore
+    forget_item pop
+  } loop
+
+  /showforgotten oldsf store
+  clear
+  flavor(browse)+ jump
+} if
+
+% Handle remember button
+/rem.x defined {
+  /rsel (0-$) store
+  /oldsf showforgotten def
+  /showforgotten 1 store
+
+  % loop through all selected items remembering each one
+  { isel next_item {break} if
+    exch pop exch /isel xstore
+    remember_item pop
+  } loop
+
+  /showforgotten oldsf store
+  clear
+  flavor(browse)+ jump
+} if
+
+% handle retire and unretire buttons
+/retire.x defined /unretire.x defined or {
+  /rsel (0-$) store
+  /oldsf showforgotten def
+  /showforgotten 1 store
+
+  % loop through all selected items retiring or unretiring each one
+  { isel next_item {break} if
+    /item xstore pop /isel xstore
+    /retire.x defined retire_item pop
+  } loop
+
+  /showforgotten oldsf store
+  clear
+  flavor(browse)+ jump
+} if
+
+% handle freeze and thaw buttons
+/freeze.x defined /thaw.x defined or {
+  /rsel (0-$) store
+  /oldsf showforgotten def
+  /showforgotten 1 store
+
+  % loop through all selected items freezing or thawing each one
+  { isel next_item {break} if
+    /item xstore pop /isel xstore
+    /freeze.x defined freeze_item pop
+  } loop
+
+  /showforgotten oldsf store
+  clear
+  flavor(browse)+ jump
+} if
+
+% handle kill button
+/kill.x defined {
+  /rsel (0-$) store
+  /oldsf showforgotten def
+  /showforgotten 1 store
+
+  % loop through all selected items killing each one
+  { isel next_item {break} if
+    /item xstore pop /isel xstore
+    kill_item pop
+  } loop
+
+  /showforgotten oldsf store
+  clear
+  flavor(browse)+ jump
+} if
+
+% Handle mark button
+/mark.x defined {
+
+  % Convert time to integer
+  mstyle (before) eq {
+    /marktime bdate 0 1 dtime def
+    marktime ! {(Bad date format.\n<BODY>\n) stop} if
+  } if
+
+  % Set up to loop through all selected items
+  /rsel (all) store
+  /showforgotten 1 store
+  isel ! {/isel (1-$) store} if
+
+  % loop through items
+  {
+    isel next_item {break} if
+    this_item {break} if
+    pop /isel xstore
+
+    /marktime defined { lastdate marktime gt {
+      % find last response before marktime starting after last we read
+      maxread 1 +   1   maxresp {
+        read_resp {break} if
+	date marktime ge {break} if
+	/markresp resp def
+      } for
+
+      % do any new marking
+      /markresp defined {
+        markresp 1 + item mark_unseen pop
+      } if
+
+      % onward to the next item
+      continue
+
+    } if } if
+
+    % mark entire item seen
+    maxresp 1 + item mark_unseen pop
+  } loop
+  clear
+  flavor(browse)+ jump
+} if
+
+% Handle read button
+/rsel /rstyle (new) default store
+
+% construct the item selector
+isel {/noskip 1 store isel} {(1-$)} ifelse
+/reverse defined { rev_sel } if
+/bnewlast defined dup /swap xdef {/bnewfirst 1 def} if
+/favfirst defined {1}{0}ifelse
+/bnewfirst defined {2}{0}ifelse + /ord xdef
+mark exch ord fav_sel swap{exch}if (,) jointomark
+
+rsel (since) eq {
+  /since sdate 0 1 dtime store
+  since ! {pop (Bad date format.\n<BODY>\n) stop} if
+} if
+next_item {
+  rsel (new) eq {(No new items.\n)} {
+  rsel (all) eq {(No items.\n)}
+                {(*.backtalk) /timezone loadvar pop
+                 (No responses since )since ctime(.\n)}
+    ifelse } ifelse
+  (</BODY>\n)
+  stop
+} if
+/item xstore
+/tmprsel xdef
+/isel xstore
+clear
+flavor(read)+ jump

@@ -1,0 +1,122 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% openconf script
+%
+% This is a header file that takes care of entering a conference. As a side
+% effect, it pushs the html <BODY> line for the conference (which sets
+% background colors and whatnot).  It also sets the variables:
+%
+%    regbutton  - normal button style
+%    offbutton  - disabled button style
+%    admbutton  - administrator button style
+%    bgcolor    - background color
+%    textcolor  - text color
+%    linkcolor  - link text color
+%    vlinkcolor - vlink text color
+%    alinkcolor - alink text color
+%    metatags   - various metatags to use - mostly robots tags
+%
+% This script is meant to be invoked with some script like:
+%    flavor(openconf)+ stopped {
+%       ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+%    } if
+% Note that it "stops" on failure, pushing nothing.
+% The pistachio/config.bt should be included before including this
+
+(lib/robots) include
+
+% open the conference (on failure, push the default body line)
+open_conf { /metatags conf_robot def `(<BODY)body_tags(>\n)' stop} if
+
+% for conferences that need passwords, keep passwords in cookies
+secret {
+  /dunno defined {
+    % User has said he doesn't know password, remember that in a cookie
+    (pass.)conf+ (Dunno!) 0 setcookie
+  } {
+    secret 1 eq {
+      % We used password to get in - stash it in cookie for future use
+      amfw ! {
+        (pass.)conf+ dup getcookie {
+           cpass 0 setcookie
+        } {
+           cpass eq {pop}{cpass 0 setcookie}ifelse
+        } ifelse
+      } if
+    } {
+      % We needed password, but didn't get it - try getting one from the cookie
+      (pass.)conf+ getcookie ! {
+         dup (Dunno!) eq {
+           pop /dunno 1 def
+         } {
+	   /cpass xstore
+	   close_conf
+	   open_conf {`(<BODY)body_tags(>\n)' stop} if
+         } ifelse
+      } if
+    } ifelse
+  } ifelse
+} if
+
+% default color values
+/bodytags () def
+/bgcolor bg_color def
+/bgimage /bg_image constant {bg_image}{()}ifelse def
+/textcolor /text_color constant {text_color}{()}ifelse def
+/linkcolor /link_color constant {link_color}{()}ifelse def
+/vlinkcolor /vlink_color constant {vlink_color}{()}ifelse def
+/alinkcolor /alink_color constant {alink_color}{()}ifelse def
+/highcolor /high_color constant {high_color}{(FF0000)}ifelse def
+/regbutton undef
+/offbutton undef
+/admbutton undef
+
+/nopersonal constant ! {
+  id {
+    % load color settings from participation file
+    /bodytags get_conf_note dup { /bodytags xdef } { pop } ifelse
+    /regbutton get_conf_note dup { /regbutton xdef } { pop } ifelse
+    /offbutton get_conf_note dup { /offbutton xdef } { pop } ifelse
+    /admbutton get_conf_note dup { /admbutton xdef } { pop } ifelse
+    /highcolor get_conf_note dup { /highcolor xdef /myh 1 def } { pop } ifelse
+  } if
+} if
+
+bodytags !
+  /regbutton defined !  or
+  /offbutton defined !  or
+  amfw /admbutton defined ! and or
+{
+  % load color settings from settings file
+  (*settings) [
+    bodytags ! {
+     /bodytags /bgcolor /bgimage /textcolor /linkcolor /vlinkcolor /alinkcolor
+     } if
+     /regbutton defined !{ /regbutton } if
+     /offbuttun defined !{ /offbutton } if
+     /admbutton defined !{ /admbutton } if
+     /myh defined !{ /highcolor } if
+     confrobots 1 eq { /norobots } if
+     ]
+    loadvar pop
+} {
+  confrobots 1 eq {
+    (*settings) /norobots loadvar pop
+  } if
+} ifelse
+
+% construct the <BODY> line
+bodytags {
+  `(<BODY )bodytags(>\n)'
+} {
+  `(<BODY)
+  bgcolor {( BGCOLOR=)bgcolor} if
+  bgimage {( BACKGROUND=)bgimage} if
+  textcolor {( TEXT=)textcolor} if
+  linkcolor {( LINK=)linkcolor} if
+  vlinkcolor {( VLINK=)vlinkcolor} if
+  alinkcolor {( ALINK=)alinkcolor} if
+  (>\n)'
+} ifelse
+
+/metatags conf_robot def

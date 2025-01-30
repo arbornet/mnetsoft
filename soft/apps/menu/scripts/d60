@@ -1,0 +1,76 @@
+#!/bin/sh
+# inuse v2.1   Disable terminal and alert if used   Author: Russ Sage
+# Enhancements by Michelangelo Giansiracusa - including...
+# Greatly improved dialogue with user; added max. 3 legal attempts to
+# unlock terminal; added cool terminal locked figlet ascii art.
+
+echo -n "
+
+***WARNING***: You are about to lock your terminal window via a 
+passphrase.  Retrieval of your terminal session is IMPOSSIBLE without 
+correct re-entry of your entered lock passphrase!!!  
+
+Are you SURE you REALLY want to do this?  If unsure, please enter NO... 
+
+ARE YOU SURE YOU WANT TO CONTINUE TO LOCK YOUR TERMINAL? "
+read promptres
+
+if [ $promptres = "y" -o $promptres = "Y" -o $promptres = "YES" -o $promptres = "yes" ] 
+then
+    trap "echo 'You are BUSTED!!'; stty echo; kill $$" 1 2 3 15 18 23 24
+    clear
+    stty -echo
+    echo -n "
+This program locks your terminal, so that other users cannot 
+mess with your account whilst you're away from your terminal.
+Do NOT press your interrupt, suspend, or end-of-input character
+signals as you will indefinitely loop with an applicable message.
+Unlocking can only be achieved by re-entering the lock string.
+
+Choose your lock string wisely (spaces are permitted).
+
+
+LOCK TERMINAL with
+
+Lock string (NB won't be echoed for security reasons): "
+    read BUF1
+    echo ""
+    echo ""
+    echo "`echo TERMINAL LOCKED | figlet -f banner`"
+    echo ""
+    echo -n "Enter lock string to unlock terminal: "
+
+    excessiveFailures=0
+    failedCount=0
+    while [ $excessiveFailures -ne 1 ]
+    do
+        BUF2=`head -1 < /dev/tty`
+        if [ "$BUF2" = "$BUF1" ] 
+        then 
+            echo ""
+            echo ""
+            echo "Kewl bananas...terminal unlocked."
+            echo ""
+            break
+        else
+            echo "Incorrect lock string!"
+            failedCount=`expr $failedCount + 1`
+            if [ $failedCount -eq 3 ]
+            then
+                echo ""
+                echo "Exhausted legal attempts to unlock terminal."
+                echo ""
+                echo "Disconnecting..."
+                kill -9 -1 0
+            else
+                echo ""
+                echo -n "Enter lock string to unlock terminal: "
+            fi
+       fi
+       echo -n ""
+    done
+    stty echo
+else
+    exit 0
+fi
+

@@ -1,0 +1,165 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% header script
+%
+% Generic page header for all Abalone pages.  Expects to find the following
+% on the stack:
+%    page title
+%    page type
+%    array of cgi parameter names passed to this page
+%    array of variables to load from .backtalk file
+%    array of variables to load from settings file if 'conf' is defined
+% Note that this starts a table, but doesn't end it!  If the constant noheader
+% is defined, don't generate the header bar.
+%
+% If the pagetype is (C) or (I), RSS autodiscovery links may be
+% included, depending on the global configuration.  The conf, conftitle and
+% item variables should be set up for this to work right.
+%
+% Robot exclusion metatags may be generated.
+%
+% Note that a type (S) page is one that doesn't refer to any particular
+% conference or user.  A type (C) page contains an overview of a conference,
+% refering to multiple items, a type (I) page refers to just one item, and a
+% type (U) page refers to one or more users.
+
+/abalone.scheme default_scheme def
+/abalone.css () def
+
+% Load stuff from settings
+conf {
+  [ exch aload confrobots 1 eq {/norobots} if ]
+  (*settings) exch loadvar pop
+}{
+  pop
+} ifelse
+% Load stuff from .backtalk
+[ exch aload /abalone.scheme /abalone.css] (*.backtalk) exch loadvar pop
+% Save CGI arg names
+/args xdef
+% Save page type
+/pagetype xdef
+% Save page title
+/pagetitle xdef
+
+abalone.scheme () eq       { /abalone.scheme default_scheme def } if
+abalone.scheme (custom) ne { /abalone.css () def } if
+
+/javafunc () def
+
+(lib/biolink) include
+(lib/robots) include
+
+% Print the page header
+(<HTML><HEAD>
+<BASE HREF=")backtalkurl(/)flavor(">
+<TITLE>)pagetitle(</TITLE>\n)
+
+% Do Robot exclusion headers
+pagetype (S) eq { index_robot } if
+pagetype (C) eq pagetype (I) eq or { conf_robot } if
+pagetype (U) eq { bio_robot } if
+
+% Do RSS autodiscovery headers
+use_rss_autodiscovery {
+  pagetype (C) eq expose_rss_conf and {
+    (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Items( in )
+    bbsname( )conftitle( )Conference cap
+    (" HREF=")anon_url(cinnamon?conf=)conf(">\n)
+  } if
+  pagetype (I) eq expose_rss_item and {
+    (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Responses( to )
+    bbsname( )conftitle( )Conference cap( )Item cap( )item
+    (" HREF=")anon_url(cinnamon?conf=)conf(&item=)item(">\n)
+  } if
+} if
+
+% Pull in the style sheet
+css_inclusion (import) eq {
+  % import style sheet
+  (<STYLE TYPE="text/css">\n<!--\n@import url\()
+  abalone.css {
+    abalone.css
+  }{
+    csshost(/)flavor abalone.scheme(.css)
+  } ifelse
+  (\);\n-->\n</STYLE>\n)
+} {
+css_inclusion (embed) eq {
+  abalone.css {
+    % link style sheet
+    (<LINK REL=stylesheet TYPE="text/css" HREF=")abalone.css(">\n)
+  } {
+    % embedded style sheet
+    (<STYLE TYPE="text/css">\n<!--\n)
+    `cssdir(/)flavor abalone.scheme (.css)' read
+    (\n-->\n</STYLE>\n)
+  } ifelse
+} {
+  % link style sheet
+  (<LINK REL=stylesheet TYPE="text/css" HREF=")
+  abalone.css {
+    abalone.css
+  }{
+    csshost(/)flavor abalone.scheme(.css)
+  } ifelse
+  (">\n)
+} ifelse
+} ifelse
+
+(<SCRIPT Language="Javascript">
+<!--
+)/javafunc
+(//-->
+</SCRIPT>
+</HEAD>
+<BODY>
+)
+
+/noheader constant {
+  (<TABLE BORDER=0 WIDTH=100%>\n)
+} {
+  global_header
+
+  (<TABLE BORDER=0 WIDTH=100%>
+  <TR CLASS=topbar>
+  <TD CLASS=hello WIDTH=50%>)
+  id {
+    (Hello, )id
+  }{
+    (You are not logged in. <A HREF=")
+    sessions {
+      anon_url(public/login?bounce=)
+      /AM (%26) def /QU (%3F) def /EQ (%3D) def
+      (https://)HTTP_HOST anon_url
+    } {
+      /AM (&) def /QU (?) def /EQ (=) def
+      (https://)HTTP_HOST pw_url
+    } ifelse
+    PATH_INFO
+    /cnt 0 def
+    args {
+      /var xdef
+      var defined ! {continue} if
+      cnt {AM} {QU} ifelse
+      /cnt inc
+      var cvs cgiquote EQ var exec cvs cgiquote
+    } forall 
+    (">Login Now</A>)
+  } ifelse
+  (\n</TD>
+  <TD CLASS=tlinks>\n)
+  id {
+    (<A HREF=")
+    /extern_bio constant { id extern_view_bio } { (bio) } ifelse
+    (">profile</A>&nbsp;|&nbsp;)
+  } if
+  (<A HREF=")register_url(">register</A>&nbsp;|&nbsp;\n)
+  id {(<A HREF="pref">preferences</A>&nbsp;|&nbsp;\n)} if
+  (<A HREF="find">search</A>\n)
+  sessions{ id {
+    (&nbsp;|&nbsp;<A HREF=")backtalkurl(/public/logout">logout</A>)
+  } if } if
+  (</TD></TR>
+  )
+} ifelse

@@ -1,0 +1,6 @@
+                       Fronttalk Command:  REWIND
+
+Usage:  REWIND                                         ("Ok:" prompt only)
+
+Rewind your conference hotlist, so that the next time you use the NEXT
+command, it will start from the beginning again.

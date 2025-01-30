@@ -1,0 +1,15 @@
+#!/bin/csh
+#
+# gatherfolk - gather all the folk who logged in today
+#
+# sfa 13-Dec-92
+
+set d = `date +%h" "%d`
+set f = /var/stats/folk.log
+set t = /tmp/gf.$$
+last -2500 | grep "$d" | awk ' $1 !~ /^(@@acct|audit|bye|cfadm|confused|exit|foot|ftp|gcoot|gripe|h|hangup|help|joot|koot|last|loot|moot|new|newuser|nutest|phone|phones|ps|quit|reboot|root|shutdown|soot|status|suggest|sundiag)$/ { print $1 } ' | awk ' $1 !~ /^(trouble|tty|uentity|ueuro|ugames|uiunet|umistik|umudos|unetmeg|uohriman|uphiber|uptime|usradm|utccbbs|uured|voteadm|w|who|woot|zoot)$/ { print $1 } ' | sort -u > $t
+echo " " >> $f
+echo "People who logged in" $d " [" `wc -l < $t` "total ]" >> $f
+pr -8 -t -l20 < $t | uniq  >> $f
+echo "------------------------------------------------------------------"  >> $f
+rm -f $t

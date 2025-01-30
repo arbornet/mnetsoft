@@ -1,0 +1,27 @@
+                          Fronttalk Separators:
+                         Date Separator Formats 
+
+For general information about separators see "HELP SEP".  The %t and %d
+item functions and the %o and %N conference functions print dates and times.
+The format used can be specified by giving a number prefix, like '%3t'.
+The following formats are understood:
+
+   CODE  DESCRIPTION               EXAMPLE
+    0    full date/time            Wed Feb 16 13:26:14 2002
+    1    full date/time            Wed, Feb 16, 2002 (13:26)
+    2    weekday                   Wed
+    3    month abbreviation        Feb
+    4    day of month              16
+    5    2-digit year              02
+    6    4-digit year              2002
+    7    24-hour hour              13
+    8    minutes                   26
+    9    seconds                   14
+   10    12-hour hour              1
+   11    am or pm                  pm
+   12    AM or PM                  PM
+   13    month number              2
+   14    day of year (001 to 366)  047
+   15    day or week (0 - 6)       3
+
+If no code is given, %d defaults to 1 and the others default to 0.

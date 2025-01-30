@@ -1,0 +1,228 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editconf script
+%
+% This is a script to edit conference setting.
+%
+% Query Parameters:
+%    conf=	Name of conference to edit
+%    nfws=	New fairwitnesses to set
+%    nmode=     New mode to set
+%    ntitle=    New title to set
+%    admhome=   URL of administrative menu
+
+flavor(config)+ include
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+(<HTML><HEAD><TITLE>Backtalk Conference Edit Page</TITLE></HEAD>
+<BODY BGCOLOR=FFFFFF>
+<H1>Backtalk Conference Edit Page</H1>)
+
+/editted 0 def			% don't write out file
+
+conf {
+   % If conference name is given, open it the usual way
+   open_conf {
+      (Could not access conference )conf
+      (.<P>You can <A HREF=makeconf?conf=)conf(&admhome=)admhome
+      (>create it</A> as a new conference, <A HREF=editalias?cname=)conf
+      (&admhome=)admhome
+      (>add it as an alias</A> for an existing conference, or )
+      (use the form below to edit some other conference.<P>\n)+
+      /conf () store
+   } if
+} if
+
+conf ! {
+   % If conference name not given, ask for a conference name
+   (<FORM METHOD=post ACTION=)SCRIPT_NAME(/admin/editconf>\n)
+   (<INPUT TYPE=hidden NAME=admhome VALUE=)+admhome(>\n)
+   (Conference to Edit: <INPUT TYPE=text NAME=conf SIZE=20>\n)+
+   (<INPUT TYPE=submit VALUE="Edit It">\n</FORM>\n)+
+   (<P><A HREF=)+admhome(>Return to menu</A>\n</BODY></HTML>\n)
+   stop
+} if
+
+(<H2>Editing conference: )conf(</H2><P>)
+
+% manually load in config file
+(*config) read dup /config xdef ! {
+   (Could not read )conf( conference config file.\n</BODY></HTML>\n)
+   stop
+} if
+
+
+config (\n) clip (\n) + /head xdef		% magic number line
+(\n) clip (\n) + head exch + /head xdef		% participation file line
+(\n) clip (\n) + head exch + /head xdef		% zero line
+(\n) clip /fws xdef				% list of fairwitnesses
+(\n) clip cvi /mode xdef			% conference mode
+(\n) clip /ctitle xdef				% conference title
+pop
+
+
+/nmode defined {
+   /nmode nmode cvi def
+   nmode 0 ne nmode 4 lt nmode 6 gt or nmode 20 lt nmode 22 gt or and and {
+      (Unsupported conference mode )nmode(\n</BODY></HTML>\n)
+      stop
+   } {
+      /mode nmode def
+      /editted 1 def
+   } ifelse
+} if
+
+
+/nfws defined {
+   % loop through fw list, looking for spaces or newlines
+   nfws {
+      dup (/n) eq exch ( ) eq or {
+	 (Bad fairwitness list\n</BODY></HTML>\n)
+	 stop
+      } if
+   } forall
+   /fws nfws def
+   /editted 1 def
+} if
+
+/ntitle defined {
+   /ctitle ntitle def
+   /editted 1 def
+} if
+
+editted {
+   head fws+ (\n)+
+   mode ctitle or {
+      mode cvs + (\n)+
+      ctitle {
+         ctitle+ (\n)+
+      } if
+   } if
+   (*config) write
+} if
+
+editted {
+  (Configuration has been updated:
+  <BLOCKQUOTE>
+  <STRONG>Fairwitness List:</STRONG> )fws quote(<BR>
+  <STRONG>Conference Mode: )
+  mode 0 eq {(OPEN)} if
+  mode 4 eq {(CLOSED (USER LIST))} if
+  mode 5 eq {(CLOSED (PASSWORD))} if
+  mode 6 eq {(CLOSED (USER LIST &amp; PASSWORD))} if
+  mode 20 eq {(FISHBOWL (USER LIST))} if
+  mode 21 eq {(FISHBOWL (PASSWORD))} if
+  mode 22 eq {(FISHBOWL (USER LIST &amp; PASSWORD))} if
+  (<BR>\nConference Title:</STRONG> The )ctitle quote( Conference
+  </BLOCKQUOTE>
+  <A HREF=)admhome(>Return to adminstration menu</A>.<BR>\n)
+  mode 4 eq mode 6 eq mode 20 eq mode 22 eq or or or {
+    (<A HREF=editulist?conf=)conf(&admhome=)admhome
+    (>Edit this conference's user list</A>\n)
+  } if
+  (</BODY></HTML>
+  )
+  stop
+} if
+
+(The form below may be used to change those conference settings that only
+the conference administrator can change.
+You can also use the <A HREF=confopt?conf=)conf
+(&admhome=)admhome(>conference options page</A> which has the
+configuration options normally controlled by the fairwitnesses.
+)
+(<FORM METHOD=post ACTION=)SCRIPT_NAME(/admin/editconf>
+<HR>
+<STRONG>Fairwitness List:</STRONG><BR>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<INPUT TYPE=text NAME=nfws VALUE=)fws quote( SIZE=60><BR>
+Fairwitnesses are users who have to power to delete, freeze)
+fw_retitle {(, retitle)} if
+( or retire items in the conference,)
+fw_erase fw_hide or {
+   fw_erase {( erase) fw_hide{( or)} if } if
+   fw_hide {( hide)} if
+   ( responses in the conference,)
+} if
+( maintain the list of users that can access closed conferences,
+and make cosmetic changes to the appearance of the conference.
+This should be a list of their login names separated by commas (but
+not spaces)<P>
+<STRONG>Conference Mode:</STRONG><BR>
+)
+/text_interface defined {
+  text_interface (Picospan) eq {
+    (<FONT COLOR=RED>Warning: Picospan will not work with Fishbowl conferences!</FONT>)
+  } if
+} if
+
+(<TABLE>
+
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=nmode VALUE=0)
+   mode 0 eq {( CHECKED)} if
+(></TD><TD COLSPAN=3><STRONG>OPEN</STRONG> -
+All users may read and post.</TD></TR>
+
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=nmode VALUE=4)
+mode 4 eq {( CHECKED)} if
+(></TD><TD><STRONG>CLOSED (USER LIST)</STRONG> -
+Only users on a user list maintained by the fairwitness may read or post.</TD>
+
+<TD VALIGN=TOP>&nbsp;&nbsp;<INPUT TYPE=radio NAME=nmode VALUE=20)
+mode 20 eq {( CHECKED)} if
+(></TD><TD><STRONG>FISHBOWL (USER LIST)</STRONG> -
+All users may read, but only users on a user list maintained by the
+fairwitness may post.</TD></TR>
+
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=nmode VALUE=5)
+mode 5 eq {( CHECKED)} if
+(></TD><TD><STRONG>CLOSED (PASSWORD)</STRONG> -
+Only users who know a secret password set by the fairwitness
+may read or post.</TD>
+
+<TD VALIGN=TOP>&nbsp;&nbsp;<INPUT TYPE=radio NAME=nmode VALUE=21)
+mode 21 eq {( CHECKED)} if
+(></TD><TD><STRONG>FISHBOWL (PASSWORD)</STRONG> -
+All users may read, but only users who know a secret password
+set by the fairwitness may post.</TD>
+
+<TR><TD VALIGN=TOP><INPUT TYPE=radio NAME=nmode VALUE=6)
+mode 6 eq {( CHECKED)} if
+(></TD><TD><STRONG>CLOSED (PASSWORD & USER LIST)</STRONG> -
+Only users who know a password and are on the user list may read or post.</TD>
+
+<TD VALIGN=TOP>&nbsp;&nbsp;<INPUT TYPE=radio NAME=nmode VALUE=22)
+mode 22 eq {( CHECKED)} if
+(></TD><TD><STRONG>FISHBOWL (PASSWORD & USER LIST)</STRONG> -
+All users may read, but
+only users who know a password and are on the user list may post.</TD></TR>
+
+</TABLE>
+
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<P>
+<STRONG>Conference Title:</STRONG></TR>
+The <INPUT TYPE=text NAME=ntitle VALUE=")ctitle quote(" SIZE=25> Conference<BR>
+The conference title is the name of the conference that Backtalk
+will display to the user.  It should normally be short (a word or two) and
+capitalized.  If it is not defined, then whatever name the user used to
+join the conference will be displayed instead.
+<P>
+<INPUT TYPE=submit VALUE="Change Settings">
+</FORM>
+<P>
+<A HREF=)admhome(>Return to adminstration page</A>.
+</BODY></HTML>
+)

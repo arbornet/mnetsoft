@@ -1,0 +1,29 @@
+                        Fronttalk Defines:  PARTMSG
+
+Usage:  DEFINE PARTMSG "<string>"
+
+The PARTMSG define is used to generate the output from the PARTICIPANTS
+command.  It called once with the 1x flag set to generate a header line,
+once for each user with the 2x flag set to generate a line describing that
+user, and once with the 4x flag set to generate a 'total' line.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(2x%10v %o %u%)\
+    %(4x\n%k participant%S total.%)\
+    %(1x\n   loginid        last time on      name\n%)"
+
+Note that when PARTMSG is used to display a user, most of the item functions
+operate differently:
+
+   %u  - listed user's full name, instead of currently logged in user's.
+   %v  - listed user's login id, instead of currently logged in user's.
+   %o  - date listed user last read this conference, instead of date logged
+         in user last logged into this conference.
+
+The %s and %q functions still work the same to display the name of the current
+conference, and %h and %H still display the server name but most of the other
+functions don't in this one case.

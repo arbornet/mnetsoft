@@ -1,0 +1,168 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% find script
+%
+% This script searches for various things in a conference.  The "findform.bt"
+% script generates the form that drives this script.
+%
+% Query Parameters:
+%    pattern=   pattern to search for
+%    conf=	name of the conference we are searching
+%    csel=      list of conference (not used, just passed along)
+%    isel=      items to search
+%    mode=      either "exact" for string search
+%                      "re" for regular expression search
+%    icase      defined if matching should be case insensitive
+%    m_text	defined if we should search message texts
+%    m_fname    defined if we should search Author's full names
+%    m_title    defined if we should search item titles
+%    m_login    defined if we should search author's login names
+
+flavor(config)+ include
+
+% if there is a shylist, load the unreg.bt header file
+/shyfile constant {flavor(unreg)+ include} if
+
+% shall we ignore case?
+/icase dup defined def
+
+% if we can't see full names, then can't search on them
+mayseealias ! {/m_fname undef} if
+
+isel ! {/isel (1-$) def} if
+
+% compile the pattern, set up search macros
+mode (re) eq
+{
+  % compile a regular expression
+  pattern icase{(im)}{(m)}ifelse regex
+  { % bad regular expression
+    (Regular Expression Error: )exch+ /err xdef
+    flavor(findform)+ jump
+  } {
+    % good regular expression
+    /reg xdef
+  } ifelse
+  % define a match function
+  /match {reg grep} def
+} {
+  % compile a plain text string
+  () pattern icase search pop
+  % define a match function
+  /match {() icase search 0 ge} def
+}
+ifelse
+
+% macro to print a successful match
+/presp {
+  ihead ! {
+    (<LI> )Item cap+( )+item(: )title(\n)
+    /ihead 1 def
+  } if
+  rhead ! {
+    (<UL>\n)
+    /rhead 1 def
+  } if
+  (<LI> <A HREF="read?conf=)conf(&csel=)csel(&item=)item(&rsel=)resp
+  (&noskip=1&showforgotten=2">)Response cap( )resp
+  (</A> by ) mayseealias {authorname( \()authorid(\))} {authorid} ifelse (\n)
+  /cnt inc
+  print
+} def
+
+
+% page header
+
+/butsel 4 defconstant flavor(buttondef)+ include
+
+(<HTML><HEAD>
+<TITLE>Search Results</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+</HEAD>
+)
+flavor(openconf)+ stopped {(Conference )conf( does not exist!\n) halt} if
+(<BODY )background(>\n)
+global_header
+
+(<TABLE CELLPADDING=8>
+<TR><TD VALIGN=TOP>
+<A HREF="confhome?conf=)conf(&csel=)csel(">)forumhome_button(</A><BR>
+)
+/oneconf constant ! {
+  spacer(<A HREF=begin>)entrance_button(</A><BR>\n)
+} if
+(</TD><TD VALIGN=TOP BGCOLOR=)text_bg(>
+Matches Found:
+<UL>
+)
+
+/rsel (all) store
+/cnt 0 def
+/blindfold 1 store	% don't "see" any of the items we read
+
+{ isel next_item {break} if
+  this_item {break} if
+  read_item {break} if
+  /nrs xdef
+  /isel xdef
+  /ihead 0 def
+  /rhead 0 def
+
+  % search title
+  /m_title defined {
+    title match {
+      (<LI> <A HREF="read?conf=)conf(&item=)item(&rsel=all">)
+        Item cap( )item(</A>: )title (\n)
+      /cnt inc
+      /ihead 1 def
+    } if
+  } if
+
+  % search item body
+  /m_text defined /m_fname defined /m_login defined or or {
+    {
+      /pm 1 def
+
+      % compare login name
+      /m_login defined {
+        authorid mode (re) eq {match} {pattern eq} ifelse {
+	  presp
+	  /pm 0 def
+	} if
+      } if
+
+      % search full name
+      /m_fname defined pm and {
+        authorname match {
+	  presp
+	  /pm 0 def
+	} if
+      } if
+
+      % search response text
+      /m_text defined erased ! and pm and {
+	/shyfile constant {raw_text} {0 read_text} ifelse match { presp } if
+      } if
+
+      % find next response
+      nrs next_resp {break} if 
+      read_resp {pop break} if
+      /nrs xdef
+    } loop
+  } if
+
+  % close any sublist
+  rhead {(</UL>\n)} if
+
+} loop
+
+(</UL>\n)
+cnt ! {(None\n)} if
+(</TD></TR></TABLE>
+)
+
+
+% page footer
+global_footer
+(</BODY></HTML>
+)

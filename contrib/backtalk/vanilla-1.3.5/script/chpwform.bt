@@ -1,0 +1,18 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+(<HTML><HEAD>
+<TITLE>Change Password for )id(</TITLE></HEAD>
+<H1>Change Password for )id(</H1>
+)
+
+/errmsg defined {
+  errmsg { (Password not changed: )errmsg(<P>\n)} if
+  } if
+
+(Enter your new password twice, once in each box.
+<FORM METHOD=POST ACTION="changepass">
+New Password: <INPUT TYPE="password" NAME=passwd1> <BR>
+Same Password: <INPUT TYPE="password" NAME=passwd2> <BR>
+<INPUT TYPE=submit VALUE="Change Password">
+</FORM>
+</BODY></HTML>)

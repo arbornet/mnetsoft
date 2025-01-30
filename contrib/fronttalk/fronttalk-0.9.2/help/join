@@ -1,0 +1,19 @@
+                       Fronttalk Command:  JOIN
+
+Usage:  JOIN <conference>                             ("Ok:" prompt only)
+        JOIN <server>:<conference>
+
+Select a different conference to read or post too.  For a list of all the
+conferences available on the current server, do "DISPLAY CONFERENCES".
+
+Not all conferences are accessible to all users.  Some are closed to all
+users not on a list maintained by the fairwitness.  Some can be read by
+all users, but can only be posted to by users on a list.
+
+You can select a conference on a different Backtalk server by using the
+second form of the command, with the server name prefixing the conference
+name.  The "DISPLAY SERVERS" command lists all servers known to Fronttalk.
+
+If a server name is given, but no conference name, (eg "JOIN grex:") then
+you will join the default conference on that server.  This is equivalent
+the the SERVER command.

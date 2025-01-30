@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# This is a script to build party.  It should be usable for
+# upgrades as well as for initial installs.
+
+VERSION=$1
+
+if test \! -f party.wrap
+then
+   echo "File party.wrap not found.  This command must be run from"
+   echo "the grexdoc/party directory."
+   exit
+fi
+
+if test "${VERSION}" == ""
+then
+   echo "Version must be given on command like:"
+   echo "  ./build party-2.12"
+   exit
+fi
+
+GREXDOCDIR=`pwd`
+
+# Goto build directory
+cd /usr/local/src
+mkdir -p party
+cd party
+
+# Fetch distribution
+ftp -V -m http://www.unixpapa.com/software/${VERSION}.tar.gz
+
+# Unpack distribution
+tar xvzf ${VERSION}.tar.gz
+cd ${VERSION}
+
+# Configure Grexishly
+rm config.h *.o
+./configure --with-suid=party  --localstatedir=/var --sysconfdir=/usr/local/etc
+
+# Compile
+make

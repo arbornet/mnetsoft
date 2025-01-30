@@ -1,0 +1,27 @@
+--- config.bt.dist	Thu Dec 23 01:47:27 2004
++++ config.bt	Thu Dec 23 01:49:06 2004
+@@ -21,19 +21,19 @@
+ % feeds of the whole site - individual conference feeds would not include
+ % this.  Must be defined.
+ %
+-/site_description (Some backtalk site) defconstant
++/site_description (Grex: Electronic Town Hall) defconstant
+ 
+ % Site Managing Editor - Email address of person with editorial control
+ % over site.  Not required.
+ %
+-%/site_managingeditor_name (John Q. Public) defconstant
+-%/site_managingeditor_email (john@mysite.com) defconstant
++/site_managingeditor_name (Cyberspace Communictions Inc) defconstant
++/site_managingeditor_email (board@cyberspace.org) defconstant
+ 
+ % Site Webmaster - Email address of person responsible for technical
+ % issues relating to RSS feeds.  Not required.
+ %
+-%/site_webmaster_name (John Q. Public) defconstant
+-%/site_webmaster_email (john@mysite.com) defconstant
++/site_webmaster_name (Grex Staff) defconstant
++/site_webmaster_email (staff@grex.org) defconstant
+ 
+ % Copyright - this string gives the copyright to be included in all RSS
+ %  feeds.  If not defined, no copyright message is included in feeds.

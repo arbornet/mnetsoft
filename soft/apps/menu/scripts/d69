@@ -1,0 +1,11 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+Internet   F-ile  T-ransfer  P-rotocol
+
+UNIX: ftp <site>
+
+Site to ftp to: "
+read site
+ftp $site

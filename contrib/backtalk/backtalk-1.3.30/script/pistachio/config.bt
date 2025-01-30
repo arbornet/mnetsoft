@@ -1,0 +1,176 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% config script
+%
+% NOTE:  This is only the configuration file for the Pistachio Interface.
+% The configuration file for backtalk as a whole has the same name but is in
+% the top level script directory.
+
+% Default background color for Pistachio:
+%  Lots of people seem to think the default pistachio color is ugly.  Actually
+%  I agree.  You can change it here.  I originally used the hexidecimal number
+%  C0FFEE because I could remember it easily, but changed it to C0FFE0 which
+%  looked better on my monitor.  Steve named the interface "pistachio" in honor
+%  (or horror) of the color.  You can change it to any hexidecimal number you
+%  like, even boring ones that don't spell anything.  - jan
+
+/bg_color (C0FFE0) defconstant
+%/bg_color (BEEFED) defconstant
+%/bg_color (CADD1E) defconstant
+%/bg_color (66CAFE) defconstant
+%/bg_color (1CEADE) defconstant
+%/bg_color (D0F00D) defconstant
+%/bg_color (BADDAD) defconstant
+
+% Default background image for Pistachio
+%  You can set a background image here.  Leave it undefined for no image.
+
+%/bg_image (http://wp.netscape.com/assist/net_sites/bg/stucco/yellow_stucco.gif) defconstant
+
+% Default text colors for Pistachio.
+%  Colors for text and links.  All except high_color can be left undefined for
+%  browser defaults.
+%     high_color = text color used to highlight some text. (Must be defined)
+%     text_color = most text
+%     link_color = links that have not been clicked
+%     vlink_color = links that have been clicked
+%     alink_color = links while being clicked
+
+/high_color  (FF0000) defconstant
+%/text_color  (000000) defconstant
+%/link_color  (0000EE) defconstant
+%/vlink_color (551A8B) defconstant
+%/alink_color (FF0000) defconstant
+
+% Default buttons for Pistachio:
+%   The following are the default button styles for all Pistachio screens.
+%   regbut_dflt is for regular buttons, offbug_default is for disabled buttons,
+%   and admbut_dflt is for administrative buttons
+
+/regbut_dflt (bgn) defconstant
+/offbut_dflt (ggn) defconstant
+/admbut_dflt (brd) defconstant
+
+% Global page header:
+%   This macro is executed at the top of every Pistachio page.  By default, it
+%   does nothing.  It's a sensible place to put ads (yuck).  If you define it,
+%   set /global_header_height to the approximate height in pixels of your
+%   global header.  This is used to enlarge the frame on the top of the page
+%   enough to hold the header.
+%
+%   For example, a typical ad rotator might be done like this:
+%   /global_header {
+%     (<A HREF="http://ad.doubleclick.net/jump/www.hsx.com/;sz=468x60;ord=x">
+%     <IMG SRC="http://ad.doubleclick.net/ad/www.hsx.com/;sz=468x60;ord=x"
+%     WIDTH="468" HEIGHT="60" BORDER=0></A><P>\n)
+%   } def
+%   /global_header_height 72 defconstant
+
+/global_header {
+} def
+/global_header_height 0 defconstant
+
+% Global page footer:
+%   This macro is executed at the bottom of every Pistachio page.  It normally
+%   generates some HTML footer text.   The default is a Backtalk copyright
+%   message, but you are welcome to take that out if you want to put something
+%   else here, say, links to other parts of your web site.
+
+/global_footer {
+  (<P><FONT SIZE=-2>- )version
+  ( - )copyright(</FONT>)
+} def
+
+% Recent Postings:
+%   Pistachio can show a summary list of the last N items/responses posted.
+%   This works only if the top-level config file defines post_log_file:
+%
+%     dflt_recent_page
+%       The entrance page will contain a control allowing you to view
+%       last N recent posts in a new page.  The default number of posts is
+%       given by the constant.  If set to zero, the page is not available.
+%
+%    dflt_recent_entrance
+%       If positive, a list of recent posting will be displayed on the entrance
+%       page.  If set to zero, nothing is shown.  The user can override this
+%       setting if post_log_file is defined.
+
+/dflt_recent_page 50 defconstant
+/dflt_recent_entrance 5 defconstant
+
+% Default Item List type
+%   The `item list' button can bring up any of four different item lists:
+%      (new)        shows only items with new responses.
+%      (current)    shows all items that are not forgotten or retired.
+%      (all)        shows all items.
+%      (forgotten)  show only forgotten or retired items.
+%   The dflt_item_list constant selects which should come up when users first
+%   request an item list.  Only the first two really make sense.
+
+/dflt_item_list (new) defconstant
+
+% Names for Things:
+%   Backtalk by default uses some slightly odd names for things.  Most of these
+%   are inherited from Picospan.  The following definitions let you rename
+%   them.  You might prefer 'host' to 'fairwitness', or 'topic' to 'item', or
+%   or 'forum' to 'conference'.  Note that this doesn't redefine the words
+%   that appear on the buttons.  You'll have to edit the buttons the hard way.
+%   Note that the defined values should be all lower case, except for
+%   MarkUnseen.
+
+/Fairwitness (fairwitness) defconstant
+/AFairwitness (a fairwitness) defconstant
+/Fairwitnesses (fairwitnesses) defconstant
+/Item (item) defconstant
+/AnItem (an item) defconstant
+/Items (items) defconstant
+/Conference (conference) defconstant
+/Conf (conf) defconstant		% short form of "conference"
+/AConference (a conference) defconstant
+/Conferences (conferences) defconstant
+/Response (response) defconstant
+/Resp (resp) defconstant		% short form of "response"
+/AResponse (a response) defconstant
+/Responses (responses) defconstant
+/Erase (erase) defconstant
+/Erased (erased) defconstant
+/Erasing (erasing) defconstant
+/Hide (hide) defconstant
+/Hidden (hidden) defconstant
+/Show (show) defconstant
+/Unseen (unseen) defconstant
+/MarkUnseen (Mark Unseen) defconstant   % this one (only) should be capitalized
+
+%/Fairwitness (host) defconstant
+%/AFairwitness (a host) defconstant
+%/Fairwitnesses (hosts) defconstant
+%/Item (topic) defconstant
+%/AnItem (a topic) defconstant
+%/Items (topics) defconstant
+%/Conference (forum) defconstant
+%/Conf (forum) defconstant
+%/AConference (a forum) defconstant
+%/Conferences (forums) defconstant
+%/Response (posting) defconstant
+%/Resp (post) defconstant
+%/AResponse (a posting) defconstant
+%/Responses (postings) defconstant
+%/Erase (scribble) defconstant
+%/Erased (scribbled) defconstant
+%/Erasing (scribbling) defconstant
+%/Hide (censor) defconstant
+%/Hidden (censored) defconstant
+%/Show (uncensor) defconstant
+%/Unseen (dogear) defconstant
+%/MarkUnseen (Dogear Response) defconstant
+
+% --- end of configurable stuff ---
+
+/body_tags `()
+  /bg_color constant {( BGCOLOR=")bg_color(")} if
+  /bg_image constant {( BACKGROUND=")bg_image(")} if
+  /text_color constant {( TEXT=")text_color(")} if
+  /link_color constant {( LINK=")link_color(")} if
+  /vlink_color constant {( VLINK=")vlink_color(")} if
+  /alink_color constant {( ALINK=")alink_color(")} if
+  ' defconstant

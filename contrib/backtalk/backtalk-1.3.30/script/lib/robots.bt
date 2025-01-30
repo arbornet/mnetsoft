@@ -1,0 +1,46 @@
+% Functions to generate robots meta tags
+%
+%  The ouput depends on the confrobots and biorobots constants, normally
+%  defined in config.pl and the norobots variable, normally loaded from
+%  the conference settings files.
+
+/confrobots defined {
+
+% This function is called for conference content pages to generate the robots
+% meta tags.
+
+/conf_robot {
+    confrobots 2 ge confrobots 1 eq /norobots 1 default 1 eq and or {
+      (<meta name="robots" content="noindex,nofollow">\n)
+    }{ () } ifelse
+} def
+
+% This function is called for conference index pages to generate the robots
+% meta tags.
+
+/index_robot {
+  confrobots 2 ge {
+    (<meta name="robots" content="noindex,nofollow">\n)
+  }{ () } ifelse
+} def
+
+} {
+/index_robot () def
+/conf_robot () def
+} ifelse
+
+
+% This function is called for user bio pages to generate the robots
+% meta tags.
+
+/biorobots defined {
+
+/bio_robot {
+  biorobots 1 ge {
+    (<meta name="robots" content="noindex,nofollow">\n)
+  }{ () } ifelse
+} def
+
+} {
+/bio_robot () def
+} ifelse

@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../../style/default.css";
+  </style>
+
+  <title>Grex Staff Notes: The Password Database</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1>Grex Staff Notes: The Password Database</h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+  <p><a href="index.xhtml">[index]</a></p>
+
+  <p>This document describes Grex's password database. A good
+  password database is a key to maintaining good security on a public
+  access system. For more information, see our technical note on
+  <a href="goals.xhtml">Grex Security Goals</a>.</p>
+
+  <p>We will describe our password database in a historical manner,
+  starting by telling about the standard Unix password database
+  that came with SunOS 4.1.4, then describing the JFH shadow
+  package that we replaced it with, and finally describing our own
+  modifications to that package.</p>
+
+  <h4>Standard Unix Password Database</h4>
+  <p>All Unix systems have a
+  file named /etc/passwd which contains one line of information
+  about each user. A typical passwd file name from a standard Unix
+  system looks like this:</p>
+  <pre>
+   janc:DIBU7epiSd4xs:2386:10:Jan Wolter:/a/j/a/janc:/bin/csh
+  </pre><p>This contains seven fields, separated by colons:</p>
+
+  <ul>
+    <li><strong>name</strong> - the user's login name.</li>
+
+    <li><strong>passwd</strong> - An encrypted version of the
+    user's password.</li>
+
+    <li><strong>uid</strong> - The user's user id number (a unique
+    number used by Unix to identify users).</li>
+
+    <li><strong>gid</strong> - The user's group id number (on Grex,
+    10 is staff, and 50 and 51 are regular users).</li>
+
+    <li><strong>gecos</strong> - This normally contains the user's
+    full name, possibly with office number, home phone and office
+    phone given after it. It's called "gecos" for weird historical
+    reasons.</li>
+
+    <li><strong>dir</strong> - This is the full path of the user's
+    home directory.</li>
+
+    <li><strong>shell</strong> - This is the full path of the
+    user's login shell program.</li>
+  </ul><p>Note that actual passwords are never stored anywhere. Only
+  an encrypted copy of the password is stored. When you type in
+  your password the login program encrypts whatever you typed in,
+  and compares the resulting string to the one stored in the passwd
+  file. If they match, you must have typed in the correct password.
+  If they don't, you didn't.</p>
+
+  <p>Passwords are encrypted using a version of the US National
+  Bureau of Standard's DES (Data Encryption Standard) algorithm.
+  The Unix password encryption algorithm takes the lowest 7 bits of
+  each of the first 8 characters of your password to construct a
+  56-bit key which is used to repeatedly encrypt a constant string
+  (usually a string of all zeros) into a 14 character string like
+  the one in the example above.</p>
+
+  <p>The first two characters of the encrypted password aren't
+  really part of the encryption. They are a randomly selected
+  "salt" which is different for each user and is used to permute
+  the algorithm in small ways, resulting in the encrypted password
+  that is stored as the other twelve characters. Thus, if two
+  different users set their password to the same thing, you won't
+  be able to tell because with different salt, their entire
+  encrypted passwords will be different.</p>
+
+  <p>The /etc/passwd file, which normally contain these encrypted
+  passwords, is always publicly readable on Unix systems, so any
+  user can see any other user's encrypted password. Back in the
+  seventies this wasn't a real problem. Knowing someone's encrypted
+  password couldn't get you access to their account, and decrypting
+  a password was simply too hard. However, computers have gotten
+  much, much faster, and there exist programs these days that can
+  do a pretty decent job of cracking passwords these days. With
+  56-bit keys, there are 2**56 or 72,057,594,037,927,936 different
+  possible passwords. Modern parallel computers can search that in
+  reasonable amounts of time, and widely available programs like
+  <tt>crack</tt> can do a pretty good job of searching the portion
+  of that key space usually used by humans - mostly words and
+  names. (That's why Grex's password programs are pretty picky
+  about encouraging "non-obvious" passwords - it lengthens the list
+  crackers have to search.)</p>
+
+  <p>The other problem with the traditional Unix password system is
+  one of access time. The original designers of Unix didn't expect
+  Unix systems with tens of thousands of users. Grex has about
+  25,000 accounts, which means that the passwd file is about 25,000
+  lines long. Every time the system needs to know any of the
+  information stored in there, it has to search that huge file.
+  This can be very slow.</p>
+
+  <p>Newer versions of Unix deal with both of these problems.
+  Encrypted passwords are no longer stored in /etc/passwd, though
+  all the other information will still be there, and there may be
+  an alternate hashed password database that can be searched much
+  more efficiently. Unfortunately, Grex runs SunOS 4.1, which is
+  <em>not</em> a newer version of Unix and doesn't support do
+  either of these things. So we had to fix it.</p>
+
+  <h2>The JFH Password Database</h2>
+  <p>Many years ago Grex's staff
+  (mainly Greg Cronau) replaced the SunOS password system with a
+  public domain system developed by Julianne F. Haugh. The JFH
+  password system does two things that we badly needed.</p>
+
+  <p>First, encrypted passwords are no longer stored in
+  /etc/passwd. If you look at that file, you will see that the
+  lines look like:</p>
+  <pre>
+   janc:x:2386:10:Jan Wolter:/a/j/a/janc:/bin/csh
+  </pre><p>Here the encrypted password has been replaced by an
+  <tt>x</tt>. (Some Unix systems put fake passwords here instead of
+  an <tt>x</tt>, but we don't want to encourage hopeful hackers to
+  download the whole useless <tt>/etc/passwd</tt> file over our
+  overburdened internet connection - though plenty of people try it
+  anyway. Duh.) The actual encrypted passwords are stored in a
+  different file, called <tt>/etc/shadow</tt>, which, unlike
+  <tt>/etc/passwd</tt>, is not readable. If you could read it, you
+  would see that it contains lines that look like this:</p>
+  <pre>
+   janc:ytx9yoTz0xTiYv3eIkk9XOpF:10008:0:365:30:::
+  </pre><p>The fields are:</p>
+
+  <ul>
+    <li><strong>name</strong> - the user's login name.</li>
+
+    <li><strong>passwd</strong> - the user's encrypted
+    password.</li>
+
+    <li><strong>lastchange</strong> - The date the user's password
+    was last changed (given as number of days since Jan 1,
+    1970).</li>
+
+    <li><strong>min</strong> - The minimum number of days after a
+    change that you have to wait to change it again (zero for all
+    users on Grex).</li>
+
+    <li><strong>max</strong> - The maximum number of days a user
+    may go without changing a password before the system forces a
+    password change (365 for most users on Grex).</li>
+
+    <li><strong>warn</strong> - The number of days before password
+    expiration that the user is warned (30 days for all users on
+    Grex).</li>
+
+    <li><strong>inactive</strong> - The number of days after
+    password expiration until the account is considered inactive
+    and is expired (not used on Grex).</li>
+
+    <li><strong>expire</strong> - The date on which an account
+    expires (not used on Grex).</li>
+  </ul><p>Obviously this does more for us than just hide the encrypted
+  password. It gives us mechanisms to force users to change their
+  password from time to time and do other handy things. But hiding
+  the password is the main goal.</p>
+
+  <p>The alert reader will have noticed another difference. In the
+  sample shadow line above, the encrypted password is 26 characters
+  long, rather than the standard 14. You guessed it - there have
+  been changes to the password encryption algorithm.</p>
+
+  <p>As we mentioned, the DES algorithm uses a 56 bit key,
+  constructed by taking 7 bits from the first 8 characters of your
+  password. But what happens if your password is longer than 8
+  characters? On standard Unix systems, the extra characters aren't
+  used. That's a waste of perfectly good password.</p>
+
+  <p>So in the JFH system, if your password is more than 8
+  characters long, the next eight characters are also encrypted by
+  the same algorithm. So the result is 2 bytes of salt, 12 bytes
+  encrypted from the first 8 characters of your password, and 12
+  more bytes encrypted from the rest of your password with the same
+  salt. String them all together and you have 26 bytes of encrypted
+  password, like the sample above.</p>
+
+  <p>The JFH password system also addresses the speed question. In
+  addition to the the standard /etc/passwd file, there are the
+  /etc/passwd.pag and /etc/passwd.dir files. These contain exactly
+  the same data as the /etc/passwd file, and, in fact, are
+  generated from the /etc/passwd file, but they comprise a hashed
+  database, which can be searched very rapidly. (To search a hashed
+  file, you take what you are searching for, in this case the name
+  "janc", and use some fixed algorithm to turn it into a number
+  (e.g., you might add up all the letters). Then you use this
+  number to index straight into the database to find the object you
+  want. This can be very fast, but requires that the database be
+  properly structured to make it work.) There are similar
+  /etc/shadow.pag and /etc/shadow.dir files to enable fast
+  searching of the shadow database.</p>
+
+  <p>The catch, of course, is that none of the Unix programs that
+  come with SunOS know that the hashed database exists. We have
+  rebuilt the most commonly used programs to use the hashed
+  database for password file lookups, but some programs still
+  search straight through the flat /etc/passwd file. In most cases,
+  this is just a matter of recompiling them with the -lshadow flag
+  on the compile command to link in the shadow library, which
+  includes new versions of the getpwnam() and getpwuid() calls that
+  use the hashed database.</p>
+
+  <p>Some programs we don't have source for. For example, the
+  <tt>csh</tt> we are running is the original SunOS version, which
+  doesn't know about the hashed password database. So when you do
+  "<tt>cd ~janc</tt>" in <tt>csh</tt> it is likely to be very slow,
+  but if you do the same thing in <tt>tcsh</tt>, which we were able
+  to recompile, it is very fast.</p>
+
+  <h2>Grex's Password Database</h2>
+  <p>The JFH shadow system had
+  several problems, so over the years the Grex staff (mainly Marcus
+  Watts) has been making changes to it. There have been a number of
+  small bug fixes, and two more significant changes.</p>
+
+  <p>The first change was related to the maintenance of the hash
+  files. In the JFH shadow system, and in many other Unix versions
+  with a hashed password database, the entire hash file has to be
+  rebuilt every time there is any change. If your password file is
+  big enough to need a hashed database, then rebuilding that
+  database is going to be a slow process. So while the hash system
+  makes accesses very fast, updates become very slow.</p>
+
+  <p>The general presumption is that it doesn't matter so much
+  because updates are rare. You only need to rebuild the hash files
+  when you create or delete an account, or when there is a change
+  to a user's name, password, or login shell. However, on Grex we
+  typically have over a hundred new accounts created through the
+  newuser program every day. With Grex as slow as it was at that
+  time, it could take as long as fifteen minutes to do each
+  rebuild, and only one can be running at a time, so it could take
+  about 25 hours a day to do all the account creations. (These days
+  our computer is much faster, but we now have over 200 accounts
+  created per day, so it's still nice to be fast). This is
+  definitely a problem.</p>
+
+  <p>The solution, of course, is <em>not</em> to rebuild the entire
+  database every time one thing changes. Instead, you modify the
+  existing database to make only the necessary changes. This is
+  much, much faster, but difficult to do correctly. Marcus has
+  developed versions of the newuser, passwd, chsh and chfn commands
+  that do this, as well as a program to allow staff members to
+  modify, create and destroy accounts.</p>
+
+  <p>The other change we have made is to the password encryption
+  algorithm. The method used by the JFH software to handle long
+  passwords isn't really all that good. Those 26-character long
+  encryptions aren't as formidable as they look. Though many users
+  have passwords longer than 8 characters, they usually aren't more
+  than a few characters longer. That means the second half of the
+  password is usually an encryption of a one, two, or
+  three-character long string. It's really easy to crack passwords
+  that short, so you could probably crack most of the second halves
+  of the passwords in a few minutes. Then you just half to crack
+  the first halves as usual. Plus those few letters you got from
+  the second half might help you guess the first half
+  (<em>e.g.</em>, if the second half the password of the user
+  "satanboy" is "66" then you might guess that the first half is a
+  seven letter word followed by a "6" - a program could try all
+  those in a minute or two).</p>
+
+  <p>This isn't really that big a problem for Grex. After all,
+  since the encrypted passwords are in a file readable only to
+  root, we don't expect many people to ever see them. People can
+  still try to guess passwords without having access to the
+  encrypted strings. All they have to do is try their guesses at
+  Grex's login prompt. But then they can't attack long passwords
+  half at a time (so, in fact, passwords longer than eight
+  characters are a lot more secure), and they can't run huge
+  numbers of guesses very fast because, well, they'd be on Grex and
+  Grex isn't fast.</p>
+
+  <p>But there was another reason we wanted to change the password
+  encryption algorithm. Currently Grex is all one computer, but in
+  the future we hope to use different machines for different
+  services, for example, there might be a separate machine to
+  handle E-mail. In such an environment, we'd want users' accounts
+  to work on multiple machines. That means we'd need to use some
+  form of distributed password system, like Kerberos. In such
+  system, encrypted passwords can't stay stored safely away in a
+  protected file on one machine. They have to be passed among
+  machines, and as soon as they start wandering the net, the risks
+  of someone getting a copy of one becomes much larger. We will
+  need a more secure encryption method.</p>
+
+  <p>So Marcus Watts formulated the following requirements for a
+  new encryption algorithm:</p>
+
+  <ul>
+    <li>Long passwords should be allowed, and all their characters
+    (up to at least 128 characters) should be significant.</li>
+
+    <li>All bits of the encrypted password should depend on all
+    bits of the cleartext input.</li>
+
+    <li>The salt should be based on some combination of the user's
+    loginid and hostname, rather than being randomly generated as
+    in DES password encryption. This is a signficant advantage in a
+    Kerberos-like environment.</li>
+
+    <li>We should not use an algorithm which, for legal reasons,
+    cannot be exported from the USA. Thus DES is not acceptable,
+    but md5 or sha-1 is.</li>
+
+    <li>The algorithm should return a binary number that is then
+    convertible into a fixed length ascii string suitable for
+    inclusion in a Unix password file. The number should have as
+    many bits as possible, while the string should be as short as
+    possible.</li>
+
+    <li>The code should be fast. Many encryption algorithms are
+    deliberately slow, to slow down people who attack the password
+    by trying every word in the dictionary. But Grex is already so
+    slow that we can't afford a password encryption algorithm that
+    further slows down the machine.</li>
+
+    <li>It should be difficult or impossible to derive the
+    cleartext password from the encrypted password using any method
+    short of a brute force dictionary attack.</li>
+  </ul>
+
+  <p>To replace the DES encryption, Marcus Watts has developed a
+  new encryption algorithm based on the
+  <a href="http://www.arpanet.com/PerlShop/sha.html">SHA (Secure
+  Encryption Algorithm)</a>. The one tricky part in this is that
+  password lengths vary, and SHA requires wants a constant length
+  input. So the basic algorithm is:</p>
+
+  <ol>
+    <li>Concatinate together the following:
+
+      <ul>
+        <li>128 minus &lt;password length&gt; pad characters (all
+        backslashes)</li>
+
+        <li>the clear text password (truncated to 128 characters if
+        it is longer)</li>
+
+        <li>the user's name long</li>
+
+        <li>the instance (currently always a null string)</li>
+
+        <li>the realm (the name of the local host)</li>
+      </ul>
+    </li>
+
+    <li>Apply the SHS hashing function to the resulting
+    string.</li>
+
+    <li>Concatinate together the following:
+
+      <ul>
+        <li>the clear text password (again)</li>
+
+        <li>128 minus &lt;password length&gt; pad characters (all
+        less-than signs)</li>
+
+        <li>the result of the previous SHS hash.</li>
+      </ul>
+    </li>
+
+    <li>Apply the SHS hashing function to the resulting string to
+    get a 20-byte binary string.</li>
+
+    <li>Convert the binary string into a string of 26 printable
+    characters.</li>
+
+    <li>Prepend the characters <tt>%!</tt> onto the string to make
+    a 28 character string. This marks it as a result of this
+    algorithm.</li>
+  </ol>
+
+  <p>The reason for tagging the passwords generated by this
+  algorithm with a <tt>%!</tt> sequence is that, for a while at
+  least, the password file will contain a mixture of DES passwords
+  and new passwords, and we need to be able to distinguish them.
+  The reason for this is to smooth the transition from the old
+  encryption to the new encryption. We can't easily convert
+  existing passwords from the old scheme to the new scheme. You'd
+  have to decrypt the old passwords before you could re-encrypt
+  them with the new scheme. It's doubtful whether such a project
+  could be considered practical or ethical.</p>
+
+  <p>So we are making the change gradually. For people with DES
+  passwords, the lines in the /etc/shadow file look like the
+  example above. For people with new passwords, the encryption
+  string always starts with the three characters <tt>%!</tt>, like
+  this:</p>
+  <pre>
+   janc:%!!@Tpf4)X^Pes@Xms8tq(M).U+#:10008:0:365:30:::
+  </pre>
+
+  <p>If the login program doesn't see the <tt>%!!</tt> in your
+  encrypted password, it uses the DES encryption algorithm, if it
+  does, it uses the new algorithm. All new accounts are now being
+  created using the new encryption, and whenever an older user makes
+  a password change, the password encryption is changed over to the
+  new algorithm. So within a year (since passwords expire after a
+  year), all Grex users will be using the new algorithm, and we will
+  be ready to change over to a distributed password system.</p>
+
+  <p>Marcus's actual source for the <tt>kg_pwhash()</tt> routine
+  that does the encryption is available on a
+  <a href="mkp2.c">separate page</a>.</p>
+  </div>
+
+  <div id="history">
+  <h6>Document History:</h6>
+  <p>
+    Aug 13, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Initial revision.<br />
+
+    Aug 20, 1997: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Various corrections from
+    Valerie Mates (<a href="mailto:valerie@cyberspace.org">valerie</a>),
+    Scott Helmke (<a href="mailto:scott@cyberspace.org">scott</a>), and
+    Marcus Wattts (<a href="mailto:mdw@cyberspace.org">mdw</a>).<br />
+
+    Mar 30, 1998: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Minor improvements, updates, and corrections.<br />
+
+    Feb 16, 1999: Jan Wolter (<a href="mailto:janc@cyberspace.org">janc</a>) -
+    Minor improvements, and updates.<br />
+  </p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: passwd.xhtml 1454 2014-03-26 23:24:04Z kentn $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

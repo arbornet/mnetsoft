@@ -1,0 +1,39 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+Choices: (pine), (elm) or (mail)
+
+How to choose: Pine and Elm are easiest for new users to figure out.
+               Mail is the classic (hard-to-use) Unix mail program.
+               If your terminal type is set to \"dumb\", only \"mail\" works.
+
+               (Your terminal type is set to \"$TERM\").
+
+Mail program to use? "
+read ans
+case $ans in
+
+	m|M|mail|MAIL)
+       		echo ""
+	        echo "Checking your mail..."
+        	echo ""
+	        mail
+        	echo ""
+	        echo -n "Please hit <RETURN> to continue "
+	        read junk
+	        clear;;
+
+        e|E|elm|ELM)
+	        echo ""
+        	elm;;
+
+        p|P|pine|PINE)
+        	echo ""
+	        pine;;
+
+        *)
+	        echo ""
+        	echo -n "Try: pine, elm or mail. "
+	        sleep 2
+esac

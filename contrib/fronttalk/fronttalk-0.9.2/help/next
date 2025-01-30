@@ -1,0 +1,15 @@
+                       Fronttalk Command:  NEXT
+
+Usage:  NEXT                                           ("Ok:" prompt only)
+
+Join the next conference in your hotlist that has items with new responses.
+This is an easy way to cycle through all your favorite conferences.
+
+To rewind back to the first conference, you can use the REWIND command.  A
+rewind is automatically executed when you hit the end of your hotlist.
+
+Currently there is a different hotlist on each server, stored in a file
+named .cflist.  You can use the "CHANGE LIST" command to edit it.
+
+In the future there will be a local conference hotlist that can span multiple
+servers.

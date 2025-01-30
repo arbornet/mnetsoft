@@ -1,0 +1,20 @@
+                       Fronttalk Command:  UNDEF
+
+Usage:  UNDEFINE
+        UNDEFINE <name>...
+        UNDEFINE <mask>
+
+The UNDEF command is used to undefine variables and macros set by DEFINE.
+Note that undefining a variables or macros with compiled in default values
+simply reverts them to their defaults.  Undefining variables that were
+created by by some previous "define" command and have no hardwired default
+values causes them to disappear entirely.
+
+UNDEF without arguments undefines everything.
+
+UNDEF with one or more names undefines those values.
+
+UNDEF with a mask value undefines everything that has a mask value that
+intersects the given mask.
+
+Conference rc scripts are forbidden to undefine any variables.

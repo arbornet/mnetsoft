@@ -1,0 +1,29 @@
+#!/usr/bin/perl -w
+use strict;
+
+my $path = $ENV{'PATH'};
+if (@ARGV) {
+	$path = join ':', @ARGV;
+}
+
+print "Searching command directories.\n";
+my %files = ();
+foreach my $dir (split(/:/, $path)) {
+	next unless $dir;
+	print "Processing $dir...";
+	opendir(DIR, $dir) || next;
+	while (my $file = readdir(DIR)) {
+		next unless -x "$dir/$file" && ! -d _;
+		$files{$file}++;
+	}
+	closedir DIR;
+	print "Done\n";
+}
+
+print "Grex Unix Commands\n";
+foreach my $file (sort keys %files) {
+	my $whatis = `whatis -- $file`;
+	$whatis =~ s/.*(not found|nothing appropriate).*\n//;
+	$whatis =~ s/^[^-]*-\s*([^\n]*)(\n.*)*/ - $1/;
+	print $file, $whatis, "\n";
+}

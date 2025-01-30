@@ -1,0 +1,8 @@
+% Backtalk Vanilla Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% peekresp script
+%
+% This is the entry point when we do peek:<conf>:<item> or
+% peek:<conf>:<item>:<sresp>
+
+(vanilla/read) chain

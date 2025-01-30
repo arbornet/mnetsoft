@@ -1,0 +1,81 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% editgroup script
+%
+% List and edit the groups on the system.
+% Parameters:
+%   op=    What to do.  Values:
+%		(L)   just list (default)
+%               (A)   add group gname
+%               (D)   delete group gname
+%   gname=  Group to add or delete
+%   admhome=URL of administrative menu
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+/op dup (L) default def
+/gname dup () default def
+
+(<HTML>
+<HEAD>
+<TITLE>Backtalk Admin Page: Manage Groups</TITLE>
+</HEAD>
+<BODY BGCOLOR=white>
+<H1>Backtalk Admin Page: Manage Group</H1>
+<A HREF=)admhome(>Return to adminstration page</A>.
+<P>
+)
+
+% do additions
+op (A) eq {
+  gname {
+    gname newgroup {
+      (<FONT COLOR=RED>Group )gname( already exists</FONT>\n<P>\n)
+    } if
+  } {
+     (<FONT COLOR=RED>No Group name entered</FONT>\n<P>\n)
+  } ifelse
+} if
+
+% do deletions
+op (D) eq {
+  gname {
+    gname delgroup {
+      (<FONT COLOR=RED>Group )gname( does not exist</FONT>\n<P>\n)
+    } if
+  } {
+     (<FONT COLOR=RED>No Group name entered</FONT>\n<P>\n)
+  } ifelse
+} if
+
+(<H2>Current Groups:</H2>
+<TABLE BORDER=1><TH>&nbsp;</TH><TH>Group Name</TH>\n)
+
+[groups] {
+  /gn xdef
+  (<TR><TD BGCOLOR=red VALIGN=CENTER><A HREF=editgroup?op=D&gname=)gn
+  (&admhome=)admhome(>Delete</A></TD><TD>)gn(</TD></TR>\n)
+} forall
+(</TABLE>
+<H2>Add A Group:</H2>
+<FORM METHOD=POST ACTION=editgroup>
+<INPUT TYPE=hidden NAME=op VALUE=A>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+Group Name: <INPUT TYPE=TEXT NAME=gname SIZE=20>
+<BR>
+<INPUT TYPE=submit VALUE=Create>
+</FORM>
+</BODY>
+</HTML>
+)

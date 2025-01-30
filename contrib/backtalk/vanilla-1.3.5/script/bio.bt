@@ -1,0 +1,114 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% bio - a web script to produce biogrphical info about user "login"
+
+% decline to run for obvious email address collectors
+browser 0 lt {(Not a browser)} if
+
+/imgbegin [(<IMG BORDER=0 SRC=")imghost(/pistachio/)] def
+
+(lib/userinfo) include
+
+% find fullname and home dir from the password info
+/pushuser defined {
+  % Backtalk version 1.4 and later
+  login [/usrname /dirpath /laston /usrstat] pushuser pop
+} {
+  % Backtalk version 1.3 and earlier
+  login userinfo 6 -2 roll pop pop
+} ifelse
+/status xdef
+/laston xdef
+/biodir xdef
+% from unix passwd files, delete text after "," in fullname field
+nopwedit {(,) clip exch pop} if /fullname xdef
+
+/me login id eq def
+/edit_mode /noedit defined ! me amadm or and def
+
+(<HTML><HEAD>
+<TITLE>) bbsname ( Personal Info - User ) login (</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>\n)
+(U) flavor(meta)+ include
+(</HEAD>
+<BODY><H1> Information About User ") login ("</H1>
+)
+
+% display errmsg if it is defined and non-null
+/errmsg defined { errmsg {
+  (<STRONG>Error:<BR><PRE>)errmsg(</PRE></STRONG><P>\n)
+} if } if
+
+% userinfo returns () if there is no such user
+biodir ! { (No account currently exists for )login(.) stop } if
+
+/plan () def
+/useplan constant {
+  % load the user's .plan file
+  (*.plan) login pathname  /bio_fn xdef
+
+  bio_fn readable {
+    /plan bio_fn read def
+    plan ! { /plan ( ) def } if
+    /privacy 0 def
+  }{
+    /privacy 1 def
+  } ifelse
+}{
+  % load settings from the user's .backtalk file
+  login getinfo
+}ifelse
+
+% If anonymity is set, all user info is private
+mayseefname ! {/privacy 1 def} if
+
+% Print message to toggle between edit and display mode
+me amadm or {
+  (<a href=bio?login=) login
+  edit_mode
+    {(&noedit=Y>View this page as others will see it.)}
+    {(>You may change any of this data about )
+     amadm {login} {(yourself)} ifelse (.)}
+    ifelse
+  (</A><HR>\n)
+} if
+
+edit_mode {
+  % bio is for me - create a form and fill in current values
+  (<FORM METHOD=POST ACTION=")SCRIPT_NAME(/)flavor(changebio">
+   <INPUT TYPE=hidden NAME=login VALUE=)login(>\n)
+   plan {
+     (<STRONG>Full Name</STRONG>: <INPUT NAME=fullname VALUE=")
+     fullname ("> <BR><STRONG>Plan</STRONG>:<BR>
+     <TEXTAREA NAME="plan" ROWS=20 COLS=72 WRAP=HARD>)plan(</TEXTAREA><BR>\n)
+   } {
+     (Do not allow others to see this information:
+     <INPUT NAME=privacy TYPE=checkbox VALUE="Y") privacy {( CHECKED)} if (><BR>
+     <STRONG>Full Name</STRONG>: <INPUT NAME=fullname VALUE=") fullname
+     ("><BR>\n)
+     {(<BR>)} () () promptinfo
+     (<BR>)
+   } ifelse
+   (<INPUT TYPE=submit VALUE="Submit changes">
+   <INPUT TYPE="reset" VALUE="Clear fields">
+   </FORM>
+   )
+  }
+  % bio is not for me, don't use a form to display the info
+  {
+    privacy mayseefname ! or  {(No information available.)} {
+    (<STRONG>Full Name</STRONG>: ) fullname ( <BR>\n)
+    laston    { (<STRONG>Last On</STRONG>: ) laston ctime      (<BR>\n) }if
+    plan      {(<P><PRE>) plan expand (</PRE>\n)} {
+    regdate   { (<STRONG>Registered</STRONG>: ) regdate cvt ctime  (<BR>\n) }if
+    {(<BR>)} () showinfo (<BR>\n)
+    } ifelse  % end test for plan
+    } ifelse  % end test for privacy
+  } ifelse    % end test edit_mode
+
+(</BODY></HTML>
+)

@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# gatherttyuse - gathers today's ttyuse and stuff in away in a file
+#
+# Edits:
+# sfa 07-Dec-92 - original version
+# sfa 13-Dec-92 - All data goes into one file now
+# vm  23-Jul-96 - This runs a few minutes after midnight, so use 'date' to
+#                 pass yesterday's date to ttyuse.
+
+## go here, so that core dumps don't fill up root -mdw 14Feb1998
+## no, go here, instead as /var/root is often out of space.  -sfa 5Feb1999
+cd /usr/root
+
+echo " " >> /var/stats/ttyuse.log
+/cyberspace/bin/ttyuse `/usr/local/bin/gdate --date '1 day ago' +%m/%d ` \
+     >> /var/stats/ttyuse.log

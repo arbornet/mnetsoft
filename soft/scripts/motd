@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# List out the Message of the Day.
+#
+# $Id: motd 1006 2010-12-08 02:38:52Z cross $
+#
+
+grexmore /etc/motd /cyberspace/etc/motd.birthday

@@ -1,0 +1,33 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% mytitle script
+%
+% This script sets private titles on items
+%
+% Query Paramters:
+%    conf=      conference to retitle an item in
+%    item=      item number to retitle
+%    newtitle=  new title.
+%
+%    csel=      current list of conference (not used, just passed through)
+%    nextnew=   skip non-new conferences? (not used, just passed through)
+%    isel=      current item selector (not used, just passed through)
+%    rsel=      current response selector (not used, just passed through)
+%    since=     date we are reading since (not used, just passed through)
+
+flavor(config.bt)+include
+
+% open the conference
+open_conf {(Backtalk internal error: No such )Conference( \()conf(\)\n) halt} if
+
+newtitle ! {/newtitle () def} if
+
+item /mytitle newtitle set_item_note
+
+/http_location `backtalkurl(/)flavor(read?conf=)conf(&csel=)csel
+  (&item=)item(&isel=)isel(&rsel=)rsel
+  /nextnew defined{(&nextnew=)nextnew}if
+  since {(&since=)since}if
+  showforgotten {(&showforgotten=)showforgotten}if '
+  store
+

@@ -1,0 +1,99 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% buttonmenu script
+%
+% This displays a form allowing fairwitnesses to select from a variety of
+% button styles to use in there conference.  The "setconf.bt" script is the
+% form handler for this.
+%
+% Query Parameters:
+%    conf=	conference to set buttons for.
+%    user=      defined if we are editing the user buttons, not the conf ones
+
+% Define at least one of these as true.
+/steve_buttons 1 defconstant
+/jan_buttons 1 defconstant
+
+% Array of Button style dirnames and full names:
+/buttons [
+steve_buttons { %  Steve's new buttons:
+	[(bbl) (Black on Blue)]
+	[(brd) (Black on Red)]
+	[(bma) (Black on Magenta)]
+	[(bor) (Black on Gold)]
+	[(bgn) (Black on Green)]
+	[(bwh) (Black on White)]
+	[(wrd) (White on Red)]
+	[(gbl) (Disabled Blue)]
+	[(grd) (Disabled Red)]
+	[(gma) (Disabled Magenta)]
+	[(gor) (Disabled Gold)]
+	[(ggn) (Disabled Green)]
+	[(gwh) (Disabled White)]
+} if
+jan_buttons { %  Jan's old buttons:
+	[(gnwh) (White on Green)]
+	[(rdwh) (White on Red) ]
+	[(blwh) (White on Blue)]
+	[(bkwh) (White on Black)]
+	[(ltwh) (White on Light Gray)]
+	[(whbk) (Black on White)]
+	[(whbl) (Blue on White)]
+	[(whgn) (Green on White)]
+	[(whrd) (Red on White)]
+	[(whgy) (Dark Grey on White)]
+	[(whlt) (Light Grey on White)]
+	[(ylbk) (Black on Yellow)]
+	[(ylbl) (Blue on Yellow)]
+	[(ylgn) (Green on Yellow)]
+	[(ylrd) (Red on Yellow)]
+	[(gylt) (Light Gray on Dark Gray)]
+} if
+] def
+
+/state [(conf=)conf csel {(&csel=)csel} if] def
+
+/user dup 0 default def
+
+what (regbutton) eq {(Standard)} if
+what (offbutton) eq {(Disabled)} if
+what (admbutton) eq {(Fair-Witness)} if
+/type xdef
+
+flavor(config)+ include
+
+(<HTML><HEAD>
+<TITLE>Select )user{(Your )}if type( Buttons for )
+/conftitle( )Conference cap(</TITLE>)
+/metatags
+(</HEAD>
+)
+
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+global_header
+
+(<H1>Select )user{(Your )}if type( Buttons for )conftitle( )Conference cap(</H1>
+)
+
+user ! amfw ! and {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+ stop
+} if
+
+(Choose any button color below:<P>
+)
+
+% loop through the buttons data structure, printing them all out
+buttons {
+  aload /longname xdef /dirname xdef
+  (<A HREF="set)user{(my)}if(conf?)state(&what=)what(&to=)dirname
+  ("><IMG SRC=)imghost(/pistachio/)dirname
+  (/button.gif HEIGHT=16 WIDTH=16 BORDER=0 ALT=-&gt;></A>\n)longname(<BR>\n)
+} forall
+
+global_footer
+(</BODY></HTML>
+)

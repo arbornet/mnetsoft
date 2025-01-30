@@ -1,0 +1,169 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+flavor(config.bt)+ include
+
+Item cap( List Page)+ (pistachio/help/header) include
+
+(<H2>The )Item cap( List Page:</H2>
+
+This page displays a list of the )Items( currently in the )Conference(.
+One line of information is displayed for each )Item(, containing the following
+information:
+<UL>
+<LI>The number of new )Responses( (if you are not reading anonymously).
+<LI>The total number of )Responses( to the )Item(.
+<LI>A checkbox.
+<LI>The )Item( number.
+<LI>The )Item( title.
+<LI>Tags indicating if the )Item( is linked, frozen or forgotten.
+</UL>
+You can display either
+)Items( with )Response( you haven't seen yet (the default),
+)Items( that have not been forgotten,
+)Items( that have been forgotten, or all )Items(.
+This is done by clicking one of the four checkboxes above the list of
+)Items(.
+<P>
+If you have any "favorite" )Items(, they will be listed first.
+
+<H2>Reading )Items cap(</H2>
+There are several ways to select )Items( from this page to read.
+
+<H3>Reading Individual )Items cap(</H3>
+You can click on the number of new )Responses
+(, or the number of total )Responses(,
+to read the new )Responses( for an )Item(, or all of the )Item(.
+
+<H3>Reading the Entire )Conference cap(</H3>
+If you don't select any particular )Items(,
+you can read the entire )Conference( by clicking the ``Read'' button.
+Next to the read button is a column of options selecting which )Items( to
+read.
+If you select ``All )Responses cap('' it will show you all )Responses(.
+If you select ``New )Responses cap('' it will show you all new )Responses(.
+If you select ``Unseen )Responses cap('' it will show you all new )Responses
+( including the ones that aren't normally new for newusers and which haven't
+had new activity since you first joined.
+<P>
+There is also a column of switches which select what order to read the )Items(
+in.  Normally, ``Favorites First'' will be selected by default.  If you
+select either ``Brand New First'' then )Items( that
+you have never seen before will be read before those that you have seen.
+``Brand New Last'' is the opposite.  The ``Backwards'' option lists )Items(
+in reverse )Item( number order.
+You can combine these arbitrarily, except that you can't have brandnew items
+both first and last.
+
+<H3>Reading Lists of )Items cap(</H3>
+If you first click the checkboxes next to the )Items( you want to see,
+the ``Read'' button will read only those )Items(, showing either only new
+)Responses(, all )Responses( or new and unseen )Items(, depending
+on which options you select.
+<P>
+Note that, when reading, selecting no )Items( is just like selecting all )
+Items(.  This doesn't hold true for the other functions.
+
+<H3>Reading )Responses cap( Posted Since Some Date</H3>
+If you select ``)Responses cap( Since'' and type a date in the box, then you can
+read all postings in the )Conference( made since that date.
+If you also select some )Items(, it will show only the )Responses( to those )
+Items( which have been entered since the selected date.
+<P>
+You can enter the dates in a wide range of formats, including exact dates,
+incompletely specified dates, and offsets from the current time.
+Examples of legal dates
+include:<BR>
+<CENTER><TABLE BORDER=1>
+<TR>
+<TD>7:00pm January 17, 2001</TD>
+<TD>1/17/96 19:00:00</TD>
+<TD>17 Jan 7pm 1999</TD>
+</TR><TR>
+<TD>August 15</TD>
+<TD>6:45am</TD>
+<TD>Nov</TD>
+</TR><TR>
+<TD>Wednesday</TD>
+<TD>Yesterday</TD>
+<TD>Tomorrow</TD>
+</TR><TR>
+<TD>1 week, 3 days</TD>
+<TD>4 hours</TD>
+<TD>1 year</TD>
+</TR>
+</TABLE></CENTER>
+An incompletely specified date, like ``Wednesday'' or ``June 19'' will always
+refer to the begining of the most recent past instance of that date, unless
+you explicitly say ``the end of June 19''.
+An offset like ``48 hours'' would
+select )Responses( entered in the last fourty-eight hours.
+
+<H2>Favoring )Items cap(</H2>
+
+If you mark an )Item( as a favorite, then it will be shown first in the )Item(
+list, and it be displayed first when you read )Items( in the )Conference(.
+You can favor and disfavor )Items( by checking the checkboxes next to their
+numbers and then selecting the favor or disfavor buttons from the top of the
+page.  Depending on the )hrefbegin(help/optform>options</A> you set, )Items(
+may automatically become favorites or temporary favorites when you post to them.
+Temporary favorites remain favorites only until the next time you read them.
+
+<H2>Marking )Items cap( Seen</H2>
+
+If you want to mark a bunch of )Items( seen, even though you haven't actually
+seen them, the ``Mark Seen'' button is your friend.
+If you select ``All )Responses cap('' then everything in the )Conference( will
+instantly be marked as having been read.
+Alternatively, you can specify that only )Items( older than some date should
+be marked read.  Newer )Responses( that you haven't seen will still be marked
+unseen.
+
+<H2>Forgetting and Remembering )Items cap(</H2>
+
+One way to make it easier to keep up with a very busy )Conference( is to
+``forget'' )Items( that don't interest you.  Just select the )Items
+( you want to forget and click the ``forget selected )Items('' button.
+<P>
+To remember )Items(, first switch to either a list of forgotten )Items( or
+all )Items( by clicking the checkbox above the list of )Items(.  This will
+cause the forgotten )Items( to be included in the list, and a ``remember
+selected )Items('' button will appear at the top of the screen.  Select
+the )Items( you want to remember and hit the button.
+<P>
+You can also forget and remember )Items( using the buttons at the top of the
+)hrefbegin(help/read>Read )Items cap( Page</A>.
+
+<H2>Freezing and Thawing )Items cap(</H2>
+
+If you are )AFairwitness( in the )Conference(, you will be given buttons to
+freeze or thaw )Items( in the )Conference(.
+A ``frozen'' )Item( can no longer be posted to, so people can still read it,
+but not post )Responses( to it.
+You freeze )Items( by selecting them off the list and clicking the ``Freeze
+Selected )Items cap('' button.
+<P>
+Thawing a frozen )Item( again allows people to post to it.
+
+<H2>Killing )Items cap(</H2>
+
+)Fairwitnesses cap( can also kill )Items(.  Killing an )Item
+( deletes it permanently
+from the )Conference(.  Killed )Items( cannot be recovered.
+Select the )Item( and hit the button.
+
+<H2>Retiring and Unretiring )Items cap(</H2>
+
+)Fairwitnesses cap( can also retire )Items(.  An )Item
+( that is retired is still
+there, but acts as if everyone has forgotten it, so they will not see it
+unless they specifically request to see it.
+<P>
+To unretire )Items(, you must follow the same procedure used to remember )
+Items( - first display forgotten )Items( \(which include retired )Items
+(\) and then the unretire button will be available.
+)
+global_footer
+(</BODY></HTML>
+)

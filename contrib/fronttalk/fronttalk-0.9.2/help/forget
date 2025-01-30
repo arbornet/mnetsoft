@@ -1,0 +1,25 @@
+                       Fronttalk Command:  FORGET
+
+Usage:  FORGET <item range>
+
+Mark all selected items forgotten.  Once an item is forgotten, it will not
+be shown to you in the future when you run commands like "READ NEW",
+"READ ALL" or "BROWSE".
+
+If you wanted to see forgotten items when you READ or BROWSE, then you can
+give the "NOFORGET" or "FORGOTTEN" options.
+
+If you want to remove the "forgotten" flag from an item, use the REMEMBER
+command.
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   FORGET 13         - Forget item 13.
+   FORGET (joe)      - Forget items entered by login ID joe.
+
+If you just say "FORGET" the default is to forget the current item.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to forget it.

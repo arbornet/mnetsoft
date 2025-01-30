@@ -1,0 +1,57 @@
+                          Fronttalk Separators:
+               Conditionals Used in Conference Separators
+
+For general information about separators see "HELP SEP".  This page just
+describes the conditional codes that can be used in conference separators:
+
+   %(y   - true if there are unseen items.
+   %(b   - true if there are brandnew items.
+   %(r   - true if there are newresponse items.
+   %(n   - true if there are brandnew or newresponse items.
+   %(i   - true if there are any items.
+   %(s   - true if you are a fairwitness in this conference.
+   %(j   - true if you just joined the conference for the first time ever.
+   %(l   - true if you are not logged in.
+
+The following codes test for the existence and newness of various conference
+files:
+
+   %(0F  - true if login file exists.
+   %(1F  - true if logout file exists.
+   %(2F  - true if index file exists.
+   %(3F  - true if bull file exists.
+   %(4F  - true if welcome file exists.
+   %(5F  - true if conference rc file exists.
+   %(6F  - true if ulist file exists.
+   %(7F  - true if glist file exists.
+
+   %(0N  - true if login file was modified since user's last login.
+   %(1N  - true if logout file was modified since user's last login.
+   %(2N  - true if index file was modified since user's last login.
+   %(3N  - true if bull file was modified since user's last login.
+   %(4N  - true if welcome file was modified since user's last login.
+   %(5N  - true if conference rc file was modified since user's last login.
+   %(6N  - true if ulist file was modified since user's last login.
+   %(7N  - true if glist file was modified since user's last login.
+
+The following test has different meanings in different separators.  In the
+LINMSG sep, which usually prints the login screen and the number of new
+responses in the conference, it is used as follows:
+
+   %(1x  - true if should print the login screen ("JOIN" or "DISP LOGIN").
+   %(2x  - true if should print the new response count ("JOIN" or "DISP NEW").
+   %(3x  - true if should print both ("JOIN").
+
+In the PARTMSG sep, which has a header, multiple text lines, and a footer,
+they are as follows:
+
+   %(1x  - true if should print the header.
+   %(2x  - true if should print a line of the body.
+   %(4x  - true if should print the footer.
+
+The following Picospan conditional have NOT been implemented in Fronttalk:
+
+   %(m   - true if new mail has arrived.
+   %(O   - true if you joined from another conferences.
+   %(C   - true if you are in a conference.
+   %(f   - true if the current conference has a summary file.

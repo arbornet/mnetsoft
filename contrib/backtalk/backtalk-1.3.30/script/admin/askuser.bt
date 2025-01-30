@@ -1,0 +1,23 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% askuser script
+%
+% This asks for the name of a user, and then runs another page with
+% the login argument set to that parameter.
+%
+% Query Parameters:
+%  action=	script to run on the conference.
+%  admhome=     name of admhome page.
+
+(<HTML><TITLE>Backtalk User Administration</TITLE>
+<BODY BGCOLOR=FFFFFF>
+<H1>Backtalk User Administration</H2>
+
+<FORM METHOD=post ACTION=)action(>
+User to Edit: <INPUT TYPE=text NAME=uname SIZE=)loginlen(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<INPUT TYPE=submit VALUE="Edit">
+<P>
+<A HREF=)admhome(>Return to Admin Menu</A>
+</FORM></BODY></HTML>
+)

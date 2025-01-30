@@ -1,0 +1,13 @@
+                    Fronttalk Command:  PARTICIPANTS
+
+Usage:  PARTICIPANTS
+        PARTICIPANTS <userid>...
+
+List users of the current conference, together with the date on which they
+last read anything in the conferences.
+
+Without arguments, this lists all users.  Picospan compatible servers can
+be extremely slow at this.
+
+With arguments, list the last read dates for users who's login id(s) were
+given.

@@ -1,0 +1,33 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_resign script
+%
+% Generate the contents of a popup confirmation window for the resign command.
+
+flavor(config)+ include
+
+(<HTML>\n)
+
+mainwin!{
+  (<HEAD><SCRIPT Language="Javascript">\n<!--
+function inmain() {
+opener.location=document.pop.action+'?conf=)conf(';
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>
+Resigning from the )conf( )Conference( will permanently erase all
+records of which items and responses you have seen.<P>
+<FORM NAME=pop ACTION=")backtalkurl(/)flavor(resign" METHOD=POST)
+mainwin!{( onSubmit="return inmain();")} if (>
+<INPUT TYPE=hidden NAME=conf VALUE=")conf(">
+Really Resign? <INPUT TYPE=submit VALUE="Yes">)
+
+mainwin!{
+  (<INPUT TYPE=submit VALUE="No" onClick="window.close(); return false;">)
+}if
+
+(</FORM></BODY></HTML>\n)

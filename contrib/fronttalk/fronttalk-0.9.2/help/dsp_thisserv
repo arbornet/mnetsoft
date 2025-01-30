@@ -1,0 +1,15 @@
+                   Fronttalk Display Value:  THISSERVER
+
+Usage:  DISPLAY THISSERVER
+
+Display information about the current server.  This includes the name of
+the server, the URLs of the server, its version number, the connection
+and login methods being used, and whether anonymous reading is allowed.
+
+The connection type tells if you are connecting to the server over the
+network or by having the client directly execute the server program.
+If you are connecting over the network, it may say the connection is
+"insecure", which just means you are connecting using an unencrypted "http"
+type protocol, instead of via an encrypted "https" protocol.
+
+Synonyms:  DISPLAY THISSYSTEM, DISPLAY THISHOST

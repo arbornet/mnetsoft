@@ -1,0 +1,309 @@
+,
+,	This is nu.info -- it contains
+,	all of the old help files all rolled up
+,	into one, and some new ones besides.
+,	Order is not special (rearrange to suit.)
+,	Check source for circumstances of invocation.
+,
+,	Philosophical note:
+,	Newusers should be taking no longer than 10 minutes
+,	for their first session.  That means, newuser PLUS
+,	whatever time they spend on the system.  The only
+,	information that belongs in newuser is stuff they HAVE
+,	to know to use the system, or one-time stuff we need
+,	to get them on the system.  Anything else belongs elsewhere.
+,	They're only going to forget it all before their 2nd
+,	session anyways.  The limited amount of fluff here
+,	is solely intended to keep them from going bonkers.
+,
+,	Update history goes here: who did what when.
+,
+,	<mdw@acorus.mi.org> Marcus D. Watts; June 13, 1991
+,		Combined & updated all files for grex.
+,
+,i nu.age
+,
+, XXX Misti thinks this wording sucks.
+The next two pieces of information are your birthdate and sex.  Feel free
+to enter them or not as your interests in this system dictate.
+,i nu.erase
+	Erase character.
+The erase character allows you to delete the last character.  Most often, it's
+set to backspace, which is the same as control-H.  Most keyboards have a key,
+often labeled backspace, on the right which generates just this.  On a few
+keyboards (including many DEC terminals) there is no such handy key, and you'll
+have to hold control down while pressing H, or select some other key.  In the
+ancient days of yore, the original Unix pioneers used '#', for some strange
+reason.
+,i nu.help
+--HELP--
+
+Type in "done" if everything's ok, or one of the following:
+
+fullname	sex		loginid 
+address		interests	password
+telephone	how		erase
+occupation	paranoid	kill
+computers	shell		interrupt
+birthdate	terminal	editor
+
+You can also use:
+	print	- to print all things or
+	help	- to get this message again.
+,i nu.intr
+	Interrupt character
+The interrupt character allows you to interrupt the current operation and
+return you to a command prompt.
+	^C	is it on DEC machines and PC-DOS.  (Ok, I know, VMS is weird..)
+	^E	MTS
+	^?	Many Unix systems
+^? is the delete character, and on many terminals it's labelled either <del> or
+<rubout>.  Probably those vicious Unix pioneers liked the idea of rubbing out
+their processes with the stroke of a key.  Unfortunately, on many IBM-PC's
+and clones, it can be hard to find (try control-backspace).  If you can't
+find it, or don't like it, ^C is a very good alternative.
+, Since this is Unix, it's our default.	<-- not true if the user used
+,					<-- it for erase/kill.
+,i nu.kill
+	The kill character
+The kill character is sort of like the erase key, except it gets rid of the
+entire line of input instead of just the last character.  (No, silly, it
+doesn't kill other users.  Sheese.) Control-U is the usual assignment on DEC
+machines.  Control-X is the default on many other machines and networks,
+including MTS.  Those silly Unix pioneers used '@', and curiously, it still
+works at the Login: prompt (because it's used by a program called Uucp!)
+,i nu.loginid
+, XXX figure out way to tell user loginid is PUBLIC -- available to all.
+Pick a login-id to identify yourself to others and to the system.  3-8
+characters in lower-case are recommended, your initials, first name or last
+name are reasonable choices.
+	examples:	denise	Denise M. Anderson
+			fes	Fred Sleator
+Avoid funny characters or long, hard to remember or hard to type login ids...
+,i nu.mixed
+	And now for something completely different
+
+Ok, that completes the funny key business.  It's time for the question and
+answer part.  Some of the answers I need to create your account.  All of your
+answers will be helpful to the people who own this system.  And, if you choose,
+most of your answers will be visible to other users, so that they can find out
+you are, and so you can find out who they are.
+
+Just a reminder, please try to use Mixed Case for text input; it's so much
+more readable!
+,i nu.occup
+The next piece of information is your occupation.
+,i nu.password
+		Passwords...
+
+After this brief message, the system will ask you to pick a secret password.
+
+Important: Write your password and login id SOMEWHERE safe!!!!  (If
+you lose it, you may lose your account.)  Don't share your password
+with anyone, not even your closest friends and family members.  The
+system will not echo your password for security reasons...
+(Are your friends watching even now, notebooks handy and pens poised?)
+,i nu.private
+The following information will be private if you so desire (if you are
+"paranoid").  Otherwise, it will be available for inspection by the other
+users on the system.  Of course we hope that on this system you will not mind
+sharing this information.  Don't worry too much about mis-spellings and so
+forth, you'll have plenty of opportunity to review everything and fix anything
+that's not quite right.
+,i nu.shell
+You may now pick your command interpreter, or shell.  (this is the program
+that does things "by your command"...)
+
+The following are legal shells:
+
+	 keyword	   what
+	cshell	- C shell	(experienced Unix users only)
+	shell	- Bourne shell	(experienced Unix users only)
+	bbs	- PicoSpan	(the PicoSpan conferencing system)
+
+If you press <RETURN>, you will have picked the default choice of "bbs".  This
+is what most users will want, unless they know or are seriously interested in
+Unix, and have the documentation.
+,i nu.editor
+When creating text via PicoSpan, you have two choices:
+
+	old	This uses the traditional PicoSpan text collector.  It's
+		 been well tested by thousands of users.  If you have
+		 used PicoSpan before, you will likely feel most comfortable
+		 with this.
+
+	new	This uses an experimental editor interface that is designed
+		 to be easy to use, yet fairly powerful.  Users who like
+		 trying new things out are particularly welcome.
+
+Please select one of these choices.
+,i nu.sorry
+, This message is not intended to show up under ordinary operation.
+, It should probably be redone for sites that use this as
+, a way of life.  (Including a telephone # for somebody resonsible
+, would only be fair.)
+,
+
+		Sorry!
+
+Um, I guess we've been having problems with new people on this system.  Your
+information has been recorded in a temporary file for later verification.
+After this verification is completed, your account will be put online.  Sorry
+for the delay!
+,i nu.startup
+, XXX check phone number
+Welcome to Cyberspace Communications' sytem.	(313)973-4739 Ann Arbor, Michigan.
+
+		This SYSTEM
+
+, XXX check final system ram size before going online
+This is a Sun-2/170, running Sun's derivation of Unix.  It has 2 megabytes of
+RAM and 160 megabytes of winchester disk online.
+
+		What's happening here
+
+, Misti thought the earlier formal wording here didn't transit
+, smoothly to the "I" stage.  So, we'll start right off 1st person.
+Hi.  I'm a program running on this system.  My name is "newuser", and
+I am here to help you, the new user, gain access to this system.
+After we finish here, you will have a unique public login-id and a
+private (secret) password that will uniquely identify yourself
+to the system.  In future sessions, you'll be able to use that login-id
+directly rather than me.
+
+I'm going to teach you a very small amount about how to use this system more
+effectively.  Then I'm going to move on and ask you a couple of questions.
+I'll give you a chance to correct your answers, and then I will craft an
+account for you (based on your answers).  After that, I'm done, and I'll let
+you on the system with your new account.  But first, some propaganda.
+,p
+		Manifesto
+
+, XXX Can improve? (shorter?  sweeter?)
+This system is intended for the peaceable interchange of ideas.
+The members of this system hope to attract a large, diverse, and
+	mature group of interesting thinking individuals.
+We believe in community education, and spiritual enrichment of the
+	users of the system.
+We hope in doing so, to contribute to a better informed citizenship,
+	better able to contribute to the democratic ideals of this society,
+	and make possible a more just (and a more healthy) society.
+It should go without saying that system is specifically NOT intended
+	for any illegal purpose.
+System will be based on the Rochdale cooperative principles, especially
+	including open membership, democratic control, and non-profit economics.
+This is an open access system, the public is welcome.  However, regular
+	users are encouraged to become members and help support this system.
+We ask that users be as considerate of others as possible, and particularly
+	ask that all make a special point of setting a good example for
+	those few who may from time to time fail to return the favour.
+, Bibliography:
+,	(1) People's Food Co-op: Member Handbook.
+,		740 Packard (313) 761-8173
+,	(2) New Venues, Old Masterworks: Picasso At Work 5-19-1991
+,		Richard S. Gilbert, Parish Minister, First Unitarian Church
+,		Rochester, New York
+,p
+Enough propaganda.  Back to the work at hand.
+		Funny keys
+
+You will often find text streaming by too rapidly on the screen to read.  You
+can use control-S to freeze it, so that you can read it, and then at your
+leisure, you can press control-Q to let it flow by again.  The control key
+works like a shift--while holding it down, you press the letter key -- S and Q
+in this case.  Sometimes, control keys are indicated this way: ^S ^Q ^C ^X.
+,p
+		EOF
+
+Almost anywhere in Unix where you are expected to type a variable number of
+lines, you end your input by typing control-D after the last line.  Since
+it's a special key, you don't press <return> or anything after it.  You'll
+be able to use control-D in just a bit, every time I give you a chance to
+answer a question with more than one line.
+,p
+		Customizing keys
+
+Many people like choosing their own keys for the next 3 functions.  I'm going
+to tell you some popular choices, and give you a "suggested" default, but if
+you can't find them on your keyboard, feel free to pick any of the popular
+choices, or anything else, if need be.
+
+Couple of hints: Many computers have "cursor" keys and 'other keys that won't
+work too well here -- they send a bunch of characters all at once, and that
+gets complicated to deal with.  Don't forget, the control key works like shift.
+,p
+,i nu.term
+	Terminal identification.
+
+Some parts of the system can take advantage of your terminal -- if the system
+is told what type you are using, and if your terminal is smart enough to do
+cursor positioning and a few other things.  For instance, there are several
+visual editors on the system (VI, EMACS), and VI, in particular, is specially
+optimized to perform well at 1200 baud.  Certain games and other software may
+also take advantage of this.
+
+One warning: "crt", "apple", and "ibmpc" will not work; that doesn't give me
+enough clues about your terminal.  There are thousands of terminal programs
+for the Ibmpc, the macintosh, and so forth, emulating many popular standard
+terminals.  You have to tell me *which* popular terminal your PC is emulating.
+
+You can respond with a "?" if you'd like me to print out the list of terminals
+I know about.  I know about more than 350 different kinds of terminals, so feel
+free to use the interrupt key (~(intr)) to stop me.
+
+If you don't know what's appropriate, just press <return>, and I will assume
+your terminal is "dumb", for now.  You can always change things around later,
+once you become more familiar with the system.
+,i nu.done
+logging in ~(loginid) now...
+,i nu.install
+Installing your new ID
+
+, here's the ignore message: (comma out when through testing.)
+, Please ignore: uid/gid=~(uid)/~(gid)
+,
+,	reconfiguring EOF isn't really quite supported (we want
+,	conditional output macros 1st) but other than that...
+,
+,i nu.eof
+		EOF character
+Almost anywhere in Unix where you are expected to type a variable number of
+lines, you end your input by typing the EOF character after the last line.
+On DEC machines (and PC-DOS and many other DEC influenced machines),
+this is set to ^Z.  On MTS, it's set to ^C, however, ^D has practically
+the same effect.  On Unix, this is just about always set to ^D.  It
+is, however, a configurable character.  Warning!--if you select the C-shell
+on Unix, you specifically DON'T want control-Z -- that's used by
+the new tty driver for job control purposes.
+
+NOTE: while you have have asked me to select another such key, and
+I will switch to your new key if you give me one, I am not yet quite
+smart enough to tell the rest of Unix about it.  In fact, I'm a bit
+surprised you saw this message, since I'm not actually supposed to
+tell you that you can change this key!
+,
+,	dunno if we'll go with this, but for now...
+,
+,i nu.reserved
+
+As a special curtesy to M-net and its users, we have temporarily reserved
+loginid ~(rloginid) for ~(rfullname).  If you are that person, then you should
+supply your M-net password at the next prompt.  If you are not, then you
+should just hit <return>, and you'll be asked to supply another loginid.
+
+This does not mean we know your M-net password.  All we've done is download the
+publically readable password file.  If you supply your M-net password, we will
+encrypt it, compare it with the encrypted entry in the password file, & if it
+matches, you must be the right person.  However, as long as we're on security
+issues, we really ought to point out that supplying your M-net password to us,
+or anybody else, is not good practice.  All you really have is our word that we
+aren't going to store your M-net password or use it for any purpose other than
+validation.  If you are even remotely worried about this, DON'T give us your
+M-net password.  Instead, use ``gripe'' (at the login prompt) and find some
+other way to prove that you are really you.
+
+If you are not ~(rfullname), then we apologize for the nuisance, but you'll
+have to select another loginid, at least for now.  Just hit <return>, & select
+another loginid.  If you would still like to use that loginid, please send us
+a request (use ``gripe''), and somebody will get back to you.  Just for now,
+however, why not select an alternate loginid?

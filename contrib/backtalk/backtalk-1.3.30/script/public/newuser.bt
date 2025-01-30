@@ -1,0 +1,154 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% newuser script
+%
+% This is a form/handler which members of the public can use to create a new
+% accounts for themselves.
+
+/err () def
+
+newuseropen 0 eq {
+  amadm ! { (gradm) () ingroup ! {
+    (Sorry, only system administrators can create accounts.\n)
+    stop
+  } if } if
+} if
+
+(lib/userinfo) include
+
+% If we are being passed data, go ahead and create the account
+/login defined /passwd1 defined and /passwd2 defined and
+/fullname defined and {
+
+  % some basic error checks
+  fullname ! {/err `err (No full name was given.\n)' def} if
+  login ! {/err `err (No login name was given.\n)' def} if
+  passwd1 ! {/err `err (The first password box was blank.\n)' def} if
+  passwd2 ! {/err `err (The second password box was blank.\n)' def} if
+  passwd1 passwd2 and passwd1 passwd2 ne and
+    {/err `err (The two passwords do not match.\n)' def
+    /passwd1 () def
+    /passwd2 () def
+  } if
+
+  err ! {
+    % Check sanity of various fields
+    checkinfo {/err xdef} if
+
+    % Create the account
+    err ! {
+      login fullname passwd1 dfltgroup [/privacy infovars] newuser /err xdef
+    } if
+
+    err ! {
+      % Declare the job a success
+      canemail { /email defined {
+	(email/welcome) call
+      } if } if
+      (public/hello) jump
+    } if
+  } if
+} if
+
+% either this is a new request, or the old request was erroneous, so show form
+
+(<HTML>
+<HEAD><TITLE>)bbsname( Conference Account Request Form</TITLE></HEAD>
+<BODY BGCOLOR="white">
+<H1>)bbsname( Conference Account Request Form</H1>
+)
+
+err {
+  (<FONT COLOR=red><STRONG>Please correct the following errors:</STRONG><UL>\n)
+  /err err(\n)+ def
+  {
+     err () eq {break} if
+     err (\n) parse exch /err xdef
+     (</UL>)exch(\n)
+  } loop
+  (</TD></FONT>\n)
+} if
+
+/fullname dup () default store
+/login dup () default store
+/privacy dup 0 default store
+/passwd1 dup () default store
+/passwd2 dup () default store
+
+(<FORM ACTION="newuser" METHOD=POST>
+
+<H2>Account Identification</H2>
+The information in the first portion of this form is required for all
+account requests.
+<P>
+<STRONG>Your Full Name:</STRONG>
+<INPUT NAME=fullname VALUE=")fullname quote(" SIZE=40> 
+<BLOCKQUOTE>
+This is your name as you wish it displayed to other users in the )bbsname(
+conferences.
+Though we prefer that you give your real name, you are not required to.
+</BLOCKQUOTE>
+<STRONG>Desired Login ID:</STRONG>
+<INPUT NAME=login VALUE=")login quote(" SIZE=)loginlen(>
+<BLOCKQUOTE>
+Each )bbsname( conferencing account must have a unique login id of no more
+than )loginlen( characters.
+</BLOCKQUOTE>
+<STRONG>Desired Password:</STRONG>
+<INPUT TYPE="password" NAME="passwd1" VALUE=")passwd1 quote(" SIZE=12>
+<STRONG>Same Password Again:</STRONG>
+<INPUT TYPE="password" NAME="passwd2" VALUE=")passwd2 quote(" SIZE=12>
+<BLOCKQUOTE>
+Select the secret password that you will
+give when you log into your )bbsname( conference account.
+It will not be displayed as you type it.
+Enter it exactly the same way twice to ensure you didn't make a typo the first
+time.
+</BLOCKQUOTE>
+)
+{(<BR>)} () (R) promptinfo
+
+(<HR>
+<H2>Personal Information</H2>
+The rest of this form asks you for various personal information.
+It's a nice way to let other )bbsname( users know a little bit about you.
+If you choose, it can be kept private so only the system administrators
+will be able see it.
+None of this information is required on an account application.
+<P>
+)
+
+{(<BR>)} () (O) promptinfo
+
+anonymity 3 lt {
+  (<P> <STRONG>Privacy:</STRONG>
+  Who may see the information in this section of the form?
+  <BR><INPUT TYPE="radio" NAME=privacy VALUE=0 )
+  privacy cvi ! {( CHECKED)} if (> All )
+  (Privileged users) (authenticated users) (users) 3 anonymity select (.
+  <BR><INPUT TYPE="radio" NAME="privacy" VALUE=1)
+  privacy cvi {( CHECKED)} if (> Admins only.\n)
+} {
+  (<INPUT TYPE=hidden NAME=privacy VALUE=1>\n)
+} ifelse
+
+(<HR>
+<TABLE><TR><TD>
+<INPUT TYPE=submit VALUE="Submit">
+</TD><TD>
+Note that this will immediately begin the creation of your new account.
+)
+newuseropen 1 eq {
+  (However, you will not be able to user your account until your application
+  has been reviewed by one of our staff members.)
+} {
+  (It should take only a few seconds.  You will be able to use your new
+  account immedately.)
+} ifelse
+(
+</TD></TR></TABLE>
+</FORM>
+<HR>
+</BODY>
+</HTML>
+)

@@ -1,0 +1,10 @@
+                       Fronttalk Setting:  RC
+
+Usage:  DISPLAY RC
+        SET RC
+
+Display/change the conference rc file for the current conference.   This is a
+file that contains Fronttalk commands to execute every time anyone joins the
+conference, before executing the user's .cfrc file.
+
+Only fairwitnesses can edit the RC file.

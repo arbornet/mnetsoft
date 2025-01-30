@@ -1,0 +1,73 @@
+
+                     Limitations of Grex
+            (or, The Tragedy of the Electronic Commons)
+
+    Because of the way the Internet has evolved, we have had to
+institute certain restrictions for new users.  We are sorry to have
+to talk about this so early on, but we need your help!
+
+{pause}#
+
+    First, WE ARE NOT AN INTERNET SERVICE PROVIDER.  This means
+that we aren't a good place to store files, transfer files to or
+from, etc.  Please do try out the conferences; we have many topics
+ranging from the silly to the serious.  If that doesn't strike your
+fancy, take advantage of us as a place to learn how to use Unix
+and/or program.
+
+    Upon creating your account, you will (unfortunately) find
+yourself severely restricted in what you can access on our machine.
+In particular, you will initially find yourself using a very
+restricted shell that only provides access to a handful of Unix
+commands.  You will have no outgoing network access at all; this
+is blocked at the kernel level.
+
+    Your first step is to validate your account.  This just lets us
+know that there is a human being on the other end.  Type 'validate'
+at the shell once you're logged in for more information.
+
+{pause}#
+
+    Once you have validated your account, you will have access to
+a normal shell of your choosing and most of the standard compliment
+of Unix software.  However, your outgoing network access will remain
+restricted (again, the potential for abuse is just too high).  Upon
+validation, there are certain things that we ask:
+
+ 1. We strongly encourage you to use mail elsewhere.  We simply
+    do not have the staff resources to support email properly anymore.
+    However, if you do elect to use mail on Grex, then please...
+    A. DO NOT subscribe to large mailing lists and then forget about
+       them!  If you decide to leave Grex, *please* unsubscribe
+       yourself from the lists you are on.  Mail is the single most
+       resource-intensive application on Grex and your help in
+       curbing "mail bloat" is sincerely appreciated!
+    B. DO NOT create mailing lists.
+    C. DO NOT expect a lot of support for mail.  We will try where
+       we can, but we just do not have the staff to help you most
+       of the time.  Really, you are better off with GMail or
+       something equivalent.
+
+{pause}#
+
+ 2. Be aware that almost everything network related will not run unless
+    you have verified your identity with the Grex staff.  In particular,
+    you cannot run MUDs, talkers, IRC bots, or other such things here,
+    because--again--the chance for abuse is just too high.
+
+ 3. ABSOLUTELY NO BOTS OR BOUNCERS ARE ALLOWED ON GREX.  NO EGGDROP!!!
+    NO PSYBNC!!!
+
+ 4. Please read the Grex list of Frequently Asked Questions.  You
+    can see it on the web at https://grex.org/faq.xhtml, or you can
+    see it on Grex by typing "faq" at the prompt.
+
+{pause}#
+
+    The final step in using Grex is verifying your identity with
+the Grex staff, thus giving you full access to Grex, including the
+ability to write your own software that uses the network.  See the
+Grex FAQ for more information on verification.
+
+   From all the staff at Grex, thanks for your help with these
+matters!

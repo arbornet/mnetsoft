@@ -1,0 +1,91 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% editlogin script
+%
+% Edit a conference login screen.  It is it's own form handler
+%
+% Query Parameters:
+%   target=     which file to edit.  Possible values are (HTML) or (ASCII)
+%   conf=       which conference (for ulist and login only)
+%   csel=       current conference selector (not used, just passed along)
+%   new=        new version of login screen.
+
+% state in form
+/hiddens `(<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+  /nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if'
+  def
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+% boot out non-fairwitnesses
+amfw ! {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+ stop
+} if
+
+/new defined {
+  target (HTML) eq {
+    /login new def
+    (*settings) /login savevar
+  } {
+    new (*login) write
+  } ifelse
+  flavor(confopt)+ jump
+} if
+
+/abalone.menujump 0 def
+
+/login () def
+
+[(Edit )/conftitle( )Conference cap('s )target( Login Screen)] (C)
+[/conf /csel /nextnew]
+[/abalone.menujump] [/login]
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+
+(<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">\n)
+hiddens
+(<TR><TD CLASS=mast>&nbsp;</TD><TD CLASS=mast ALIGN=right>
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=confhome>Goto )Conference cap( Home Page</OPTION>
+<OPTION VALUE=confopt>* Change )Conference cap( Options</OPTION>\n)
+csel {(<OPTION VALUE=nextconf>View Next )Conference cap(</OPTION>\n) } if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>\n)
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR>
+<TD CLASS=colhead COLSPAN=2>
+Edit )/conftitle( )Conference cap('s )target( Login Screen</TD></TR>
+<TR><TD CLASS=odd>
+<FORM METHOD=POST ACTION=editlogin
+<INPUT TYPE="hidden" NAME=target VALUE=)target(>\n)
+hiddens
+(<TEXTAREA NAME=new WRAP=OFF ROWS=20 COLS=72>)
+target (HTML) eq {
+  login quote
+} {
+  (*login) read quote
+} ifelse
+(</TEXTAREA><BR>
+<INPUT TYPE=submit VALUE="Change"></FORM>
+</TABLE>)
+global_footer
+(</BODY></HTML>
+)

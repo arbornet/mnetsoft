@@ -1,0 +1,107 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Changing Fairwitnesses</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Changing Fairwitnesses</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Fairwitnesses are the hosts of conferences, how have special powers enabling
+them to administrate particular conferences.
+You can changing the fairwitnesses of an existing conference either from
+Backtalk's web interface or from Unix.
+
+<H2>Changing Fair-Witnesses From Backtalk:</H2>
+
+To change the fairwitnesses of a Backtalk conference, follow the following
+steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Goto the conference edit page.
+<P>
+There is a link on the administration page labelled "Edit a Conference".
+Click on this.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Specify the conference to be edited.
+<P>
+You will be shown a form one box.  Enter the name of the conference that
+you want to edit here and kill the button labeled "Edit It".
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Specify the new fairwitnesses.
+<P>
+The form that comes up next will include a textbox containing the current
+list of fairwitnesses.  Edit this.
+You can list more than one fairwitness, so long as the names are separated
+by commas (but not spaces).
+<P>
+When you are done, click on the "Change Settings" button.
+<HR>
+</OL>
+
+<H2>Changing Fair-Witnesses From Unix:</H2>
+
+The procedure used to change fair-witnesses from Unix 
+is identical to that used for Picospan or Yapp 2.3 conferences.
+<P>
+To change the fairwitnesses of a Backtalk conference, follow the following
+steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log onto the Unix conference administration account.
+<P>
+This is the account that owns all the conference files and the backtalk
+program itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> change directory to conference directory
+<P>
+Each conference has a directory where all its files are kept.  There is a
+pointer to this directory in the <TT>conflist</TT> file.  The location
+of the <TT>conflist</TT> file depends on how your system is configured.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the conference <TT>config</TT> file
+<P>
+Inside the conference directory, you will find (among other things) a
+file named <TT>config</TT>.  This is the file we need to edit to change
+the conference fairwitnesses.
+A typical <TT>config</TT> file looks like this:
+<PRE>
+    !&lt;pc02&gt;
+    .martian1.cf
+    0
+    marvin,carter
+</PRE>
+(There may be some additional lines at the end.)
+The fourth line of this tells us the names of the current fairwitnesses of
+the conference.
+All we need to do to change the fairwitnesses is edit this line.
+It should just be a list of the Backtalk login names of the users who are
+to be fairwitnesses.  If there is more than one, their names should be
+separated by commas (but no spaces).
+There should always be at least one fairwitness.
+</OL>
+</BODY></HTML>

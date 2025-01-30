@@ -1,0 +1,75 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% openconf script
+%
+% This is a header file that takes care of entering a conference.  It handles
+% all the checking for and submitting of passwords.  As a side effect, it
+% pushs the html <BODY> line for the conference (which sets background colors
+% and whatnot).  It also sets the variables:
+%
+%    background - background tag
+%    textcolor  - text color
+%    linkcolor  - link text color
+%    vlinkcolor - vlink text color
+%    alinkcolor - alink text color
+%
+% This script is meant to be invoked with some script like:
+%    flavor(openconf)+ stopped {
+%       ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+%    } if
+% Note that it "stops" on failure, pushing nothing.
+% The papaya/config.bt should be included before including this
+
+% open the conference (on failure, push the default body line)
+open_conf {`(<BODY )background(>\n)' stop} if
+
+% for conferences that need passwords, keep passwords in cookies
+secret {
+  /dunno defined {
+    % User has said he doesn't know password, remember that in a cookie
+    (pass.)conf+ (Dunno!) 0 setcookie
+  } {
+    secret 1 eq {
+      % We used password to get in - stash it in cookie for future use
+      amfw ! {
+        (pass.)conf+ dup getcookie {
+           cpass 0 setcookie
+        } {
+           cpass eq {pop}{cpass 0 setcookie}ifelse
+        } ifelse
+      } if
+    } {
+      % We needed password, but didn't get it - try getting one from the cookie
+      (pass.)conf+ getcookie ! {
+         dup (Dunno!) eq {
+           pop /dunno 1 def
+         } {
+	   /cpass xstore
+	   close_conf
+	   open_conf {`(<BODY )background(>\n)' stop} if
+         } ifelse
+      } if
+    } ifelse
+  } ifelse
+} if
+
+% default color values
+/bgcolor () def
+/textcolor () def
+/linkcolor () def
+/vlinkcolor () def
+/alinkcolor () def
+
+% load color settings from settings file
+(*settings)
+  [/bgcolor /textcolor /linkcolor /vlinkcolor /alinkcolor]
+  loadvar pop
+
+% construct the <BODY> line
+`(<BODY)
+bgcolor {( BGCOLOR=)bgcolor} {( )background} ifelse
+textcolor {( TEXT=)textcolor} if
+linkcolor {( LINK=)linkcolor} if
+vlinkcolor {( VLINK=)vlinkcolor} if
+alinkcolor {( ALINK=)alinkcolor} if
+(>\n)'

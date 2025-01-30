@@ -1,0 +1,31 @@
+% Backtalk 0.9.4 doesn't have a replace function, so we script one.  Yuck.
+% <string> <pattern> <replacement> <icase> replace <newstring>
+/repl {
+  % save the icase flag
+  /icase xdef
+  % save the replacement
+  /rep xdef
+  % compile the pattern
+  dup length /len xdef
+  () exch icase search pop
+  % stick output string in front of input string
+  () exch
+  {
+    % search for an instance of the pattern
+    dup () icase search
+    dup -1 eq {
+      % search failed.  Append unsearched part to output part and stop
+      pop +
+      break
+    } {
+      % search succeeded
+      2 copy
+      0 exch substr 4 -1 roll exch +
+      rep +
+      3 1 roll
+      len + 9999999 substr
+    } ifelse
+  } loop
+} def
+
+(This is a test.  This is also a test.) ( is ) ( is a big fat ) repl

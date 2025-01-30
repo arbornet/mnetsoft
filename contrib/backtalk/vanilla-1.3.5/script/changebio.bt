@@ -1,0 +1,57 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% changebio - a form handler to update biographical info about user "login"
+
+% find fullname and home dir from the password info
+/pushuser defined {
+  % Backtalk version 1.4 and later
+  login [/usrname /dirpath /usrstat] pushuser pop
+} {
+  % Backtalk version 1.3 and earlier
+  login userinfo 6 -2 roll pop pop exch pop
+} ifelse
+/status xdef
+/hdir xdef
+/ofullname xdef
+
+% userinfo returns () if there is no such user
+hdir ! {
+  (Internal error, )login( no longer appears to have an account.) halt
+} if
+
+/useplan constant {
+  % switch to user if we are adm
+  amadm {login selectuser} if
+  
+  % update .plan file
+  plan (*.plan) write
+} { 
+  % Check information using generic user information routines
+  (lib/userinfo) include
+  checkinfo {/errmsg xdef flavor(bio)+ jump} if
+  
+  % switch to user if we are adm
+  amadm {login selectuser} if
+
+  % update .backtalk file
+  saveinfo
+} ifelse
+
+% if there is a new full name given, do the change
+fullname ofullname ne {
+  /defuser defined {
+    % Backtalk 1.4 and later
+    () /usrname fullname defuser
+  } {
+    % Backtalk 1.3 and earlier
+    fullname changename
+  } ifelse
+  dup {(Fullname not changed: )exch + /errmsg xdef} {pop} ifelse
+  } if
+
+amadm {() selectuser} if
+
+% now go display it via "bio"
+/bio login store
+/noedit (Y) def
+flavor (/bio) + jump

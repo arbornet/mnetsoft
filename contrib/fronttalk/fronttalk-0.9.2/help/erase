@@ -1,0 +1,15 @@
+                       Fronttalk Command:  ERASE
+
+Usage: ERASE <response number>               ("Respond or Pass?" prompt only)
+
+Erase the given response number in the item currently being read.
+
+Who can erase responses depends on the server configuration.  Usually the
+author of the response may have this power, and the fairwitness of the
+conference may have this power.
+
+Erased response are actually deleted from the underlaying file, with their
+content overwritten, so an erase command is generally irreversable.  However
+many servers may log a copy of erased responses.
+
+Synonyms:  SCRIBBLE

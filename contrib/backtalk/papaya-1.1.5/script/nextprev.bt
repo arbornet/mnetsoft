@@ -1,0 +1,68 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter
+%
+% Figure out the next and previous conference.  This is included by the
+% confhome.bt and read.bt pages.  'conf' must be defined.  'csel' is nice
+% to have.  When done, we define 'next' and 'prev'.  They are empty strings
+% if there is no next/previous conference.  Otherwise, they are the arguments
+% to pass to confhome to goto that conference.
+
+% find next and previous conferences
+
+% first, try to figure out previous conference from our csel
+/csel defined {
+  % have a csel, presumably of the '@7' style, since that's the only kind we
+  % use in this interface.
+
+  % get next conference
+  csel next_conf dup {
+    (conf=)exch cgiquote+exch(&csel=)exch++ /next xdef
+  } {
+    pop
+  } ifelse
+
+  % get previous conference
+  csel (@0) eq {
+    % There is no conference before @0
+    /prev () def
+  } {
+      % decrement the number, and do next_conf to get the conference name
+      csel <<^@(\d+)$>> sgrep {
+	1 get cvi 1 - cvs (@)exch+ next_conf
+	(conf=)exch cgiquote+exch(&csel=)exch++ /prev xdef
+     } if
+  } ifelse
+} if
+
+% if that didn't work, try matching the current conference against the hotlist
+% conferences - doesn't work as well when conferences appear more than once
+/prev defined ! {
+  % scan the hotlist for conferences
+  /hotlist 1 cflist_array def
+  /cnt 0 def
+  hotlist {
+    /hotconf xdef
+    hotconf conf_dir confdir eq {
+      /i cnt def
+      break
+    } if
+    /cnt inc
+  } forall
+  /i defined {
+    i 0 eq {
+      /prev () def
+    } {
+      /prev hotlist i 1 - get cgiquote (conf=)exch+(&csel=@)i cvs ++ def
+    } ifelse
+    /i inc
+    /next defined ! {
+      i hotlist length ge {
+	/next () def
+      } {
+	/next hotlist i get cgiquote (conf=)+(&csel=@)i 1 + cvs ++ def
+      } ifelse
+    } if
+  } {
+    /prev () def
+    /next defined ! {/next () def} if
+  } ifelse
+} if

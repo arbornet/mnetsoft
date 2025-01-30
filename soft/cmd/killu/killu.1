@@ -1,0 +1,71 @@
+.TH KILLU 1 04/11/96
+.UC
+.SH NAME
+killu \- Kill all a user's processes
+.SH SYNOPSIS
+.B killu
+[-r] login|uid|-t<XX>...
+.SH DESCRIPTION
+.I Killu
+will kill every process belonging to the named users or running on the named
+tty.
+Users may be named either by login name or uid number.
+Tty's are named with a
+.B -t
+flag.
+For example, 'ttyp0' could be given either as:
+.BR -tp0 ,
+.BR -tttyp0 ,
+.BR -t p0
+or
+.BR -t ttyp0 .
+.P
+For ordinary users, this is of limited use, since you can only kill your own
+processes.
+It could be useful as a way to kill all your login sessions and background
+processes (targeting your username), or to log yourself off another terminal
+(targetting the tty name).
+(Note that
+.I killu
+will not kill itself, so if you run it on yourself it won't die before the
+job is done.)
+.P
+For root this is a more useful program.
+You can list one or more targets on the command line.
+.I Killu
+will boost its CPU priority to the maximum, and then do a pass through
+the process table for each user or tty, killing all associated processes.
+.P
+When cleaning up users running fork bombs, give the -r flag, which will
+cause
+.I killu
+to make repeated passes through the process table, killing all processes owned
+by the named users.
+Between each pass, it will temporarily give up it's high CPU priority and
+sleep two seconds, allowing time for killed processes to exit.
+It will terminate after the first pass where it finds no processes to kill.
+Note that if there is an unkillable hung process, it will keep repeating,
+trying to kill that process.  You can interupt it, or it will give up after
+twelve passes.
+.P
+For fast-spawning fork bombs, it make be useful to try something like
+"killu -r mdw mdw mdw" which would do three consecutive passes through the
+process table, killing all processes owned by mdw on each pass,
+without sleeping in between, then it would do the sleep and repeat the process.
+.P
+Note also that killing processes by user name or uid number is going to be
+more effective against fork bombs than killing them by tty name.
+This is partly because
+the control terminal of a process takes a bit longer to figure out,
+but motly because once the user is logged out his processes get orphaned
+and no longer have a control tty, and so will no longer be found.
+.SH "SEE ALSO"
+kill(1), ps(1)
+.SH AUTHOR
+Jan Wolter
+.SH BUGS
+It doesn't print out any information about which processes it killed, basically
+because it doesn't want to be slowed down while it is doing the killing.
+.P
+When killing multiple users, it does a separate pass through the process
+table for each.  I think this is rare enough that I don't care.

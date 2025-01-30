@@ -1,0 +1,9 @@
+{
+    "title":"*** OTHER MENUS ***",
+    "entries": [
+        {"key":"G", "menu":"@/progs.json", "desc":"Grex Programs Menu"},
+        {"key":"S", "menu":"@/sysinfo.json", "desc":"System Information Menu"},
+        {"key":"B", "menu":"@/bbs.json", "desc":"BBSes Information Menu"},
+        {"key":"E", "exit":true, "desc":"Exit this menu"}
+    ]
+}

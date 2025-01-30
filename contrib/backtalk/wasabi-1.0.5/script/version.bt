@@ -1,0 +1,3 @@
+% Current Wasabi Version Number
+
+/if_version (Wasabi version 1.0.5) defconstant

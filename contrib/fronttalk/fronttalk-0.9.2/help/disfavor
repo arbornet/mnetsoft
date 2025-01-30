@@ -1,0 +1,21 @@
+                       Fronttalk Command:  DISFAVOR
+
+Usage:  DISFAVOR <item range>
+
+Mark all selected items as non-favorites.  Favorite items are listed first
+when you "BROWSE" or "READ" items in the conference.
+
+The "favorite" flag is set with the "FAVOR" command, or it may be
+automatically set when you post or respond to items.
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   DISFAVOR 13      - Disfavor item 13.
+   DISFAVOR "Bush"  - Disfavor all items with the word "Bush" in their titles.
+
+If you just say "DISFAVOR" the default is to favor the current item.
+
+In addition to the flags described in "HELP RANGE" you can also give the
+CONFIRM flag on the command line.  Then each selected item's header will
+be printed, and you will be asked if you want to disfavor it.

@@ -1,0 +1,115 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% show table of contents - item list for the conference
+%  conf= confernce name.  Defaults if not given, which we prefer.
+%  show= response selector.  Defaults to (all).  Other useful value is (new).
+
+flavor(config)+ include
+flavor(cdate)+ include
+flavor(conf)+ include
+(lib/robots) include
+
+(<html>
+<head>
+<title>)conftitle(: )title quote(</title>
+)
+use_rss_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for Articles in )
+  conftitle(" HREF=")anon_url(cinnamon?conf=)conf(">\n)
+} if
+use_atom_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="application/atom+xml" Title="Atom feed for Articles in )
+  conftitle(" HREF=")anon_url(cinnamon?conf=)conf(&fmt=Atom-1.0">\n)
+} if
+conf_robot
+flavor(style)+ include
+(<script language="Javascript">
+)
+
+id ! {
+  flavor(poplogin)+ include
+} if
+
+(</script></head>
+<body>
+<table width=100% height=100% cellpadding=0 cellspacing=0>
+<tr><td class=sidebar rowspan=3 width=160 valign=top>
+)login(\n)
+use_rss_icon use_atom_icon or expose_rss_conf and {
+  (<P><CENTER>)
+  use_rss_icon {
+    (<A CLASS=rss TITLE="RSS feed for )conftitle( Articles" HREF=")
+      anon_url(cinnamon?conf=)conf(">RSS</A> )
+  } if
+  use_atom_icon {
+    (<A CLASS=atom TITLE="Atom feed for )conftitle( Articles" HREF=")
+      anon_url(cinnamon?conf=)conf(&fmt=Atom-1.0">ATOM</A>)
+  } if
+  (</CENTER>\n)
+} if
+(</td><td class=topbar height=20>
+)
+id {
+  (<span class="welcome">) () /usrname pushuser pop
+  (</span>&nbsp;&nbsp;)
+  (\(<a href=")backtalkurl(/public/logout?goto=)
+  `backtalkurl(/)flavor scriptname(?)cgiquery' cgiquote
+  (">logout</a>\)\n)
+} {
+  (<a href=")register_url(">register</a>&nbsp;&nbsp;\n)
+  (<a href="#" onclick="poplogin(); return false">login</a>\n)
+} ifelse
+
+(</td><td class=topbar height=20 align=right>
+)
+
+maypost {
+  (&nbsp;&nbsp;)
+  (<a href="new_article)confarg1("><font color=white>new article</font></a>\n)
+} if
+
+(</td></tr>
+<tr><td class=main colspan=2 valign=top>
+<h1 class=title>Table of Contents</h1>
+)
+
+
+% show the article list
+/isel (1-$) def
+/show defined {
+  /rsel show def
+} {
+  /rsel (all) def
+} ifelse
+
+(<dl>)
+{
+  isel next_item {break} if
+  this_item {break} if
+  exch /isel xstore
+  read_item {continue} if pop
+
+  (<p><dt><a class=toct href="begin?item=)item confarg(">)title expand
+  (</a><span class=tocd> posted )date cdate
+  editdate {
+    (, updated )editdate cdate
+  } if
+  (</span></dt>\n<dd><span class=tocs>)summary expand
+  (</span><br><a class=tocn href="begin?show=all&item=)item confarg(">)
+  maxresp( reader comments</a>)
+  id { 
+    maxresp maxread gt {
+      ( - <a class=tocn href="begin?show=new&item=)item confarg(">)
+      maxresp maxread - ( new</a>)
+  } if } if
+  (</dd>\n)
+} loop
+
+(</td></tr>
+<tr><td class=botbar colspan=2 height=8>
+)global_footer
+(</td></tr>
+</table>
+</body>
+</html>
+)

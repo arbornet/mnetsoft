@@ -1,0 +1,8 @@
+                       Fronttalk Setting:  LOGOUT
+
+Usage:  DISPLAY LOGOUT
+        SET LOGOOUT
+
+Display/Edit the logout file for the current conference.  This file is
+printed as a banner message whenever a user leaves the conference.  You
+need to be a fairwitness to be able to set the logout screen.

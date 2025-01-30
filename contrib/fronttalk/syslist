@@ -1,0 +1,9 @@
+<SYSTEM NAME="grex,cyberspace" HREF="file:///suid/libexec/backtalk-1.3.30">
+Grex, via direct execution.
+</SYSTEM>
+<SYSTEM NAME="mnet,arbornet" HREF="https://backtalk.arbornet.org/cgi-bin/backtalk">
+M-Net.
+</SYSTEM>
+<SYSTEM NAME="webgrex" HREF="https://grex.org/cgi-bin/backtalk">
+Grex, via the Web.
+</SYSTEM>

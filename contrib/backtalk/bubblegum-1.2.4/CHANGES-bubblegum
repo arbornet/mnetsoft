@@ -1,0 +1,92 @@
+Version 1.2.4 - Nov 23, 2004
+   - Add RSS autodiscovery code.  We don't do the 'XML' icon thing, because
+     weird obscure buttons for advanced usage are un-bubblegum-like.
+
+Version 1.2.3 - Nov 10, 2004
+   - Add links.bt file for compatibility with RSS interface.
+
+Version 1.2.2 - Jul 7, 2004
+   - Fix login links so they bounce back to gumball when running gumball.
+   - Change logout links to use public/logout.bt.
+
+Version 1.2.1 - May 8, 2003
+   - Fix bug that caused parent pointers to be erased when editing responses.
+   - Fix crash in view.bt script.
+   - Make entrance button disappear from bio page when running gumball.
+
+Version 1.2.0 - Apr 7. 2003
+   - Read-only support for attachments
+   - Added 'maroon' button set (Contributed by Valerie Mates).
+   - Fixed grammer:  "1 items total" becomes "1 item total".
+
+Version 1.1.7 - Mar 14, 2003
+   - Support external bio links when used with Backtalk 1.2.13 or later.
+   - Moved version number from config.bt to version.bt file.
+   - Support for Gumball and Gumdrop pseudo-interfaces.
+   - Deleted comment about global_header_height from script/config.bt.  Doesn't
+     apply to Bubblegum.
+
+Version 1.1.6 - Mar 4, 2003
+   - Backtalk 1.2.10 compatibility: redefined format macros
+
+Version 1.1.5 - Mar 1, 2003
+   - Backtalk 1.2.9 compatibility: moved userinfo.bt to lib/userinfo.bt
+
+Version 1.1.4 - Feb 25, 2003
+   - Backtalk 1.2.8 compatibility.
+
+Version 1.1.3 - Feb 17, 2003
+   - Hard line break before response box to keep it looking better on wide
+     browser windows.
+   - Small portability fix to if.ins install script.
+   - Install script deletes any compiled scripts left over from previous
+     release.
+
+Version 1.1.2 - Oct 5, 2002
+   - Make use of Backtalk 1.2.2 backtalkurl function to generate base URLs
+     correctly even on https servers.
+
+Version 1.1.1 - Aug 25, 2002
+   - Make use of improved .cflist parsing functions in Backtalk 1.2.1
+   - Make use of Backtalk 1.2.1 snoop_conf function.
+   - Only tell people to close all browser windows if we are not using 
+     essions.
+
+Version 1.1.0 -  Aug 8, 2002
+   - Support for generalized public.txt parsing.
+   - Bio script uses 'pathname' to construct paths to other user's .backtalk
+     and .plan files instead of doing it manually.
+
+Version 1.0.6 - Feb 13, 2002
+   - Fixed bug in searchs that gave duplicate result if both authorname and
+     response text match the search pattern.
+   - Minor cosmetic fixes.
+   - Fixed a crash on read page when using sessions.
+
+Version 1.0.5 - Feb 6, 2002
+   - Fixed several bugs in joining password protected confernces.
+   - Bubblegum version number displayed in default footer.
+
+Version 1.0.4 - Feb 3, 2002
+   - Fixed quoting bug on response edit page.
+   - Added CSS commands in pages with TEXTAREAs to force monospaced fonts.
+
+Version 1.0.3 - Jan 2, 2002
+   - Better formatting of /etc/motd and support of bbs/motd.html.
+   - Logout button appears if built with session IDs, and "please log in" links
+     are also updated to support that option.
+   - Use new cache_conflist command to improve performance of the "My
+     Conferences" page.
+   - Improvements to parsing of public.txt files.
+   - Don't use 'userinfo.bt' file on systems with /useplan defined.
+   - Modifications to work with changed conf_new syntax in Backtalk 1.1.7
+
+Version 1.0.2 - Jun 24, 2001
+   - Fixed a silly timeout bug in begin.bt.
+
+Version 1.0.1 - Jun 15, 2001
+   - Added many <BASE> tags to many pages, to improve behavior with really
+     stupid browsers.
+
+Version 1.0.0 - Jan 24, 2001
+   - Original release.

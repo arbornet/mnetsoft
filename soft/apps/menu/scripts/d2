@@ -1,0 +1,14 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+clear
+num=`who | wc -l`
+echo "UNIX: who | more
+
+Grex's current users... $num total.
+
+Name     TTY      Date         From"
+# f | head -1 ; f | tail +2 | sort -k 1.32
+# f
+who | menumore
+

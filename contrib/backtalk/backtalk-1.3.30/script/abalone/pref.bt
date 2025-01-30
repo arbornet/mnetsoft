@@ -1,0 +1,241 @@
+% Backtalk Abalone Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% pref script
+%
+% This generates a form for setting some user options in Abalone.  The
+% "prefset.bt" script is the handler for this.
+%
+% Query Parameters:
+%    login=	User whose options we are setting
+%    errmsg=    An error message to display (from password change)
+
+/login defined ! {/login id def} if
+
+flavor(config)+ include
+flavor(css)+ include
+
+% Default option values
+/abalone.rpage 25 def
+/rtype (text/plain) def
+/timezone () def
+/abalone.list (hot) def
+/abalone.css () def
+/abalone.menujump 0 def
+/abalone.recent dflt_recent_entrance def
+
+`(User )login( Preferences)' (S)
+[/login]
+[/abalone.list /abalone.rpage /rtype /timezone /ifav /rfav /abalone.menujump
+ /abalone.recent /abalone.css] []
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+% warn off unauthorized users
+amadm ! { login id ne {
+ (</TABLE>Only )login( or an administrator can change )login('s options.
+ </BODY></HTML>\n)
+ stop
+} if } if
+
+(<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+<TR><TD CLASS=mast>&nbsp;</TD><TD CLASS=mast ALIGN=right>
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")} if
+(>
+<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=edithot>Edit Your )Conference cap( Hotlist</OPTION>
+  <OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(<OPTION VALUE="@0help:pref">Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>\n)
+id ! {
+  (You are not logged in\n) halt
+} if
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<FORM METHOD=POST ACTION=prefset>
+<INPUT TYPE=hidden NAME=login VALUE=)login(>
+)
+
+% display errmsg if it is defined and non-null
+/errmsg defined { errmsg {
+  (<TR><TD CLASS=alert COLSPAN=2>)errmsg(</TD></TR>\n)
+} if } if
+
+(<TR>
+<TD CLASS=colhead COLSPAN=2>Preferences for user ")login("</TD></TR>
+)
+
+% topic list option
+(<TR><TD CLASS=odd>
+)Conferences cap( to list<BR>on entrance page:</TD>
+<TD CLASS=odd>
+<SELECT NAME=list>
+<OPTION VALUE=hot>Hot List )Conferences cap(</OPTION>
+<OPTION VALUE=all) abalone.list (all) eq {( SELECTED)} if
+(>All )Conferences cap(</OPTION>
+</SELECT></TD></TR>
+)
+
+% response type option
+(<TR><TD CLASS=even>
+Default )Response( format:</TD>
+<TD CLASS=even>
+<SELECT NAME=rtype>
+<OPTION VALUE="text/plain">Plain Text</OPTION>
+<OPTION VALUE="text/html")rtype (text/html) eq {( SELECTED)}if
+(>Pure HTML</OPTION>
+<OPTION VALUE="text/html-blanks")rtype (text/html-blanks) eq {( SELECTED)}if
+(>lazy HTML</OPTION>
+</SELECT></TD></TR>
+)
+
+% page size option
+(<TR><TD CLASS=odd>
+Maximum number of<BR>)Responses( to show<BR>on a single page:</TD>
+<TD CLASS=odd>
+<INPUT TYPE=text NAME=rpage SIZE=4 VALUE=)abalone.rpage(></TD></TR>
+)
+
+% color scheme option
+(<TR><TD CLASS=even VALIGN=TOP>
+Color scheme:</TD>
+<TD CLASS=even>
+<TABLE BORDER=0>
+)
+stylelist {
+  (:) split /stydes xdef /styttl xdef /stynam xdef
+  (<TR><TD CLASS=even VALIGN=TOP><INPUT TYPE=radio NAME=scheme VALUE=)stynam
+  abalone.scheme stynam eq {( CHECKED)} if
+  (></TD><TD CLASS=even><STRONG>)styttl(.</STRONG><BR>\n)
+  stydes(.</TD></TR>\n)
+} forall
+(<TR><TD CLASS=even VALIGN=TOP><INPUT TYPE=radio NAME=scheme VALUE=custom)
+abalone.scheme (custom) eq {( CHECKED)} if
+(></TD><TD CLASS=even><STRONG>Homemade Style.</STRONG><BR>
+Style sheet URL:
+<INPUT TYPE=text NAME=css VALUE=")abalone.css(" SIZE=50></TD></TR>\n)
+(</TABLE>
+</TD></TR>
+)
+
+% autofavor options
+(<TR><TD CLASS=odd VALIGN=TOP>
+Auto-favorites:</TD><TD CLASS=odd>
+<TABLE>
+<TR><TD CLASS=odd>When posting a new )Item(</TD><TD CLASS=odd>
+<SELECT NAME=newifav>
+<OPTION VALUE="0">That )Item( does not automatically become a favorite
+<OPTION VALUE="1")ifav 1 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until explicitly disfavored
+<OPTION VALUE="2")ifav 2 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until it is next read
+</SELECT></TD></TR>
+<TR><TD CLASS=odd>When posting a new )Response(</TD><TD CLASS=odd>
+<SELECT NAME=newrfav>
+<OPTION VALUE="0">That )Item( does not automatically become a favorite
+<OPTION VALUE="1")rfav 1 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until explicitly disfavored
+<OPTION VALUE="2")rfav 2 eq {( SELECTED)}if
+(>That )Item( becomes a favorite until it is next read
+</SELECT></TD></TR>
+</TABLE>
+</TD></TR>
+)
+
+% menujump options
+(<TR><TD CLASS=even VALIGN=TOP>
+Pull-down command<BR>menu behavior:</TD><TD CLASS=even>
+<SELECT NAME=menujump>
+<OPTION VALUE="0">Execute commands immediately when selected
+<OPTION VALUE="1")abalone.menujump cvi 1 eq {( SELECTED)}if
+(>Do not execute commands until "Go" button is clicked
+</SELECT>
+</TD></TR>
+)
+
+% post log option:
+post_log_file {
+(<TR><TD CLASS=odd VALIGN=TOP>
+Number of most<BR>recent postings listed<BR>on entrance page:</TD><TD CLASS=odd>
+<INPUT TYPE=text NAME=recent VALUE=")abalone.recent(" SIZE=3>
+</TD></TR>
+)
+/thiscolor 0 def
+} {
+/thiscolor 1 def
+} ifelse
+
+
+% <array> tzselect - options for zones
+/tzselect {
+  {
+    (<OPTION VALUE=") exch aload /country xdef quote (">) country (\n)
+  } forall
+} def
+
+% timezone option
+flavor(zone.bt)+ include
+(<TR><TD CLASS=odd VALIGN=TOP>Time Zone:</TD>
+<TD CLASS=odd><STRONG>Current setting:</STRONG>)
+timezone {timezone}{( Use server timezone)}ifelse (<BR>
+<STRONG>Current time:</STRONG> )time ztime(<P>
+<STRONG>To change select <EM>one</EM> of the controls below:</STRONG><BR>
+<INPUT TYPE=checkbox NAME=systimezone VALUE="Y">Use server's timezone<BR>
+<SELECT NAME=timezone1>
+<OPTION VALUE="">(Select African Time Zone)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n)
+africa tzselect
+(</SELECT><BR>
+<SELECT NAME=timezone2>
+<OPTION VALUE="">(Select American Time Zone)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n)
+america tzselect
+(</SELECT><BR>
+<SELECT NAME=timezone3>
+<OPTION VALUE="">(Select Asian Time Zone)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n)
+asia tzselect
+(</SELECT><BR>
+<SELECT NAME=timezone4>
+<OPTION VALUE="">(Select Australian Time Zone)
+&nbsp;&nbsp;&nbsp;&nbsp;\n)
+australia tzselect
+(</SELECT><BR>
+<SELECT NAME=timezone5>
+<OPTION VALUE="">(Select European Time Zone)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n)
+europe tzselect
+(</SELECT><BR>
+<SELECT NAME=timezone6>
+<OPTION VALUE="">(Select Middle Eastern Time Zone)\n)
+mideast tzselect
+(</SELECT><BR>
+<SELECT NAME=timezone7>
+<OPTION VALUE="">(Select Pacific Time Zone)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n)
+pacific tzselect
+(</SELECT></TD></TR>
+)
+
+nopwedit ! {
+(<TR><TD CLASS=even VALIGN=TOP>Password:</TD>
+<TD CLASS=even>Enter new password twice to change it:<BR>
+<INPUT TYPE=password NAME=passwd1><BR>
+<INPUT TYPE=password NAME=passwd2>
+</TD></TR>
+)
+} if
+
+(<TR>
+<TD CLASS=odd>&nbsp;</TD><TD CLASS=odd>
+<INPUT TYPE=submit VALUE="Change Settings"></TD></TR></TABLE>
+</FORM>
+)
+global_footer
+(</BODY></HTML>
+)

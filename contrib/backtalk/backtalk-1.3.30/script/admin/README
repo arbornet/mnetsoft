@@ -1,0 +1,11 @@
+The admin scripts are meant to be useful only to the conference administrator.
+They invoke functions that will only work for the conference administrator.
+
+   admin/makeconf.bt   -   Script to create a conference.  This just creates
+                           a basic conference with mostly default setting.
+                           The editconf.bt script is used to customize it.
+
+   admin/editmenu.bt   -   Script to edit the conference menu.  This edits
+   			   the menu that is shown to users when they ask for
+   			   a list of conferences.
+

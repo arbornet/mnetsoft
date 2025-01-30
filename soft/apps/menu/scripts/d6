@@ -1,0 +1,21 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+#Modification(s)
+#Added UNIX command tutorial comments --mic (Dec. 26, 1998)
+
+clear
+echo "
+UNIX: more /etc/motd; cat /cyberspace/etc/motd.birthday
+"
+sleep 2
+menumore /etc/motd
+if [ -f /etc/motd.err.disk ]
+then
+	cat /etc/motd.err.disk
+fi
+if [ -f /etc/motd.err.link ]
+then
+	cat /etc/motd.err.link
+fi
+cat /cyberspace/etc/motd.birthday

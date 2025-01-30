@@ -1,0 +1,9 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+UNIX: last | more
+
+Todays Grex users....
+"
+last | menumore

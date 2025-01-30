@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:webmaster@cyberspace.org" />
+
+  <title>PicoSpan Guide</title>
+</head>
+
+<body>
+  <h1>PicoSpan Guide</h1>This guide will help you become familiar
+  with our conferencing software. Be sure to look at the "Helpful
+  Concepts" if you are new to PicoSpan.
+
+  <p><a href="lynxexec:bbs">Select this to conference</a> and type
+  "quit" once or twice to return to this screen.</p>
+
+  <p>You may read more about the following topics:</p>
+
+  <ul>
+    <li><a href="#1">Some Helpful Concepts</a></li>
+
+    <li><a href="#2">Reading New Items</a></li>
+
+    <li><a href="#3">Adding Your Own Response</a></li>
+
+    <li><a href="#4">Entering a New Item</a></li>
+
+    <li><a href="#5">Seeing What's New</a></li>
+
+    <li><a href="#6">Finding Specific Ideas</a></li>
+
+    <li><a href="#7">Finding Other Conferences</a></li>
+
+    <li><a href="#8">Quit Conferencing</a></li>
+
+    <li><a href="#9">Screening Out Discussions</a></li>
+
+    <li><a href="#10">Getting More Information</a></li>
+
+    <li><a href="#11">Some Useful Commands</a></li>
+  </ul>
+  <hr />
+  <a name="1"></a>
+
+  <h1>Some Helpful Concepts</h1>A <em>conference</em> is a group of
+  people discussing multiple related topics of mutual interest over
+  time.
+
+  <p>GREX has many interesting conferences, and you can participate
+  in as many of them as you like.</p>
+
+  <p>An <em>item</em> is a specific discussion started by a GREX
+  user about an idea related to the conference's main subject.</p>
+
+  <p>A conference contains many items. After you read an item, you
+  can make your own response to it if you choose. Items become a
+  permanent part of the conference, and can be read at any time by
+  any interested GREX user.</p>
+
+  <p>A <em>response</em> is a comment added to the end of an item.
+  Over time, an item may collect many responses.</p>
+
+  <p>You can easily scan what's new in the discussions; review
+  things you read earlier; and filter out areas of discussion that
+  you don't find interesting.</p>
+  <hr />
+  <a name="2"></a>
+
+  <h1>Reading New Items</h1>To read new items and responses type:
+
+  <blockquote>
+    read
+  </blockquote>GREX will display the text of any new items, and new
+  responses to old items.
+
+  <p>You can modify your read request. For instance to specify only
+  items and responses entered since some date, e.g., June 3, type
+  the date:</p>
+
+  <blockquote>
+    scan since 6/3
+  </blockquote>To look at item 22 in particular, type:
+
+  <blockquote>
+    read 22
+  </blockquote>
+  <hr />
+  <a name="3"></a>
+
+  <h1>Adding Your Own Response</h1>You can add your response to
+  items that interest you by typing:
+
+  <blockquote>
+    respond
+  </blockquote>at the <em>Respond or Pass?</em> prompt.
+
+  <p>Start entering your text. When you are finished typing, exit
+  the editor. (Use ^x for pico, the default editor.)</p>
+  <hr />
+  <a name="4"></a>
+
+  <h1>Entering a New Item</h1>If you have a new topic to introduce
+  for discussion,-- that is, something that isn't already under
+  discussion within the current set of items--at the <em>Ok:</em>
+  prompt type:
+
+  <blockquote>
+    enter
+  </blockquote>
+  <hr />
+  <a name="5"></a>
+
+  <h1>Seeing What's New</h1>To see the "headers" of all the items
+  in your current conference, at the <em>Ok:</em> prompt type:
+
+  <blockquote>
+    scan
+  </blockquote>GREX lists the header of every item in the
+  conference.
+
+  <p>To get the headers for items changed since some date, e.g.,
+  June 3, use a date:</p>
+
+  <blockquote>
+    scan since 6/3
+  </blockquote>To get the headers of only new items and those with
+  changes, type:
+
+  <blockquote>
+    scan new
+  </blockquote>
+  <hr />
+  <a name="6"></a>
+
+  <h1>Finding Specific Ideas</h1>To find all the items and
+  responses in a conference that mention a particular idea, e.g.,
+  mentions of "communication", at the <em>Ok:</em> prompt, type:
+
+  <blockquote>
+    find "communication" all
+  </blockquote>
+  <hr />
+  <a name="7"></a>
+
+  <h1>Finding Other Conferences</h1>GREX has dozens of conferences.
+  To find the ones that interest you, at the <em>Ok:</em> prompt,
+  type:
+
+  <blockquote>
+    help conferences
+  </blockquote>Once you find a conference you'd like to explore,
+  you can join it. For instance, to join the co-op conference: At
+  the <em>Ok:</em> prompt, type:
+
+  <blockquote>
+    join coop
+  </blockquote>
+  <hr />
+  <a name="8"></a>
+
+  <h1>Quitting Conferencing</h1>When you're finished conferencing
+  for the time being, at the <em>Ok:</em> prompt type:
+
+  <blockquote>
+    quit
+  </blockquote>
+  <hr />
+  <a name="9"></a>
+
+  <h1>Screening Out Discussions</h1>To screen out an item
+  concerning an uninteresting topic, at the <em>Respond or
+  Pass?</em> prompt, type:
+
+  <blockquote>
+    forget
+  </blockquote>The item will then be "forgotten" and you won't see
+  any future activity.
+  <hr />
+  <a name="10"></a>
+
+  <h1>Getting More Information</h1>For information about GREX
+  commands, at any prompt type:
+
+  <blockquote>
+    help
+  </blockquote>To get help with a specific command or modifier, at
+  the <em>Ok:</em> prompt type:
+
+  <blockquote>
+    help <em>command</em>
+  </blockquote>i.e.: help read.
+  <pre>
+Ok: <em>help read</em>
+To read new items in a conference.
+You may first want to enter:
+    browse all
+to get a list of items of interest
+to you.  Then if you want to look at
+item 22 from your list you can
+enter:
+    read 22
+After each item, you will be
+prompted to "Respond or pass?" Type:
+    r
+to respond, or just press [RETURN]
+to pass.
+ 
+</pre>NOTE: To save you time, the information provided on your
+first request for help is limited. Watch for references to related
+commands you'll want to know more about.
+  <hr />
+  <a name="11"></a>
+
+  <h1>Some Useful Commands</h1>
+  <pre>
+    For handling items:
+    read       browse     join       find
+    print      respond    thaw       freeze
+    check      remember   next       enter
+    retire     unretire   postpone   header
+ 
+    For handling responses:
+    text       pseudonym  again      current
+    pass       new        expunge    since
+    first      last       kill       only
+ 
+    For dealing with other things:
+    help       write      resign
+    display    echo       mail       change
+    system     leave      bye
+    define     undefine   quit       source
+</pre>
+  <hr />
+  This guide to PicoSpan was prepared from the Grex Guide "Take Me
+  to Your Modem" by Misti Anslin.
+  <hr />
+  You may <a href="mailto:carl">mail carl</a> if you have any
+  questions.
+</body>
+</html>

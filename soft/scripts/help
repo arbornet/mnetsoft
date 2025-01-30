@@ -1,0 +1,113 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+sub closure { my $fref = shift; my @args = @_; sub { $fref->(@args, @_) } }
+sub command { my @args = @_; sub { system @args } }
+sub page    { command('grexmore', @_) }
+sub browse  { command('lynx', @_) }
+sub execute { sub { exec @_ } }
+
+sub pause
+{
+	print 'Press <RETURN> to continue...';
+	local $| = 1;
+	<>;
+}
+
+our @LABELS = split('', '0123456789ABCDEFGHIJKLMNOPRSTUVWXYZ');
+our $WRITE_ETIQUETTE = q(
+Write etiquette:
+ * One person types at a time.
+ * The person you are writing to generally talks first.
+ * When they are done talking, they will type the letter "o" on a blank line.
+   This stands for "over", to tell you that it is your turn to type.
+ * When you are done with your turn, type "o" to tell the other person it is
+   their turn to type.
+ * At the end of the conversation, type "oo" for "over and out", or "oo?" to
+   ask "Do you want to end this conversation now?"
+
+Please wait for an answer.
+At the end of the conversation, use control-D to exit.
+
+);
+
+sub writehelp
+{
+	print $WRITE_ETIQUETTE;
+	system 'write', '-c', 'help';
+}
+
+my @choices = (
+	[ 'The Grex FAQ.',
+	  browse 'http://www.grex.org/faq.xhtml' ],
+	[ 'An introduction to Grex ("Take Me to Your Modem")',
+	  page '/cyberspace/grex/docs/take.me' ],
+	[ 'An Introduction To The FrontTalk Conferencing ("BBS") System.',
+          command 'bbsguide' ],
+	[ 'The Grex Declaration Of Principles',
+	  command 'grex-principles' ],
+	[ 'Limitations of Grex',
+	  command 'grex-limits' ],
+	[ 'Who pays for Grex?  Can I help?  Does this cost money?',
+	  command 'support' ],
+	[ 'Choose this option to get >>>help from a real live person<<<',
+	  closure \&writehelp ],
+	[ 'Run the menu system.',
+	  execute 'menu' ],
+	[ 'Run Lynx.',
+	  execute 'lynx' ],
+	[ 'Go to the conferences ("BBS").',
+          execute 'bbs' ],
+	[ 'Change settings on your account (password, name, shell, .plan file, etc)',
+	  command 'change' ],
+	[ q(Frequently Asked Questions about Grex's Party program),
+          command 'party-faq' ],
+	[ 'Frequently Asked Questions about Web Pages on Grex',
+          browse 'http://www.grex.org/wwwfaq.xhtml' ]
+);
+
+sub menu
+{
+	print "\n";
+	print "    Available documents are:\n";
+	my $index = 0;
+	foreach my $aref (@choices) {
+		print '    ', $LABELS[$index++], '. ', $aref->[0], "\n";
+	}
+	print "\n";
+}
+
+sub perform
+{
+	my $index = shift;
+	unless (defined $index and exists $choices[$index]) {
+		print "Invalid choice; try again.\n";
+		return;
+	}
+	my $aref = $choices[$index];
+	my $fref = $aref->[1];
+	&$fref();
+	pause;
+}
+
+sub pick
+{
+	print "Choose a number (or letter), or q to quit: ";
+	local $| = 1;
+	my $c = <> || exit 0;
+	chomp $c;
+	$c = uc $c;
+	exit 0 unless defined($c) and $c ne 'Q';
+	return grep $LABELS[$_] eq $c, 0 .. $#LABELS;
+}
+
+print q(
+Welcome to Grex's help archives!
+Please mail help@grex.org with additions, corrections, or if you need help!
+);
+
+for ( ; ; ) {
+	perform pick menu;
+}

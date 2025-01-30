@@ -1,0 +1,15 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% <time> cdate <string>...<string>
+%  Given a backtalk time value, return a date like "January 31, 1959" except
+% with all spaces turned non-breakable.
+
+/cdms (JanFebMarAprMayJunJulAugSepOctNovDec) def
+/cdma [(January) (February) (March) (April) (May) (June) 
+       (July) (August) (September) (October) (November) (December) ] def
+/cdate {
+   ctime dup 4 3 substr cdms exch 0 search 3 / cdma exch get exch
+   dup 7 3 substr ( ) (&nbsp;) 0 replace exch
+   (,&nbsp;) exch
+   20 4 substr
+} def

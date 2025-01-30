@@ -1,0 +1,11 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% peekconf script
+%
+% This is the entry point when we do peek:<conf>.  The conference name is
+% passed in in the "conf" variable.  Unlike other interfaces, the wasabi
+% front page displays an item from the conference.  You could make this link
+% to the table of contents page instead, but that is not really wasabi-like.
+% The wasabi concept definately include content on the front page.
+
+(wasabi/begin) chain

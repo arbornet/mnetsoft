@@ -1,0 +1,115 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% view script
+%
+% A script to display a single item from a conference (even hidden responses)
+%
+% Query Paramters:
+%    conf=	conference to view a response from
+%    item=	item number to view a response from
+%    resp=	response number to view
+
+/shyfile constant {
+  flavor(unreg)+ include
+} if
+
+flavor(config)+ include
+
+flavor(openconf)+ stopped {
+  (Backtalk internal error: )exch(</BODY></HTML>\n) halt
+} if
+
+`(View )Item cap( #)item( )Response cap( #)resp' (I)
+[/conf /item /resp]
+[/timezone] []
+flavor(header)+ include
+(</TABLE>\n)
+
+secret 2 eq /dunno defined ! and {
+  [/conf /item /resp] flavor(confpass)+ jump
+} if
+
+/showresp resp def	% save value - resp is about to get clobbered
+
+mayread !
+{
+  (The )conf( )Conference( cannot be read.</BODY></HTML>\n)
+  halt
+} if
+
+(0) item this_item {
+  /baditem 1 def
+} {
+  read_item { /baditem 1 def } if
+} ifelse
+
+/baditem defined {
+  (The )conftitle quote( )Conference( contains no )Item( )item(</BODY></HTML>\n)
+  halt
+} if
+
+showresp read_resp {
+  Item cap( #)item( contains no )Response( #)showresp(.</BODY></HTML>\n)
+  halt}
+if
+
+
+(<P><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=navbar COLSPAN=2><A HREF="begin">)bbsname(</A> &gt; )
+(<A HREF="confhome?conf=)conf(">)conftitle quote(</A> &gt; #)
+item(: )title quote( &gt; )Response cap( #)resp
+(</TD></TR>
+<TR><TD CLASS=colhead WIDTH=18%>Author</TD>
+<TD CLASS=colhead>Message</TD>
+</TR>
+<TR><TD CLASS=odd VALIGN=TOP>
+<SPAN CLASS=authid><A HREF=")
+/extern_bio constant { authorid extern_view_bio }
+  { (bio?login=)authorid cgiquote } ifelse
+(">)authorid(</A></SPAN><BR>
+<SPAN CLASS=authfn>)authorname 18 wrap quote(</SPAN></TD>
+<TD CLASS=odd VALIGN=TOP><TABLE WIDTH=100% BORDER=0><TR><TD CLASS=odd>
+<SPAN CLASS=resphead>)Response( )resp( of ) maxresp(:</SPAN>
+</TD><TD CLASS=odd ALIGN=RIGHT><SPAN CLASS=respdate>)date ztime 4 25 substr
+(</SPAN></TD></TR></TABLE>\n)
+parentresp {(<SPAN CLASS=respnote>\(responding to )parentresp(\)</SPAN>\n)} if
+editdate erased ! and {
+  (<BR><SPAN CLASS=respnote>\(edited )editdate ztime(\)</SPAN>\n)} if
+(<HR>\n)
+erased {(<SPAN CLASS=respstat>This )what( has been erased.</SPAN>)} if
+/shyfile constant {form_text} {1 read_text} ifelse
+attachments {
+  {
+    attachments (,) clip /hand xdef /attachments xstore
+    (<BR>)
+
+    hand get_attach dup 0 gt {
+      `(<IMG BORDER=0 HEIGHT=7 WIDTH=23 SRC=")
+      imghost(/)flavor(attach.gif" ALT="Attachment">&nbsp;<SPAN CLASS=attach>)'
+      exch 1 eq { (<EM>Deleted</EM>) }
+	   { (<EM>Permission Denied</EM>) } ifelse
+    } {
+      pop
+      /url xdef /desc xdef /size xdef /type xdef
+      (<A HREF=")url("><IMG BORDER=0 HEIGHT=7 WIDTH=23 SRC=")
+      imghost(/)flavor
+      (attach.gif" ALT="Attachment"></A>&nbsp;<SPAN CLASS=attach>)
+      desc quote( \() type mimename( - )
+      size 2048 lt { size( bytes) }
+      { size 2097152 lt {size 1024 / (K)}
+	{size 1048576 / (M)} ifelse } ifelse
+      (\))
+    } ifelse
+    (</SPAN>\n)
+
+    attachments ! {break} if
+  } loop
+} if
+
+
+(</TD></TR>
+</TABLE>
+Use "back" to return.)
+global_footer
+(</BODY></HTML>
+)

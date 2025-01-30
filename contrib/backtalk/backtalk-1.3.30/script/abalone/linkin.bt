@@ -1,0 +1,27 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% linkin script
+%
+% Link 'sitem' from 'sconf' into 'dconf'
+
+flavor(config)+ include
+
+/conf /dconf () default def
+/sconf dup () default def
+/sitem dup 0 default def
+
+open_conf {(Conference ')conf(' does not exist\n) halt} if
+
+sconf sitem cvi link_item dup {
+  % failed - pick an error message
+  (You do not have the required access to make this link.\n)
+  `(No such )Item( in the named conference.\n)'
+  `(Cannot access )Conference( (does not exist or is closed).\n)'
+  () 4 6 -1 roll select
+  halt
+} if
+pop pop
+
+/http_location `backtalkurl(/)flavor(confhome?conf=)conf(&csel=)csel(&list=)list
+  /nextnew defined{(&nextnew=)nextnew}if '
+  store

@@ -1,0 +1,71 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% findform script
+%
+% This script generates a form for searching a conference for various things.
+% The form handler for this form is the "find.bt" script.
+%
+% Query Paramters:
+%    conf=      name of the conference we are searching
+%    err=       any error message to print on the form.
+%    csel=      list of conference (not used, just passed along)
+
+flavor(config)+ include
+
+(<HTML><HEAD>
+<TITLE>Search the )/conftitle`( )Conference cap(</TITLE>
+)/metatags(</HEAD>)'
+flavor(openconf)+ include
+secret 2 eq /dunno defined ! and { [/conf /csel] flavor(confpass)+ jump } if
+global_header
+
+/butsel 4 defconstant flavor(buttondef)+ include
+
+% various default settings of form
+/pattern dup () default def
+/mode dup (exact) default def
+/exact_check mode (exact) eq {( CHECKED)}{()} ifelse def
+/re_check mode (re) eq {( CHECKED)}{()} ifelse def
+/icase_check /icase 1 default {( CHECKED)}{()} ifelse def
+/m_text_check /m_text 1 default {( CHECKED)}{()} ifelse def
+/m_fname_check /m_fname 0 default {( CHECKED)}{()} ifelse def
+/m_title_check /m_title 0 default {( CHECKED)}{()} ifelse def
+/m_login_check /m_login 0 default {( CHECKED)}{()} ifelse def
+
+(<H1>Search the )conftitle( Conference</H1>
+<FORM METHOD=post ACTION=find>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>)} if
+(<STRONG>Search For:</STRONG><BR>
+<INPUT TYPE=text NAME=pattern VALUE=")pattern quote
+(" SIZE=72><BR>\n)
+/err defined {(<FONT COLOR=red><STRONG>)err(</STRONG></FONT><BR>)} if
+(<INPUT TYPE=radio NAME=mode VALUE=exact)exact_check(> Exact Match
+<INPUT TYPE=radio NAME=mode VALUE=re)re_check(> Regular Expression<BR>
+<INPUT TYPE=checkbox NAME=icase)icase_check(> Ignore Case
+<P>
+<STRONG>Match Against:</STRONG><BR>
+<TABLE><TR>
+<TD><INPUT TYPE=checkbox NAME=m_text)m_text_check(> Message Text<BR></TD>\n)
+mayseealias {
+ (<TD><INPUT TYPE=checkbox NAME=m_fname)m_fname_check
+ (> Author's Full Name<BR></TD>\n</TR><TR>\n)
+} if
+(<TD><INPUT TYPE=checkbox NAME=m_title)m_title_check(> )Item cap( Title<BR></TD>
+<TD><INPUT TYPE=checkbox NAME=m_login)m_login_check(> Author's Login Name</TD>
+</TR></TABLE>
+<P>
+<STRONG>In )Items cap(:</STRONG><BR>
+<INPUT TYPE=text NAME=isel VALUE="1-$" SIZE=12>
+<P>
+<INPUT TYPE=submit VALUE=Search>
+Note:
+Searching a )Conference( may take a bit longer than your average transaction.
+</FORM>
+<P><HR>
+Goto <A HREF="confhome?conf=)conf(&csel=)csel(">)
+confhome_button(</A> or <A HREF=begin>)entrance_button
+(</A> or <A HREF=help/findform>)help_button(</A>)
+global_footer
+(</BODY></HTML>
+)

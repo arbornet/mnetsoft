@@ -1,0 +1,94 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% spelltext script
+%
+% This is the text frame for the spell checking popup.  In addition to the
+% text display, it contains Javascript defintions of the 'text' variable, which
+% contains the current text, and the 'bad' array, which has one subarray for
+% each misspelled word.  The first entry in the subarray is the misspelled
+% word.  The second is the offset of the first letter of that word in 'text',
+% and the rest are suggested alternatives.
+%
+%   text = text to spell check
+%   texttype = 'text/html' or 'text/plain' or 'text/lazyhtml'
+%   spell_ignore = comma-separated list of words to ignore
+
+/badindex 0 def
+/badarray () def
+/offset 0 def
+
+/checkit {
+   texttype 3 {
+
+     /word xdef				% misspelled word
+     exch /sa xdef			% suggestion array
+     dup length offset + /offset xdef   % compute offset of misspelled word
+     doquote				% do appropriate qouting on correct text
+     (<A HREF="#" OnClick="parent.selword\(bad[)badindex(]\); return false">)
+     word(</A>)
+
+     /badindex inc
+
+     % Add word to bad array
+     /badarray `
+       badarray				% previously built rows
+       dup {(,\n)} if			% comma if there were previous rows
+       (new Array \()			% subarray declaration
+       word jsquote(,)offset		% misspelled word and it's offset
+       sa {(,)exch jsquote} forall      % quoted prefixed suggestions
+       (\))				% subarray close
+       ' def
+
+     /offset offset word length + def	% add word length to offset
+
+   } spellcheck
+   doquote
+} def
+
+% <text> striplink <text>
+% delete any <A> or </A> tags from html text
+/striplink {
+  `exch <<\</?(A|a)([^\>"']|"[^"]*"|'[^']*')*\>>> 0 {} rgrep'
+} def
+
+(<HTML>
+<HEAD>
+<SCRIPT Language="Javascript">
+<!--
+var ignore= )spell_ignore jsquote(;
+var text= )/jtext(;
+var bad= new Array\(
+)/badarray(\);
+if (bad.length > 0) parent.selword(bad[0]);
+//-->
+</SCRIPT>
+</HEAD>
+<BODY>
+)
+
+
+texttype (text/plain) eq {
+  (<PRE>)
+  /jtext text jsquote def
+  /doquote {quote} def
+  `text checkit'
+  (</PRE>)
+}{
+  /text text cleanhtml def
+  /jtext text jsquote def
+  texttype (text/html) ne {
+    % fix up lazy-html to make regular html
+    /doquote {
+      striplink
+      (\r) () 0 replace
+      (\n\n) (\n<P>\n) 0 replace
+    } def
+  } {
+    /doquote { striplink } def
+  } ifelse
+  text checkit
+} ifelse
+
+(</BODY>
+</HTML>
+)

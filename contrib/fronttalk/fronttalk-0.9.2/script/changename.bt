@@ -1,0 +1,21 @@
+% Copyright 2002, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to change the user's conference name.
+%   conf       Conference names (for per-conference files only)
+%   newname    New name for the user
+
+
+id ! {
+ (<ERROR MSG="Must be logged in to change your name">\n)
+ stop
+} if
+
+open_conf {
+ (<ERROR MSG="Conference ')conf(' could not be accessed.">\n)
+ stop
+} if
+
+newname conf_alias
+
+(<DONE>
+)

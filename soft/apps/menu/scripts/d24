@@ -1,0 +1,19 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+echo -n "
+UNIX: <editor> <file-to-edit>
+
+Editors: (pico) (ed) (vi) (emacs)
+
+Use which editor? "
+read editor
+sleep 1
+echo "Listing Directory (`pwd`):
+"
+sleep 1
+ls -p | grep -v /\$ | menumore
+echo -n "
+File name to be edited? (you can choose a new file name) "
+read edit
+$editor $edit

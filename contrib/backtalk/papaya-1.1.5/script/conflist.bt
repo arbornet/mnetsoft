@@ -1,0 +1,122 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% conflist script
+%
+% List all available conferences.  This parses and pretty prints the
+% public.txt or the confmenu file, with conference names clickable so you can
+% go straight to them.
+
+flavor(config)+ include
+
+% Print the page header
+(<HTML><HEAD>
+<TITLE>) bbsname`(: Index of )Conferences cap(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">\n)
+(S) flavor(meta)+ include
+(</HEAD>
+<BODY )background(>
+)global_header
+(<H1>)bbsname`(: Index of )Conferences cap(</H1>
+<FORM METHOD="post" ACTION="edithot">
+)
+
+% cname ctitle cdes showconf ...
+%  Display a conference line
+/showconf {
+  /cdes xdef /ctitle xdef /conf xstore
+  in_dl ! {1 /in_dl xdef (<DL>)} if      % enter <DL> if needed
+  (<DT>)
+  id {(<INPUT TYPE="checkbox" NAME="confs" VALUE=")conf(")/checked(>\n)} if
+  (<B><A HREF="confhome?conf=)conf(">)ctitle quote(</A></B>\n)
+
+  snoop_conf {
+    (<EM>not accessible</EM>)
+  } {
+    conf_new /unseen xdef /newresp xdef /brandnew xdef /total xdef
+    (\()total`( )Items(, )'brandnew( unread, )newresp( new, )unseen( unseen\))
+    hotdict confdir known {
+      (&nbsp;<IMG SRC=")imghost(/)flavor(hot.gif">)
+      /checked ( CHECKED) def
+    }{
+      /checked () def
+    } ifelse
+    brandnew newresp + id and {
+      (&nbsp;<IMG SRC=")imghost(/)flavor(new.gif">)
+    } if
+  } ifelse
+
+  (</DT><DD>)cdes quote(<P></DD>\n)
+  print
+} def
+
+% load hotlist dirs into a dictionary
+/hotdict dict def
+1 cflist_array {
+  % store directory path in hash
+  hotdict exch conf_dir 1 put
+} forall
+
+/usepublic_txt constant {
+  % Load the "public.txt" file
+  bbsdir (/public.txt) + read /remainder xdef
+  0 /in_dl xdef
+
+  % Process the file, line-by-line
+  {
+    % get the next line
+    remainder (\n) parse
+      dup () eq {break} if
+      /work_line xdef
+      /remainder xdef 
+
+    % check if it is a conference line
+    work_line pt_confline sgrep {
+      aload /work_line xdef /conf xstore pop
+      conf conf work_line showconf
+    } {
+      % check if it is a header line
+      work_line pt_headline sgrep {
+	1 get /work_line xdef
+	in_dl {0 /in_dl xdef (</DL>)} if     % exit </DL> if needed
+	(<H3>) work_line quote (</H3>)
+      } if
+    } ifelse
+  } loop
+} {
+  % Load the confmenu file
+  (*confmenu) read /remainder xdef
+
+  % Process the file, line-by-line
+  /in_dl 0 def
+  {
+    % get the next line
+    remainder (\n) parse exch /remainder xdef
+    dup ! {break} if
+
+    % skip comments
+    dup 0 1 substr (#) eq {pop continue} if
+
+    % parse apart the line
+    (:) clip /cname xdef
+    (:) clip /ctitle xdef /cdes xdef
+
+    cname {
+      % Format a conference name
+      cname ctitle cdes showconf
+    } {
+      % Format a header line
+      in_dl {/in_dl 0 def (</DL>)} if	% exit </DL> if needed
+      (<H3>)ctitle(:</H3>\n)
+      cdes {(<BLOCKQUOTE>)cdes(</BLOCKQUOTE>\n)} if
+    } ifelse
+
+  } loop
+} ifelse
+
+in_dl {/in_dl 0 def (</DL>)} if
+
+id {(<INPUT TYPE="submit" VALUE="Update hotlist">\n)} if
+(</FORM>\n)
+
+/conf () def
+flavor(footer)+ chain

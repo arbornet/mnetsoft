@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <script type="text/javascript"></script>
+  <style type="text/css" media="screen">
+    @import "../style/default.css";
+  </style>
+  <title>Privacy on Grex</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a><span id="grex"><em>Grex</em></span> Staff Notes: Authentication on Grex</a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="../grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="../newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="../faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="../member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="../contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+    <p>Authentication on Grex is handled using the standard tools
+    that come with the OpenBSD operating system.  In particular, we
+    use the OpenBSD
+    <a href="http://www.openbsd.org/cgi-bin/man.cgi?query=bcrypt"><em>bcrypt</em></a>(3)
+    hashing algorithm, and the standard 4.4BSD /etc/master.passwd
+    database and its Berkeley DB counterparts, all managed using
+    the tools that come with the base operating system.</p>
+
+    <p>In the past, however, authentication on Grex was very complex.
+    Grex used a proprietary algorithm and format for its hashed
+    passwords and used a heavily modified version of the software that
+    maintains the Unix /etc/passwd file under SunOS.  Special tools
+    had to be used to work on the password database, which was very
+    inconvenient.  See <a href="sun/passwd.xhtml">the old staff notes</a>
+    for more information, </p>
+
+    <p>When Grex moved to OpenBSD from SunOS, it was decided that it
+    was too much effort to maintain support for the custom hashing
+    algorithm that had been used for passwords on Grex.  So, the system
+    was migrated to use the standard OpenBSD algorithm and tools
+    instead.</p>
+
+    <p>Migrating from the old system to the new system was remarkably
+    easy, but time consuming.  Since passwords are hashed in a format
+    that is difficult to invert, we could not simply "decrypt" them
+    and rehash them using <em>bcrypt</em>(3).  Further, we knew that
+    asking every user on Grex to change his or her password simply
+    would not work.</p>
+
+    <p>So, we came up with a different plan.  The program that creates
+    new accounts on Grex was modified to use the OpenBSD algorithm, and
+    then the <em>passwd</em>(1) program was updated to always use bcrypt
+    when a user changed his or her their password.  Finally, the program
+    that authenticates a user's password was modified so that, if it
+    detected that a password was hashed with the old format, it would
+    rehash the password (which it had access to) in the new format and
+    update the database accordingly.</p>
+
+    <p>The bulk of users had been migrated to the OpenBSD algorithm
+    over the course of about six months; picking up the rest of the
+    stragglers took about a year.  Grex is now free of the proprietary
+    algorithm, account maintenance is much easier, and upgrades are
+    simpler.</p>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: authentication.xhtml 1547 2016-09-25 14:57:21Z kentn $</span>
+</div>
+</body>
+</html>

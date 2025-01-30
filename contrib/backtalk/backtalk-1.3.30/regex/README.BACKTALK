@@ -1,0 +1,28 @@
+The contents of this 'regex' directory are derived from Henry Spencer's regex
+library.  The authors of Backtalk assert no copyright over either the original
+code or our modifications, and use of this code is not covered in any way
+by the Backtalk license.  See the file regex/COPYRIGHT for Henry Spencer's
+terms.
+
+Backtalk originally tried to use whatever regular expression library was
+installed on the target system.  Some of these stunk.  Even those that work
+fine work in slightly incompatible ways.  Since I want to move toward making
+heavier use of regular expressions in Backtalk scripts, I want them to behave
+more consistantly across systems.  So I've decided to roll Henry Spencer's
+ubiquitous regular expression package into the Backtalk distribution.  (Note
+that there is a copy of this in Apache, in MSQL, and in many other common
+packages, so I'm kind of running with the herd here.  We all owe Henry a
+hearty thank-you for making this available under such a liberal license.)
+
+The basic regular expression code in this directory has not been
+meaningfully modified.  However the regtoflat.c file has been added.  It
+contains functions to convert compiled regular expressions into a flat form
+suitable for storing to disk and reading back (the flat format could and
+should be more compact).  The Makefile has been rearranged and the common.h
+and fake.c files have been added to make it easier for Backtalk's configure
+script to configure this too.  Various test and debug files have been omitted
+from this copy of the distribution.
+
+I got the distribution from ftp://ftp.zoo.toronto.edu/pub/regex.shar and
+that's probably a good place to look if you want the original, complete
+distribution.

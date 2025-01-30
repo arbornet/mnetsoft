@@ -1,0 +1,11 @@
+% Backtalk Gumball Interface - (c) 2003, Jan Wolter, Steve Weiss
+%
+% begin script
+%
+% This is the entry point for the one-conf script.  
+
+/oneconf 1 defconstant
+
+urlarg {/conf urlarg def} if
+
+(bubblegum/confhome) chain

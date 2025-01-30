@@ -1,0 +1,14 @@
+                       Fronttalk Setting:  STAY
+
+Usage:  SET STAY
+        SET NOSTAY
+
+If the STAY flag is set, then you will be returned to the "Respond or Pass"
+prompt for the same item after you respond to the item.  This is handy if
+you like entering multiple responses in a row and such.
+
+If NOSTAY is set, then an automatic PASS is executed after entering a response
+so that you move on to the next item.  This is the default.
+
+This setting effects only the RESPOND command.  To control whether you move
+on to the next item after doing a FORGET or FAVOR, see SET MODESTAY

@@ -1,0 +1,12 @@
+                       Fronttalk Setting:  CFRC
+
+Usage:  DISPLAY CFRC
+        SET CFRC
+
+Display/change your remote .cfrc file on the current server.   This is a
+file that contains Fronttalk commands to execute every time you join a
+conference, after the conference RC file is executed.
+
+There can also be a .cfrc file in your home directory (or in a subdirectory
+of your home directory named .cfdir) on your local system.  To view or edit
+this, just use unix commands.

@@ -1,0 +1,29 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% changealias script
+%
+% This script resets the user's default conference name, and then displays the
+% "confhome.bt" page again.
+%
+% Query Parameters:
+%    conf=	name of conference where we will change the alias
+%    newalias=	new alias to set
+%    csel=      pass this on to confhome.bt
+%    nextnew=   pass this on to confhome.bt
+
+flavor(config.bt)+ include
+
+% open the conference
+open_conf {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n)
+  halt
+} if
+
+% set the new alias
+newalias conf_alias
+
+% close the conference
+close_conf
+
+% call the confhome page
+flavor(confhome) + jump

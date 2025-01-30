@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="author" content="grex.org" />
+
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" media="screen">
+    @import "../style/default.css";
+  </style>
+
+  <title>Installing JRE</title>
+</head>
+
+<body>
+<div id="wrap">
+  <div id="header">
+    <h1><a>Installing JRE</a></h1>
+  </div>
+  <div id="menu">                                                                                                       
+    <ul>
+      <li class="first"><a href="http://grex.org/" accesskey="1">Home</a></li>
+      <li><a href="grex.xhtml" accesskey="2">About Us</a></li>
+      <li><a href="newuser/index.xhtml" accesskey="3">Get a Free Account</a></li>
+      <li><a href="faq.xhtml" accesskey="4">FAQ</a></li>
+      <li><a href="member.xhtml" accesskey="5">Become a Member</a></li>
+      <li><a href="../contact.xhtml" accesskey="6">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <div id="content">
+    This page describes the install process for Sun's (now Oracle's)
+    Java Runtime Environment (JRE). JRE is essential if you want to use
+    our MindTerm Java applet to SSH into Grex.
+
+    <h4>Java (JRE) Installation</h4>
+    <ol>
+      <li><a href="#installed">Is JRE installed?</a></li>
+      <li><a href="#download">Download &amp; Install JRE</a></li>
+      <li><a href="#troubleshoot">Troubleshoot the JRE install</a></li>
+    </ol>
+    <hr />
+
+    <h4 id="installed">Is JRE installed?</h4>
+      <p>You need to check if Java is already present on your 
+      computer.</p>
+      <p><b>in Windows:</b>
+        <ol>
+          <li>Click on: <tt class="menu">Start --> Program Files --> Control Panel</tt></li>
+          <li>A rectangular window should pop-up.</li> 
+          <li>Look within this window and double click:
+          <tt class="menu">Add Remove Programs</tt></li>
+          <li>A new window will pop-up, which contains a list of 
+          installed applications. Check too if Java (JRE) is in the list</li>
+        </ol>
+      </p>
+
+      <p><b>in Debian:</b>
+      <samp>
+        <tt>dpkg -l|grep -i jre</tt><br />
+        <tt>dpkg --status sun-java6-jre</tt>
+      </samp></p>
+
+      <p><b>in Centos &amp; Fedora:</b> 
+      <samp>
+         <tt>rpm -qa|grep -i jre</tt><br />
+         <tt>rpm -qi packagename</tt>
+      </samp></p>
+
+
+    <h4 id="download">Download and Install JRE to desktop</h4>
+      <p>JRE can be downloaded from Oracle's website, or from 
+      <a href="http://java.com/en/download/">this website</a>. However
+      it would be best to use your distributions package manager to do 
+      the download and install.</p>
+
+      <p><b>in Windows:</b>
+      Windows doesn't come with a software package manager so you need
+      to download the Java (JRE) package (.exe file) using the above 
+      mentioned link. Then double click the installation file you 
+      just downloaded to start the install process.</p>
+
+      <p><b>in Debian:</b>
+      <samp>
+        <tt>apt-cache search jre</tt><br />
+        <tt>apt-get install package-name</tt>
+      </samp></p>
+
+      <p><b>in Centos, Fedora</b>
+      <samp>
+        <tt>yum list jre</tt><br />
+        <tt>yum update package-name</tt>
+      </samp></p>
+
+    <h4 id="troubleshoot">Troubleshoot your Java Installation</h4>
+      <ol>
+      <li>See if the Grex Java MindTerm applet loads within your browser by
+        <a href="/mindterm/applet.html">clicking on this link</a></li>
+      <li>A window should pop-up asking you for permission to run the applet
+        or application, because its <q>digital signature</q> has expired. Click:
+        <tt class="menu">Run</tt></li>
+      <li>A window should pop-up asking you to accept a 
+        <q>MindTerm - License agreement</q>. Click: <tt class="menu">Accept</tt></li>
+      <li>If steps 2 &amp; 3 don't happen and if you have Java installed, then read our
+        <a href="networkconnectivity.xhtml">network troubleshooting</a> page</li>
+      <li>If nothing works <a href="troubleshoot.xhtml">ask for help</a></li>
+      </ol>
+  </div>
+
+</div>
+<div id="footer">
+  <span id="revision">$Id: installjre.xhtml 1018 2010-12-13 16:32:00Z veek $</span>
+  <span id="feedback">We welcome your
+    <a href="mailto:webmaster@grex.org">feedback</a>.</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+#!/bin/sh
+
+# gloria shell script, written 3/25/94 by Valerie Mates <popcorn>.
+# This is designed to work something like a program called Gloria that
+# ran on M-Net, which I have never seen.  The idea is to show the user
+# all the .plan files that have changed since the last time she or he ran
+# this script.
+# This script is released into the public domain (if anybody would want it).
+
+# Gloria creates a file called .gloria_time in the user's home directory 
+# each time it runs.  That file has a date stamp from last time we ran, 
+# so we can tell which .plan files are newer.
+# note: the timestamp format is number of seconds from 1/1/70 00:00:00.
+
+# updated/modified June 10, 1995 David Martinelli <dam@cyberspace.org>
+
+# files in package:
+# gloria - this script.  the ones users will run.
+# gloria.plans - list of .plan files and timestamps created by gloria.update
+# gloria.update - this is a system event to update the gloria.plans database.
+# $HOME/.gloria_time - the time stamp of the last time gloria was run.
+
+#set gloriadir to the location of the gloria script files
+gloriadir=/usr/local/bin
+
+#set gloria_database to the name of the gloria database file
+gloria_database=/usr/local/lib/gloria.plans
+
+#set gloriabin to the location of the system executables
+#uses cat, echo, expr, find
+# dang -- I've removed this because newgrex has real binaries in several places
+#gloriabin=/usr/local/bin
+
+# If we have a .gloria_time file, it means we've run this program before.
+# We set variable last_run to the timestamp on the .gloria_time file, so
+# we can use it later when we look for newer .plan files.
+
+#if new gloria user
+if [ -f $HOME/.gloria_time ]
+then
+   last_run=`find $HOME/.gloria_time -printf "%T@\n" -maxdepth 0`
+else
+
+   # We haven't run gloria before.  Offer to show the user *lots* of output.
+
+   echo "This is the first time you have run the gloria program."
+   echo -n "Do you want to see all .plan files on the system?  (y/n) "
+   read show_all
+
+   # Convert input to lower case.  There must be an easier way.
+
+   if [ "$show_all" = "Y" ]
+   then
+      show_all="y"
+   fi
+
+
+   # If the user wants to see all .plans, set our start date to the
+   # beginning of time.
+   # If not, set our start date to be blank, so we know not to show .plans,
+   # and tell the user what we're doing.
+
+   if [ "$show_all" = "y" ]
+   then
+      last_run="0"
+   else
+      last_run=""
+      echo " "
+      echo "Creating file $HOME/.gloria_time, so that next time you run gloria"
+      echo "it will show you all .plan files that are newer than today."
+   fi
+fi #new gloria user
+
+
+
+# display all of the .plan files newer than the last time gloria was run.
+
+# this is the function that actually does all the work.
+show_new_plans ()
+{
+  number_new=0
+  while read userdir timestamp
+  do
+    if [ $timestamp -ge $last_run ]
+    then
+      echo " "
+      echo "$userdir/.plan:"
+      cat $userdir/.plan 2>&- || echo "Not readable."
+      number_new=`expr $number_new + 1`
+    else
+      break
+    fi
+  done
+  echo " "
+    echo "Done!  Total of $number_new new .plan files."
+}
+
+# Now last_run should be set to the timestamp to start showing .plans from.
+# Unless it's blank (because we didn't want to see .plans),
+if [ "$last_run" != "" ]
+then
+  show_new_plans < $gloria_database
+fi
+
+
+# And create or update our .gloria_time file for next time we run:
+touch $HOME/.gloria_time
+

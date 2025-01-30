@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+
+  <title>Trouble Connecting to Grex</title>
+<style type="text/css">
+/*<![CDATA[*/
+ body {
+  background-color: #FFFFFF;
+ }
+ p.c2 {font-size: 80%}
+ div.c1 {text-align: center}
+/*]]>*/
+</style>
+</head>
+
+<body>
+  <div class="c1">
+    <img src="../images/grexweb2.png" alt="GREX" width="188" height="97" />
+    <h1><a id="top">Trouble Connecting to Grex</a></h1>
+  </div>
+
+  <p>You came to this page because you cannot get connect to Grex.
+  there are a number of reasons that this can happen.</p>
+
+  <ul>
+    <li><a href="#client">Read this section</a> if you do not know
+    how to SSH. Perhaps you do not have a SSH client, or do
+    not know what the command is.</li>
+
+    <li><a href="#browser">Read this section</a> if when you click
+    on a <a href="ssh://grex.org">ssh link</a>, your browser
+    gives you an error, such as "unable to find application".</li>
+
+    <li><a href="#connect">Read this section</a> if you can ssh,
+    but you can't get a response from Grex.</li>
+
+    <li><a href="#other">Read this section</a> if you are having
+    some other problem with ssh.</li>
+  </ul>
+
+  <p><a href=".">Return to the main trouble page</a>.</p>
+  <hr />
+
+  <h3><a id="client">Your SSH Client</a></h3>In
+  order to make a ssh connection to Grex, you need an ssh
+  client. It is likely that you already have one, because most
+  modern systems come with one built in.
+
+  <p>There are several cases to consider, depending on what kind of
+  machine and connection you are using:</p>
+
+  <ul>
+    <li>If you have a PC running a 32-bit Windows operating system
+    (Window 95, 98, NT, 7, 10), then you are unlikely to have an ssh program
+    built in.  grex requires ssh for connecting, so you would need to install
+    an ssh client.  If this doesn't work, <a href="#top">go back to the
+    top of this page</a>, and make another selection.
+
+      <p>Please see the <a href="../ssh.xhtml">Grex ssh
+      Page</a> for information about alternate ssh programs.</p>
+    </li>
+
+    <li>If you are running an older version of Windows or Windows
+    for Workgroups on your PC, you may not have a built in ssh
+    program, and you may also need TCP/IP stack software. See the
+    <a href="../ssh.xhtml">Grex ssh Page</a> for information
+    on how to get what you need.</li>
+
+    <li>If you have a Macintosh, you need a ssh client program.
+    See the <a href="../ssh.xhtml">Grex ssh page</a> for
+    information about Macintosh ssh clients.</li>
+
+    <li>If you are using a terminal emulator, then it does not matter
+    whether you are connecting from a Macintosh, or PC. You will be
+    running the ssh client on the host machine, which is usually a
+    unix machine. If you are dialing into a Free-net or Community
+    network, using a terminal emulator, you may be presented with a
+    menu of options. You will need to get help from the people who
+    run that machine to find out how to do an ssh connection from
+    it. If you are able to access a unix command prompt, or if your own
+    machine is a unix machine, then you should be able to type "ssh
+    **username**@grex.org" to start the connection to Grex (substitute
+    your Grex user name for **username**). You do not need a special ssh
+    client, because it is built in to all unix systems.</li>
+  </ul>
+
+  <h3><a id="browser">If Your Browser Cannot
+  ssh</a></h3>This occurs when your browser has not been
+  configured to know where your ssh client is located. To
+  correct this, you must configure your browser. There is a
+  slightly different way to do this for each different browser. 
+  Generally, there is a way to assign ssh connections to an
+  application.  Assign ssh connections to your ssh client.
+  If you do not know what your ssh client is, then you should <a href=
+  "#client">read the previous section</a> of this page.
+
+  <p>Once you have selected a good ssh client program to be your
+  browser's ssh application, your browser should not have any
+  further trouble following ssh links.</p>
+
+  <h3><a id="connect">If You Cannot Connect to
+  Grex</a></h3>There are a number of reasons why this might be
+  happening:
+
+  <ul>
+    <li>Your DNS is not configured properly. This can easily be
+    tested. Try sshing to Grex's IP address. Of course you have
+    to know the IP address. We can tell you that at the time this
+    page was last updated, Grex's IP address was 162.202.67.158, but
+    it may change at any time. If you are in doubt, <a href=
+    "/cgi-bin/grexip/">view this page</a> to see if it has changed.
+    Try substituting that IP address for the name "grex.org" when
+    you ssh, to see if it works any better. If it does, then you
+    have a problem with your machine's configuration for DNS. You
+    really need to correct this problem, because you should not
+    rely on the IP address to remain constant. In order to
+    configure DNS properly on your machine, you will need to
+    contact your Internet Access Provider's system help desk, or
+    help website.
+
+      <p>If, on the other hand, this does not help, then DNS is not
+      your problem.</p>
+    </li>
+
+    <li>You are connected to the net via a firewall. A firewall is
+    a router that filters (blocks) certain packets. Firewalls are
+    usually installed to protect private networks, or to limit the
+    usage of certain services. Users connecting from corporate
+    intranets are most likely to encounter firewalls. Very often it
+    is possible to ssh through a firewall, but unfortunately, we
+    cannot help you find a way to do this. If you need to traverse
+    a firewall to get access to the internet, you should contact
+    the firewall or security administrator on your intranet and ask
+    how to make a ssh connection to the internet.</li>
+
+    <li>Grex might be down at the moment, or there may be
+    disruptions in the proper functioning of the internet. In this
+    case, there is little you can do except wait a while, and try
+    again later. If Grex were down, or the network were broken,
+    though, it is not likely that you would be seeing this page,
+    because it is provided by Grex's web server, unless perhaps you
+    are looking at a copy of it that was cached by your browser
+    when the connection to Grex was clear.</li>
+
+    <li>Your domain or IP address is in a black or block list. Grex
+    subscribes to several lists which contain IP address known to
+    be associated with illegal activity.  Unfortunately, some of these
+    may be dynamically assigned by your Internet Service Provider,
+    and you may be blocked from connecting to Grex.  Ideally, this is
+    something your ISP should take care of (e.g. removing the IP
+    address from block or black lists, or making the IP address
+    unavailable to users on their system).  Grex staff may be
+    able to help but if the IP address continues to show up on
+    black lists, there's not a lot we can do.</li>
+
+    <li>If none of the above seems to apply to you, please fill out
+    the following form. The more information you provide, the more
+    likely the Grex Staff will be able to help you discover what is
+    wrong. Therefore, please take the time to fill the form out
+    carefully. The Grex staff will respond by email to your account
+    or to the e-mail address you provide, so make sure it is
+    correct.
+
+      <form action="http://www.grex.org/cgi-bin/staffmail" method=
+      "get">
+        <input type="hidden" name="redirect" value=
+        "/trouble/connect-submitted.xhtml" /> <input type="hidden"
+        name="subject" value="www-Trouble Connect Failure" />
+        <input type="hidden" name="email" value=
+        "trouble@grex.org (www-Trouble)" /> <input type="hidden"
+        name="recipient" value="help@grex.org" /> <input type=
+        "hidden" name="bgcolor" value="#FFFFFF" /> <input type=
+        "hidden" name="env_report" value=
+        "REMOTE_HOST,HTTP_USER_AGENT" /> <input type="hidden" name=
+        "required" value="Account" />
+
+        <table border="0">
+          <tr>
+            <td align="right">Account:</td>
+
+            <td align="left"><input type="text" name="Account"
+            value="" size="8" /> (Grex Login ID)<br /></td>
+          </tr>
+
+          <tr>
+            <td align="right">E-mail address:</td>
+
+            <td align="left"><input type="text" name="Email" value=
+            "" size="32" /><br /></td>
+          </tr>
+
+          <tr>
+            <td align="right">Name or IP address of the host you
+            are connecting from:</td>
+
+            <td align="left"><input type="text" name="Peer" value=
+            "" size="32" /><br /></td>
+          </tr>
+
+          <tr>
+            <td align="right">Exact time (including time zone) of
+            the last attempt that failed:</td>
+
+            <td align="left"><input type="text" name="Time" value=
+            "" size="32" /><br /></td>
+          </tr>
+
+          <tr>
+            <td align="right">Additional information that you think
+            might be helpful:</td>
+
+            <td align="left">
+            <textarea name="text" rows="4" cols="36">
+</textarea><br /></td>
+          </tr>
+
+          <tr align="right">
+            <td><input type="reset" value="Clear This Form" /></td>
+
+            <td align="left"><input type="submit" name="Submit"
+            value="Submit Request" /></td>
+          </tr>
+        </table>
+      </form>
+    </li>
+  </ul>
+
+  <h3><a id="other">If You Are Having Some Other
+  Problem With Telnet</a></h3>Please fill out this form and include
+  as much detail as possible about your problem. The e-mail address
+  is optional, but if you do not specify one, the staff will
+  respond with mail to your Grex account. This will only be helpful
+  if you have a way to connect and read your mail.
+
+  <form action="http://www.grex.org/cgi-bin/staffmail" method=
+  "get">
+    <input type="hidden" name="redirect" value=
+    "/trouble/connect-submitted.xhtml" /> <input type="hidden" name=
+    "subject" value="www-Trouble: Telnet-Other" /> <input type=
+    "hidden" name="email" value="trouble@grex.org (www-Trouble)" />
+    <input type="hidden" name="recipient" value="help@grex.org" />
+    <input type="hidden" name="bgcolor" value="#FFFFFF" />
+    <input type="hidden" name="env_report" value=
+    "REMOTE_HOST,HTTP_USER_AGENT" /> <input type="hidden" name=
+    "required" value="Account" />
+
+    <table border="0">
+      <tr>
+        <td align="right">Account:</td>
+
+        <td align="left"><input type="text" name="Account" value=""
+        size="8" /> (Grex Login ID)<br /></td>
+      </tr>
+
+      <tr>
+        <td align="right">E-mail address:</td>
+
+        <td align="left"><input type="text" name="Email" value=""
+        size="32" /><br /></td>
+      </tr>
+
+      <tr>
+        <td align="right">Please describe the problem you are
+        experiencing precisely. Details are important.</td>
+
+        <td align="left">
+        <textarea name="text" rows="12" cols="36">
+</textarea><br /></td>
+      </tr>
+
+      <tr align="right">
+        <td><input type="reset" value="Clear This Form" /></td>
+
+        <td align="left"><input type="submit" name="Submit" value=
+        "Submit Request" /></td>
+      </tr>
+    </table>
+  </form>
+
+  <p>Return to the <a href="/">Grex Front Page</a> or to the
+  <a href="/trouble/">Grex Trouble Page</a>.</p>
+
+  <p class="c2">Last Modified: Dec 27, 1998 (srw)</p>
+</body>
+</html>

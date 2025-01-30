@@ -1,0 +1,27 @@
+% Backtalk Pistachio Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% setorder script
+%
+% Form handler for "myconf.bt" which sets read order ortions in the
+% the users' per-conference notes.
+%
+% Query Parameters:
+%   conf=	conference name
+%   csel=	current list of conferences
+%   favfirst=  should favorites be listed first?
+%   bnewfirst= should brandnew items be listed first?
+%   bnewlast=  should brandnew items be listed last?
+%   reverse=   should items listed in reverse order?
+
+flavor(config)+ include
+flavor(openconf)+ stopped {
+   ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+pop % discard body line
+
+/nofavfirst /favfirst 0 default cvi ! set_conf_note
+/bnewfirst dup 0 default cvi def /bnewfirst bnewfirst set_conf_note
+/bnewlast dup 0 default cvi bnewfirst ! and set_conf_note
+/reverse dup 0 default cvi set_conf_note
+
+flavor(myconf)+ jump

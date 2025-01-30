@@ -1,0 +1,349 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% read.mktext script
+%
+% This include file is used to generate the actual text of an item for the
+% read page, either in a frame (when called from "read.text.bt" or in the
+% top-level window (when called from "read.bt").  
+
+/shyfile constant {flavor(unreg)+ include} if
+
+frames {(read.text)}{(read)} ifelse /self xdef
+
+% if seeno is set, don't mark things seen
+/seeno defined {
+  seeno cvi 2 eq {
+    % Find response number before the first response we will display
+    nrs maxresp next_int 1 - /undisp xdef pop
+    maxread undisp lt
+    {
+      % there are some undisplayed responses before what we are displaying
+      undisp maxread -   rpage  lt {
+        % extend range to include unseen responses, if it will still fit
+	% on the same page with first requested response.
+	/nrs `maxread 1 +(-)undisp(,)nrs' def
+      } {
+	% otherwise, don't mark things seen
+        /blindfold 1 store
+      } ifelse
+    } if
+  } {
+    seeno {
+      % seeno=1 - always mask
+      /blindfold 1 store
+    } if
+  } ifelse
+} if
+
+% construct byline macro used in more than one place
+/byline {
+ mayseealias {
+   ( by <I>)authorname quote(</I> \(<A HREF="bio?login=)authorid(">)
+   authorid expand (</A>\))
+ } {
+   ( by )authorid expand
+ } ifelse
+ ( on ) date
+} def
+
+% scrollup form macro
+/scrollup {
+  /first 0 def
+  [
+  (<TABLE WIDTH=100%><TR>
+  <FORM METHOD=POST TARGET="_self" ACTION=scroll>
+  <INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+  <INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+  <INPUT NAME=item TYPE=hidden VALUE=)item(>
+  <INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+  <INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>
+  <INPUT NAME=from TYPE=hidden VALUE=)self(>
+  <INPUT NAME=at TYPE=hidden VALUE=)resp(>\n)
+  noskip {(<INPUT NAME=noskip TYPE=hidden VALUE=)noskip(>\n)} if
+  since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+  showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten(>\n)} if
+  resp 0 gt {
+    (<TD><INPUT TYPE=image NAME=back )button_src( Previous )
+    resp rpage gt {rpage} {resp} ifelse
+    dup( )exch 1 eq {Response cap}{Responses cap} ifelse (.</TD>\n)
+    resp rpage gt {
+      (<TD><INPUT TYPE=image NAME=first )button_src( First )rpage`( )
+      Responses cap(.</TD>\n)'
+    } if
+  } if
+  (<TD><INPUT TYPE=image NAME=view )button_src
+  `( View )Responses cap( <INPUT TYPE=text NAME=tmprsel SIZE=11 VALUE="0)'
+  resp 1 ne {(-) resp 0 gt {resp 1 -} {($)} ifelse } if ("></TD></TR>)
+  id {
+    (\n<TR><TD><INPUT TYPE=image NAME=mytitle )button_src
+    `( Set Private )Item cap( Title.</TD>)'
+    mayretitle {
+      (\n<TD><INPUT TYPE=image NAME=retitle )
+      mayretitle 2 eq {fw_button_src}{button_src}ifelse
+      `( Retitle )Item(.</TD>)'
+    } if
+    (</TR>\n)
+  } if
+  (</TABLE></FORM>\n)
+  ] exch print
+} def
+/first 1 def
+
+% scrolldown form macro
+/scrolldown {
+  (<BR CLEAR=ALL><HR><TABLE WIDTH=100%><TR><TD>
+  <FORM METHOD=POST TARGET="_self" ACTION=scroll>
+  <INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+  <INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+  <INPUT NAME=item TYPE=hidden VALUE=)item(>
+  <INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+  <INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>
+  <INPUT NAME=tmprsel TYPE=hidden VALUE=)nrs(>
+  <INPUT NAME=from TYPE=hidden VALUE=)self(>
+  <INPUT NAME=at TYPE=hidden VALUE=)resp(>\n)
+  noskip {(<INPUT NAME=noskip TYPE=hidden VALUE=)noskip(>\n)} if
+  since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+  showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten(>\n)} if
+  (<INPUT TYPE=image NAME=fore )button_src
+  /left maxresp resp - def
+  left rpage gt{rpage}{left}ifelse
+  left rpage gt {
+    cnt {( Next )}{( First )}ifelse exch
+    dup( )exch 1 eq{Response cap}{Responses cap}ifelse(.</TD>\n)
+    (<TD><INPUT TYPE=image NAME=last )button_src( Last )rpage( )Responses cap+
+  } {
+    ( Last )exch dup( )exch 1 eq {Response cap}{Responses cap}ifelse
+  } ifelse
+  cnt {`( and )Response cap( Form)'} if
+  (.</TD></TR></TABLE></FORM>\n)
+} def
+
+% response control panel macro
+/rcp {
+  (<BR CLEAR=ALL><HR>)
+  id {
+    (<DIV ALIGN=right>)
+    (<A HREF="markunseen?conf=)conf(&csel=)csel(&item=)item(&resp=)resp
+    since{(&since=)since}if noskip {(&noskip=)noskip}if
+    (&isel=)isel(&rsel=)rsel(" TARGET=_self>)
+    unseen_button(</A>\n)
+    mayhide {
+      /red mayhide 2 eq def
+      (<A HREF="hide?conf=)conf(&csel=)csel(&item=)item(&resp=)resp
+      since{(&since=)since}if noskip {(&noskip=)noskip}if
+      showforgotten{(&showforgotten=)showforgotten}if
+      (&isel=)isel(&rsel=)rsel(&goto=)flavor self(&fn=)
+      hidden
+	{(S" target="_self">)red{fw_show_button}{show_button}ifelse}
+	{(H" target="_self">)red{fw_hide_button}{hide_button}ifelse}
+      ifelse
+      (</A>\n)
+    } if
+    mayerase {
+      /red mayerase 2 eq def
+      (<A HREF="hide?conf=)conf(&csel=)csel(&item=)item(&resp=)resp
+      since{(&since=)since}if noskip {(&noskip=)noskip}if
+      showforgotten{(&showforgotten=)showforgotten}if
+      (&isel=)isel(&rsel=)rsel(&goto=)flavor self(&fn=E" TARGET=_self>)
+      red{fw_erase_button}{erase_button}ifelse(</A>\n)
+    } if
+    mayedit {
+      /red mayedit 2 eq def
+      (<A HREF="edit?conf=)conf(&csel=)csel(&item=)item
+      (&resp=)resp(&lastresp=)maxresp
+      since{(&since=)since}if noskip{(&noskip=)noskip}if
+      showforgotten{(&showforgotten=)showforgotten}if
+      (&isel=)isel(&rsel=)rsel(&goto=)flavor self(" TARGET=_self>)
+      red{fw_edit_button}{edit_button}ifelse(</A>\n)
+    } if
+    (</DIV>)
+  } if
+} def
+
+% <what> show_text <text>...
+/show_text {
+  /what xdef
+  /cnt inc
+  /ignore 0 def
+  twitlist {authorid twitlist (,) inlist {/ignore 1 def} if } if
+  hidden erased ignore or or {
+    erased {
+      (<I>This )what( has been )Erased(.</I>)++
+    } {(<A HREF="view?conf=)conf(&csel=)csel(&item=)item
+        (&resp=)resp("><I>View )
+        ignore {(ignored )}{Hidden( )+}ifelse
+        what(</I></A>.)
+    } ifelse
+    resp 1 + item mark_unseen pop
+    (<P>\n)
+  } {
+    /shyfile constant {form_text} {1 read_text} ifelse
+    attachments {
+      (<P><FONT SIZE=-1><EM><U>Attachments</U>:</EM>\n)
+      {
+	attachments (,) clip /hand xdef /attachments xstore
+	(<BR>&nbsp;&nbsp;)
+	hand get_attach dup 0 gt {
+	  1 eq { (<EM>Deleted</EM>) }
+	       { (<EM>Permission Denied</EM>) } ifelse
+	} {
+	  pop
+	  /url xdef /desc xdef /size xdef /type xdef
+	  (<A HREF=")url(">)desc quote(</A> \() type mimename( - )
+	  size 2048 lt { size( bytes) }
+	  { size 2097152 lt {size 1024 / (K)}
+	    {size 1048576 / (M)} ifelse } ifelse
+	  (\)) 
+	} ifelse
+	
+	attachments ! {break} if
+      } loop 
+      (</FONT>\n)
+    } if
+  } ifelse
+} def
+
+% ===== Filter Macros =====
+
+flavor(links)+ include
+
+% ===== Get to work =====
+
+nrs read_item {`(Cannot access )Item(.\n)' stop} if
+/nrs xstore
+
+item /mytitle get_item_note dup {/title xdef} {pop} ifelse
+
+[
+/slipped defined ! { /slipped () def } if
+
+slipped {
+  `(<CENTER><TABLE BORDER=3 WIDTH=65%><TR><TD BGCOLOR=FF0000>
+  <FONT COLOR=FFFFFF><STRONG>
+  The )Response( below was posted since you last read this )Item(.<P>
+  Your new )Response( has NOT yet been posted.<P>
+  If you still want to post your )Response(, you may edit it and hit the
+  post button again.</STRONG></FONT></TD></TR></TABLE></CENTER><P>\n)'
+  /sliptype defined {/rtype sliptype store} if
+  /slipalias defined {/alias slipalias store} if
+} if
+
+resp ! {rcp} {(<BR CLEAR=ALL><HR>)} ifelse
+
+(<A NAME=0><STRONG><FONT SIZE=+1>)bbsname
+( <A HREF=confhome?conf=)conf(&csel=)csel(>)conftitle
+`(</A> )Item cap( )'item(: <I>)title expand(</I>)
+linked {( [linked])} if forgotten {( [forgotten])} if
+frozen {( [frozen])} if retired {( [retired])} if
+(</A>)
+(<BR>
+Entered)byline ztime (:</FONT></STRONG>
+)
+
+/cnt 0 def
+resp {
+  (<P>)`(<B>)nrs maxresp count_sel ( new of )'
+} {
+  ] scrollup [
+  editdate erased ! and {
+    (<BR><EM>\(edited )editdate ztime(\)</EM><P>\n)} if
+  (<P>)
+  (item text) show_text
+ (<P>)(<B>)
+} ifelse
+`maxresp ( )Responses( total.</B>)' +
+use_rss_icon expose_rss_item and {
+  (\n<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>\n<TR><TD>) exch
+  (</TD>\n<TD ALIGN=right><A TITLE="RSS feed for )Responses( to )bbsname( )
+  conftitle( )Item cap( #)item(" HREF=")
+  anon_url(cinnamon?conf=)conf(&item=)item("><IMG SRC=")rss_icon
+  (" BORDER=0></A></TD></TR>\n</TABLE>\n)
+} if
+(<P>)
+]
+
+
+{ cnt rpage ge {break} if
+  nrs next_resp {break} if
+  read_resp {pop break} if
+  /nrs xstore
+
+  first {scrollup} if
+  rcp
+  (<A NAME=)resp(><B>#)resp( of ) maxresp byline ctime(:</B></A>\n)
+  parentresp {(<EM>\(responding to )parentresp(\)</EM>\n)} if
+  editdate erased ! and {
+    (<BR><EM>\(edited )editdate ztime(\)</EM>\n)} if
+  (<P>\n)
+
+  (response) show_text
+
+  print
+} loop
+first {scrollup} if
+
+resp maxresp lt {
+  scrolldown
+  cnt {stop} if
+} if
+
+mayresp
+{
+/allowhtml dflt_html def (*settings) /allowhtml loadvar pop
+(
+<BR CLEAR=ALL><HR>
+<FORM METHOD=POST TARGET="_self" ACTION=response>
+<TABLE WIDTH=100% BORDER=0>
+<TR><TD><B>#)maxresp 1 +( of )maxresp
+(: by <INPUT NAME=pseudo VALUE=")alias("> \()id(\)</B>
+</TD><TD>
+)
+allowhtml {(
+<SELECT NAME=texttype>
+<OPTION VALUE="text/plain">Plain Text
+<OPTION VALUE="text/html")rtype (text/html) eq {( SELECTED)}if (>Pure HTML
+<OPTION VALUE="text/html-blanks")rtype (text/html-blanks) eq {( SELECTED)} if
+(>lazy HTML
+</SELECT>
+)} {(<INPUT TYPE=hidden NAME=texttype VALUE="text/plain">
+)}ifelse
+(<INPUT NAME=hidden TYPE=checkbox VALUE=1)
+/sliphid defined{( CHECKED)}if `(>&nbsp;)Hide cap(
+</TD><TD ALIGN=RIGHT>
+<INPUT TYPE=image NAME=post )'post_button_src(
+<INPUT TYPE=image NAME=preview )
+  canspell{spelling_button_src}{preview_button_src}ifelse(
+</TD></TR></TABLE>
+<INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+<INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+<INPUT NAME=item TYPE=hidden VALUE=)item(>
+<INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+<INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>
+<INPUT NAME=goto TYPE=hidden VALUE=)flavor self(>
+<INPUT NAME=prevmax TYPE=hidden VALUE=)maxresp(>\n)
+noskip {(<INPUT NAME=noskip TYPE=hidden VALUE=)noskip(>\n)} if
+since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten(>\n)} if
+(<TEXTAREA NAME="text" ROWS=12 COLS=72 WRAP=HARD>)slipped quote(</TEXTAREA><BR>
+)
+canattach { (<INPUT NAME=atch TYPE=CHECKBOX VALUE=1>&nbsp;Attach a File\n) } if
+(</FORM>)
+} {
+  (<P><I>Response not possible - )
+  id {
+    frozen { `Item cap( is frozen.)' }
+	   { `Conference cap( is read-only.)' } ifelse
+  } {
+    (You must <A HREF=)register_url(>register</A> and <A HREF=)
+    sessions {
+      anon_url(/public/login?bounce=)serverurl anon_url
+      (pistachio/read%3Fconf%3D)conf cgiquote(%26csel%3D)csel
+      (%26item%3D)item(%26isel%3D)isel(%26rsel%3D)rsel
+    } {
+      pw_url(pistachio/read?conf=)
+      conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+    } ifelse
+    (>login</A> before posting.)
+  } ifelse
+  (</I><P>\n)
+} ifelse

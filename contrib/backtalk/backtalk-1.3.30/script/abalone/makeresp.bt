@@ -1,0 +1,90 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% makeresp script
+%
+% We have nearly identical response forms appearing in the read and respond
+% scripts.  This is included in both to generate it.
+% 
+% Usage:
+%   /rtype <whatever> def
+%   headerclass
+%   rtheader
+%   <table title>...
+%   <nrows> rtbody
+% 
+% Define the constant /popup if this is being used in a popup window.
+
+/rtheader {
+  /cl xdef
+  (<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>\n)
+  (<TR><TD CLASS=)cl(>\n)
+} def
+
+/rtbody {
+  /rrow xdef
+  (</TD></TR>
+  <FORM NAME=resp METHOD=post ACTION=newresp)
+  /popup constant {mainwin!{( onSubmit="inmain();")} if } if
+  (>
+  <TR>
+  <TD CLASS=odd ALIGN=CENTER>
+  <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0><TR><TD CLASS=odd>
+  <INPUT NAME=pseudo VALUE=")alias quote(">&nbsp;&nbsp;
+  <SPAN CLASS=big><A HREF=")
+  /extern_bio constant { id extern_view_bio } { (bio) } ifelse
+  (">)id(</A></SPAN>
+  </TD><TD CLASS=odd ALIGN=RIGHT>\n)
+  allowhtml {
+    (<SELECT NAME=texttype>
+    <OPTION VALUE="text/plain">Plain Text
+    <OPTION VALUE="text/html")
+      rtype (text/html) eq {( SELECTED)}if (>Pure HTML
+    <OPTION VALUE="text/html-blanks")
+     rtype (text/html-blanks) eq {( SELECTED)} if
+    (>lazy HTML</SELECT>&nbsp;\n)
+  } {
+    (<INPUT TYPE=HIDDEN NAME=texttype VALUE="text/plain">\n)
+  } ifelse
+  canspell {
+    (<INPUT TYPE=submit NAME=spell VALUE="Spell" onClick="spellpop(); return false">&nbsp;)
+    /javafunc javafunc
+    (function spellpop() { var f= document.resp; var i,inp; var arg= '';
+for (i= 0; i<f.elements.length; i++) { if (arg != '') arg= arg+'&';
+arg= arg+f.elements[i].name+'='+escape(f.elements[i].value);}
+window.open('spellcheck?'+arg, 'spellpop',
+'scrollbars=yes,resizable=yes,height=550'); }
+)+ def
+  } if
+  (<INPUT TYPE=submit VALUE="Post")
+  canattach { /slipattach defined ! {
+    ( onClick="if (document.resp.atch.checked) {attachpop(); return false;} else {return true;}")
+    /javafunc javafunc
+    (function attachpop() { var f= document.resp; var i,inp; var arg= '';
+for (i= 0; i<f.elements.length; i++) { if (arg != '') arg= arg+'&';
+arg= arg+f.elements[i].name+'='+escape(f.elements[i].value);}
+window.open('askattach?'+arg, 'attachpop',
+'scrollbars=yes,resizable=yes,height=150,width=550'); }
+)+ def
+  } if } if
+  (></TD></TR>
+  <TR><TD CLASS=odd ALIGN=CENTER COLSPAN=2>
+  <TEXTAREA NAME="text" ROWS=)rrow( COLS=72 WRAP=HARD>)
+  /slipped defined {slipped quote} if(</TEXTAREA>\n)
+  canattach {
+    (</TD></TR><TR><TD CLASS=odd COLSPAN=2>
+     <INPUT NAME=atch TYPE=CHECKBOX VALUE=1)
+    /slipattach defined{( CHECKED)}if (>&nbsp;Attach a File\n)
+  } if
+ (<INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+  <INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+  <INPUT NAME=item TYPE=hidden VALUE=)item(>
+  <INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+  <INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>\n)
+  showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten(>\n)} if
+  /slipattach defined {(<INPUT NAME=slipattach TYPE=hidden VALUE=")slipattach cgiquote(">\n)} if
+  since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+  /nextnew defined {(<INPUT NAME=nextnew TYPE=hidden VALUE=)nextnew(>\n)} if
+  (<INPUT NAME=goto TYPE=hidden VALUE="abalone/read">
+  <INPUT NAME=prevmax TYPE=hidden VALUE=)maxresp(>\n)
+  (</TD></TR></TABLE></TD></TR></FORM></TABLE>\n)
+} def

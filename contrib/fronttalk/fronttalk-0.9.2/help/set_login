@@ -1,0 +1,10 @@
+                       Fronttalk Setting:  LOGIN
+
+Usage:  DISPLAY LOGIN
+        SET LOGIN
+
+Display/Edit the login file for the current conference.  This file is
+printed as a banner message whenever a user joins the conference.  Typically
+it contains the name of the conference, the names of the fairwitnesses, and
+maybe some minimal ascii art.  You need to be a fairwitness to be able to
+set the login screen.

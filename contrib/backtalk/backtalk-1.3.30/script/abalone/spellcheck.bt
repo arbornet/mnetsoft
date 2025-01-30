@@ -1,0 +1,49 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% spellcheck script
+%
+% This is just the parent frame for the spellcheck popup.  It has a text
+% window and a control panel.
+
+(<HTML>
+<HEAD>
+<SCRIPT Language="Javascript">
+<!--
+var curword= null;
+var curoffset;
+function selword(bad)
+{
+    var i;
+    var f= panframe.document.spanel;
+    f.suggsel.options.length= 1;
+    curword= f.word.value= bad[0];
+    curoffset= bad[1];
+    for (i= 2; i < bad.length; i++)
+	f.suggsel.options[i-1]= new Option(bad[i]);
+    f.suggsel.selectedIndex= 0;
+}
+function repl(newword)
+{
+    var txt= txtframe.text;
+    txt= txt.substr(0,curoffset)+newword+txt.substr(curoffset+curword.length);
+    txtframe.location= 'spelltext?text='+escape(txt)+'&texttype='+)
+     texttype jsquote(+'&spell_ignore='+escape(txtframe.ignore);
+}
+function ign()
+{
+    var ign= txtframe.ignore;
+    if (ign.length > 0) ign= ign+',';
+    ign= ign+curword;
+    txtframe.location= 'spelltext?text='+escape(txtframe.text)+'&texttype='+)
+     texttype jsquote(+'&spell_ignore='+escape(ign);
+}
+//-->
+</SCRIPT>
+</HEAD>
+<FRAMESET ROWS="50,*" FRAMEBORDER=0>
+<FRAME NAME=panframe SRC="spellpanel">
+<FRAME NAME=txtframe SRC="spelltext?text=)text cgiquote(&texttype=)
+texttype cgiquote(&spell_ignore=)spell_ignore cgiquote(">
+</FRAMESET>
+</HTML>
+)

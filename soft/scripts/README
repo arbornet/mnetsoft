@@ -1,0 +1,12 @@
+
+This directory is for sh/csh/perl/awk/tcl/etc scripts writen by grex staff
+and members. The script should be installed here and a *relative* symlink
+placed in /usr/local/bin. The file should also be checked into the GrexDoc
+CVS repository in the misc/grex-scripts directory.  An entry should be added
+in the scriptsymlink directory in misc/ to create the correct symlink.
+
+For example:
+    Suppose you've just written "grexfoo". As root, cd to /usr/local/bin and
+do an "ln -s ../grex-scripts/grexfoo grexfoo".
+
+Feel free to add to this readme with any useful info.

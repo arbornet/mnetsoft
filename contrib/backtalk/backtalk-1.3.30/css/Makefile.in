@@ -1,0 +1,26 @@
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+hdrdir= @srcdir@/../incl
+VPATH= @srcdir@
+
+INSTALL= @INSTALL@
+
+prefix= @prefix@
+cssdir= @htmldir@/css
+owner= @owner@
+
+binaries:
+
+install: install-scripts
+
+install-scripts:
+	../install-sh -d -o $(owner) -m 755 $(cssdir)
+	for dir in abalone; do \
+	    ../install-sh -d -o $(owner) -m 755 $(cssdir)/$$dir; \
+	    for file in $$dir/*.css $$dir/README; do \
+	       $(INSTALL) -o $(owner) -m 644 $$file $(cssdir)/$$file; \
+	    done; \
+	done
+
+clean:

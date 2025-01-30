@@ -1,0 +1,24 @@
+                       Fronttalk Setting:  REMOTE
+
+Usage:  SET REMOTE
+        SET SOMEREMOTE
+        SET NOREMOTE
+
+The RC files defined on remote servers may try change Fronttalk settings in
+ways that are appropriate for users running Fronttalk or Picospan on that
+server, but not for users accessing the server remotely.  In particular:
+
+   * Defining commands which are aliases for Unix commands, like
+       DEFINE MAIL 9 'UNIX "pine"'
+     These Unix commands may not make sense on your local system.
+
+   * Redefining PAGER or EDITOR.  These are also Unix commands which may
+     not exist or may have different paths on your system.
+
+If the SOMEREMOTE flag is set, then remote RC files will be executed, but
+commands in these questionable categories will be skipped.  This is the
+default.
+
+If REMOTE is defined, all commands from remote RC files are executed.
+
+If NOREMOTE is define, remote RC files are not executed at all.

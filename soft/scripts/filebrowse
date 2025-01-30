@@ -1,0 +1,131 @@
+#!/bin/sh
+PATH=/usr/local/bin:/bin:/usr/bin;export PATH
+echo 'Simple file browser by Valerie Mates, popcorn@cyberspace.org'
+echo ' '
+# Version 7/17/94.
+# This script is released into the public domain.
+# If you run this script on your own system, I'd appreciate an e-mailed note.
+# I'm curious about where my scripts travel to. - valerie@cyberspace.org
+#
+# 9/2/96 - Added options for compressing file and running du.
+#          Changed "display file" option to display compressed files too.
+#
+
+listfiles() {
+	echo ' '
+	echo 'Current directory is '`pwd`
+	echo 'File listing:'
+	# Hidden files are deliberately not listed: it's paternalistic,
+	# but it helps stop users from messing up their own accounts.
+	ls -xskp
+	echo ' '
+	echo 'The numbers are file sizes (in Kilobytes).  Directories end in "/".'
+	echo 'You can use * to abbreviate file names, for example foo* for all files that'
+	echo 'start with foo.  Often a "mail" directory has heavy disk usage.'
+}
+
+if [ "`pwd`" != "$HOME" ]
+then
+	echo 'Current directory is '`pwd`
+	echo -n 'Change to your home directory ('$HOME')? '
+	read changedir
+	if [ "$changedir" = "y" -o "$changedir" = "Y" ]
+	then
+		cd $HOME
+	fi
+fi
+
+listfiles
+
+
+while true
+do
+	echo ' '
+	echo 'V)iew file, D)elete file, L)ist files, C)hange directory, Z)ip (compress) file'
+	echo -n 'U)ncompress file, S)how space in this directory, Q)uit program: '
+	read choice
+
+	case $choice in
+
+		v|V)
+			echo -n 'File to view: '
+			read viewme
+			if [ "$viewme" != "" ]
+			then
+				zmore $viewme | ${PAGER:-grexmore}
+			fi
+			;;
+
+		d|D)
+			echo -n 'File to delete: '
+			read deleteme
+			if [ "$deleteme" != "" ]
+			then
+				rm -i $deleteme
+			fi
+			;;
+
+		l|L)
+			listfiles
+			;;
+
+		c|C)
+			echo 'Directories are: '
+			ls -p | grep \/$
+			echo $HOME
+			echo '.. (type two periods for the directory "above" the current one)'
+			echo ' '
+			echo -n 'Directory to change to: '
+			read changetome
+			if [ "$changetome" != "" ]
+			then
+				if [ -d $changetome ]
+				then
+					cd $changetome
+					listfiles
+				else
+					echo $changetome 'is not a directory.'
+				fi
+			fi
+			;;
+
+		z|Z)
+			echo -n 'File to compress: '
+			read compressme
+			if [ "$compressme" != "" ]
+			then
+				gzip -9v $compressme
+			fi
+			;;
+
+		u|U)
+			echo -n 'File to uncompress: '
+			read compressme
+			if [ "$compressme" != "" ]
+			then
+				gunzip -v $compressme
+			fi
+			;;
+
+		s|S)
+			echo ' '
+			echo 'Total space, in kilobytes, is on bottom line.'
+			echo 'Disk space in' `pwd`':'
+			du
+			;;
+
+		!*)
+			# This case sends !commands to the shell.
+			prog=`echo $choice | sed 's/^!//'`
+			echo ' '
+			eval $prog
+			echo ' '
+			;;
+
+		q|Q)
+			echo ' '
+			exit
+			;;
+
+	esac
+done

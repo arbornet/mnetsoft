@@ -1,0 +1,49 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% view - a web script to see a specific response even if it has been hidden
+
+/shyfile constant {flavor(unreg)+ include} if
+
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+(
+<HTML>
+<HEAD>
+<TITLE>) bbsname ( ) conf ( Conference - Item ) item (, response ) resp
+(</TITLE>\n)
+(I) flavor(meta)+ include
+(</HEAD>
+<BODY>
+)
+
+mayread ! {(The ) conf ( conference cannot be read. You may <a href=conflist>
+return to the list of conferences</a>.) halt } if
+
+/tmpresp resp def
+resp cvs item this_item { (Item )item( does not exist.\n) halt} if
+read_item {(Could not read item )item(.\n) halt} if pop
+/resp tmpresp def
+
+bbslogo (<h1>) bbsname ( ) conf ( Conference</h1>\n)
+
+(Viewing response ) resp ( from item ) item (.<hr>)
+
+resp read_resp 
+{(An error has occurred reading this response.) halt} if
+
+( by )
+mayseealias {
+  authorname quote ( \(<a href=bio?login=) authorid (>)
+  authorid expand (</a>\))
+}{
+  authorid expand
+} ifelse
+( on ) date ctime (:<p>\n)
+/shyfile constant {form_text}{(<PRE>) 0 read_text expand (</PRE>)}ifelse
+(
+<hr>Use "back" to return.
+<p>
+</BODY>
+</HTML>
+)

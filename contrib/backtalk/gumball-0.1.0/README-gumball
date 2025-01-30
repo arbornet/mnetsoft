@@ -1,0 +1,93 @@
+		      BACKTALK GUMBALL/GUMDROP INTERFACES
+		   (c) 2001-2003  Jan Wolter & Steve Weiss
+
+			      Version 0.1.0
+	          Requires Backtalk Version 1.3.1 or later
+		  Requires Bubblegum Version 1.1.7 or later
+
+DESCRIPTION:
+
+The gumball and gumdrop interfaces aren't really separate interfaces.  They
+are wrappers for the bubblegum interface that make it look as though there
+is only one conference (gumball) or one item (gumdrop).  They are used when
+you want to present users with a simplified view of a small part of your
+conferencing system, so you use gumball to make what appears to be a single
+stand-alone conference, or you can use gumdrop to make what appears to be a
+single stand-alone item (like a guestbook or blog).  They present the same
+interface as bubblegum, but with links to other conferences/items missing.
+
+You must have bubblegum installed to be able to use this.  These are not
+independent script sets - just some bubblegum wrappers.
+
+Once installed, you can use gumball to access the foobar conference by
+having the user enter on a link like:
+
+  http://www.mysite.com/path/to/backtalk/gumball:foobar
+
+Or you can have a user enter item 42 of the foobar conference by having
+the user enter on a link like:
+
+  http://www.mysite.com/path/to/backtalk/gumdrop:foobar:42
+
+Obviously these interfaces don't prevent the user from accessing any other
+conferences you may have installed, nor do they prevent users from using
+other interfaces to access the conferences.  These are not intended as a
+security tool.  There are other mechanisms in Backtalk to provide conference
+security.  They merely provide the "appearance" of being independent
+conferences.
+
+INSTALLATION:
+
+(1) Make sure that you have the correct version of Backtalk and Bubblegum 
+    installed.  The top of this file tells the minimum version of each needed
+    to support the scripts in this package.  Later versions of Backtalk may
+    or may not be compatible.  If we release a version of Backtalk not
+    compatible with this interface package, a new version of this package
+    will be released.
+
+(2) Unpack the Gumball distribution.
+
+    OK, if you hadn't already done that, you wouldn't be reading this, would
+    you?  We'll refer to the full path of the new directory containing the
+    distribution as DISTDIR.
+
+(3) Versions of Backtalk after 1.1.4 have a 'btinstall' script to simplify
+    the installation of seperately distributed interface packages.  Btinstall
+    assumes that the configuration of Backtalk hasn't radically changed since
+    you used Backtalk's 'make install' commands to install the system.  If
+    you've manually rearranged what goes where on the disk, btinstall will
+    need some editing.  Installing gumball and gumdrop manually is more trouble
+    than its worth.
+
+    TO INSTALL USING BTINSTALL:
+
+    (a)  Login either as root or as the user that owns Backtalk's files on
+         your system.
+
+    (b)  Find where the 'btinstall' script was installed, so you can run it.
+         You want to be sure you get the installed copy of the program, which
+	 has been modified with information about your installation, not
+	 the one in the distribution directory.
+
+    (c)  cd into the unpacked distribution directory, DISTDIR.
+
+    (d)  Run 'btinstall'
+
+    TO INSTALL WITHOUT BTINSTALL:
+
+    This is more trouble than its worth.
+
+That's all.
+
+CUSTOMIZATION:
+
+Gumball and gumdrop may be customized by editing the
+SCRIPTDIR/gumball/config.bt and SCRIPTDIR/gumdrop/config.bt files.  These 
+files are identical to the SCRIPTDIR/bubblegum/config.bt file.  If you want
+the configurations to be the same, you may replace the gumdrop and gumball
+config.bt files with links to the bubblegum/config.bt file.  Otherwise see
+the bubblegum README file for information on the settings in the config files.
+
+After changing the config files, you should probably do
+"rm SCRIPTDIR/{gumball,gumdrop}/*.bb" to delete any previously compiled
+scripts, forcing the system to recompile with the new settings.

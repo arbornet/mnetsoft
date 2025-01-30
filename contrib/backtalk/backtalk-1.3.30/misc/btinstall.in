@@ -1,0 +1,100 @@
+#! /bin/sh
+# Backtalk Interface Installation Script
+#
+#   This script is used to install new backtalk interfaces.  Usage is:
+#      btinstall [<path>]
+#   The <path> is the full path name of the directory where the interface
+#   distribution was unpacked.  If omitted, the current directory is assumed.
+#
+#   Most of the actual installation work is done by the 'if.ins' script that
+#   is in each distribution directory.  This script just defines the following
+#   variables before running 'if.ins':
+#
+#     DISTDIR		The pathname of distribution directory to install.
+#     SCRIPTDIR		The pathname of the backtalk script directory.
+#     IMAGEDIR		The pathname of the backtalk image directory.
+#     OWNER		The login id of the user that backtalk runs as.
+#     CANCHOWN		Defined if 'chown $OWNER file' works.
+
+# These defines set up by the configure script:
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+cgidir=@cgidir@
+SCRIPTDIR=@scriptdir@
+IMAGEDIR=@htmldir@/image
+OWNER=@owner@
+owneruid=@owneruid@
+
+# Sanity check some of the defines set by configure script
+if test ! -f $SCRIPTDIR/config.bt; then
+  echo "Error:  Expected to find $SCRIPTDIR/config.bt, but didn't"
+  exit 1
+fi
+if test ! -d $IMAGEDIR; then
+  echo "Error:  Expected to find directory $IMAGEDIR, but didn't"
+  exit 1
+fi
+
+# Get distribution directory name, and check it for sanity
+if test $1; then
+  DISTDIR=$1
+else
+  DISTDIR=.
+fi
+if test ! -d $DISTDIR; then
+  echo "$DISTDIR is not a directory."
+  fail=1
+else
+  IFINS=$DISTDIR/if.ins
+  if test ! -f $IFINS; then
+    echo "Cannot open $IFINS"
+    fail=1
+  fi
+fi
+if test $fail; then
+  if test $DISTDIR = "."; then
+    echo "To install a Backtalk Interface, unpack the distribution, 'cd'"
+    echo "into the directory, and run this program again."
+  else
+    echo "To install a Backtalk Interface, unpack the distribution and"
+    echo "run '$0 <path-to-unpacked-distribution-directory>'"
+  fi
+  exit 1
+fi
+
+# Check if various useful commands are in our path
+if test "x$IFS" = 'x'; then
+  IFS='		';
+fi
+ifs_save="$IFS"; IFS=":"
+dummy="$PATH"
+for dir in $dummy; do
+  test -z "$dir" && dir=.
+  if test -f $dir/id; then
+    id_path="$dir/id"
+  fi
+  if test -f $dir/whoami; then
+    whoami_path="$dir/whoami"
+  fi
+  if test -f $dir/chown; then
+    chown_path="$dir/chown"
+  fi
+done
+IFS="$ifs_save"
+
+# see if we can create files in the script directory
+if touch $SCRIPTDIR/delete_me >/dev/null 2>&1; then
+  # see if we can chown files to $OWNER
+  if test $chown_path; then
+    if chown $OWNER $SCRIPTDIR/delete_me >/dev/null 2>&1; then
+      CANCHOWN=1
+    fi
+  fi
+  rm -f $SCRIPTDIR/delete_me >/dev/null 2>&1
+else
+  echo "Cannot write to $SCRIPTDIR directory."
+  echo "Must be run as root or $OWNER"
+  exit 1;
+fi
+
+. $IFINS

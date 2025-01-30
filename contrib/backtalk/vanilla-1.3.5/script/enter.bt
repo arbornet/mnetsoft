@@ -1,0 +1,46 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% enter - a web script to present the form to enter a new item
+
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+(
+<HTML>
+<HEAD>
+<TITLE>) bbsname ( ) conf ( Conference - Enter an item</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>\n)
+(C) flavor(meta)+ include
+(</HEAD>
+<BODY>
+)
+
+maypost ! {(Backtalk cannot write conference ) conf (. You may)
+(<a href=conflist> return to the list of conferences</a>.) halt } if
+
+id ! {
+  % Figure out a default alias for anonymous posters
+  anonposter /usrname pushuser ! { /alias xstore } if
+  alias ! {/alias (Anonymous User) store } if
+} if
+
+% Output form to post new item
+(<H1>Enter an item into the )conf( conference</h1>
+
+Type in your new item below. Fill in a one-line title
+and then press "Enter" to enter it.
+
+<FORM METHOD=POST ACTION=enterpost>
+<INPUT TYPE=submit VALUE="Enter"><INPUT TYPE=reset VALUE="Clear item">
+Name <INPUT NAME=pseudo VALUE=") alias ("><br>
+Heading for your item <INPUT NAME=title size=60><br>
+<INPUT NAME=conf TYPE=hidden value=") conf (">
+<TEXTAREA NAME="text" ROWS=12 COLS=72 WRAP=HARD></TEXTAREA>
+
+</FORM >
+</BODY></HTML>
+)

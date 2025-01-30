@@ -1,0 +1,20 @@
+--- config.bt.dist	Tue Jun 17 12:21:20 2003
++++ config.bt	Tue Jun 17 12:37:26 2003
+@@ -14,7 +14,8 @@
+ %  (or horror) of the color.  You can change it to any hexidecimal number you
+ %  like, even boring ones that don't spell anything.  - jan
+ 
+-/bg_color (C0FFE0) defconstant
++/bg_color (FFFFCC) defconstant
++%/bg_color (C0FFE0) defconstant
+ %/bg_color (BEEFED) defconstant
+ %/bg_color (CADD1E) defconstant
+ %/bg_color (66CAFE) defconstant
+@@ -67,6 +68,7 @@
+ %   /global_header_height 72 defconstant
+ 
+ /global_header {
++(<LINK REL="SHORTCUT ICON" HREF="/favicon.ico">\n)
+ } def
+ /global_header_height 0 defconstant
+ 

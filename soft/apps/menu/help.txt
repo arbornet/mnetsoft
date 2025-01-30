@@ -1,0 +1,15 @@
+
+This is the Grex menu shell.  It takes you through menus and lets
+you move to other menus or run programs.
+
+If you ever need help, type "help" to see this text.
+
+If you ever want to leave the current menu, type "exit" or enter
+the relevant menu key.
+
+Menu keys are usually a single letter; case does not matter.
+
+The system will pause after executing most commands, to let
+you see the result of the command.  Just hit the <ENTER> or
+<RETURN> key to get back to the menu.
+

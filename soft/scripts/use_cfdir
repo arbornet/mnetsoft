@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ -d $HOME/.cfdir ]; then
+	echo "$HOME/.cfdir already exists."
+	exit 1
+fi
+mkdir $HOME/.cfdir
+mv -f $HOME/.cfonce $HOME/.cfdir
+mv -f $HOME/.??*.cf $HOME/.cfdir
+mv -f $HOME/.??*.cfx $HOME/.cfdir

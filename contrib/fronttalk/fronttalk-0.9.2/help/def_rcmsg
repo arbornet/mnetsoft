@@ -1,0 +1,13 @@
+                        Fronttalk Defines:  RCMSG
+
+Usage:  DEFINE RCMSG "<string>"
+
+The RCMSG define is used to generate the output from the "DISPLAY RC"
+command.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(1x%5g%)%c"

@@ -1,0 +1,35 @@
+                       Fronttalk Command:  READ
+
+Usage:  READ <item range>                               ("Ok:" prompt only)
+
+Display all items in the given range.  After each item, you'll be given a
+"Respond or Pass?" prompt.  Type "R" to respond, hit <enter> to go on to
+the next item, or type "HELP" for a complete list of "Respond or Pass?"
+commands.
+
+For a full description of item ranges, do "HELP RANGE".  Here are some
+common examples:
+
+   READ NEW       - Items entered or with new responses since you last read.
+   READ ALL       - All items not forgotten.
+   READ UNSEEN    - Items with responses you have not seen before.
+   READ 13        - Only item 13.
+   READ 14,22-31  - Item 14, and items 22 through 31.
+
+If you just say "READ" the default is to do "READ NEW".
+
+In addition to the flags described in "HELP RANGE" there are some additional
+flags that work only on the READ command:
+
+   NORESPONSE     - Don't display any responses - just goto "Respond or Pass"
+   PASS           - Don't stop with "Respond or Pass" prompt between items.
+   FORCERESPONSE  - Go directly to response entry for each item.
+   DATE, NODATE   - Show or don't show timestamp for each response.
+   UID, NOUID     - Show or don't show user id number for each response.
+   NUMBERED       - Show line numbers on each line of each response.
+   NOSKIP         - Do "Respond or Pass" even when item has no new responses.
+
+The formating of the item can be controlled by redefining you separators
+(see "HELP SEPARATORS").  The item will be filtered through a pager (see
+"HELP PAGER").  The using pager is "more" which will pause the display after
+each full screen.  Hit <space> to see the next screen.

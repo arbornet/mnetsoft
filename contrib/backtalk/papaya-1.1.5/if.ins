@@ -1,0 +1,56 @@
+# This is an install script for a Backtalk Interface.  It is meant to be
+# invoked by the 'btinstall' command, not to be run independently.
+
+NAME=papaya
+
+# Make sure all the stuff btinstall is supposed to pass to us is here
+if test -z $DISTDIR; then
+  echo "DISTDIR not defined"
+  exit 1
+fi
+if test -z $SCRIPTDIR; then
+  echo "SCRIPTDIR not defined"
+  exit 1
+fi
+if test -z $IMAGEDIR; then
+  echo "IMAGEDIR not defined"
+  exit 1
+fi
+if test -z $OWNER; then
+  echo "OWNER not defined"
+  exit 1
+fi
+
+# Create and permit the image directories
+echo "Creating $NAME image directories"
+test ! -d $IMAGEDIR/$NAME && mkdir $IMAGEDIR/$NAME
+chmod 775 $IMAGEDIR/$NAME
+if test $CANCHOWN; then
+  chown $OWNER $IMAGEDIR/$NAME
+fi
+
+# Copy files into the image directories
+echo "Copying $NAME button images"
+cp image/*.gif $IMAGEDIR/$NAME
+chmod 644 $IMAGEDIR/$NAME/*.gif
+if test $CANCHOWN; then
+  chown $OWNER $IMAGEDIR/$NAME/*.gif
+fi
+
+# Create and permit the script directory
+echo "Creating $NAME script directory"
+test ! -d $SCRIPTDIR/$NAME && mkdir $SCRIPTDIR/$NAME
+chmod 775 $SCRIPTDIR/$NAME
+test $CANCHOWN && chown $OWNER $SCRIPTDIR/$NAME
+
+# Copy scripts into script directory
+echo "Copying $NAME scripts"
+cp script/*.bt $SCRIPTDIR/$NAME
+chmod 644 $SCRIPTDIR/$NAME/*.bt
+if test $CANCHOWN; then
+  chown $OWNER $SCRIPTDIR/$NAME/*.bt
+fi
+rm -f $SCRIPTDIR/$NAME/*.bb
+
+echo "Done installing $NAME"
+exit 0

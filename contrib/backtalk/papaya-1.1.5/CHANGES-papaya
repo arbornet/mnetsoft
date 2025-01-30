@@ -1,0 +1,41 @@
+Version 1.1.5 - May 9, 2006
+   - Fix multiple bugs on twitlist editing screen.
+
+Version 1.1.4 - Sep 21, 2005
+   - Compatibility with backtalk 1.4 user database.
+   - Generation of robot exclusion headers.
+   - Generation of Atom syndication headers (with Backtalk 1.4).
+   - Support anonymous posting (with Backtalk 1.4).
+
+Version 1.1.3 - Nov 23, 2004
+   - Add RSS autodiscovery and RSS button display.
+
+Version 1.1.2 - Nov 10, 2004
+   - Add links.bt for compatibility with RSS interface.
+
+Version 1.1.1 - Jul 7, 2004
+   - Fix bug that caused parent pointers to be erased when editing responses.
+   - Use public/logout script to logout.
+
+Version 1.1.0 -  Apr 7, 2003
+   - Support external bio links when used with Backtalk 1.2.13 or later.
+   - Read-only attachment support when used with Backtalk 1.3.2 or later.
+
+Version 1.0.4 - Mar 4, 2003
+   - Backtalk 1.2.10 compatibility: redefine format macros.
+
+Version 1.0.3 - Mar 1, 2003
+   - Backtalk 1.2.9 compatibility: moved userinfo.bt to lib/userinfo.bt
+
+Version 1.0.2 - Feb 25, 2003
+   - Backtalk 1.2.8 compatibility.
+   - Install script deletes any compiled scripts left over from previous
+     release.
+ 
+Version 1.0.1 - Oct 5, 2002
+   - Use Backtalk 1.2.2 backtalkurl function to generate correct BASE addresses
+     even when running under https.
+   - Add Papaya version number to script/config.bt file.
+
+Version 1.0.0 - Aug 25, 2002
+   - Original release.

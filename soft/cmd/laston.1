@@ -1,0 +1,38 @@
+.\"
+.\" laston.1 -- Print the last time someone was on.
+.\"
+.\" $Id: laston.1 1006 2010-12-08 02:38:52Z cross $
+.\"
+.TH LASTON 1
+.SH NAME
+.B laston
+\- Print the last time a user logged in.
+.SH SYNOPSIS
+.B laston
+.I user[s]
+.SH DESCRIPTION
+.PP
+.I laston
+is a utility to determine the last time one or more users logged into
+the system.  For each users listed on the command line, it prints out
+the tty, time, and host from which the user logged in on.  
+.I laston
+will also indicate if the user is currently logged in.
+.SH FILES
+.I /var/run/utmp
+.br
+.I /var/log/lastlog
+.SH SOURCE
+grexsoft/cmd/laston.c
+.SH "SEE ALSO"
+.IR libgrex (3)
+.br
+.IR lastlog (5)
+.br
+.IR utmp(5)
+.SH BUGS
+None known.
+.SH HISTORY
+Originally writen by Jan Wolter <janc@cyberspace.org>.
+.br
+Rewritten 27-Feb-2005 by Dan Cross <cross@cyberspace.org>.

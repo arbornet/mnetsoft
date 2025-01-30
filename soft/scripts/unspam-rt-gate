@@ -1,0 +1,6 @@
+#!/bin/sh
+p=/usr/local/bin/procmail
+rc=/var/users/rt/unspam-rt
+q=$1
+a=$2
+exec $p -tYa -m ACTION=$a QUEUE=$q $rc || exit 75

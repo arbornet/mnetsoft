@@ -1,0 +1,227 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part VB: Apache Configuration with Unix Accounts</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  <A HREF=install4b.html>Part IV: Installation</A><BR>
+Next:  <A HREF=install6.html>Part VI: Cron Configuration</A>
+<HR>
+If you are installing a system using Backtalk accounts,
+read the <A HREF=install5a.html>other version</A> of this page.
+<P>
+You probably need to make some adjustments to the configuration of your
+http server before Backtalk will work properly.
+We have no idea how to do Unix authentication with httpd servers other than
+Apache, so we strongly suggest using Apache.
+<P>
+<STRONG>(1) Install Mod_Auth_External</STRONG>
+<P>
+If you selected <TT>--authtype=shadow</TT> then
+you need to set up Apache for authenticating out of the shadow password
+file.  We suggest that the freeware mod_auth_external be used for this.
+It can be obtained from
+<A HREF=http://www.unixpapa.com/mod_auth_external.html>
+http://www.unixpapa.com/mod_auth_external.html</A>.
+This distribution includes the '<TT>pwauth</TT>' program which you will
+need.  If you got <TT>mod_auth_external</TT> from someplace else, and it
+doesn't include <TT>pwauth</TT> get ours instead.
+<P>
+<TT>Mod_auth_external</TT> comes with detailed instructions for how to
+link it into Apache.  Follow those.
+<P>
+If you selected <TT>--authtype=passwd</TT>
+then it would probably make sense to use something like
+<TT>mod_auth_system</TT> or <TT>mod_auth_pam</TT>.
+We've never tried this, and in most cases we think you'd be better off
+upgrading your system to one that uses a shadow password file.
+If you're aren't feeling adventurous enough to figure out how to use
+these other modules, it would work OK to just install
+<TT>mod_auth_external</TT> and <TT>pwauth</TT> as described here.
+<P>
+<STRONG>(2) Install Pwauth</STRONG>
+<P>
+The <TT>pwauth</TT> program is an external suid-root program that is run
+by <TT>mod_auth_external</TT> to do authentications out of a Unix shadow
+file (or through PAM).  It is part of the <TT>mod_auth_external</TT>
+distribution but it was originally written for Backtalk.
+<P>
+Follow the installation instructions that come with <TT>pwauth</TT>.
+If you built Backtalk with the <TT>--lastlog=unix</TT> option, then
+you'll probably want to define <TT>UNIX_LASTLOG</TT> in <TT>pwauth</TT>'s
+<TT>config.h</TT> file.  If you didn't, don't.
+<P>
+Install the program in a sensible place (possibly in Backtalk's
+<TT>libexec</TT> directory).  Set it up to be setuid-root so it can
+read the shadow file.
+<P>
+<STRONG>(3) Configure Apache for Pwauth</STRONG>
+<P>
+Find Apache's configuration file, named '<TT>httpd.conf</TT>'.
+You'll need to add the lines:
+<P>
+<PRE>
+       AddExternalAuth pwauth /full/path/to/pwauth
+       SetExternalAuthMethod pwauth pipe</PRE>
+If you are using virtual servers, these lines need to go into the appropriate
+virtual server block.  Otherwise you can just put them anywhere near the end
+of the file.
+<P>
+<STRONG>(4) Enable Authentication</STRONG>
+<P>
+The Backtalk installation scripts will have created two subdirectories
+under your CGI directory, one named '<TT>pw</TT>' the other named
+'<TT>adm</TT>'.  Into these directories it has placed some programs
+that should only be runnable by authenticated users, and it has placed
+some files named '<TT>.htaccess</TT>' which configure the authentication
+for those directories.
+<P>
+As distributed, Apache will ignore the '<TT>.htaccess</TT>' files.  To
+enable them, we need to make a slight change in the configuration.
+<P>
+To do this, locate the '<TT>httpd.conf</TT>' configuration file for
+Apache and edit it.
+Find the section of the configuration file that configures the
+options on the cgi-bin directory.  It probably looks something like this:
+<P>
+<PRE>
+    &lt;Directory "/home/httpd/cgi-bin"&gt;
+        AllowOverride None
+        Options ExecCGI
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;</PRE>
+Change the '<TT>AllowOverride</TT>' line to say
+<P>
+<PRE>
+        AllowOverride AuthConfig</PRE>
+This says that '<TT>.htaccess</TT>' files may override the authentication
+configuration settings for this directory and its subdirectories.
+<P>
+<STRONG>(5) Restart Apache</STRONG>
+<P>
+Tell the currently running apache to reload its configuration file,
+so the new settings are activated.  If your system has the '<TT>apachectl</TT>'
+program installed, do:
+<P>
+<PRE>
+        apachectl restart</PRE>
+For Redhat 6.1, which doesn't have '<TT>apachectl</TT>', do instead:
+<P>
+<PRE>
+        /etc/rc.d/init.d/httpd restart</PRE>
+<P>
+<STRONG>(6) Test Authentication</STRONG>
+<P>
+If you aren't confident that you have Apache and the Backtalk authentication
+system all correctly installed, then you may want to run some tests by using
+your browser to run Backtalk's little cgitest script.
+<P>
+The URLs of the cgitest program will be
+<BLOCKQUOTE>
+<EM>cgiurl</EM><TT>/cgitest</TT><EM>cgisuffix</EM><TT>/foo?bar</TT><BR>
+<EM>cgiurl</EM><TT>/pw/cgitest</TT><EM>cgisuffix</EM><TT>/foo?bar</TT><BR>
+<EM>cgiurl</EM><TT>/adm/cgitest</TT><EM>cgisuffix</EM><TT>/foo?bar</TT>
+</BLOCKQUOTE>
+For example, if you configured <TT>cgiurl</TT> to
+<TT>http://your.host.name/cgi-bin/backtalk</TT> and did not set
+<TT>cgisuffix</TT>,
+then the URLs would be
+<BLOCKQUOTE>
+<TT>http://your.host.name/cgi-bin/backtalk/cgitest/foo?bar</TT><BR>
+<TT>http://your.host.name/cgi-bin/backtalk/pw/cgitest/foo?bar</TT><BR>
+<TT>http://your.host.name/cgi-bin/backtalk/adm/cgitest/foo?bar</TT>
+</BLOCKQUOTE>
+Try hitting these URLs with your browser.
+<P>
+The first URL is just to test that you can run CGI scripts and that your
+http server is vaguely sane.
+The output will look something like:
+<BLOCKQUOTE>
+environment variables:<BR>
+HTTP_USER_AGENT=Mozilla/4.61 [en] (X11; I; Linux 2.2.12-20 i686)
+<BR>
+PATH_INFO=/foo
+<BR>
+PATH_TRANSLATED=/home/httpd/html/foo
+<BR>
+QUERY_STRING=bar
+<BR>
+REMOTE_ADDR=209.142.241.230
+<BR>
+REMOTE_HOST=undefined
+<BR>
+REMOTE_USER=undefined
+<BR>
+SCRIPT_NAME=/cgi-bin/backtalk/cgitest
+<HR>
+httpd id:<BR>
+uid=99(nobody) gid=99(nobody) groups=99(nobody)
+</BLOCKQUOTE>
+If you instead only get an error message or no output at all, something is
+definitely wrong.  The error messages displayed by the browser are often
+vague.  Check the http server's error log for a more detailed message.
+If the <TT>cgitest</TT> program was not found, the log file will get the
+path name it looked at.  Is the <TT>cgitest</TT> program there and correctly
+permitted?  If it is looking under the document root, you may need to add
+a <TT>ScriptAlias</TT> for the `<TT>cgi-bin</TT>' directory (for Apache, this
+should be in the <TT>httpd.conf</TT> file.
+<P>
+If you are seeing the contents of the <TT>cgitest</TT> program instead of its
+output, then Apache is not recognizing it as a CGI program and is just
+displaying the file instead of running it.  Your server may be configured to
+require a <TT>.cgi</TT> suffix on CGI program files.
+<P>
+If it runs, you should confirm that
+<UL>
+<LI>HTTP_USER_AGENT is a string describing your browser.
+<LI>PATH_INFO is ``/foo'' (as given in the URL above).
+<LI>PATH_TRANSLATED is the full path to your document root followed by ``/foo''.
+<LI>QUERY_STRING is ``bar'' (as given in the URL above).
+<LI>REMOTE_ADDR is the IP number of the host your browser is running on.
+<LI>REMOTE_HOST is undefined or the name of the host your browser is running on
+(whether or not it is defined depends on you server's configuration and doesn't
+particularly matter to Backtalk).
+<LI>REMOTE_USER is undefined.
+<LI>SCRIPT_NAME is ``/cgi-bin/backtalk/cgitest''
+(or whatever else was between the hostname and the
+``/foo'' in the URL you used).
+<LI>The http id is the one you defined in the <TT>httpd-id</TT> configuration
+setting.
+</UL>
+<P>
+The second two URLs run the same test script, but authentication should be
+required for them.  Your browser should pop up a login window before showing
+the output of the program.
+Any valid Unix login and password should work.
+The output should be similar to that shown above,
+except that <TT>REMOTE_USER</TT> should be the name of the account you logged
+into.
+<P>
+If you are not asked for authentication and <TT>REMOTE_USER</TT> is shown
+as undefined, then Apache is not recognizing the <TT>.htaccess</TT> file.
+Check that you have `<TT>AllowOverride AuthConfig</TT>' set for the
+<TT>cgi-bin</TT> directory.
+<P>
+Note that once you have authenticating, if you run the same program again,
+or another program in the same directory, you will not be asked to log in
+again.  Your browser remembers your old authentication and automatically
+resends it.  To log in as a different user, you need to exit and restart
+the browser.
+This is, in fact, the sole purpose of the `adm' subdirectory.
+With two links to Backtalk in directories with different AuthNames,
+it is possible for a person to be logged on simultaneously as two
+different users. This is especially useful for conference administrators,
+who may want to access the administration account without exiting their
+personal accounts. That's why the second directory is called `adm',
+though the link to Backtalk in there does not actually have any
+special properties.
+<HR>
+Prev:  <A HREF=install4b.html>Part IV: Installation</A><BR>
+Next:  <A HREF=install6.html>Part VI: Cron Configuration</A>
+</BODY></HTML>

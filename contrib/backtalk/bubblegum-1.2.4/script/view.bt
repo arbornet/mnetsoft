@@ -1,0 +1,100 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% view script
+%
+% A script to display a single item from a conference (even hidden responses)
+%
+% Query Paramters:
+%    conf=	conference to view a response from
+%    item=	item number to view a response from
+%    resp=	response number to view
+
+flavor(config)+ include
+
+/shyfile constant {
+  flavor(unreg)+ include
+} if
+
+flavor(buttondef)+ include
+
+(<HTML>
+<HEAD>
+<TITLE>)bbsname( - )/conftitle( )Conference cap( - )Item cap( )item
+( - )Response cap( )resp
+(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+</HEAD>)
+
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+(<BODY )background(>\n)
+
+global_header
+
+secret 2 eq /dunno defined ! and {
+  [/conf /item /resp] flavor(confpass)+ jump
+} if
+
+mayread ! {(The )conf`( )Conference( cannot be read. You may <A HREF=conflist>
+return to the list of )Conferences(</A>.)' halt } if
+
+/tmpresp resp def
+resp cvs item this_item { (Item )item( does not exist.\n) halt} if
+read_item {(Could not read item )item(.\n) halt} if pop
+/resp tmpresp def
+
+showlogo (<H1>)bbsname( )conf`( )Conference cap(</H1>\n)'
+
+`(Viewing hidden )Response( )'resp`( from )Item( )'item(.<HR>)
+
+resp read_resp 
+{(An error has occurred reading this )Response(.) halt} if
+
+(*.backtalk) /timezone loadvar pop
+
+(<STRONG> #)resp( by )
+mayseealias {
+  authorname quote
+  ( \(<A HREF=")
+  /extern_bio constant {
+    (lib/biolink) include
+    authorid extern_view_bio
+  } {
+    (bio?login=)authorid
+  } ifelse
+  (">)authorid expand(</A>\) on )
+} {
+  (<FONT COLOR=red>)authorid expand(</FONT> on )
+} ifelse
+date ztime (:</STRONG>\n)
+editdate {(<BR><EM>\(edited )editdate ztime(\)</EM>)} if
+(<P>\n)
+/shyfile constant {form_text} {1 read_text} ifelse
+attachments {
+  (<P><FONT SIZE=-1><EM><U>Attachments</U>:</EM>\n)
+  {
+    attachments (,) clip /hand xdef /attachments xstore
+    (<BR>&nbsp;&nbsp;)
+    hand get_attach dup 0 gt {
+      1 eq { (<EM>Deleted</EM>) }
+           { (<EM>Permission Denied</EM>) } ifelse
+    } {
+      pop
+      /url xdef /desc xdef /size xdef /type xdef
+      (<A HREF=")url(">)desc quote(</A> \() type mimename( - )
+      size 2048 lt { size( bytes) }
+      { size 2097152 lt {size 1024 / (K)}
+        {size 1048576 / (M)} ifelse } ifelse
+      (\))
+    } ifelse
+
+    attachments ! {break} if
+  } loop
+  (</FONT>\n)
+} if
+(
+<HR>Use "back" to return.)
+global_footer
+(</BODY></HTML>
+)

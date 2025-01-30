@@ -1,0 +1,4 @@
+AuthExternal pwauth
+AuthName Grex
+AuthType Basic
+require valid-user

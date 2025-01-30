@@ -1,0 +1,110 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+%
+% Item Operations
+%
+% Arguments:
+%  conf          conference
+%  isel          item numbers to operate on
+%  op		 Operation to perform:
+%                  (D) = Disfavor
+%                  (F) = Forget
+%                  (K) = Kill
+%                  (M) = reMember
+%                  (R) = Retire
+%                  (S) = mark Seen
+%                  (T) = Thaw
+%                  (U) = Unretire
+%                  (V) = faVor
+%                  (v) = temporarily favor
+%                  (Z) = freeZe
+%  showforgotten 0=unforgotten items only, 1=all items, 2= forgotten only
+%  rsel          response selector
+%  since         read since date - implies rsel=since
+%  pattern       match only items whose title contains this string
+%  by            match only posted by this user
+%
+% Response:
+%  For each selected item, either
+%     <DONE ITEM=number>
+%  or
+%     <ERROR MSG=whatever>
+
+/http_content_type (text/plain) store
+
+open_conf {(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+% Fix up since
+/sincedate defined {
+  /since sincedate 0 1 dtime store
+  /rsel (since) store
+} if
+
+% Default rsel
+rsel () eq {
+   /rsel (all) store
+} if
+
+showforgotten 0 eq {/showforgotten 1 store} if
+
+% If we have a pattern, compile it
+/pattern defined { () pattern 1 search pop } if
+
+/gethead /pattern defined /by defined or def
+/getsum gethead op (S) eq or def
+
+{
+  isel next_item {break} if
+  /item xstore  /nrs xdef  /isel xstore
+
+  getsum {
+    % get sum file entry
+    nrs item this_item { break } if
+    gethead {
+      % get the item title
+      read_item { break } if pop
+
+      % skip item if title does not contain pattern
+      /pattern defined {
+        title () 1 search 0 lt {continue} if
+      } if
+
+      % skip item if author is not on by list
+      /by defined {
+        authorid by in_sel ! {continue} if
+      } if
+
+    } if
+  } if
+
+  % faVor or tempfavor or Disfavor an item
+  op (V) eq op (v) eq or op (D) eq or {
+    item /fav 
+      op (D) eq { 0 } { op (v) eq { 2 } { 1 } ifelse } ifelse
+      set_item_note
+    (<DONE ITEM=)item(>\n)
+    continue
+  } if
+
+  % Forget or reMember or fixSeen an item
+  op (F) eq op (M) eq or op (S) eq or {
+    op (F) eq { item forget_item /rc xdef} if
+    op (M) eq { item remember_item /rc xdef} if
+    op (S) eq { maxresp 1 + item mark_unseen /rc xdef } if
+    rc 0 eq {(<DONE ITEM=)item(>\n)} if
+    rc 1 eq {(<ERROR MSG="Item )item( not found">\n)} if
+    rc 2 eq {(<ERROR MSG="Response )maxresp( not found">\n)} if
+    continue
+  } if
+
+  % freeZe, Thaw, Retire, Unretire or Kill an item
+  op (Z) eq { 1 freeze_item /rc xdef } if
+  op (T) eq { 0 freeze_item /rc xdef } if
+  op (K) eq { kill_item /rc xdef } if
+  op (R) eq { 1 retire_item /rc xdef } if
+  op (U) eq { 0 retire_item /rc xdef } if
+
+  rc 0 eq {(<DONE ITEM=)item(>\n)} if
+  rc 2 eq {(<ERROR MSG="Item )item( not found">\n)} if
+  rc 3 eq {(<ERROR MSG="Permission denied for item )item(">\n)} if
+} loop

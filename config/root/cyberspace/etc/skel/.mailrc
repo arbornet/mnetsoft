@@ -1,0 +1,47 @@
+#
+# Display introductory message:
+#
+echo " "
+echo "Hi -- Welcome to the mail program!  By default, Grex mail is opt-in.  Please"
+echo "make sure you have turned mail on if you intend to use mail here!"
+echo " "
+echo "Some mail tips:"
+echo " "
+echo " + This is an antique mail program.  For a much nicer one, try mutt instead."
+echo "   If you do not know which mail program to use, start with mutt."
+echo " "
+echo " + For a list of mail commands, type   help   at the & prompt.  For more"
+echo "   commands, type tilde-questionmark when you are writing a message."
+echo " "
+echo " + Cc: means carbon copies.  If you do not want to send copies of your"
+echo "   message to other people, press Enter when you see a Cc: prompt."
+echo " "
+echo " + When you are done reading your incoming messages, please delete them."
+echo "   For example, to delete message 5 type:"
+echo "           d 5"
+echo " "
+echo " + When you are done, type   q   to exit."
+echo " "
+echo " + You can edit your .mailrc file to remove these overly helpful messages."
+echo " "
+
+#
+# Pause after every screenful of text:
+#
+set PAGER=grexmore
+set crt=24
+
+#
+# Don't take forever to bring up the pager:
+#
+set SHELL=/bin/sh
+
+#
+# Save all messages in the mail spool, not in an mbox file:
+#
+set hold
+
+#
+# When I do ~m to forward a message, prefix it with "> ", not with tabs:
+#
+set indentprefix="> "

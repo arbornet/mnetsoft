@@ -1,0 +1,150 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+
+% JavaScript functions for processing pulldown-menu commands.
+%
+% Some pulldown-menu commands are executed directly, just loading a new page
+% into the current window, others generate pop-up boxes that prompt for
+% parameters, before doing something in the main window.  The latter degrade
+% sensibly for browers that don't do JavaScript, with the prompt appearing in
+% the main window instead.
+%
+% This file generates some Javascript code to be included on all pages with
+% a command mode.  It consists of a couple JavaScript data structures, and the
+% gopop() function.  The gopop() function should be called whenever a command
+% is selected.  This is done by defining the pulldown menu as follows:
+%
+%  <FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">
+%  <SELECT NAME=command onChange="if (gopop('nav')) document.nav.submit();">
+%
+% For browsers that don't do JavaScript, this will always result in running
+% the 'go.bt' script, with the command name as a parameter.  The result will
+% always appear in a new window.
+%
+% For browsers where Javascript is enabled, the gopop() function will check
+% if the command name starts with a @.  If not, it returns true, causing the
+% default action to occur, just as if JavaScript were disabled, that is we
+% just load the go.bt script's output into the current window.  If there is
+% an @ sign, however, we create a pop-up window, whose size is determined by
+% the integer that follows the @ sign.  We then load some content into the
+% pop-up window, and exit returning false, so that nothing new is loaded into
+% the main window.
+%
+% We can actually load the contents of the pop-up window in two different
+% ways.  Which is used is configuarable for each command on each page.
+% The methods are:
+%
+%    CGI LOAD:
+%      When we create the window, we initiate and http request to run the
+%      go.bt script on the server to generate the contents of the window.
+%      All hidden variables and current checkbox settings are passed to
+%      go.bt as part of the request.
+%
+%    JAVASCRIPT LOAD:
+%      We create an empty window, and then write its contents in from
+%      Javascript.
+%
+% The JAVASCRIPT LOAD method is faster because no http request must be made.
+% The box should pop up instantly even if the network connection is slow.
+% However, to do this, we must have pregenerated the contents of all the
+% possible pop-up boxes when we loaded the main page, so this adds some
+% overhead (especially since at most one of those popups will ever be used).
+%
+% The JAVASCRIPT LOAD method also seems to confuse some browsers.  Netscape
+% 4 mostly works, except the onSubmit methods on forms in the created box don't
+% work.  Using onClick on the submit button does, but this doesn't entirely
+% do the same thing because you don't always use the submit button.  Konqueror
+% 2.1.2 works, except that it writes the popup window contents to the main
+% window instead of the popup.  We always use the CGI LOAD option with those
+% browsers.
+%
+% The CGI LOAD option is more flexiable.  It can be used for all popups.
+% Some current popups (like 'killall') won't work with JAVASCRIPT LOAD.
+%
+% Which method is used for which popups is determined by which of the
+% following constants is defined before you include this file:
+%  jpop_gotoconf       jpop_kill
+%  jpop_linkin         jpop_mytitle       jpop_resign
+%  jpop_respond        jpop_resprange     jpop_retitle
+% If the constant is defined, then the corresponding function will be
+% handled by JAVASCRIPT load.
+
+/javafunc `
+
+% First we define the jpop hash.  For each function that is to do
+% JAVASCRIPT LOAD, it gives the data to be loaded into the window.
+
+(var jpop= new Object();\n)
+
+/mainwin 0 defconstant
+/jpop_gotoconf constant {
+   (jpop['gotoconf']= )`flavor(pop_gotoconf)+ include' jsquote (;\n)} if
+/jpop_kill constant {
+   (jpop['kill']= )`flavor(pop_kill)+ include' jsquote (;\n)} if
+/jpop_linkin constant {
+   (jpop['linkin']= )`flavor(pop_linkin)+ include' jsquote (;\n)} if
+/jpop_mytitle constant {
+   (jpop['mytitle']= )`flavor(pop_mytitle)+ include' jsquote (;\n)} if
+/jpop_resign constant {
+   (jpop['resign']= )`flavor(pop_resign)+ include' jsquote (;\n)} if
+/jpop_respond constant {
+   (jpop['respond']= )`flavor(pop_respond)+ include' jsquote (;\n)} if
+/jpop_resprange constant {
+   (jpop['resprange']= )`flavor(pop_resprange)+ include' jsquote (;\n)} if
+/jpop_retitle constant {
+   (jpop['retitle']= )`flavor(pop_retitle)+ include' jsquote (;\n)} if
+/mainwin undefconstant
+
+
+% Here's a basic function for creating a popup
+
+(function popwin(e,w,h) {
+return window.open(e, 'popup', 'scrollbars=yes,resizable=yes,width='+w+',height='+h)
+}
+)
+
+% The array of pop window sizes.  An index into this array follows the '@'
+% sign in popup function names.
+
+(var wid= new Array('', 400, 600, 500, 550);
+var hei= new Array('', 100, 500, 70,  120);
+)
+
+% Here is gopop().  If the function name starts with an @, it creates the
+% popup.  It checks the jpop hash to see if it has content for this type
+% of popup.  If it does, it loads that, otherwise, it constructs an http
+% request and runs it.
+
+(function gopop(fname) {
+var f= document[fname];
+var sel= f.command;
+var cmd= sel.options[sel.selectedIndex].value;
+var inp;
+if (cmd.substr(0,1) == '@') {
+var i,hid='';
+var sz= cmd.substr(1,1);
+var fnc= cmd.substr(2);
+if (jpop[fnc] == null || 
+    (navigator.appName == 'Netscape' && parseInt(navigator.appVersion) < 5) ||
+    navigator.appName == 'Konqueror')
+{
+for (i= 0; i<f.elements.length; i++)
+{
+  inp= f.elements[i];
+  if (inp.type == 'hidden' || (inp.type == 'checkbox' && inp.checked))
+    hid=hid+'&'+inp.name+'='+inp.value;
+}
+popwin(document[fname].action+'?command='+fnc+hid,wid[sz],hei[sz]);
+}
+else
+{
+var w= popwin('',wid[sz],hei[sz]);
+w.document.write(jpop[fnc]);
+w.document.close();
+}
+return false; }
+else return true;
+}
+)
+
+' def

@@ -1,0 +1,135 @@
+			BACKTALK WASABI INTERFACE
+		         (c) 2004  Jan Wolter
+
+			      Version 1.0.5
+	          Requires Backtalk Version 1.4.6 or later
+
+DESCRIPTION:
+
+The Backtalk Wasabi interface was developed for Jan Wolter's weblog site,
+Great Green Room (greatgreenroom.org).  Except it's not really a weblog as
+such.  Instead of just displaying postings from the owner in cronological
+order, wasabi presents the site owner's writings as a collection of
+separate articles, each on its own page, with a sidebar linking to other
+related or recent articles.  Readers may post responses to the articles,
+but these are given less emphasis than they would in a normal conferencing
+system, being displayed on a separate page.
+
+Normally if you are using wasabi, then it will be the only interface that
+you offer to your users.  It is not intended to be a general conferencing
+tool like pistachio, abalone, bubblegum, vanilla, or papaya.
+
+INSTALLATION:
+
+(1) Make sure that you have the correct version of Backtalk.  The top of
+    this file tells the minimum version of Backtalk needed to support this
+    scripts in this package.  Later versions of Backtalk may or may not
+    be compatible.  If we release a version of Backtalk not compatible with
+    this interface package, a new version of this package will be released.
+
+(2) Backtalk must be built with the --index=sql option for Wasabi to work.
+
+(3) Unpack the Wasabi distribution.
+
+    OK, if you hadn't already done that, you wouldn't be reading this, would
+    you?  We'll refer to the full path of the new directory containing the
+    distribution as DISTDIR.
+
+(4) Versions of Backtalk after 1.1.4 have a 'btinstall' script to simplify
+    the installation of seperately distributed interface packages.  Btinstall
+    assumes that the configuration of Backtalk hasn't radically changed since
+    you used Backtalk's 'make install' commands to install the system.  If
+    you've manually rearranged what goes where on the disk, btinstall will
+    need some editing, or you'll need to install the interface manually.
+
+    TO INSTALL USING BTINSTALL:
+
+    (a)  Login either as root or as the user that owns Backtalk's files on
+         your system.
+
+    (b)  Find where the 'btinstall' script was installed, so you can run it.
+         You want to be sure you get the installed copy of the program, which
+	 has been modified with information about your installation, not
+	 the one in the distribution directory.
+
+    (c)  cd into the unpacked distribution directory, DISTDIR.
+
+    (d)  Run 'btinstall'
+
+    TO INSTALL WITHOUT BTINSTALL:
+
+    This distribution contains two subdirectories.  The 'script' subdirectory
+    contains all the Backtalk scripts that implement the interface.  The
+    'image' directory contains some button images.  These just have to be
+    moved into directories named 'wasabi' under Backtalk's script and
+    image directories.  In a bit more detail:
+
+    (a) Find the Backtalk script directory.  The default pathname is
+        /usr/local/backtalk/script, but it will vary on different systems.
+        Typically it will contain the config.bt script, the userinfo.bt script
+        and subdirectories for all installed interfaces.
+
+    (b) Create a new subdirectory under the script directory, called
+        'wasabi'.  Make sure the directory is writable to the Backtalk
+	account, so that compiled copies of the scripts can be written into
+	it by Backtalk.
+
+    (c) Copy all the files in DISTDIR/script to the new wasabi directory.
+
+    (d) Find the Backtalk image directory.  This will normally be somewhere
+        under your http server's document root.  The "imghost" symbol defined
+	in config.bt gives the URL of this directory.
+
+    (e) Create a new subdirectory under the image directory, called
+        'wasabi'.
+
+    (f) Copy all the files under DISTDIR/image into this new wasabi image
+        directory.  These should all be readable by the http server.
+
+That's all.  Backtalk's 'welcome' page will automatically detect the
+presence of the wasabi interface, and include it in the list of available
+interfaces.
+
+CUSTOMIZATION:
+
+Wasabi may be customized by editing the SCRIPTDIR/wasabi/config.bt file.
+After editting it, you should probably do "rm SCRIPTDIR/wasabi/*.bb" to
+delete any previously compiled scripts, forcing the system to recompile with
+the new settings.
+
+My 'Great Green Room' page uses some other unusual configuration settings.
+I recommend creating the conference with the web-based tools and then doing
+a little manual file editing similar to what is below.  The Great Green Room
+is actually just one conference called 'ggr'.  To make it the default
+conference, edit the system conference hot list so that it is listed first.
+This can be done through the admin web interface, or by editing the file
+bbs/dflt.cflist
+
+The conference config file is set to use a Yapp-style access control list to
+control user powers.  The config file, bbs/ggr/config looks like this:
+
+    !<pc02>
+    .ggr.cf
+    0
+    jan
+    acl
+    Great Green Room
+
+The fourth line defines user 'jan' as the fairwitness for the conference.
+The fifth line, with the magic word 'acl' tells backtalk to load the acl
+file.  This is a file in the conference directory name 'acl, and it looks
+like this:
+
+    r +all
+    w +registered
+    c +fwlist
+    a +fwlist
+
+That means anyone can read, registered users can respond to items, but only
+the fairwitness can post new items.  To enable users to post comments without
+registering or logging in, change it to:
+
+    r +all
+    w +all
+    c +fwlist
+    a +fwlist

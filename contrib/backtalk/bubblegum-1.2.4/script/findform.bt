@@ -1,0 +1,72 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% findform script
+%
+% This script generates a form for searching a conference for various things.
+% The form handler for this form is the "find.bt" script.
+%
+% Query Paramters:
+%    conf=      name of the conference we are searching
+%    err=       any error message to print on the form.
+%    csel=      list of conference (not used, just passed along)
+
+flavor(config)+ include
+
+(<HTML><HEAD>
+<TITLE>Search the )/conftitle`( )Conference cap(</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+</HEAD>)
+flavor(openconf)+ include
+secret 2 eq /dunno defined ! and { [/conf /csel] flavor(confpass)+ jump } if
+global_header
+
+(<BODY )background(>\n)
+
+flavor(buttondef)+ include
+
+(<TABLE CELLPADDING=8>
+<TR><TD VALIGN=top>
+<A HREF="confhome?conf=)conf(&csel=)csel(">)forumhome_button(</A><BR>\n)
+/oneconf constant ! {
+  spacer( <A HREF=begin>)entrance_button(</A>\n)
+} if
+(</TD><TD VALIGN=top BGCOLOR=)text_bg(>
+)
+
+% various default settings of form
+/pattern dup () default def
+/m_text_check /m_text 1 default {( CHECKED)}{()} ifelse def
+/m_fname_check /m_fname 0 default {( CHECKED)}{()} ifelse def
+/m_title_check /m_title 0 default {( CHECKED)}{()} ifelse def
+/m_login_check /m_login 0 default {( CHECKED)}{()} ifelse def
+
+(<H1>Search the )conftitle( Conference</H1>
+<FORM METHOD=post ACTION=find>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>)} if
+(<STRONG>Search For:</STRONG><BR>
+<INPUT TYPE=text NAME=pattern VALUE=")pattern quote
+(" SIZE=72><BR>\n)
+/err defined {(<FONT COLOR=red><STRONG>)err(</STRONG></FONT><BR>)} if
+(<P>
+<INPUT TYPE=hidden NAME=icase VALUE=1>
+<INPUT TYPE=hidden NAME=mode VALUE=exact>
+<INPUT TYPE=hidden NAME=isel VALUE="1-$">
+<STRONG>Match Against:</STRONG><BR>
+<TABLE><TR>
+<TD><INPUT TYPE=checkbox NAME=m_text)m_text_check(> Message Text&nbsp;</TD>
+)
+mayseealias {
+  (<TD><INPUT TYPE=checkbox NAME=m_fname)m_fname_check(> Author's Full Name</TD>
+  </TR><TR>\n)
+} if
+(<TD><INPUT TYPE=checkbox NAME=m_title)m_title_check(> )Item cap( Title&nbsp;</TD>
+<TD><INPUT TYPE=checkbox NAME=m_login)m_login_check(> Author's Login Name</TD>
+</TR></TABLE>
+<P>
+<INPUT TYPE=submit VALUE=Search>
+</FORM>
+</TD></TR></TABLE>
+)global_footer
+(</BODY></HTML>
+)

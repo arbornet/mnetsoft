@@ -1,0 +1,9 @@
+After the weekly walk, people gather at a local restaurant for lunch. To get
+notification of the lunch location, subscribe to 
+
+        grexwalk-debrief-announce@googlegroups.com
+
+by sending a message to
+
+     grexwalk-debrief-announce-subscribe@googlegroups.com
+

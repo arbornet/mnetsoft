@@ -1,0 +1,194 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% bio script
+%
+% The bio script displays information about any user in the system and
+% allows users to edit their own personal information.  It also allows
+% administrators to edit other users personal information.
+%
+% Query Parameters:
+%    login=	Login name of user who's bio we want to look at.
+%    doedit=	If defined, show edit form instead of ordinary bio
+%    errormsg=  If defined, an error message to display at top of page.
+
+% Decline to run for obvious email address collectors
+browser 0 lt {(Not a browser)} if
+
+% load some button definitions and sizes
+/butsel 5 defconstant flavor(buttondef)+ include
+flavor(config)+ include
+
+% Get the generic userinfo code
+(lib/userinfo) include
+(lib/robots) include
+
+% find fullname, status, and home directory from the password info
+login userinfo 
+   /status xdef
+   /laston xdef
+   /biodir xdef
+   % from unix passwd files, delete text after "," in fullname field
+   nopwedit {(,) clip exch pop} if /fullname xdef
+   pop	% discard group id number
+   pop	% discard user id number
+
+% "me" is true if the user is viewing his own bio
+/me login id eq def
+
+% set "edit_mode" if we are going to offer the user the chance to change things
+/edit_mode /doedit defined me amadm or and def
+
+/regdate 0 def
+
+% output page header
+(<HTML><HEAD>
+<TITLE>) bbsname ( Personal Info - User ) login (</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+)bio_robot(</HEAD>
+<BODY)body_tags(>)
+global_header
+(<H1> Personal Info - User ") login ("</H1>
+Goto <A HREF=begin>)entrance_button(</A> or
+<A HREF=help/bio>)help_button(</A>
+<P>)
+
+/errmsg defined ! {
+  % userinfo returns () if there is no such user
+  status 0 lt { (No account currently exists for )login(.) stop
+    } if
+
+  /useplan constant {
+    % load the user's .plan file.
+    (*.plan) login pathname  /bio_fn xdef
+
+    bio_fn readable {
+      % plan is readable -- load it.
+      /plan bio_fn read def
+      plan ! { /plan ( ) def } if
+      0 /privacy xdef
+    }{
+      % plan is not readable -- user wants privacy.
+      () /plan xdef
+      1 /privacy xdef
+    } ifelse
+  }{
+    % load settings from the user's .backtalk file
+    login getinfo
+  }ifelse
+} {
+  /privacy defined ! {/privacy 0 def} if
+} ifelse
+
+% If anonymity is set, all user info is private
+mayseefname ! {/privacy 1 def} if
+
+% Print message to toggle between edit and display mode
+me amadm or {
+  (<A HREF="bio?login=) login
+  edit_mode
+    {(">View your settings as others will see them.)}
+    {(&doedit=Y">You may change any of this data about )
+     amadm {login} {(yourself)} ifelse (.)}
+    ifelse
+  (</A><HR>\n)
+} if
+
+/errmsg defined {
+  (<FONT COLOR=red>Please correct the following errors:<BR>\n<UL><LI>)
+  errmsg chomp (\n) (\n<LI>) 0 replace(\n</UL></FONT>\n)
+} if
+
+edit_mode {
+
+  % bio is for me - create a form and fill in current values
+
+  (<FORM METHOD=POST ACTION=changebio>\n)
+  status {(<P>Account Status: )status 1 eq {(U)}{(I)}ifelse(nvalidated<P>)}if
+  (<INPUT TYPE=hidden NAME=login VALUE=)login(>\n)
+  /useplan constant {
+
+     % version for systems using .plan files
+
+     (<STRONG>Full Name</STRONG>: <INPUT TYPE=text NAME=fullname VALUE=")
+     nopwedit {(" TYPE=hidden>)fullname} {(" SIZE=40>)} ifelse
+     (<BR><STRONG>Plan</STRONG>:<BR>
+     <TEXTAREA NAME="plan" ROWS=20 COLS=72 WRAP=HARD>)plan(</TEXTAREA><BR>\n)
+
+  } {
+
+     % version for systems using .backtalk files
+
+     (<INPUT NAME=privacy TYPE=checkbox VALUE=1) privacy {( CHECKED)} if
+     (> Do not allow other users to see this information<P>
+     <STRONG>Full Name</STRONG>: <INPUT NAME=fullname VALUE=")fullname
+     nopwedit {(" TYPE=hidden>)fullname} {(" SIZE=40>)} ifelse
+     (<BR>\n)
+     {(<BR>\n)} () () promptinfo
+  } ifelse
+
+  (<BR><INPUT TYPE=submit VALUE="Submit changes">
+  <INPUT TYPE="reset" VALUE="Clear fields">
+  </FORM>
+  <HR>)
+
+  % Offer him the option to set account options
+
+  (<A HREF="optform?login=)login(">)
+  amadm{fw_button}{button}ifelse
+  (</A> Set options for ``)login('' account.<BR>\n)
+
+  (<A HREF="timezone?login=)login(">)
+  amadm{fw_button}{button}ifelse
+  (</A> Set time zone for ``)login('' account.<BR>\n)
+
+  (<A HREF="twitlist?login=)login(">)
+  amadm{fw_button}{button}ifelse
+  (</A> Edit list of users to ignore for ``)login('' account.<BR>\n)
+
+  % Offer him the option to change his password or delete his account
+
+  nopwedit ! {
+
+     status ! {
+       (<A HREF="chpwform?login=)login(">)
+       amadm{fw_button}{button}ifelse
+       (</A> Change password for ``)login('' account.\n<BR>)
+     } if
+
+     amadm{
+       (<A HREF="validate?login=)login(&flag=)status 0 ne(">)fw_button(</A> )
+       status{(V)}{(Inv)}ifelse(alidate ``)login('' account.<BR>\n)
+     } if
+
+     (<A HREF="killconfirm?login=)login(">)
+     amadm{fw_button}{button}ifelse
+     (</A> Delete ``)login('' account.<BR>\n)
+
+  } if
+
+}{
+
+  % bio is not for me, don't use a form to display the info
+
+  privacy mayseefname ! or  {(No information available.)} {
+  (<STRONG>Full Name</STRONG>: ) fullname ( <BR>\n)
+  laston    { (<STRONG>Last On</STRONG>: ) laston ztime      (<BR>\n) }if
+  /useplan constant  {(<P><PRE>) plan expand (</PRE>\n)} {
+    regdate   { (<STRONG>Registered</STRONG>: ) regdate cvt ztime  (<BR>\n) }if
+    {(<BR>\n)} () showinfo
+  } ifelse  % end test for plan
+  } ifelse  % end test for privacy
+  status {(<P><STRONG>Account Status</STRONG>: )
+    status 1 eq {(U)}{(I)}ifelse(nvalidated)}if
+} ifelse    % end test edit_mode
+
+% print page footer
+
+global_footer
+(</BODY></HTML>
+)

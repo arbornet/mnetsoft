@@ -1,0 +1,351 @@
+<HTML>
+<HEAD>
+<TITLE>Backtalk Script Language Tutorial</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Script Language<BR>Tutorial</H1>
+Version 1.3.30
+<P>
+&copy; 2003: Jan Wolter, Steve Weiss
+</CENTER>
+<H2>1. Introduction</H2>
+
+Backtalk's script language is, well, unusual.
+It's a stack-based language, which means everything is written backwards.
+If you know the Postscript language then Backtalk's language will be very
+familiar.
+If you know the Forth language, then you have the basic idea.
+However, most likely you don't and probably Backtalk scripts will look totally
+weird to you.
+If you've used an old Hewlett-Packard RPN calculator or have a reasonably
+good grounding in computer science then at least you have the
+advantage of knowing about postfix notation.
+<P>
+This document is meant to give a enough of a basic introduction to the
+Backtalk script language to help you figure out what you are seeing when
+you look at a script, and make simple changes.
+<P>
+For full details of the language, see the
+<A HREF=language.html>Backtalk Script Language Reference Manual</A>.
+
+<H2>2. Postfix Notation and Stacks</H2>
+
+This section introduces the basic idea of the Reverse Polish or
+Infix Notation used by Backtalk.
+<P>
+In a typical procedural computer language, you might write a statement
+like this:
+<PRE>
+   print("The answer is ",(abs(x) + 1) * 5);</PRE>
+This is a mixture of <EM>prefix</EM> notation and <EM>infix</EM> notation.
+The <TT>print</TT> and <TT>abs</TT> function are in prefix notation.  The
+operator name <EM>preceeds</EM> a list of arguments.  The <TT>+</TT> and
+<TT>*</TT> functions are in infix notation, with function name
+<EM>in between</EM> its arguments.
+<P>
+<EM>Postfix</EM> notation writes the operator after the arguments.  So the
+statement above would be written as:
+<PRE>
+   "The answer is " x abs 1 + 5 * print</PRE>
+That's pretty weird looking.  Let's take a simpler example:
+<PRE>
+   2 1 + 5 * print</PRE>
+This says:
+<OL>
+<LI> Take the number 2.
+<LI> Take the number 1.
+<LI> Add the two things you have and keep the result.
+<LI> Take the number 5.
+<LI> Multiply the two things you have and keep the result.
+<LI> Print everything you have.
+</OL>
+So this prints the number 15.  Note that we didn't need parenthesis to
+distinguish between <TT>(1 + 2)*5</TT> and <TT>1 + (2 * 5)</TT>.
+That kind of ambiguity happens only with infix operators.
+<P>
+Returning to our more complex example:
+<PRE>
+   "The answer is " x abs 1 + 5 * print</PRE>
+what this does is
+<OL>
+<LI> Take the string "The answer is ".
+<LI> Take the value of the variable x.
+<LI> Find the absolute value of the thing you have and keep the result.
+<LI> Take the number 1.
+<LI> Add the two things you have and keep the result.
+<LI> Take the number 5.
+<LI> Multiply the two things you have and keep the result.
+<LI> Print everything you have.
+</OL>
+Note that we start by taking the string and just hold onto it without operating
+on it at all.  The <TT>abs</TT> function operates on the most recent thing
+we took, and the <TT>+</TT> and <TT>*</TT> times functions operate on the
+two most recent things we took.  So clearly the computer needs to be able
+to keep track of a large number of things and their order.
+<P>
+The data structure used by computer to do this is a <EM>stack</EM>.  It's
+just a linear pile of values which allows us to add a value onto the top,
+or take a value off the top.  Adding a value is called <EM>pushing</EM> it.
+Deleting a value is called <EM>popping</EM> it.
+<P>
+So we'll run the above command again, this time using stack terminology and
+showing the stack after each step.  We'll assume that the value of <TT>x</TT>
+is -7 and we'll write the stack with the bottom at the left and the top at
+the right:
+<TABLE>
+<TR><TH COLSPAN=2>Operation</TH><TH>Resulting Stack</TH>
+<TR><TD>(1)</TD><TD>Push the string "The answer is ".</TD>
+<TD><TT>"The answer is "</TT></TD></TR>
+<TR><TD>(2)</TD><TD>Push the value of <TT>x</TT>.</TD>
+<TD><TT>"The answer is " -7</TT></TD></TR>
+<TR><TD>(3)</TD><TD>Pop a number, push its absolute value.</TD>
+<TD><TT>"The answer is " 7</TT></TD></TR>
+<TR><TD>(4)</TD><TD>Push 1.</TD>
+<TD><TT>"The answer is " 7 1</TT></TD></TR>
+<TR><TD>(5)</TD><TD>Pop two numbers, push their sum.</TD>
+<TD><TT>"The answer is " 8</TT></TD></TR>
+<TR><TD>(6)</TD><TD>Push 5.</TD>
+<TD><TT>"The answer is " 8 5</TT></TD></TR>
+<TR><TD>(7)</TD><TD>Pop two numbers, push their product.</TD>
+<TD><TT>"The answer is " 40</TT></TD></TR>
+<TR><TD>(8)</TD><TD>Print everything on the stack from bottom up.</TD>
+<TD><EM>empty</EM></TD></TR>
+</TABLE>
+<P>
+So the execution of a Backtalk program is really very simple.  Backtalk
+starts at the beginning of the program and executes one item at a time
+according to the following rules:
+<UL>
+<LI>If the item is a number or a string, push it on the stack.
+<LI>If the item is a variable name, push its value on the stack.
+<LI>If the item is a function name, execute it.  It will pop its inputs
+    (if any) off the stack and push its result (if any) back.
+</UL>
+That's pretty much all there is.
+This is very simple and computers can run such scripts very quickly.
+
+<H2>3. Backtalk Syntax</H2>
+
+The examples above aren't actually quite in correct Backtalk syntax.
+We'll set that straight here.
+
+<H3>3.1. Comments</H3>
+
+First, comments start with percent signs:
+<PRE>
+    % This is my beautiful program
+
+    1 2 + print   % This should print the number 3</PRE>
+
+<H3>3.2. White Space</H3>
+
+White space doesn't matter.  Occasionally it can be omitted.  All of the
+following are equivalent:
+<PRE>
+    1 2 + print
+
+    1   2
+        +
+        print
+
+    1 2+print</PRE>
+
+<H3>3.3. Strings</H3>
+
+Since we don't need parenthesis for their usual function of grouping
+arguments to operators, we use them instead of quotation marks to quote
+strings.  Quoting strings with parenthesis seems a bit odd at least, but
+it actually makes things easier to read, since it is clear what is inside
+the parenthesis and what is outside.
+<P>
+So the classic hello world program is:
+<PRE>
+    (Hello world!\n) print</PRE>
+Here '<TT>\n</TT>' represents a newline.  You can also just put a literal
+linebreak inside a string.  The following two forms are equivalent:
+<PRE>
+    (Hello world!\nHow you doing?\n) print
+
+    (Hello world!
+    How you doing?
+    ) print</PRE>
+
+If you have a parenthesis in a string, you usually need to backslash it:
+<PRE>
+   (Hello world! \(copyright 1978, Kernighan and Ritchie\)\n) print </PRE>
+Actually, in this case you don't have to Backslash the parentheses because
+they balance.  But you definately would in the following case:
+<PRE>
+   (Hello world! \(copyright )
+     year
+     (, Kernighan and Ritchie\)\n) print </PRE>
+Here the parentheses inside each string don't match up, so they must be
+backslashed.  In general it is good style to backslash them all.
+<P>
+You can concatinate strings with the <TT>+</TT> function.
+"<TT>(Hello )(World)+</TT>" gives "<TT>(Hello World)</TT>".
+Sometimes this gets big and ugly:
+<PRE>
+  (Hello )(World!)(\n)(How are )(you)(?/n)+++++</PRE>
+An alternate syntax is often more convenient:
+<PRE>
+  ` (Hello )(World!)(\n)(How are )(you)(?/n) '</PRE>
+Here everything between the <TT>`</TT> and the <TT>'</TT> will be
+concatinated together into a string.  The <TT>`</TT> really just pushes
+a mark on the stack, and the <TT>'</TT> is a function that concatinates
+everything after the last mark on the stack.
+
+<H3>3.4. Variables</H3>
+
+We can define variable as follows:
+<PRE>
+   /year 1978 def
+   /name (Tom) def </PRE>
+When a variable name is proceded by a slash, then the name itself is pushed
+on the stack instead of it's value.  So the <TT>def</TT> function pops the
+name and a value off the stack and defines that variable to have that value.
+We get the value of a variable just by using its name without the slash.
+<PRE>
+   (My name is )name( and I was born in )year(\n) print</PRE>
+<P>
+You'll see several other forms of this.
+The <TT>xdef</TT> function does that same thing but takes the arguments in
+reverse order:
+<PRE>
+   1978 /year xdef
+   (Tom) /name xdef </PRE>
+<P>
+The <TT>store</TT> and <TT>xstore</TT> functions are similar to <TT>def</TT>
+and <TT>xdef</TT> but they can only store new values in previously existing
+variables, while <TT>def</TT> can either update or create variables.  In
+most Backtalk scripts the difference doesn't matter, but Backtalk does have
+a notion of local and global sets of variables that we won't get into here,
+and it may matter when those are being used.
+
+<H3>3.5. Constants</H3>
+
+The <TT>defconstant</TT> function looks a lot like <TT>def</TT>:
+<PRE>
+   /year 1978 defconstant
+   /name (Tom) defconstant</PRE>
+It behaves very differently though.  All Backtalk scripts are compiled before
+being executed, with the compiled copy being saved to a file.  Constants are
+evaluated at compile time instead of run time.  So if we write
+<PRE>
+   (My name is )name( and I was born in )year(\n) print</PRE>
+Then the compiler will translate this to:
+<PRE>
+   (My name is )(Tom)( and I was born in )1978(\n) print</PRE>
+This means when we actually run the program Backtalk doesn't have to look
+up the values of <TT>name</TT> and <TT>year</TT> because it already has
+the values.  In fact, it can't look up those values, because they don't
+exist at run time.
+This is faster, but it also means that you can't change those values at
+run time.  A lot of system configuration settings are done with constants.
+<P>
+Backtalk will even do some computation on constants at compile time.
+If we write:
+<PRE>
+   /msg `(I was five years old in )year 5 +(\n)' def </PRE>
+then the compiled copy of the program will actually do
+<PRE>
+   /msg (I was five years old in 1983\n) def</PRE>
+Here the addition and the concatination could all be done at compile time.
+Appropriate use of constants can improve performance significantly.
+
+<H3>3.6. Arrays</H3>
+
+You can define an array in Backtalk by doing
+<PRE>
+  /weekname [ (Sun) (Mon) (Tue) (Wed) (Thu) (Fri) (Sat) ] def</PRE>
+This actually works much the way the concatination operators do -
+<TT>[</TT> pushs a mark on the stack, and <TT>]</TT> is a function that
+pops things off the stack until it finds a mark, then forms everything it
+popped into an array.
+Array can contain any mixture of any kind of data, including other arrays.
+There are operators to do various normal things with arrays, like
+extract particular values, but you most often see them used in Backtalk
+to simply group data.  If you print an array, it just prints all the 
+elements in it.
+So if I want to generate a control panel to be
+displayed at the top and the bottom of the screen, I can generate it once,
+save it in an array, and print it twice.
+
+<H3>3.7. Procedures</H3>
+
+A procedure is similar to an array, but functions aren't executed in it:
+<PRE>
+   /addone { 1 + } def</PRE>
+The <TT>{ 1 +}</TT> part of this doesn't get executed.  Instead, a special
+array is created with the elements <TT>1</TT> and <TT>+</TT>.  The array
+becomes the value of the <TT>addone</TT> variable.  Variables whose values
+are procedures are special.  If we later do:
+<PRE>
+   7 addone print</PRE>
+Then we don't just push the value of <TT>addone</TT> onto the stack as we
+usually would for a variable.  Instead, Backtalk notices that it is a
+procedure and executes it.  So the 1 is pushed and the <TT>+</TT>
+is executed and we print 8.
+This is how new functions are defined in Backtalk.
+<P>
+Procedures are also used to create conditionals and loops.
+Here is a conditional:
+<PRE>
+   (The value is )
+   x 0 lt {
+     (negative.)
+   } {
+     (postive.)
+   } ifelse
+   (\n) print</PRE>
+The <TT>ifelse</TT> takes three values off the stack.  The first is a flag,
+and the second two are procedures.  If the flag is a non-zero number or a
+non-empty string, it executes the first of the two procedures.  Otherwise
+it executes the second.
+<P>
+There are a number of different loop functions, all of which take a procedure
+argument and execute it repeatedly until some condition arises.
+<P>
+Conditionals interact in a special way with constants.  If I do:
+<PRE>
+   name constant {
+      `(My name is )name(\n)'
+   } if</PRE>
+Then if <TT>name</TT> is defined as a constant, then the compiler will
+produce
+<PRE>
+   (My name is Tom\n)'</PRE>
+but if <TT>name</TT> is not defined, nothing will be generated.  In this
+way entire chunks of code can be caused to vanish if they are not needed
+in a particular installation.
+This is Backtalk's equivalent of a C-language "<TT>#ifdef</TT>".
+
+<H3>3.8. Implicit Print</H3>
+
+When a Backtalk script finishs execution, it automatically does a
+<TT>print</TT> causing everything on the stack to be printed from bottom up.
+A lot of scripts work by just letting all the stuff they intend to output
+pile up on the stack and never do an explicit <TT>print</TT>.
+<P>
+This has a number of advantages.  One of the odder ones is that you can
+put the <EM>name</EM> of a variable on the stack fairly early on, by doing, say
+<TT>/number_of_rows</TT>.  Then you can generate a whole page of data,
+keeping count of the number of rows of data generate with the
+<TT>number_of_rows</TT> varable.  When you finally output the page, when
+the <TT>/number_of_rows</TT> literal is printed, it's current value is
+substituted in.  This way I can print the count at the top of the page
+although I don't know it's value until the bottom of the page.
+<P>
+For large pages, however, it is generally better to do regular <TT>print</TT>s
+calls to keep from using up too much memory, and to allow output to begin
+transferring to the user's browser.
+
+<HR>
+
+<ADDRESS>
+<A HREF="mailto:backtalk@hvcn.org">backtalk@hvcn.org</A>
+Wed Feb  6 09:35:00 EST 2002
+</ADDRESS>
+</BODY>
+</HTML>

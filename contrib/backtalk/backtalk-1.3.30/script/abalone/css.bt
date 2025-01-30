@@ -1,0 +1,20 @@
+% Backtalk Abalone Interface -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% css script
+%
+% This is just a list of the installed style sheets.  Pref.bt uses it to
+% generate a list of options.  If you add a new style sheet, you should add
+% it to this file.
+%
+% This is just an array of strings, each string is
+%   (<stylename>:<Title>:<Description>)
+%
+% The filename of the style sheet must be <stylename>.css
+
+/stylelist [
+  (openforum:Green and Grey:Highly Professional)
+  (blue:Ice Blue:Some nice blue hues)
+  (bright:Maximally Bright:Sure cure for Seasonal Affective Disorder (even in the summer))
+  (coffee:Coffee Colors:So very beige)
+  (dark:Black and Blue:and a little bit of yellow)
+ ] def

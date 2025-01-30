@@ -1,0 +1,20 @@
+To end your text entry, type a . as the first and only character on a line.
+
+The following other commands are available in text entry mode.  They must be
+entered at the beginning of a line, but the names may be abbreviated.
+
+  $:edit                - invoke your editor on text entered so far.
+  $:/<old>/<new>        - replace occurrences of <old> with <new>
+  $:quit                - abort text entry.
+  $:spell               - check spelling
+  $:ok                  - end text entry and prompt for verification.
+  $:clear               - clear buffer, deleting any text entered.
+  $:print               - reprint the text you have entered so far.
+  $:read <filename>     - append file contents to your text.
+  $:write <filename>    - save a copy of entered text to a disk file.
+  $:set [<option>]      - display or set options
+  $:help                - show this help message.
+
+In addition, Control-L will reprint your text and may be entered anywhere.
+
+For more help, do !man gate

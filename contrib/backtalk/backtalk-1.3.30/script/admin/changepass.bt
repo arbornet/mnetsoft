@@ -1,0 +1,65 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% changepass script
+%
+% This is the form handler for the "change password" form generate by the
+% chpwform.bt script.
+%
+% Query Parameters
+%    uname=	User whose password we are supposed to change
+%    passwd1=	First copy of the new password
+%    passwd2=	Second copy of the new password
+%    admhome=   URL of administrative menu
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+uname id ne {
+  amadm ! {
+    % non-administrator trying something - warn him off
+    /errmsg `(Only )uname( or an administrator can change )uname
+    ('s password.)' def
+    flavor(chpwform)+ jump
+  } {
+    % administrator changing another user's password - select that user
+    uname selectuser
+  } ifelse
+} if
+
+% check that two passwords match
+passwd1 passwd2 ne {
+  /errmsg (The two copies of the new password are not identical) def
+} {
+  % change the password
+  passwd1 changepass /errmsg xdef
+} ifelse
+
+% deselect target user
+amadm {() selectuser} if
+
+% If an error occured, return to form
+errmsg { flavor(chpwform)+ jump} if
+
+% If change succeeded, display a page telling him about it
+
+(<HTML><BODY BGCOLOR=white>
+)
+
+amadm {
+ (Password for )uname( has been changed.)
+}{
+ (Your password has been changed.  <P>
+  Note:  This change takes place immediately.  Your old authentication has
+  been invalidated, and your next Backtalk transaction will fail.  Your browser
+  will ask you to enter your new login and password before continuing.
+  <P>
+  An amazingly large number of people forget their passwords immediately after
+  changing them.  It's a good idea to keep it written down in a safe place for
+  at least a little while even if you are <EM>sure</EM> you won't forget it.)
+} ifelse
+
+% provide some links
+(<P>
+Return to <A HREF=)admhome(>admin menu</A><BR>
+Return to <A HREF=showuser?uname=)uname(&admhome=)admhome(>)uname('s page</A>
+</BODY></HTML>
+)

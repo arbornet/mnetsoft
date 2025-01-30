@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run the list of party noises through a pager. (jhr)
+noisefind '' | ${PAGER:-grexmore}

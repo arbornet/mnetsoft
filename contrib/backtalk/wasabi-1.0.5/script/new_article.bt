@@ -1,0 +1,33 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+
+flavor(conf)+ include
+
+maypost ! {
+  (You cannot post to this conference.)
+  halt
+} if
+
+(<html>
+<head>
+<title>)conftitle(: Enter Article</title>
+</head>
+<body>
+<h1>New Article</h1>
+<form method=post action=post_article>
+<input type=hidden name=conf value=")conf(">
+<br><strong>Title:</strong><br>
+<input type=text name=title size=70>
+<br><strong>Summary:</strong><br>
+<textarea name=summary rows=3 cols=70></textarea>
+<br><strong>Keywords:</strong><br>
+<textarea name=keywords rows=3 cols=70></textarea>
+<br><strong>HTML Text:</strong><br>
+<textarea name=text rows=30 cols=70></textarea>
+<br>
+<input type=checkbox name=rf value="yes"> Post in Retired State.
+<br>
+<input type=submit value="Post">
+</form>
+</body>
+</html>
+)

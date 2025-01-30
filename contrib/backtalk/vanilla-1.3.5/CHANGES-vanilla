@@ -1,0 +1,24 @@
+Version 1.3.5 - Sep 19, 2005
+   - Support Backtalk 1.4 style user database.
+   - Do robot exclusion headers.
+   - Do RSS and Atom headers.
+   - Support anonymous posting (with Backtalk 1.4)
+
+Version 1.3.4 - Jan 12, 2005
+   - Fix read page so if page is accessed under https, links are https too.
+
+Version 1.3.3 - Nov 10, 2004
+   - Added links.bt for compatiblity with RSS interface.
+
+Version 1.3.2 - Jul 7, 2004
+   - Fixed a typo in read.bt.
+   - Modified to use public/logout.bt script.
+
+Version 1.3.1 - Jul 17, 2003
+   - Fixed a broken link on the info page.
+
+Version 1.3.0 - Mar 11, 2003
+   - Broken out from Backtalk distribution as a separately distributed
+     interface.
+   - Added display of vanilla version number to begin page.
+   - Added version.bt file with version number in it.

@@ -1,0 +1,13 @@
+                        Fronttalk Defines:  WELLMSG
+
+Usage:  DEFINE WELLMSG "<string>"
+
+The WELLMSG define is used to generate the output from the "DISPLAY WELCOME"
+command.  (Note that the LINMSG also displays the welcome file.)
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(1x%4g%)%c"

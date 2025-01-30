@@ -1,0 +1,1095 @@
+<HTML>
+<HEAD>
+<TITLE>Backtalk File Formats</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk File Formats</H1>
+Version 1.3.30
+<P>
+&copy; 2002-2003: Jan Wolter, Steve Weiss
+</CENTER>
+
+<H2>Table of Contents</H2>
+
+<TABLE>
+<TR><TD>0.</TD><TD COLSPAN=2><A HREF=#tag>Tag Files</A></TD></TR>
+<TR><TD>1.</TD><TD COLSPAN=2><A HREF=#conflist>List of Conferences</A></TD></TR>
+<TR><TD></TD><TD>1.1.</TD><TD><A HREF=#yappconflist>Yapp-style Conflist File</A></TD></TR>
+<TR><TD></TD><TD>1.2.</TD><TD><A HREF=#picoconflist>Picospan-style Conflist File</A></TD></TR>
+<TR><TD>2.</TD><TD COLSPAN=2><A HREF=#confmenu>Menu of Conferences</A></TD></TR>
+<TR><TD></TD><TD>2.1.</TD><TD><A HREF=#btconfmenu>Backtalk <TT>confmenu</TT> File</A></TD></TR>
+<TR><TD></TD><TD>2.2.</TD><TD><A HREF=#grexpublic>Grex-style <TT>public.txt</TT> File</A></TD></TR>
+<TR><TD></TD><TD>2.3.</TD><TD><A HREF=#mnetpublic>M-Net-style <TT>public.txt</TT> File</A></TD></TR>
+<TR><TD></TD><TD>2.4.</TD><TD><A HREF=#otherpublic>Other <TT>public.txt</TT> Files</A></TD></TR>
+<TR><TD>3.</TD><TD COLSPAN=2><A HREF=#config>Conference Configuration</A></TD></TR>
+<TR><TD>4.</TD><TD COLSPAN=2><A HREF=#acl>Conference Access Control List</A></TD></TR>
+<TR><TD>5.</TD><TD COLSPAN=2><A HREF=#summary>Conference Summary</A></TD></TR>
+<TR><TD>6.</TD><TD COLSPAN=2><A HREF=#item>Item File</A></TD></TR>
+<TR><TD></TD><TD>6.1.</TD><TD><A HREF=#picoitem>Tradition Picospan/Yapp Item Files</A></TD></TR>
+<TR><TD></TD><TD>6.2.</TD><TD><A HREF=#htmlitem>HTML Responses and Alternate Texts</A></TD></TR>
+<TR><TD>7.</TD><TD COLSPAN=2><A HREF=#index>Index File</A></TD></TR>
+<TR><TD>8.</TD><TD COLSPAN=2><A HREF=#part>Participation File</A></TD></TR>
+<TR><TD></TD><TD>8.1.</TD><TD><A HREF=#picopart>Traditional Picospan Participation Files</A></TD></TR>
+<TR><TD></TD><TD>8.2.</TD><TD><A HREF=#btpart>Backtalk Participation Files</A></TD></TR>
+<TR><TD></TD><TD>8.3.</TD><TD><A HREF=#btexpart>Backtalk Participation Extension Files</A>
+<TR><TD>9.</TD><TD COLSPAN=2><A HREF=#part>Participation File</A></TD></TR>
+</TABLE>
+
+<H2>Introduction</H2>
+
+This document describes some of the file formats used in Backtalk.
+<P>
+Backtalk is designed to be able to share its conference database with Picospan
+or Yapp.
+Picospan is a conferencing program designed by Marcus Watts and distributed
+by NETI.  It was the original software used by M-Net and The Well.  It is
+still used today on Grex, but is no longer available due to the collapse of
+NETI.
+Yapp is a clone of Picospan written by David Thaler.  Yapp 2.3 source is
+available as shareware.  Yapp 3.0 is an extended version including a web
+interface.  Both use file formats very similar to,
+but not completely compatible with Picospan.
+<P>
+Backtalk can be built to coexist with Picospan, Yapp, or neither.
+The file formats it uses will be slightly different in each case.
+
+<H2><A NAME=tag>0. Tag Files</A></H2>
+
+Backtalk uses several different "tag files".  These are files that give string
+or integer values for various variables ("tags").  Tag files can contain
+fairly arbitrary information.  Different Backtalk interfaces may store
+different information in them.
+Tag files used by Backtalk include the following:
+<P>
+<BLOCKQUOTE>
+<TABLE BORDER=1 CELLPADDING=2 WIDTH=80%>
+<TH ALIGN=left>Filename</TH>
+<TH ALIGN=left>Location</TH>
+<TH ALIGN=left>Description</TH>
+<TR><TD><TT>.backtalk</TT></TD>
+    <TD>User's home directory</TD>
+    <TD>User's personal settings</TD></TR>
+<TR><TD><TT>id</TT></TD>
+    <TD>User's home directory</TD>
+    <TD>User's login name, uid number, and gid number.  Used only in
+    	configurations built with <TT>--ident=tagfile</TT>.</TD></TR>
+<TR><TD><TT>settings</TT></TD>
+    <TD>Conference directory</TD>
+    <TD>Settings for a conference.</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+Backtalk-style participation files are modified tag files.
+
+<H4>0.1. Sample</H4>
+
+Here's a sample <TT>settings</TT> file:
+
+<PRE>
+   allowhtml=1
+   allowgraphics=1
+   login=(&lt;CENTER&gt;\n&lt;TABLE BORDER=4 CELLSPACING=4 CELLPADDING=8&gt;\n&lt;TR&gt;&lt;TD ALIGN=CEN
+   TER&gt;\n&amp;nbsp;\n&lt;BR&gt;\n&lt;FONT SIZE=+1&gt;Welcome to the&lt;/FONT&gt;&lt;BR&gt;\n&lt;FONT SIZE=+3&gt;TEST&lt;
+   /FONT&gt;&lt;BR&gt;\n&lt;FONT SIZE=+1&gt;Conferencce&lt;/FONT&gt;&lt;P&gt;\n\(Fairwitness:  Marcus Watts\)&lt;
+   BR&gt;\n&amp;nbsp;\n&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;\n&lt;/CENTER&gt;)
+   new_isel=(1,3,5,10,11,$)
+   new_since=7
+   bgcolor=(00FFFF)
+   regbutton=(bgn)
+   bgimage=()
+   highcolor=(FF1493)
+</PRE>
+Note that the "<TT>login</TT>" field is all one line, broken across four
+lines here for readability.
+
+<H4>0.2. Description</H4>
+
+Each line starts with a tag or variable name, terminated by an equal
+sign.  After the equal sign is either a number, if the it is an integer
+tag, or an string enclosed in parentheses.  Inside the string, any
+backslash or parenthesis characters have a preceeding backslash and any
+newlines characters are converted to the two character sequence "<TT>\n</TT>".
+
+<H2><A NAME=conflist>1. List of Conferences</A></H2>
+
+The <TT>conflist</TT> file resides in the top level "bbs" directory.
+It is used to map typed names of conferences to the actual directory names.
+It allows you to have multiple names for the same conference, or to abbreviate
+the names of conferences.
+These features are mainly useful when people are typing in conference names,
+which isn't that common in most Backtalk interfaces - you more often select
+the conference from a list, and having alternate names for it isn't that
+useful there.  However, it's a nice feature to have for command-line interfaces
+like Picospan and Fronttalk.
+<P>
+Yapp and Picospan use slightly different formats here.
+Backtalk uses the Picospan format, unless it was configured for Yapp
+compatibility at compile time.
+
+<H3><A NAME=yappconflist>1.1. Yapp-style Conflist File<A></H3>
+
+<H4>1.1.1. Sample</H4>
+
+<PRE>
+    !&lt;hl01&gt;
+    /usr/local/backtalk/bbs/general2
+    gen_eral2:/usr/local/backtalk/bbs/general2
+    general1:/usr/local/backtalk/bbs/general1
+    oldgen_eral:/usr/local/backtalk/bbs/general1
+    tes_t1:/usr/local/backtalk/bbs/test1
+    mar_tian1:/usr/local/backtalk/bbs/martian1
+    mars:/usr/local/backtalk/bbs/martian1
+    bar_soom:/usr/local/backtalk/bbs/martian1
+</PRE>
+
+<H4>1.1.2. Description</H4>
+
+The first line is always ``<TT>!&lt;hl01&gt;</TT>''.  This is a magic number
+identifying the file type and version.
+<P>
+The second line is the directory name of the default conference.  This is
+rarely used in Backtalk's web interfaces, but it is in command-line
+interfaces.
+<P>
+The remaining lines each consist of a conference name, a colon,
+and a conference directory.
+Conference names usually have an underscore inserted in them somewhere.
+When a user types the name of a conference, he may abbreviate it by leaving
+off letters after the underscore.   Thus, in the sample above,
+you could join version 2 of the
+general conference by typing ``gen,'' ``gene,'' ``gener,'' ``genera,''
+``general,'' or ``general2.''  To join version 1, you'd have to type
+``general1'' however, because there is no underscore in the name so no
+abbreviations are allowed.
+Note that there can be more than one line for the same conference.  Thus,
+in the sample above,
+we can also go to version 1 of the general conference by using the name
+``oldgen.''
+<P>
+Lines may be commented out by starting them with a # sign.
+
+<H3><A NAME=picoconflist>1.2. Picospan-style Conflist File<A></H3>
+
+Newer versions of Picospan support some compression of the conflist file.
+The old syntax still works though.
+
+<H4>1.2.1. Sample</H4>
+
+The following Picospan conflist file is equivalent to the Yapp conflist in
+section 1.1.1:
+
+<PRE>
+    !&lt;hl01&gt;
+    %general2
+    gen_eral2:%general2
+    general1:%general1
+    oldgen_eral:%general1
+    tes_t1:%test1
+    mar_tian1:%martian1
+    mars:%martian1
+    bar_soom:%martian1
+</PRE>
+
+<H4>1.2.2. Description</H4>
+
+Here the % sign is replaced with ``/usr/local/backtalk/bbs/'' while the
+file is being read in.  Actually, it is replaced with whatever
+default location was defined for conference directories during the
+installation process.  Otherwise the format is the same.  Of course,
+if any conference directories are stored in a different place, then their
+full path names must be given, as before.
+
+<H2><A NAME=confmenu>2. Menu of Conferences</A></H2>
+
+When you request a list of all conferences from Backtalk, Yapp or Picospan,
+you do not get a listing of the conflist file.  Instead, there is a separate
+conference menu file.  Conferences can be listed in the conflist, but not
+the conference menu, in which case it will still be possible to join them
+normally, if you happen to know they exist and if the interface you are using
+offers a way to type in conference names.  This makes "hidden" conferences
+possible.
+<P>
+When Picospan or command-line Yapp are given a command to list all
+conferences, they simply print the <TT>public.txt</TT> file.  This is a
+file with no fixed format that lives in the conference directory.
+<P>
+Backtalk needs a more formally formatted list of conferences that it
+can read, parse apart, and display in different formats in different
+interfaces.
+So Backtalk defines a new file called "<TT>confmenu</TT>" which lives in
+the conference directory.
+<P>
+In places where Backtalk co-exists with Picospan or command-line Yapp,
+Backtalk can be
+configured to use the traditional "<TT>public.txt</TT>" file instead,
+but it requires that it be entered in a consistant format so that it can
+be parsed.  However, what that format should be can be configured.
+You can write
+your own regular expressions to parse a fairly broad range of file formats.
+Two sets of regular expressions are pre-written, one for a Grex-style
+<TT>public.txt</TT> file, one for an M-Net-style <TT>public.txt</TT> file.
+Those will be described here.
+
+<P>
+Web versions of Yapp seem to have a different conference menu database.
+I haven't figured out what exactly this is.
+
+<H3><A NAME=btconfmenu>2.1. Backtalk <TT>confmenu</TT> File</A></H3>
+
+<H4>2.1.1. Sample</H4>
+
+<BLOCKQUOTE>
+<PRE>
+:Terrestrial Conferences:Conferences primarily relating to the planet earth.
+general:General:Our conference for general discussions
+oldgeneral:Old General:Previous version of the general conference
+:Interplanetary Conferences:Sponsored by your friends from NASA
+mars:Martian:Talk about Mars here
+venus:Venusian:Talk about Venus here
+:Test Conferences:
+test:Test:A place to experiment
+</PRE>
+</BLOCKQUOTE>
+
+<H4>2.1.2. Description</H4>
+
+The conference menu contains two kinds of lines.
+The lines starting with colons are "header" lines.  They describe related
+groups of conferences.
+The other lines describe individual conferences.
+The conferences will normally be listed in the order that they appear in the
+file, with each header applying to the conferences listed after it.
+<P>
+You don't need to have any headers in the conference menu.
+<P>
+The first field in each line is the internal name of the conference.
+(This is blank for header lines).  This must match a line in the conflist
+file.  This is normally all lower case with no spaces.
+<P>
+The second field is the name of the conference to be displayed in the
+conference list.  This can be mixed case and can have spaces, but should
+generally be something quite short.  For headers it is the text of the
+header.
+<P>
+The third field is a longer description of the conference or group
+of conferences.
+<P>
+Lines starting with # signs are comments and are ignored.
+
+<H3><A NAME=grexpublic>2.2. Grex-style <TT>public.txt</TT> File</A></H3>
+
+<H4>2.2.1. Sample</H4>
+
+<BLOCKQUOTE>
+<PRE>
+    @@@@@@@@@@@@@@@@@@@
+    @ OUR CONFERENCES @
+    @@@@@@@@@@@@@@@@@@@
+
+Terrestrial Conferences:
+
+ general    - Our conference for general discussions
+ oldgeneral - Previous version of the general conference
+
+Interplanetary Conferences:
+
+ mars       - Talk about Mars here
+ venus      - Talk about Venus here
+
+Test Conferences:
+
+ test       - A place to experiment
+
+    (last modified 12/23/02)
+</PRE>
+</BLOCKQUOTE>
+
+<H4>2.2.2. Description</H4>
+
+Like a <TT>confmenu</TT> file, this contains header lines and conference
+lines.  It also contains various other lines.  Anything that isn't a
+conference or a header is ignored (like the "OUR CONFERENCES" title and
+the "last modified" date).
+<P>
+Header lines start in column 0 (no leading spaces) and have a colon in them.
+The header text is from the start of the line through the colon.  You cannot
+give descriptions.
+<P>
+Conference lines start with exactly one space.  After the space is the
+internal conference name, followed by white spaces and dashes.  After this
+is the description of the conference.  The description must all fit on one
+line.  The title of the conference will simply be a capitalized version of
+the conference name.
+
+<H3><A NAME=mnetpublic>2.3. M-Net-style <TT>public.txt</TT> File</A></H3>
+
+<H4>2.3.1. Sample</H4>
+
+<BLOCKQUOTE>
+<PRE>
+ You may JOIN any of the following conferences:
+ 
+  ********Terrestrial Conferences*********
+
+general......Our conference for general discussions
+oldgeneral...Previous version of the general conference
+
+  *******Interplanetary Conferences********
+
+mars.........Talk about Mars here
+venus........Talk about Venus here
+
+  ***********Test Conferences*************
+
+test.........A place to experiment
+</PRE>
+</BLOCKQUOTE>
+
+<H4>2.3.2. Description</H4>
+
+Same basic idea, slightly different format.
+Headers start with some white space.  The text of the header is surrounded
+by one or more stars on each side.
+Conferences start with no white space, and the internal conference name is
+separated from the description by dots or white space.
+Any other lines are ignored.
+
+<H3><A NAME=otherpublic>2.4. Other <TT>public.txt</TT> Files</A></H3>
+
+Other systems which have used Yapp or Picospan for a long time have probably
+developed their own favorite formats for the public.txt file.  Very likely
+you can teach Backtalk to use it, though you may have to clean the file
+up a bit.
+<P>
+All you have to do is provide two regular expressions - one that matches
+header lines, and one that matches conference lines.  They should contain
+parenthesis that pick out the interesting substrings of the lines - the
+header text for headers, and the conference name and description for
+conferences.
+<P>
+This means that (1) headers and conferences must be described in one line,
+and (2) the conference name must appear before the conference description in
+conference lines.  If this is true for your <TT>public.txt</TT> file, then
+Backtalk can probably use it.
+
+<H2><A NAME=config>3. Conference Configuration File</A></H2>
+
+Every conference directory must contain a conference configuration file named
+<TT>config</TT>.
+This stores some basic conference configuration information.
+
+<H4>3.1. Sample</H4>
+<PRE>
+    !&lt;pc02&gt;
+    .general.cf
+    0
+    bob,roger
+    0
+    General
+</PRE>
+
+<H4>3.2. Description</H4>
+
+<H5>Magic Number</H5>
+
+The first line is always '<TT>!&lt;pc02&gt;</TT>'.  It identifies the file
+type.
+
+<H5>Participation File Name</H5>
+
+The second line is the name of the participation file used for the conference.
+Each user that joins the conference will have a participation file by this
+name created in his home directory.  The name should be unique among all
+conferences that have ever existed in the history of the system.
+
+<H5>Time Limit</H5>
+
+The third line is always zero.  Backtalk and Yapp always ignore it.
+I don't know if non-zero values mean anything to Picospan.
+Some references refer to it as a time limit.
+
+<H5>Fairwitness List</H5>
+
+The fourth line is a comma-separated list of the login names of the users
+who are fair witnesses in this conference.
+
+<H5>Conference Mode</H5>
+
+The fifth line, if given, is the conference mode.  If not given, it defaults
+to zero.  The meanings of the mode values are as follows:
+<blockquote><table BORDER=1>
+<tr><td>0</td>
+<td>all users may read and post [default]</td>
+<td><TT>public</TT></td></tr>
+<tr><td>4</td>
+<td>only users in the ulist or glist may read and post</td>
+<td><TT>ulist</TT></td></tr>
+<tr><td>5</td>
+<td>only users who know the password may read or post</td>
+<td><TT>password</TT></td></tr>
+<tr><td>6</td>
+<td>only users who are in the ulist or glist
+and know the password may read or post</td>
+<td><TT>paranoid</TT></td></tr>
+<tr><td>8</td>
+<td>all users may read and post (but item files not directly readable)</td>
+<td><TT>protected</TT></td></tr>
+<tr><td>20*</td>
+<td>only users in the ulist or glsit may post / all may read</td>
+<td><TT>ulist&nbsp;readonly</TT></td></tr>
+<tr><td>21*</td>
+<td>only users who know the password may post / all may read</td>
+<td><TT>password&nbsp;readonly</TT></td></tr>
+<tr><td>22*</td>
+<td>only users who are in the ulist or glist
+and know the password may post / all may read</td>
+<td><TT>paranoid&nbsp;readonly</TT></td></tr>
+</table>
+<FONT SIZE=-1>
+* Note that read-only conferences are not recognized by Picospan, though they
+are recognized by Yapp.  If you are using Backtalk with Picospan, 
+modes 20, 21, and 22 cannot be used.
+</FONT>
+</blockquote>
+Later versions of Yapp allow sequences of keywords to be used instead of
+numeric modes.  Backtalk also recognizes these.
+They are given at right in the table above.  Picospan
+does not recognize these keywords.
+<P>
+If Backtalk was compiled to be Yapp-compatible mode, then the modes given
+in the <TT>config</TT> file will be ignored if an <TT>acl</TT> file exists.
+In non-Yapp compatible installations, the <TT>acl</TT> file will only be
+checked if the mode in the <TT>config</TT> file is '<TT>acl</TT>' or a
+negative number.
+
+<H5>E-Mail Address</H5>
+
+Later versions of Yapp use the sixth line for mailing addresses when
+conferences are linked via email.  If Backtalk is compiled for Yapp
+compatibility, it will ignore this line, and put the conference title in
+the seventh line.  Otherwise, the conference title is in the sixth line.
+
+<H5>Conference Title</H5>
+
+The conference title, if given, is usually mixed case and
+possibly has some spaces in it.  Something that will fit
+nicely into the "The X Conference".  Normally it would be the same as whatever
+conference title is given in the <TT>confmenu</TT> file, but it doesn't have
+to be.
+If the sixth line is omitted, a capitalized version of whatever name the
+user used to join the conference is used as the conference title.
+
+<H2><A NAME=acl>4. Conference Access Control List</H2>
+
+Conference access control lists files were introduced in late versions of
+Yapp.  They allow more fine-grained control over which users have which
+kinds of access to the conference.
+The file is called "<TT>acl</TT>" and it resides in the conference
+directory.
+Backtalk supports "<TT>acl</TT>" files, but somewhat half-heartedly.
+<P>
+Normally Backtalk will only pay attention to "<TT>acl</TT>" files only if
+the conference mode specified in the conference "<TT>config</TT>" file is
+negative or "<TT>acl</TT>".
+However, if compiled in Yapp-compatible mode, Backtalk will always check
+for the "<TT>acl</TT>" file and will ignore any conference modes set in
+the "<TT>config</TT>" file if it is found.
+
+<H3>4.1. Sample</H3>
+
+<PRE>
+    r +all
+    w +registered -f:observer
+    c +f:ulist
+    a +fwlist
+</PRE>
+
+<H3>4.2. Description</H3>
+
+Lines of the <TT>acl</TT> file may begin with one of the following symbols:
+<blockquote>
+<TABLE>
+<TR><TD><TT>r</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>Who may join and read the conference.</TD></TR>
+<TR><TD><TT>w</TT></TD><TD>Who may respond to existing items in the conference.</TD></TR>
+<TR><TD><TT>c</TT></TD><TD>Who may create new topics in the conference.</TD></TR>
+<TR><TD><TT>a</TT></TD><TD>Who may edit the <TT>acl</TT> file.</TD></TR>
+<TR><TD><TT>#</TT></TD><TD>Comment.</TD></TR>
+</TABLE>
+</blockquote>
+The lines may appear in any order.  Blank lines are accepted.
+Currently, the '<TT>a</TT>' lines are ignored by Backtalk, since it doesn't
+actually include any tools to edit <TT>acl</TT> files.
+<P>
+After these characters will appear a sequence of keywords describing the
+tests that a user must pass to have that access.  All tests on the line
+must be passed by a user to have the given access.
+If the keyword is prefixed with a '<TT>+</TT>' or has no prefix,
+then the user must pass the test.   If the keyword is prefixed with a
+'<TT>-</TT>' then the user must fail the test.
+<P>
+Recognized tests are:
+<blockquote>
+<TABLE>
+<TR><TD>all</TD><TD>All users.</TD></TR>
+<TR><TD>registered</TD><TD>Users who have logged in.</TD></TR>
+<TR><TD>fwlist</TD><TD>Fairwitnesses.</TD></TR>
+<TR><TD>originlist</TD><TD>Users from sites listed in the
+    '<TT>originlist</TT>' file in the conference directory.
+    Ignored by Backtalk.</TD></TR>
+<TR><TD>password</TD><TD>Users who can give the conference password in
+    the '<TT>secret</TT>' file in the conference directory.</TD></TR>
+<TR><TD>f:<EM>filename</EM></TD><TD>Users whose logins are included in
+    the named file in the conference directory.</TD></TR>
+<TR><TD>u=<EM>userlist</EM></TD><TD>Users whose logins appear in the
+    comma-separated list.  Not Yapp compatible.</TD></TR>
+<TR><TD>g:<EM>filename</EM></TD><TD>Users who are in at least one of
+    group names listed in the named file in the conference directory.</TD></TR>
+<TR><TD>g=<EM>grouplist</EM></TD><TD>Users who are in at least one of
+    comma-separated group names listed.  Not Yapp compatible.</TD></TR>
+<TR><TD>sysop</TD><TD>System administrators.
+    Equivalent to '<TT>g=cfadm</TT>'</TD></TR>
+<TR><TD>#</TD><TD>Comment.</TD></TR>
+</TABLE>
+</blockquote>
+The '<TT>+all</TT>' keyword is actually a no-op, but the '<TT>-all</TT>'
+keyword is useful for banning anyone from doing something.
+Backtalk does not (yet) support '<TT>+all</TT>' for item entry or
+responding.  You must always be '<TT>registered</TT>' to perform these
+actions.
+<P>
+All the keywords except '<TT>all</TT>' and '<TT>secret</TT>' imply
+'<TT>registered</TT>'.  You have to be logged in to have a chance of
+passing them.
+<P>
+In Backtalk (though probably not in Yapp) '<TT>fwlist</TT>' implies
+'<TT>sysop</TT>', since system administrators are considered to be
+fairwitnesses in all conferences.  If you wanted to permit something to
+fairwitnesses, but not sysops, you'd have to say '<TT>+fwlist&nbsp;-sysop</TT>'.
+<P>
+The '<TT>f:</TT>' keyword is most commonly used as '<TT>+f:ulist</TT>'
+to say that a user must be in the ulist file, or as
+'<TT>-f:observer</TT>' to say that a user may not be in the observer
+file.  Similarly, '<TT>+g:glist</TT>' says the user must be a group in
+the '<TT>glist</TT>' file.  However these may be used with any filename.
+Filenames starting with '<TT>/</TT>' are treated as full paths.  Otherwise
+they are sought in the current conference's directory.
+
+<H2><A NAME=summary>5. Conference Summary File</A></H2>
+
+The oldest versions of Picospan did not have conference summary files.
+The information contained in them is all redundant.  If the conference
+summary file is removed, Backtalk, Yapp or Picospan will reconstruct it.
+The purpose of the summary file is to provide a rapidly readable index
+of all the items in a conference.  It is used to improve performance.
+<P>
+Because of this, it is one of the few binary files used by Backtalk.
+It must be rapidly accessible, and it does not have to be easily read or
+editted by humans.  If a file is corrupted, you don't edit it, you delete it.
+The Backtalk distribution includes two programs, sumcheck and dumpsum that
+can be mildly useful in reading and repairing sum files, in the unlikely
+event that you should wish to do so.  See man pages in the doc directory
+for more information.
+<P>
+The sum file contains a 24-byte header record, followed by a sequence of
+16-byte item records.
+The sum file entry for item number <EM>N</EM> is always stored at offset
+24&nbsp;+&nbsp;16(<EM>N</EM>-1).
+
+<H4>5.1. Header Record</H4>
+The fields of the 24-byte header record are as follows:
+<BLOCKQUOTE>
+<TABLE BORDER=1>
+<TR><TD>8 bytes</TD><TD>char</TD><TD>Magic Number</TD>
+    <TD>Always "!<sm02>\n".  Identifies file type and version.</TD></TR>
+<TR><TD>4 bytes</TD><TD>int</TD><TD>Checksum</TD>
+    <TD>A checksum on the name of the participation file given in the
+        <TT>config</TT> file.</TD></TR> 
+<TR><TD>4 bytes</TD><TD>int</TD><TD>Unknown</TD>
+    <TD>Picospan always sets this to 0x00001537.
+        I don't know what it means.</TD></TR>
+<TR><TD>8 bytes</TD><TD>long</TD><TD>Sequence</TD>
+    <TD>The value 0x12345678.
+        Used for byte order checking.</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+Given a participation file name, we compute <TT>Checksum</TT> by doing
+<PRE>
+    set Checksum = 0;
+    for each character Char in the name
+       Checksum = (Checksum * 4) XOR Char
+    end
+</PRE>
+Backtalk puts this checksum into sum files it creates, but does
+not check them when it reads an existing sum file.
+<P>
+Sum files are written using the native byte order of the computer that
+generated them.  So if you have conferences on a shared file system, it
+is possible that different sum files may be created with different byte
+orders.  We check the Sequence field to determine the byte order of the
+participation file.  If it is not the native byte order, then the program
+must bytes when reading or writing.
+
+<H4>5.2. Item Record</H4>
+The fields of the 16-byte item records are as follows:
+<BLOCKQUOTE>
+<TABLE BORDER=1>
+<TR><TD>4 bytes</TD><TD>unsigned int</TD><TD>Flags</TD>
+    <TD>Item flag bits.  A boolean OR of the following:<BR>
+        <TABLE>
+	<TR><TD ROWSPAN=6>&nbsp;&nbsp;&nbsp;</TD><TD>0x0002</TD>
+	    <TD ROWSPAN=6>&nbsp;&nbsp;&nbsp;</TD>
+	    <TD>Item is retired.</TD></TR>
+	<TR><TD>0x000C</TD><TD>Unknown.</TD></TR>
+	<TR><TD>0x0030</TD><TD>Item is active.</TD></TR>
+	<TR><TD>0x0040</TD><TD>Item is frozen.</TD></TR>
+	<TR><TD>0x0080</TD><TD>Item is synchronous.</TD></TR>
+	<TR><TD>0x0100</TD><TD>Item is linked.</TD></TR>
+	</TABLE>
+        </TD></TR>
+<TR><TD>4 bytes</TD><TD>unsigned int</TD><TD>Response Count</TD>
+    <TD>The number of responses on the item, including the item text.</TD></TR> 
+<TR><TD>4 bytes</TD><TD>unsigned int</TD><TD>Response Date</TD>
+    <TD>Date/time of last response to the item.</TD></TR>
+<TR><TD>4 bytes</TD><TD>unsigned int</TD><TD>Item Date</TD>
+    <TD>Date/time item was entered.</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+
+In Picospan, ordinary items may have flag values 0x0030 or 0x003C.  I don't
+know what makes the difference.  In Backtalk and Yapp ordinary items flagged
+0x0030.  Additional bits are set for retired, frozen, synchronous or
+linked items.  Entries for deleted items have the flags set to zero.
+<P>
+The times are standard Unix time integers (seconds since Jan 1, 1970).
+The response date should always match the 'mtime' value for the item
+file - the time at which the file was last modified.
+<P>
+The system is less picky about the item date, and it is set to slightly
+different values in different circumstances.
+When a new item is entered, it is set to the value the file's mtime had
+after the item was created.
+If an item is linked in from another conference, it is set to the time that
+the link was made.
+If the sum file ever has to be reconstructed, then it is set to match the
+time stamp on response zero (the item text).
+Picospan and Backtalk are not entirely consistant in the
+way they set this value, but I don't think it matters.
+
+<H2><A NAME=item>6. Item File</A></H2>
+
+Item files store the actual text of a Picospan item and all of the responses
+to it.  Item files reside in the appropriate conference directory.
+The name of the file is the item number, with an underscore prepended.
+<P>
+For the most part, Backtalk uses the traditional item file format used by
+Picospan and Yapp.
+The main extension is in how HTML and plain-text versions of responses are
+stored in installations that must be Picospan or Yapp compatible.
+This is done slightly different for Picospan and Yapp, and will be discussed
+at the end of this section.
+
+<H3><A NAME=picoitem>6.1. Tradition Picospan/Yapp Item Files</A></H3>
+
+<H4>6.1.1. Sample</H4>
+
+The following is an item with two responses:
+<PRE>
+    !&lt;ps02&gt;
+    ,HOur First Test Item
+    ,R0000
+    ,U232,janc
+    ,AJan Wolter
+    ,D3d7a9a89
+    ,T
+    This is an item entered to test Backtalk.
+    This is the item text for that item.
+    It is a very good item.
+    ,E
+    ,R0000
+    ,U123,joe
+    ,AJoseph Cantata
+    ,D3dbdfad5
+    ,T
+    This is the first response to the very dull item
+    that was entered by Jan Wolter.  This response too
+    is very dull.
+    ,E
+    ,R0000
+    ,U232,janc
+    ,AJan Wolter
+    ,D3dbdfd2f
+    ,T
+    How very dull!  It is very good that this item is
+    so very dull.
+    ,E
+</PRE>
+
+<H4>6.1.2. Description</H4>
+
+All item files begin with the magic text string "<TT>!&lt;ps03&gt;</TT>"
+which identifies it as an item file and gives the version number.
+<P>
+The second line is normally the item title, identified by a "<TT>,H</TT>"
+prefix.
+<P>
+The rest of the item file consists of a sequence of responses.
+Note that, the item text is simply the first response.
+<P>
+Each response consists of a "<TT>,R</TT> line that contains various
+flags for the response, a "<TT>,U</TT>" line that contains the login
+name and UID number of the author, a "<TT>,A</TT>" line that contains the
+author's full name, a "<TT>,D</TT>" line that contains the date of
+the response in hexadecimal, and then the text of the response,
+enclosed by "<TT>,T</TT>" and "<TT>,E</TT>" lines.
+<P>
+Any lines in the
+text that start with a comma are stored with two initial commas in a
+Picospan item file, or three initial commas in a Yapp item file.
+Backtalk follows Picospan in this, unless configured for Yapp compatibility.
+<P>
+Response flags are as follows:
+<BLOCKQUOTE>
+<TABLE>
+<TR><TD><TT>,R0000</TT>&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>Regular response</TD></TR>
+<TR><TD><TT>,R0001</TT></TD><TD>Hidden response</TD></TR>
+<TR><TD><TT>,R0003</TT></TD><TD>Scribbled response</TD></TR>
+</TABLE>
+</BLOCKQUOTE>
+<P>
+For some reason, it is common for the "<TT>,E</TT>" tag to be missing.
+Programs reading item files should tolerate this.
+<P>
+Yapp supports three additional directives.  The "parent" link, "<TT>,P</TT>"
+usually appears between the "<TT>,D</TT>" and the "<TT>,T</TT>" lines:
+<PRE>
+    ,R0000
+    ,U771,kate
+    ,AKate Middleton
+    ,D3b977d6a
+    ,P2
+    ,T
+    This is a response to response number 2.
+    ,E
+</PRE>
+This causes the response to be displayed with a
+"<TT>&lt;response to #2&gt;</TT>" message beside it.
+There are also "<TT>,N</TT>" and "<TT>,M</TT>" lines that can appear
+immediately after the "<TT>,T</TT>" line, but before the message text.
+This are used when importing Usenet news messages and give the original
+article number and message ID respectively.  Backtalk understands the
+"<TT>,P</TT>" line but no the other two.
+<P>
+For editted responses, Backtalk stores an edit date in addition to the post
+date.  This is a second hexadecimal string on the "<TT>,D</TT>" line.
+<PRE>
+   ,D3b977d6a 3b978ac1
+</PRE>
+<P>
+The item modes are mostly stored in the item files permission bits.  Linked
+items are detected by checking if the item's link count is greater than one.
+Frozen items have their owner-write permissions turned off.  Retired items
+have their owner-execute permissions turned on.  I forget how synchronous
+items are flagged - group execute, I think.
+
+<H3><A NAME=htmlitem>6.2. HTML Responses and Alternate Texts</A></H3>
+
+Backtalk allows responses to be either plain text or HTML.  HTML Responses
+are flagged by setting another bit in the response flags, like
+"<TT>,R0010</TT>" for an HTML response that has neither been hidden nor
+erased.
+<P>
+When Backtalk is configured for compatibility with Yapp or Picospan, then
+a plain text version of any HTML response is posted in addition to the HTML
+response.  The plain text response is placed so that Yapp or Picospan will
+find that, while the HTML text is stashed someplace slighly unusual where
+Yapp or Picospan will ignore it.
+<P>
+For Picospan, this works like this:
+<PRE>
+    ,R0010
+    ,U232,janc
+    ,AJan Wolter
+    ,D3b977d6a
+    I'm feeling very &lt;STRONG&gt;strong&lt;/STRONG&gt;
+    and &lt;EM&gt;emphatic&lt;/EM&gt; today.
+    ,T
+    I'm feeling very strong
+    and emphatic today.
+    ,E
+</PRE>
+Here the HTML response is inserted immediately before the "<TT>,T</TT>" line.
+<P>
+For Yapp, we additionally prefix each line of the HTML version of the response
+with "<TT>,:</TT>" characters:
+<PRE>
+    ,R0010
+    ,U232,janc
+    ,AJan Wolter
+    ,D3b977d6a
+    ,:I'm feeling very &lt;STRONG&gt;strong&lt;/STRONG&gt;
+    ,:and &lt;EM&gt;emphatic&lt;/EM&gt; today.
+    ,T
+    I'm feeling very strong
+    and emphatic today.
+    ,E
+</PRE>
+
+<H3><A NAME=attachitem>6.3. Attachments</A></H3>
+
+Backtalk allows attachments to be associated with responses.  Every attachment
+is indentified by a unique string called an "attachment handle", which can be
+used to find the content of the attachment in the attachment directory, or to
+lookup up information about the attachment in the attachment index.  Attachment
+handles tend to be somewhat human-readable strings, including the item number
+and response number, but this is only to make them look pretty in URLs.
+Programs should expect to be able to parse them apart for any really
+meaningful information.  (If the item has been linked for example, the item
+number in the attachment handles is likely to be wrong.)
+<P>
+Responses that have attachments include attachment lines, which are simply a
+"<TT>,X</TT>" prefix followed by an attachment handle.  These appear after the
+"<TT>,A</TT>" line and before the "<TT>,D</TT>" line.  More than one my appear.
+For example:
+<PRE>
+    ,R0010
+    ,U232,janc
+    ,AJan Wolter
+    ,Xtest-1-8/doug1.gif
+    ,Xtest-1-8/doug2.jpg
+    ,D3b977d6a
+    ,T
+    Here are some picture of my uncle doug.
+    ,E
+</PRE>
+
+<H2><A NAME=index>7. Index File</A></H2>
+
+Index files are a Backtalk extension.  They are not supported by Picospan
+or Yapp.
+An index file is maintained for each item file.
+It is a binary file containing the offsets into the
+item file where each response begins
+and is used to rapidly find the Nth response to an item.
+If an index file is missing, incomplete, or inaccurate, Backtalk will usually
+detect the fact and repair the file automatically.
+<P>
+Index files reside in a subdirectory of the conference directory called
+"<TT>indexdir</TT>".  The index file's name is the item number prefixed with
+an "<TT>@</TT>" character.
+<P>
+When Backtalk links an item, the index files will also be linked.  If a link
+is created by Picospan or Yapp, no link is created and the items will likely
+end up with separate index files.
+<P>
+The format of an index file is simple.  It is a sequence of 4-byte integers.
+The first is the offset of response 0 (the item text), the next is the offset
+of response 1, and so on.
+The offsets always point to the start of the "<TT>,R</TT>" field of the
+response.
+So to find response 412 in an item, we'd seek to offset 412*4 in the index
+file, read the long integer there, and then seek that offset in the item
+file.
+
+<H2><A NAME=part>8. Participation File</A></H2>
+
+Participation files record information about a user's participation in
+a particular conferences.
+Traditionally this includes a record of which responses have been read,
+which items have been forgotten, and the user's alias in the conference.
+Backtalk will expand on this a bit.
+
+<H3><A NAME=picopart>8.1. Traditional Picospan Participation Files</A></H3>
+
+Picospan participation files reside in the user's home directory, or, if it
+exists, a directory name <TT>.cfdir</TT> under the user's home directory.
+They are owned by the user.
+There is one file for each conference which the user has joined.  The names
+of the files for the individual conferences are specified in the conference
+configuration files.
+<P>
+In most Unix-login configurations, Backtalk changes the group of the files to
+one it can read/write.  In Backtalk-login and Yapp 3.0 compatible Unix-login
+configurations, the files are owned by the cfadm account.
+
+<H4>8.1.1. Sample</H4>
+
+<PRE>
+    !&lt;pr03&gt;
+    Jan Wolter
+    1 76 3D1C5899
+    2 8 3D1C5A80
+    3 3 3D1C5A8A
+    4 20 3D1C5B69
+    5 18 3D1C5B80
+    6 58 3D1C5BA3
+    7 52 3D1C5CD8
+    8 -9 3D1CEF3F
+    9 -30 3D1CEF6A
+</PRE>
+
+<H4>8.1.2. Description</H4>
+
+The first line identifies the file type.  It is always
+<TT>!&lt;pr03&gt;</TT> in Picospan and Yapp.
+<P>
+The second line gives the user's alias in this conference.
+<P>
+The remaining lines describe items that the user has read.
+Each contains three columns.
+<UL>
+<LI> The item number.
+<LI> The number of first unread response.  (Response 0 is the item text.)
+<LI> The date/time when the item was last read.
+</UL>
+<P>
+The number of the last response read may be prefixed with a minus sign.  This
+means that the item has been forgotten.  Picospan recognizes "-0" as a
+distinct value from "0" - the former is an item that has never been read, but
+has been forgotten.  The later is an un-read, un-forgotten item.  Yapp does
+not understand "-0" and does not allow unread items to be forgotten.
+<P>
+The time of last reading is represented as a standard unix time value (the
+number of seconds since the begining of 1970), written in hexidecimal notation.
+<P>
+The time of last reading is used to distinguish between new and unseen items.
+An item has unseen responses if the number of responses in the item exceeds
+the last response read.
+An item has new responses if it is unseen AND
+the date of the last response in the item exceeds the date
+on which we last read responses.
+
+<H3><A NAME=btpart>8.2. Backtalk Participation Files</A></H3>
+
+Backtalk likes to store some additional per-user/per-conference and
+per-user/per-item information
+that is not included in traditional Picospan Participation Files.
+So a more flexibly formatted file is used for Backtalk systems that do
+not need to be Picospan compatible.
+<P>
+These files are named the same as a Picospan file would have been, and
+are stored in the same locations, except that Backtalk accounts don't
+usually have <TT>.cfdir</TT> directories.
+
+<H4>8.2.1. Sample</H4>
+
+<PRE>
+    !&lt;pr10&gt;
+    alias=(Jan Wolter)
+    pistacho.background=(C0FFE0)
+    1
+    r=(76)
+    d=1025267865
+    2
+    r=(8)
+    d=1025267352
+    3
+    r=(3)
+    d=1025268362
+    4
+    r=(20)
+    d=1025268585
+    fav
+    5
+    r=(4-9,11,18)
+    d=1025268608
+    6
+    r=(58)
+    d=1025268643
+    7
+    r=(52)
+    d=1025268952
+    fav
+    8
+    r=(9)
+    d=1025306431
+    forgot
+    9
+    r=(30)
+    d=1025306474
+    forgot
+</PRE>
+
+<H4>8.2.2. Description</H4>
+
+This is basically a series of tagfiles, separated by item numbers alone on
+a line.  The tags defined before the first number apply to the entire
+conference.  The tags after each number apply to only that item.  Some
+tags have meaning to the Backtalk interpretor, others are only used by the
+interfaces.  Ones that are specific to a particular interpretor usually
+have names like '<TT>pistachio.background</TT>'.
+<P>
+The tag syntax is actually slightly different than regular tag files, for
+no good reason.  A tag without a value (like "<TT>fav</TT>") is equivalent to
+setting it to integer 1 (that is, "<TT>fav=1</TT>").  If a string contains
+newlines, actual newlines are put in instead of "<TT>\n</TT>" values.
+Oh well.
+<P>
+In the conference-wide section, the '<TT>alias</TT>' tag defines the user's
+name in the conferences.
+<P>
+In the per-item sections, the '<TT>r</TT>' field
+is a selector describing all unread responses in the item.  There is an
+implied '<TT>-$</TT>' at the end of each, so '<TT>r=(9)</TT>' means
+we have not read responses <TT>9-$</TT>.  Currently these are always single
+digits, because, like Picospan, if we have read response 109, then we assume
+that we have read all that went before.  But to support tree-style items, we
+need to remember exactly the set of responses which are still unread, so
+these will become more general selectors.  If this is a single number (as
+it usually is), it can be written out as a number instead of a string,
+without the parentheses.
+<P>
+The <TT>d</TT> field is the date the item was last read.  This is exactly
+like the date field in the traditional picospan participation file, except
+that it is written in decimal instead of hexadecimal.
+<P>
+Forgotten items are marked by a '<TT>forgot</TT>' tag.
+<P>
+Extensions to the standard Picospan format include the '<TT>fav</TT>' tag
+which is included if the item is one of the user's favorites, and the
+<TT>title</TT> flag which gives the user's personal title for the item.
+
+<H3><A NAME=btexpart>8.3. Backtalk Participation Extension Files</A></H3>
+
+When Yapp or Picospan compatibility is needed, we must maintain two files
+for each item the user reads.  One is the standard Picospan participation
+file.  The other is an extension file.  We can't try to jam our extra
+information into the Picospan file, because Picospan and Yapp destructively
+rewrite the file every time you enter and leave the conference.  Even if
+we could hide some extra information in there in such a way that they
+wouldn't choke on it, they probably wouldn't write it back out for us.
+<P>
+So we maintain our extra information in an extra file,
+called the participation extension file.
+It's name is the same as the participation file, but with
+an 'x' appended to the name.
+
+<H4>8.3.1. Sample</H4>
+
+<PRE>
+    !&lt;px01&gt;
+    pistacho.background=(C0FFE0)
+    4
+    fav
+    5
+    r=(4-9,11,18)
+    7
+    fav
+</PRE>
+
+<H4>8.3.2. Description</H4>
+
+This files format is just like a Backtalk participation file, except that
+it starts with a
+<TT>!&lt;px01&gt;</TT> line
+and it includes only fields that have information not included in the
+Backtalk file.
+
+<HR>
+
+<ADDRESS>
+<A HREF="mailto:backtalk@hvcn.org">backtalk@hvcn.org</A>
+Wed Apr  9 16:55:23 EDT 2003
+</ADDRESS>
+</BODY>
+</HTML>

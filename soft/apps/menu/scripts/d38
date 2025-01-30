@@ -1,0 +1,10 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo "
+UNIX: mail -f
+
+Checking your mailbox....
+"
+sleep 2
+mail -f

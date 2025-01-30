@@ -1,0 +1,405 @@
+% Backtalk Configuration Script -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% config.bt script
+%
+% This script is included automatically as a header to any other script.  It
+% is the only place from which protected system variables can be redefined,
+% and is intended as the primary run-time configuration file for backtalk.
+
+
+% Initialize User Dictionary -- Put a dictionary on the user dictionary
+% stack so that we can define variables (so obviously this needs to be done
+% first).
+
+dict begin
+
+% INFINITE LOOP TIMEOUT -- Backtalk will bomb after the given number of
+% seconds.  This is intended to save things if a script goes into an infinite
+% loop.  If all your scripts are thoroughly debugged, you can set this to
+% 0, meaning never timeout.
+
+420 timeout
+
+% AUTOMATIC RECOMPILATION -- If the auto_recompile variable is set to 2,
+% Backtalk will always check if any of the associated source files have been
+% modified since a binary was last compiled.  If so, it will recompile it
+% before executing it.  If auto_recompile is set to 1, it only checks the
+% binary date against the date of config.bt (this file).  If it is set to
+% 0, none of these checks are made.
+%
+% NOTE: If you change this from 0 to anything else, you will have to
+% manually recompile some script (which will cause this config.bt to be
+% recompiled) before the change will have any effect.
+
+/auto_recompile 2 def
+
+% BACKTALK URLS -- There are typically three different URLs for the backtalk
+% cgi-bin program - two that require authentication to run, one that can
+% be run anonymously.  Adm_url, pw_url and anon_url are the URLs of those
+% scripts.  (Adm_url is used mostly for administrative tasks.)  Note that in
+% many places we just use the SCRIPT_NAME environment variable instead of
+% these, but they are still useful when we want to cross reference between
+% the anonymous and authenticated pages.
+
+/cgi_dir_url (@cgirel@/) defconstant
+
+/progname defined {
+  ` cgi_dir_url (adm/) progname (/) ' /adm_url xdef
+  ` cgi_dir_url (pw/) progname (/) ' /pw_url xdef
+  ` cgi_dir_url progname (/) '  /anon_url xdef
+} {
+  ` cgi_dir_url (adm/backtalk/) ' /adm_url xdef
+  ` cgi_dir_url (pw/backtalk/) ' /pw_url xdef
+  ` cgi_dir_url (backtalk/) ' /anon_url xdef
+} ifelse
+
+% IMAGE DIRECTORY URL -- This is the URL of directory containing backtalk
+% images, including buttons and such like.
+
+/imghost (@htmlurl@/image) defconstant
+
+% SITE IDENTIFICATION:  SYSTEM NAME -- The following constant gives the name
+% of your conferencing system.
+
+/bbsname (Backtalk Test Site) defconstant
+
+% SITE IDENTIFICATION:  LOGO IMAGES -- These are URLs of logo images that the
+% interfaces may display at the top of some or all of the pages.  A standard
+% logo should be defined for all installations.  Currently very few interfaces
+% use the wide logo, and all can use the standard logo if no wide logo is
+% defined.
+
+% Standard Logo should be approximately 200 to 300 pixels wide
+/logo imghost(/backtalk.jpg)+ defconstant
+/logo.h 125 defconstant                         % height of logo
+/logo.w 285 defconstant                         % width of logo
+
+% Wide Logo should be approximately 500 to 700 pixels wide
+% (optional: comment these lines out if you don't have a wide logo)
+%/widelogo imghost(/banner.gif)+ defconstant
+%/widelogo.h 100 defconstant                     % height of widelogo
+%/widelogo.w 600 defconstant                     % width of widelogo
+
+% IMAGE URL - If the following string is defined, clicking on the bbs logo
+% will send people to the given URL.  If you don't want this, comment it out.
+
+%/imageURL (http://localhost) defconstant
+
+% the following is just an HTML image string to display the logo
+/bbslogo
+  /imageURL constant {
+    `(<A HREF=)imageURL(><IMG SRC=)logo( HEIGHT=)logo.h
+            ( WIDTH=)logo.w( BORDER=0></A>\n)'
+  } {
+    `(<IMG SRC=)logo( HEIGHT=)logo.h( WIDTH=)logo.w(>\n)'
+  } ifelse
+defconstant
+
+% STYLE SHEET DIRECTORY PATH & URL -- This is the URL and path of the
+% directory containing cascading style sheets for the few interfaces that
+% understand them.
+
+/csshost (@htmlurl@/css) defconstant
+/cssdir (@htmldir@/css) defconstant
+
+% ENABLE OPEN LOGIN ACCOUNT CREATION  -- If this is 0, new login accounts can
+% only be created by administrators (namely members of the 'cfadm' and
+% 'gradm' groups.  If it is 1, then random people coming in off the net
+% can run the public/newuser script to create themselves an account, but that
+% account won't be usable until and administrator has validated it.  If this
+% is set to 2, then random people can create accounts, and the accounts will
+% be instantly usable, without the administrators needing to take any
+% action.  It defaults to 2.
+
+/newuseropen 2 defconstant
+
+% ALLOW UNAUTHENTICATED READERS -- If this is 1, unauthenticated users can
+% have read access to conferences, but cannot post.  If it is 0,
+% unauthenticated users can only run the welcome script and the other scripts
+% in the public directories listed below.  It defaults to 1.
+
+/allowanon 1 defconstant
+
+% PUBLIC FLAVORS -- This is a comma-separated list of of the script directories
+% that may be accessed by users who are not logged in, even if anonymous
+% logins are turned off.  It may be desirable to include 'cinnamon' here, if
+% you want people to be able to get headline feeds from a site that does not
+% allow anonymous reading.
+
+/publicflavors (public) defconstant
+
+% AUTHOR POWERS -- Can authors freeze, kill, retire, or retitle items they
+% entered?  (Even if enabled, authors can only kill items if there are no
+% responses to them yet.)  Can they erase, hide or edit responses they entered?
+% Normally these are all enabled by default, except author_edit, which is
+% spooky.
+
+/author_freeze  1 defconstant
+/author_kill    1 defconstant
+/author_retire  1 defconstant
+/author_retitle 1 defconstant
+/author_erase   1 defconstant
+/author_hide    1 defconstant
+/author_edit    0 defconstant
+
+% FAIRWITNESS POWERS -- Can conference fairwitneseses retitle items, or
+% hide, erase or edit responses to items in their conferences?  Normally
+% these are all enabled by default, except fw_edit, which is a bit spooky.
+
+/fw_erase   1 defconstant
+/fw_hide    1 defconstant
+/fw_retitle 1 defconstant
+/fw_edit    0 defconstant
+
+% FROZEN ITEMS -- Picospan and older Backtalk versions didn't allow
+% responses in frozen items to be erased, hidden, shown, or editted, nor
+% did they allow frozen items to be retitled.  To enable all these operations
+% on frozen items, set the "editfrozen" flag to 1.  Making these work require
+% that items be briefly partially thawed while opening the item file for the
+% operation, which creates a microscopic risk that a frozen item might briefly
+% appear to be thawed, which probably won't happen and probably doesn't matter.
+
+/editfrozen 1 defconstant
+
+% ANONYMITY LEVEL -- Which users can see other user's fullnames on postings
+% (aliases) and bio information (including their "real" names and other
+% personal info.  Settings are:
+%
+%   anonymity     aliases can be seen by:      bios can be seen by:
+%       0                everyone                   everyone
+%       1           authenticated users         authenticated users
+%       2              fairwitnesses           gradm and cfadm groups
+%       3               cfadm group                cfadm group
+
+/anonymity 0 defconstant
+
+% ALLOW HTML -- Fairwitnesses can set a switch saying whether or not HTML
+% postings are allowed in their conferences.  The following switch determines
+% whether or not HTML postings are allowed in conferences where the fair
+% witness has not yet set the switch one way or the other.  Define it to
+% 1 if HTML should be allowed by default, or 0 if it should be disallowed
+% by default.
+
+/dflt_html 1 defconstant
+
+% OPEN EXTERNAL LINKS IN NEW WINDOWS -- By default, if a user clicks on a
+% link in a posting by another user, then that link is opened in a new
+% window.  If linktonew is defined to zero, clicking on external links
+% will open the URL in the backtalk window instead.
+
+%/linktonew 0 defconstant
+
+% SHOW_MOTD -- If defined, we show all users the system /etc/motd file
+% instead of the bbs/motd.html file.
+
+%/show_motd 1 defconstant
+
+% USE .PLAN -- Backtalk can store secondary user information (things like
+% sex, date of birth, etc.) in it's own database, or in the standard unix
+% .plan files.  If the "useplan" is true, then .plan files will be used.
+
+%/useplan 1 defconstant
+
+% TEXT_INTERFACE -- If the conferences may also be read through a text
+% interface, this constant should be defined to the name of that interface
+% (usually "Picospan" or "Yapp").  When people preview their HTML postings,
+% they will see a plain text version as well as the HTML version.  Normally
+% this is only defined if you compiled Backtalk with the PICOSPAN_COMPAT or
+% YAPP_COMPAT flag.
+
+%/text_interface (Picospan) defconstant
+
+% USE PUBLIC.TXT -- Picospan keeps the list of conferences in a free-format
+% text file called public.txt.  Backtalk prefers to use a more rigidly
+% formated file call confmenu, but can use public.txt.  So if you are using
+% Backtalk with Picospan, and don't want to maintain both files, then define
+% this.
+%
+% If /usepublic_txt is defined, then the two regular expressions /pt_confline
+% and /pt_headline must be defined too.  The /pt_confline expression should
+% match any line of the public.txt file that describes a conference.  It should
+% contain two sets of parenthesis - the first enclosing the part that matches
+% the conference name, the second enclosing the part that matches the
+% conference description.  The /pt_headline matches all section headers in the
+% conference list.  It contains one set of parenthesis, which matches the title
+% of that section.  Lines in public.txt which match neither of these patterns
+% will be ignored.
+
+%/usepublic_txt 1 defconstant
+
+% Grex-style public.txt file:
+/pt_headline <<^([^\t ].*):>> defconstant
+/pt_confline <<^ ([^\t ]+)[-\t ]+([^\t ].*)$>> defconstant
+
+% M-net-style public.txt file:
+%/pt_headline <<^[\t ]+[*]+([^*]+)[*]+>> defconstant
+%/pt_confline <<^([^*.\t ]+)[.\t ]+([^.\t ].*)$>> defconstant
+
+% Yapp-style desclist file (one ugly regex)
+%/pt_headline <<^group:(.*)$>> defconstant
+%/pt_confline <<^([^:]{1,4}|[^:]{6,}|[^g:][^:]{4}|[^:][^r:][^:]{3}|[^:]{2}[^:o][^:]{2}|[^:]{3}[^u:][^:]|[^:]{4}[^p:]):(.*)$>> defconstant
+
+% MANY USERS -- If you expect to have many thousands of users on your system,
+% and your computer isn't all that fast, then set this flag to 1.  It changes
+% some of the system's behavior in ways to accomodate such large numbers of
+% users.  Mainly the option of sorting the list of users while searching for
+% users disappears, because the memory and computation used get to be a real
+% problem.
+
+/many_users 0 defconstant
+
+% SHYFILE -- The shy file is a the full path name of a file that contains a
+% list of users who don't want to have their responses readable by unregistered
+% users.  If you don't want or need a shylist, don't define this string.
+
+%/shyfile (@res_etcdir@/shylist) defconstant
+
+% REGISTRATION URL -- This is a URL of a page that tells users how to register
+% for an account on your system.  The value below is for the Backtalk newuser
+% program.  If you are using a foreign newuser program, change this.
+
+/register_url anon_url(public/newuser)+ defconstant
+
+% EXTERNAL USER BIO PAGES - Backtalk maintains a 'bio' page that a user can
+% edit to display information about himself.  If you are using user accounts
+% created by some other program, then you may well want to use that' programs
+% user information display/editing tools.  In that case, define extern_bio
+% here, and edit the script/lib/biolink.bt script to teach it to generate the
+% correct URLs.  Otherwise, leve this undefined.
+%
+% This is not currently supported by the Pistachio interface.
+
+% /extern_bio 1 defconstant
+
+% ROBOT EXCLUSION
+% Backtalk can generate meta tags to exclude well-mannered indexing robots
+% from some or all of the pages it generates.  For conference pages, we set
+% the /confrobots variable to one of the following values:
+%
+%   0   Generate no meta tag - unless you do something else, like put in a
+%       robots.txt file, all conference pages may be indexed.
+%
+%   1   Allow fairwitnesses to determine whether their confernces may be
+%       indexed.  Conference index pages may always be indexed.
+%
+%   2   No indexing allowed.  All conference pages have exclude tags.
+%
+% Indexing of user bio pages is controlled by the /biorobots variable, which,
+% if 0 allows indexing, and if 1 denies it.
+
+/confrobots 0 defconstant
+/biorobots 0 defconstant
+
+% SPELL CHECK LANGUAGES - These are the languages supported by your 'aspell'
+% or 'ispell' installation, used only if you configured Backtalk with the
+% --with-aspell or --with-ispell options.  It's just a comma-separated list of
+% dictionary names that are legal on the 'ispell -d language' command.  For
+% aspell versions after 0.50, you can get a list by doing 'aspell dump dicts'.
+
+/languages (en,en_US,en_CA,en_GB) defconstant   % typical minimum aspell
+%/languages (american,british) defconstant      % typical minimum ispell
+
+% SYNDICATION - The following settings should only be enabled if you are
+% installing the 'cinnamon' syndication interface, which provide RSS.  This
+% is a technology that lets other programs display "headlines" from your
+% Backtalk site.  The settings here control how all other interfaces advertise
+% the RSS feed.  First the following two links define which methods are used
+% to advertise the feed.
+%
+%    use_rss_icon              if non-zero, display orange 'XML' buttons.
+%    use_rss_aoutodiscovery    if non-zero, include autodiscovery links.
+%
+% If neither of these two is true, the other interfaces will not advertise the
+% RSS URIs, and the definitions below will be ignored.
+%
+% The next two definitions define which RSS feeds to advertise.  If they are
+% non-zero, the corresponding RSS feed type is advertised by all the methods
+% selected above.
+%
+%   expose_rss_conf     list of items in a given conference
+%   expose_rss_item     list of responses in a given item.
+%
+% If use_rss_icon is defined, rss_icon gives the URL of the icon image.  One
+% is installed by the cinnamon distribution.
+
+/use_rss_icon 0 defconstant
+/use_rss_autodiscovery 0 defconstant
+/expose_rss_conf 1 defconstant
+/expose_rss_item 1 defconstant
+/rss_icon imghost(/xml.png)+ defconstant
+
+% FAVICON - Some browsers (IE 5 and Konqueror) like to request an icon image
+% called 'favicon.ico' from web sites.  IE uses it for bookmarks.  Normally
+% backtalk responds to all such requests with an empty document.  If you
+% have a custom .ico file for your site that you would like sent, set the
+% favicon variable to to the full path of that file.  Leaving this undefined
+% is the more common option.  Visit www.favicon.com for more info.
+
+% /favicon (/home/httpd/html/favicon.ico) def
+
+% POST LOGS --  The post log file is an optional log file which has a line
+% appended to it every time a new response is posted or a new item is entered.
+% These logs can be used to generate listings of the "last N responses" and
+% such.  We can support these in a couple different formats (well, actually
+% just about any format, if you edit lib/postlog.bt and lib/readpostlog.bt).
+%
+% For a Backtalk-format postlog file, uncomment the following two lines
+% and edit the first to be the location of the log.
+
+%/post_log_file (@res_logdir@/post.log) defconstant
+%/bt_post_log 1 defconstant
+
+% For a Yapp-compatible resplog file, uncomment the following three lines, edit
+% the first to the full pathname of the file and edit the second to the base
+% URL of Yapp's CGI's on your machine.
+
+%/post_log_file (/usr/bbs/resplog) defconstant
+%/yapp_resplog_url (http://www.spring.net/yapp-bin) defconstant
+%/yapp_post_log 1 defconstant
+
+% WEB YAPP COMPATIBLE HTML RESPONSE FORMATTING -- If you are actually sharing
+% conference files between Backtalk and Web Yapp (not command-line Yapp)
+% turning this on will help.  If this is 1 or 3, then all Backtalk postings,
+% even those posted as "plain text" will be stored as HTML, so that they
+% look the same in Yapp as in Backtalk.  If this is 2 or 3, then any
+% responses not flagged as HTML responses are presumed to have been posted
+% by Yapp, and thus contain dirty HTML, not plain text.  They will be
+% cleaned up and then treated as HTML responses, only with a <BR> appended
+% to each line.  So Yapp responses with good HTML will look the same in
+% Backtalk and Yapp, and Yapp responses with bad HTML will be fixed in
+% Backtalk.  If you are not running Backtalk with Web Yapp, don't set this,
+% or set it to 0.
+
+% /yapp_formats 3 def
+
+% SESSION STUFF -- If Backtalk is built with --login=cookies, the it uses
+% session ids to track users, and the following settings effect the system's
+% behavior.  If you are using basic authentication, they are ignored.
+%  
+% expire_session -- If a user submits no requests for more than this many
+%   seconds, log him off.  It's usually good to set this fairly long, because
+%   people typing long responses can go a long time without clicking any
+%   buttons.
+%
+% logout_url -- URL to jump to after a user clicks the logout button.  Usually
+%   some sort of front page for your system.
+
+/expire_session 3600 defconstant		% one hour
+/logout_url anon_url defconstant		% Backtalk welcome page
+
+% DEBUG SWITCHES -- The following settings are used for debugging.  They
+% should not be left turned on in production systems because they can introduce
+% substantial security holes.
+%
+%   If saverep is turned on, Backtalk saves the last HTTP query sent to it
+%   to a file.  Enough information is saved so that the query can be
+%   exactly re-executed using the 'backtalk -r' command.  This is typically
+%   used to rerun a failed query under gdb.
+%
+%   If secure is turned off, Backtalk doesn't check that the program is being
+%   run by the httpd user before trusting the environment variables that
+%   identify the user.  On some installations this will be needed to be able
+%   to run 'backtalk -r'.
+
+% /saverep 1 defconstant    % INSECURE TO SET THIS TO NON-ZERO
+% /secure 0 defconstant	    % INSECURE TO SET THIS TO ZERO

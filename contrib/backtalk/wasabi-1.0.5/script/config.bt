@@ -1,0 +1,30 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Configuration file for Wasabi Interface
+
+flavor(version)+ include
+
+% The maximum number of related articles to show in sidebar.
+
+/max_related 5 def
+
+% The maximum number of recent articles to show in sidebar.  This is for
+% anonymous readers only
+
+/max_recent 5 def
+
+% Maximum number of brandnew and new comment articles to show
+
+/max_new_comment 5 def
+/max_brand_new 5 def
+
+% Global page footer:
+%   This macro is executed at the bottom of every Wasabi page.  It normally
+%   generates some HTML footer text.   The default is a Backtalk copyright
+%   message, but you are welcome to take that out if you want to put something
+%   else here, say, links to other parts of your web site.
+
+/global_footer {
+  (<FONT SIZE=-2>Powered by )version
+  ( / )if_version( - )copyright(</FONT>)
+} def

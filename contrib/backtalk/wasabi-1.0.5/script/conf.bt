@@ -1,0 +1,28 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% This is included by most scripts to open the conference.  If no conference
+% name is passed in we use the default conference.  The default conference is
+% the first one on the user's .cflist (or more likely the system's
+% default.cfist).  If neither of these contains a conference, it is the
+% default conference out of the conflist file.  We actually prefer not passing
+% around the conference name, so we set up the confarg variables to be
+% 'conf=whatever' if we are in a non-default conference or empty otherwise.
+
+conf () eq {
+    (@0) next_conf /conf xdef pop
+    conf () eq { /conf (?) def } if
+    /confarg1 () def
+    /confarg () def
+} {
+    /confarg1 (?conf=)conf cgiquote + def
+    /confarg  (&conf=)conf cgiquote + def
+} ifelse
+
+% Open a conference
+open_conf {
+  (Error: Could not open conference ')conf('.\n)
+  halt
+} if
+
+% Get some settings
+flavor(settings)+ include

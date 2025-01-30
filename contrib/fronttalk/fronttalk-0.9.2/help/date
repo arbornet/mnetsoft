@@ -1,0 +1,88 @@
+                      Fronttalk Commands:  DATE, CDATE
+
+Usage:  DATE <date>
+        CDATE <date>
+
+These commands parse and display a date.  DATE prints the full date, and
+CDATE prints the internal hexidecimal representation of the date.  These
+commands are really only useful for testing, but dates in the same format
+are frequently used in command like "READ SINCE December 31" (see "HELP
+RANGE").
+
+Legal Date Formats:
+-------------------
+
+Dates can include many components, including months, dates, years, weekdays,
+hours, minutes, and seconds.  These components can usually be entered in
+any order.  They can be relative or absolute.
+
+Examples of dates that can be used include:
+
+   December 11, 1998
+   12/11/1998
+   11-Dec-98
+   12.11.1998
+   12-11
+   Dec 11
+   December
+   Friday
+   today
+   yesterday
+
+Note that dates are always interpreted American style, with month preceeding
+years.  "25.12.1998" is an error, not Christmas.
+
+You can also specify times:
+
+   15:25
+   3:25 pm
+   3pm
+   4:03:12 am
+   12 noon
+   12 midnight
+
+You can combine dates and times:
+
+   December 11 1998 7:30 am
+   1pm yesterday
+   Wednesday 3:34pm
+
+By default, if a date could be either in the future or the past,
+(e.g. "Wednesday") then it is normally interpreted as being in the past.
+You can make this explicit with syntaxes like:
+
+   next December
+   last Wednesday
+
+If the time specified refers to an period of time, (e.g. "2003"), by
+default we take it to mean the beginning of that period.  This too can
+be made explicit:
+
+   start of next December
+   end of 3/31
+   beginning of time
+   end of time.
+
+It is frequently useful to specify dates relatively instead of absolutely.
+The following three relative dates are equivalent:
+
+   -2
+   -2 days
+   2 days ago
+
+Other examples of relative dates include:
+
+   4 hours ago
+   3 weeks hence
+   -1 day, 2 hours
+   +4 days
+   +4
+
+Fronttalk trys hard to figure out what parts of a command are meant to be
+part of the date, but in cases like:
+   READ SINCE 3pm 1-12
+it can be hard to tell if that means "read all responses entered since 3pm
+on January 12" or "read responses entered after 3pm today to items one through
+twelve".  In cases like this date arguments should be quoted like:
+   READ SINCE "3pm 1-12"
+but usually it is not necessary to quote date strings.

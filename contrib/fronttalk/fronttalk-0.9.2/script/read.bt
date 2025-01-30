@@ -1,0 +1,141 @@
+% Copyright 2001, Jan D. Wolter, All Rights Reserved.
+%
+% Fronttalk server script to fetch item text.  We pass in the following:
+%   conf          Conference name.
+%   isel          Item selector
+%   rsel          Response selector (all,new,brandnew,unseen,newresp)
+%   sincedate     If defined, read since the date in this string.
+%   noresp        If defined and nonzero, omit responses.
+%   noskip        If defined, show all items, even ones with new new responses.
+%   pattern       If defined, select only items with this substring in title
+%   showforgotten If 1, also show forgotten.  If 2, show only forgotten.
+%   favonly       If defined, show only favorite items.
+%   by            If defined, show only items by users in comma sep list.
+%   measure       If defined and nonzero, SIZE and LINES for items w/o resp 0
+%   shuffle       If defined and nonzero, reshuffle isel to do the following:
+%    reverse        If defined and nonzero, reverse the item selector.
+%    nofavfirst     If defined and nonzero, don't show favorites first
+%    bnewfirst      If defined and nonzero, show brandnew first
+%    bnewlast       If defined and nonzero, show brandnew last
+
+/http_content_type (text/plain) store
+
+open_conf
+{(<ERROR MSG="Conference ')conf quote(' not found">\n) stop} if
+mayread ! {(<ERROR MSG="Conference ')conf quote(' not accessible">\n) stop} if
+
+% Reshuffle the item selector
+/shuffle 0 default {
+  isel
+  /reverse 0 default {rev_sel} if
+  /bnewlast 0 default dup /swap xdef {/bnewfirst 1 def} if
+  /nofavfirst 0 default {0}{1} ifelse
+  /bnewfirst 0 default {2}{0}ifelse + /ord xdef
+  mark exch ord fav_sel swap{exch}if (,) jointomark
+  /isel xstore
+} if
+
+
+% Fix up since
+/sincedate defined {
+  /since sincedate 0 1 dtime store
+  /rsel (since) store
+} if
+
+% Default rsel
+rsel () eq {
+   /rsel (all) store
+} if
+
+% Default noresp
+/noresp dup 0 default def
+
+/measure dup 0 default def
+
+% Find first item that fits query
+{
+  isel next_item { (<QRY NOITEM>\n) stop } if
+  this_item { (<QRY NOITEM>\n) stop } if
+  read_item { (<QRY NOITEM>\n) stop } if
+  /nrs xdef /isel xdef
+  /fav item /fav get_item_note def
+  /favonly defined { fav ! {continue} if } if
+  /by defined { authorid by in_sel ! {continue} if } if
+  /mytitle item /mytitle get_item_note def
+  /pattern defined { title pattern 1 search -1 eq {
+    mytitle ! {continue} if
+    mytitle () 1 search -1 eq {continue} if
+  } if } if
+  break
+} loop
+
+(<QRY ISEL=")isel(">
+<ITEM N=)item
+( TITLE=")title quote
+mytitle {(" MYTITLE=")mytitle quote} if
+(" LINKDATE=)linkdate cvi
+( LASTDATE=)lastdate cvi
+( READDATE=)readdate cvi
+( FIRSTRESP=)resp {nrs next_resp {-1} {exch pop} ifelse} {0} ifelse
+( MAXRESP=)maxresp
+fav {( FAVORITE)} if
+forgotten {( FORGOTTEN)} if
+frozen {( FROZEN)} if
+retired {( RETIRED)} if
+linked {( LINKED)} if
+mayresp ! {( NOPOST)} if
+mayretitle {( MAYRETITLE)} if
+maykill {( MAYKILL)} if
+mayfreeze {( MAYFREEZE)} if
+mayretire {( MAYRETIRE)} if
+( AUTHOR=")authorid(,)authoruid(,)authorname quote(")
+measure resp and {
+  % if measuring, and don't plan to send resp 0 text, send size and lines
+  0 read_resp
+  /lines 1 def
+  ( SIZE=")0 read_text dup length exch (") exch
+  { (\n) clip pop
+    dup ! {break} if
+    /lines inc
+  } loop
+  ( LINES=")lines(")
+  % restore resp to -1 to indicate that were are not sending item text.
+  /resp -1 store
+} if
+(>\n) print
+
+% Send no responses if noresp set.
+noresp {stop} if
+
+% Item text
+resp 0 eq {
+  (<RESP N=0 AUTHOR=")authorid(,)authoruid(,)authorname quote
+  (" DATE=)date cvi
+  hidden {( HIDDEN)} if
+  erased {( ERASED)} if
+  mayedit {( MAYEDIT)} if
+  mayerase {( MAYERASE)} if
+  mayhide {( MAYHIDE)} if
+  (>\n) print
+  erased ! { 0 read_text quote } if
+  (</RESP>\n)
+} if
+
+% Other responses
+{
+  nrs next_resp {break} if /resp xdef /nrs xdef
+  resp read_resp {break} if
+
+  (<RESP N=)resp
+  ( AUTHOR=")authorid(,)authoruid(,)authorname quote
+  (" DATE=)date cvi
+  parentresp {( PARENT=)parentresp} if
+  hidden {( HIDDEN)} if
+  erased {( ERASED)} if
+  mayedit {( MAYEDIT)} if
+  mayerase {( MAYERASE)} if
+  mayhide {( MAYHIDE)} if
+  (>\n)
+  erased ! { 0 read_text quote } if
+  (</RESP>\n) print
+} loop

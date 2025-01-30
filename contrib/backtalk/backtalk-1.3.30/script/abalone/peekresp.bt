@@ -1,0 +1,8 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter
+%
+% peekresp script
+%
+% This is the entry point when we do peek:<conf>:<item> or
+% peek:<conf>:<item>:<sresp>
+
+(abalone/read) chain

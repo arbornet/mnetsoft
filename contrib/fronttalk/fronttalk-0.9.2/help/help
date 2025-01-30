@@ -1,0 +1,8 @@
+                       Fronttalk Command:  HELP
+
+Usage:  HELP <topic>
+
+Display some help on the given topic.  If no topic is given, some general
+starting points will be given.
+
+For a list of topics, do "HELP TOPICS".

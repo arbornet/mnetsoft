@@ -1,0 +1,31 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% forget script
+%
+% This is the handler for the "preserve as unread" button on the read screen.
+%
+% Query Parameters:
+%    conf=	conference to forget an item in
+%    item=      item number to forget
+%    resp=      Response to mark as first unread response
+%
+%    csel=	current list of conference (not used, just passed through)
+%    rsel=      current response selector (not used, just passed through)
+%    noskip=    are we reading only new items? (not used, just passed through)
+%    since=     date we are reading since (not used, just passed through)
+
+flavor(config)+ include
+
+% open the conference
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+% do the preserve
+resp item mark_unseen /rc xdef
+rc 1 eq{
+  (Backtalk error: no )Item( )item( in the )conf( )Conference(.\n)
+  halt
+} if
+
+% goto read page
+/mesg `Item( )item( is still new.)' def
+flavor (read)+ jump

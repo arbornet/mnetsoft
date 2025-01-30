@@ -1,0 +1,170 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% twitlist script
+%
+% This is the form generator and query handler for editing a user's
+% twit list.  If run without the "op" parameters, it just displays
+% the twitlist, with controls for editing it
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%                   (V) = just display the menu.
+%    uname=	User whose twitlist is to be edited - default is current user.
+%    twit=	(D,A Only) login name of user to be added or deleted.
+%    admhome=   Administrative home page URL
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+% Print the page header
+(<HTML><HEAD><TITLE>Edit User's Ignore List</TITLE></HEAD>
+<BODY BGCOLOR=white>
+)
+
+/uname defined ! {
+  (No user specified\n</BODY></HTML>\n)
+  stop
+} if
+
+% select the user
+uname selectuser
+
+% set some defaults
+/edited 0 def		% don't write out new list
+/err () def		% no error message
+/op defined ! {/op (V) def} if
+/twit defined ! {/twit () def} if
+
+% Load the twitlist into memory
+/twitlist () def
+(*.backtalk) dup /twitlist loadvar pop
+filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt {
+      /op (V) def
+      /err (Ignoring reloaded query.\n) def
+      /twit () def
+   } if
+} if
+
+% Do add case - sorts the list while inserting the new twit
+op (A) eq {
+  twit {
+    twit twitlist (,) inlist !  {
+      % Construct an array of arrays and asort it
+      [ [ twit ]
+      twitlist
+      { (,) parse 
+	dup ! {pop break} if
+	[ exch ] exch
+      } loop
+      pop
+      ] 0 1 asort
+
+      % form it back into a comma separated string
+      () exch
+      {
+	0 get
+	exch dup {(,)+} if
+	exch +
+      } forall
+      /twitlist xdef
+      /edited 1 def
+    } {
+      /err `(user )twit( is already in your ignore list.\n)' def
+    } ifelse
+  } {
+    /err (No username to add given.\n) def
+  } ifelse
+} if
+
+% Do deletion case
+op (D) eq {
+  twit {
+    `(,)twitlist(,)' `(,)twit(,)' (,) 0 replace
+    dup length 2 - 1 exch substr
+    /twitlist xdef
+    /edited 1 def
+  } if
+} if
+
+edited {
+  (*.backtalk) dup /twitlist savevar
+  filedate cvi /filetime xdef
+} if
+
+% display a heading
+(Goto <A HREF=)admhome(>admin menu</A><BR>
+Goto <A HREF=showuser?uname=)uname(&admhome=)admhome(>)uname('s page</A>.
+<P>
+)
+
+% display any error messages
+err {
+   (<H2>Error:</H2>)err(<P>\n)
+} if
+
+
+% display a caption
+(<H2>Edit )uname('s Current Ignore User List:</H2>
+Responses by users whose login id's appear in the following list
+will be automatically hidden from )uname( in all conferences:<P>
+<TABLE BORDER=1 CELLPADDING=2>
+)
+
+print
+
+/url [(<A HREF=twitlist?tm=)filetime(&admhome=)admhome(&uname=)uname] def
+
+twitlist ! {(<TR><TD>No Users Listed</TD></TR>\n)} if
+
+% Print out the current contents of the list
+{
+   twitlist (,) parse
+   dup ! {pop break} if
+   /twit xdef /twitlist xdef
+
+   (<TR><TD BGCOLOR=RED>)url(&op=D&twit=)twit quote(>Remove</A></TD>\n)
+   (<TD><A HREF=showuser?uname=)twit quote(&admhome=)admhome(>)
+   twit quote(</A></TD>\n)
+   twit userinfo pop pop ! {
+      pop pop pop (<TD BGCOLOR=YELLOW><EM>No Such User</EM>)
+   } {
+     exch pop exch pop (<TD>) exch dup {quote} {pop (&nbsp;)} ifelse
+   } ifelse
+   (</TD></TR>\n)
+} loop
+(</TABLE>\n)
+
+print
+
+(<P><HR><H2>Ignore Another User:</H2>
+To add a user to )uname('s ignore list,
+type their login name into the box below
+and click the "Add" button
+<P>
+<FORM METHOD=post ACTION=twitlist>
+<STRONG>Login name:</STRONG>
+<INPUT TYPE=hidden NAME=op VALUE="A">
+<INPUT TYPE=hidden NAME=tm VALUE=)filetime(>
+<INPUT TYPE=hidden NAME=uname VALUE=)uname(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<INPUT TYPE=text NAME=twit SIZE=20>
+<INPUT TYPE=submit VALUE="Add">
+</FORM>
+</BODY></HTML>
+)

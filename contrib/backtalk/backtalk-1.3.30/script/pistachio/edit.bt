@@ -1,0 +1,149 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% edit script
+%
+% A script to display a form for editing a single response from a conference.
+%
+% Query Paramters:
+%    conf=	conference to view a response from
+%    item=	item number to view a response from
+%    resp=	response number to view
+%    goto=	page to return to after edit.
+%    lastresp=  number of lastresponse in item.
+% Query Parameters passed through:
+%    csel,rsel,skip,since,showforgotten
+
+% Load relevant settings
+/allowhtml dflt_html def (*settings) /allowhtml loadvar pop
+
+% Get button definitions
+/butsel 76 defconstant flavor(buttondef)+ include
+
+flavor(config)+ include
+
+(
+<HTML>
+<HEAD>
+<TITLE>)bbsname( - )/conftitle`( )Conference cap( - )Item cap( )'item`(, )
+Response( )'resp(</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+)/metatags(</HEAD>)
+
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such conference \()conf(\)\n) halt
+} if
+
+global_header
+
+secret 2 eq /dunno defined ! and {
+  [/conf /item /resp] flavor(confpass)+ jump
+} if
+
+/blindfold 1 store
+
+mayread ! {(The )conf( conference cannot be read. You may <A HREF=conflist>
+return to the list of conferences</A>.) halt } if
+
+/tmpresp resp def
+resp cvs item this_item { (Item )item( does not exist.\n) halt} if
+read_item {(Could not read item )item(.\n) halt} if pop
+/resp tmpresp def
+
+(<H2>Editing )conftitle`( )Conference cap( )Item cap( )'item
+(, Response )resp(:</H2>\n)
+
+resp read_resp 
+{(An error has occurred reading this )Response(.) halt} if
+
+mayedit ! {(You do not have permission to edit this )Response(.) halt} if
+
+(*.backtalk) /timezone loadvar pop
+
+(<FORM METHOD=POST ACTION=respedit)
+canattach {( ENCTYPE="multipart/form-data")}if(>
+<TABLE WIDTH=100% BORDER=0><TD ALIGN=LEFT>
+<TR><TD><B>#)resp( of )lastresp
+(: by <INPUT NAME=pseudo VALUE=")authorname quote("> \()id(\)</B>
+</TD><TD>
+)
+
+allowhtml {(
+<SELECT NAME=texttype>
+<OPTION VALUE="text/plain">Plain Text
+<OPTION VALUE="text/html")texttype (text/html) eq {( SELECTED)}if (>Pure HTML
+<OPTION VALUE="text/html-blanks")texttype (text/html-blanks) eq {( SELECTED)} if
+(>lazy HTML
+</SELECT>
+)} {(<INPUT TYPE=HIDDEN NAME=texttype VALUE="text/plain">
+)}ifelse
+
+(</TD><TD ALIGN=RIGHT>
+<INPUT TYPE=image NAME=post )post_button_src(
+<INPUT TYPE=image NAME=preview )preview_button_src(
+</TD></TR></TABLE>
+<INPUT NAME=conf TYPE=hidden VALUE=)conf(>
+<INPUT NAME=csel TYPE=hidden VALUE=)csel(>
+<INPUT NAME=item TYPE=hidden VALUE=)item(>
+<INPUT NAME=resp TYPE=hidden VALUE=)resp(>
+<INPUT NAME=goto TYPE=hidden VALUE=)goto(>
+<INPUT NAME=parentresp TYPE=hidden VALUE=)parentresp(>
+<INPUT NAME=isel TYPE=hidden VALUE=)isel(>
+<INPUT NAME=lastresp TYPE=hidden VALUE=)lastresp(>
+<INPUT NAME=rsel TYPE=hidden VALUE=)rsel(>\n)
+noskip {(<INPUT NAME=noskip TYPE=hidden VALUE=)noskip(>\n)} if
+since {(<INPUT NAME=since TYPE=hidden VALUE=)since(>\n)} if
+showforgotten {(<INPUT NAME=showforgotten TYPE=hidden VALUE=)showforgotten(>\n)} if
+(<TEXTAREA NAME="text" ROWS=12 COLS=72 WRAP=HARD>)
+erased ! {2 read_text quote} if
+(</TEXTAREA>
+)
+canattach {
+  /i 0 def
+  attachments {
+    (<P><STRONG>Current Attachments:</STRONG><BR>\n<TABLE BORDER=0>\n)
+    (<TR><TD>Size</TD><TD>Description</TD><TD>Type</TD><TD>Delete?</TD>\n)
+    {
+      /i inc
+      attachments (,) clip /hand xdef /attachments xstore
+      (<INPUT TYPE=hidden NAME=hand)i( VALUE=")hand quote(">\n<TR>)
+      hand get_attach dup 0 gt {
+	(<TD COLSPAN=3>)
+	exch 1 eq { (Missing) } { (Permission Denied) } ifelse
+	(</TD>\n)
+      } {
+	pop
+	/url xdef /desc xdef /size xdef /type xdef
+	(<TD><A HREF=")url(" TARGET=_top>)
+	size 2048 lt { size( bytes) }
+	{ size 2097152 lt {size 1024 / (K)}
+	  {size 1048576 / (M)} ifelse } ifelse
+	(</A></TD>\n)
+        (<TD><INPUT TYPE=text NAME=desc)i( VALUE=")desc quote(" SIZE=35></TD>\n)
+        (<TD><INPUT TYPE=text NAME=type)i( VALUE=")type quote(" SIZE=20></TD>\n)
+      } ifelse
+      (<TD ALIGN=center><INPUT TYPE=checkbox NAME=del)i(></TD></TR>\n)
+      attachments ! {break} if
+    } loop
+    (</TABLE>\n)
+  } {
+    (<P>)
+  } ifelse
+  (<INPUT TYPE=hidden NAME=nattach VALUE=)i(>\n)
+  (<STRONG>New Attachment:</STRONG><BR>\n<TABLE BORDER=0>
+  <TR><TD>File&nbsp;to&nbsp;Attach:</TD>
+  <TD><INPUT TYPE=file NAME=baa_file SIZE=35>
+  </TD></TR>
+  <TR><TD>
+  Description:</TD><TD><INPUT TYPE=text NAME=desc SIZE=55>
+  </TD></TR>
+  </TABLE>\n)
+} if
+(</FORM>
+)
+global_footer
+(</BODY></HTML>
+)

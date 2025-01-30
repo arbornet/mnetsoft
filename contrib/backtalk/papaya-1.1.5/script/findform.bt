@@ -1,0 +1,76 @@
+% Backtalk Papaya Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% findform script
+%
+% This script generates a form for searching a conference for various things.
+% The form handler for this form is the "find.bt" script.
+%
+% Query Paramters:
+%    conf=      name of the conference we are searching
+%    err=       any error message to print on the form.
+%    csel=      list of conference (not used, just passed along)
+
+flavor(config)+ include
+
+(<HTML><HEAD>
+<TITLE>)bbsname(: Search the )/conftitle`( )Conference(</TITLE>\n)'
+(S) flavor(meta)+ include
+(</HEAD>\n)
+
+flavor(openconf)+ include
+secret 2 eq /dunno defined ! and { [/conf /csel] flavor(confpass)+ jump } if
+global_header
+
+% various default settings of form
+/pattern dup () default def
+rsel ! {/rsel (all) def} if
+/mode dup (exact) default def
+/exact_check mode (exact) eq {( CHECKED)}{()} ifelse def
+/re_check mode (re) eq {( CHECKED)}{()} ifelse def
+/icase_check /icase 1 default {( CHECKED)}{()} ifelse def
+/m_text_check /m_text 1 default {( CHECKED)}{()} ifelse def
+/m_fname_check /m_fname 0 default {( CHECKED)}{()} ifelse def
+/m_title_check /m_title 0 default {( CHECKED)}{()} ifelse def
+/m_login_check /m_login 0 default {( CHECKED)}{()} ifelse def
+/rsel_all_check rsel (all) eq {( CHECKED)}{()} ifelse def
+/rsel_new_check rsel (new) eq {( CHECKED)}{()} ifelse def
+/rsel_since_check rsel (since) eq {( CHECKED)}{()} ifelse def
+
+(<FORM METHOD=post ACTION=find>
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>)} if
+(<STRONG>Search For:</STRONG><BR>
+<INPUT TYPE=text NAME=pattern VALUE=")pattern quote
+(" SIZE=72><BR>\n)
+/err defined {(<FONT COLOR=red><STRONG>)err(</STRONG></FONT><BR>)} if
+(<INPUT TYPE=radio NAME=mode VALUE=exact)exact_check(> Exact Match
+<INPUT TYPE=radio NAME=mode VALUE=re)re_check(> Regular Expression<BR>
+<INPUT TYPE=checkbox NAME=icase)icase_check(> Ignore Case
+<P>
+<STRONG>Match Against:</STRONG><BR>
+<TABLE><TR>
+<TD><INPUT TYPE=checkbox NAME=m_text)m_text_check(> Message Text<BR></TD>\n)
+mayseealias {
+ (<TD><INPUT TYPE=checkbox NAME=m_fname)m_fname_check
+ (> Author's Full Name<BR></TD>\n</TR><TR>\n)
+} if
+(<TD><INPUT TYPE=checkbox NAME=m_title)m_title_check(> )Item cap( Title<BR></TD>
+<TD><INPUT TYPE=checkbox NAME=m_login)m_login_check(> Author's Login Name</TD>
+</TR></TABLE>
+<P>
+<STRONG>In )Items cap(:</STRONG><BR>
+<INPUT TYPE=radio NAME=rsel VALUE='all')rsel_all_check
+  (> All&nbsp;&nbsp;&nbsp;&nbsp;\n)
+id {(<INPUT TYPE=radio NAME=rsel VALUE='new')rsel_new_check
+  (> New&nbsp;&nbsp;&nbsp;&nbsp;\n)} if
+(<INPUT TYPE=radio NAME=rsel VALUE='since')rsel_since_check
+  (> Active in last 7 days<P>
+<STRONG>In )Item cap( Range:</STRONG><BR>
+<INPUT TYPE=text NAME=isel VALUE="1-$" SIZE=12><BR>
+<P>
+
+<INPUT TYPE=submit VALUE=Search>
+</FORM>
+)
+
+flavor(footer)+ chain

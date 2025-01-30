@@ -1,0 +1,71 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part VI: Backtalk Cron Configuration</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  Part V: Apache Configuration</A>
+(<A HREF=install5a.html>Backtalk Accounts</A> or
+<A HREF=install5b.html>Backtalk Accounts</A>)<BR>
+Next:  <A HREF=install7.html>Part VII: Customization</A>
+
+<HR>
+The Unix <TT>cron</TT> program can be configured to automatically run commands
+periodically.  Backtalk doesn't currently make very much use of this, but it
+is likely to do more in the future, at least in some configurations.
+<P>
+For now, there are two things that you might want to consider installing
+in your cron table:
+
+<DL>
+<DT><STRONG>Attachment Clean-up</STRONG>
+<DD>
+If you  have configured Backtalk to allow attachments, it might be useful
+to periodically run the <TT>cleanattach</TT> program.
+The process of posting an item or response with an attachment is actually
+fairly complex.  In some cases it may require a long sequence of HTTP
+transactions between the user's browser and Backtalk before it is complete.
+If this process gets interupted, then it is possible that an attachment file
+may be left laying about on your server with no references to it.  Since
+attachments are sometimes large, this can be a substantial waste of disk
+space.  The
+<TT>cleanattach</TT> program looks for and deletes such lost attachments.
+<P>
+If Backtalk was built with attachments enabled, the <TT>cleanattach</TT>
+program should have been installed in the Backtalk bin directory.
+You can just try to remember to run it from time to time, or you can
+make a crontab entry to run it once a week or so.
+<P>
+<DT><STRONG>Log File Rolling</STRONG>
+<DD>
+Backtalk can keep various log files.  When this is done, there is always
+a risk that they will get annoying big.  Various tools exist for managing
+these.
+<P>
+I need to document this someday.
+</DL>
+<P>
+On most Unix systems, the commands '<TT>man crontab</TT>' and
+'<TT>man 5 crontab</TT>' will tell you all about how to edit crontabs.
+A typical procedure would be:
+<OL>
+<LI>Login to the Backtalk owner account.
+<LI>Run '<TT>crontab -e</TT>' to edit your crontab.
+<LI>Add a line like:
+<PRE>
+   0 22 * * 0 /full/path/to/cleanattach</PRE>
+This would run <TT>cleanattach</TT> every Sunday at 11:00 pm.
+<LI>Write out the file
+</OL>
+
+<HR>
+Prev:  Part V: Apache Configuration</A>
+(<A HREF=install5a.html>Backtalk Accounts</A> or
+<A HREF=install5b.html>Backtalk Accounts</A>)<BR>
+Next:  <A HREF=install7.html>Part VII: Customization</A>
+</BODY></HTML>

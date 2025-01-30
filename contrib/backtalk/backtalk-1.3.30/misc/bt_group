@@ -1,0 +1,4 @@
+# Group zero must always be the administrator group
+cfadm::0:cfadm
+user::1:
+gradm::2:

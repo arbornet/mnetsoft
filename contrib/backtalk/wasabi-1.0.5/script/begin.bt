@@ -1,0 +1,126 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% show an item
+%  conf= confernce name.  Defaults if not given, which we prefer.
+%  item= item number
+%  show= (text) - item text only
+%        (all) - all comments, not item text
+%        (new) - new comments only, no item text
+%        or any other valid response selector.
+
+flavor(cdate)+ include
+flavor(conf)+ include
+flavor(links)+ include
+(lib/robots) include
+
+% if no item number was passed in choose the newest item
+item 0 le {
+   /rsel (0) store
+   ($-1) next_item {
+     (No articles found in conference ')conf('.\n)
+     maypost {
+	(<p><a href=")backtalkurl(/)flavor(new_article)confarg1
+	(">enter an article</a>\n)
+     } if
+     halt
+   } if
+   /item xdef pop pop
+} if
+
+/show defined ! { /show (text) def } if
+
+% figure out the rsel and open the item
+show (text) eq { (all) }{ show } ifelse
+item this_item {
+   (Error: Cannot access article )item
+   halt
+} if
+read_item {
+   (Error: Cannot read article )item
+   halt
+} if
+/nrs xdef
+
+
+/maintext [
+show (text) eq {
+  flavor(article)+ call
+} {
+  flavor(comments)+ call
+} ifelse
+] def
+
+% Note that we set the base url because this page can be references as either
+% "backtalk.cgi/wasabi/begin" or "backtalk.cgi/wasabi".  Without normalizing
+% the base, we'd never be able to use relative links.
+
+(<html>
+<head>
+<title>)conftitle(: )title quote(</title>
+<base href=")backtalkurl(/)flavor(">
+)
+use_rss_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )
+  conftitle( Articles" HREF=")anon_url(cinnamon?conf=)conf(">\n)
+} if
+use_atom_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="application/atom+xml" Title="Atom feed for )
+  conftitle( Articles" HREF=")anon_url(cinnamon?conf=)conf(&fmt=Atom-1.0">\n)
+} if
+use_rss_autodiscovery expose_rss_item and {
+  (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for Comments on )
+  title(" HREF=")anon_url(cinnamon?conf=)conf(&item=)item(">\n)
+} if
+use_atom_autodiscovery expose_rss_item and {
+  (<LINK REL="alternate" TYPE="application/atom+xml" Title="Atom feed for Comments on )
+  title(" HREF=")anon_url(cinnamon?conf=)conf(&item=)item("&fmt=Atom-1.0>\n)
+} if
+conf_robot
+flavor(style)+ include
+(<script language="Javascript">
+)
+
+id ! {
+  flavor(poplogin)+ include
+} if
+
+(</script></head>
+<body>
+<table width=100% height=100% cellpadding=0 cellspacing=0>
+<tr><td class=sidebar rowspan=3 width=160 valign=top>
+)
+flavor(sidebar)+ include
+(</td><td class=topbar height=20>
+)
+id {
+  (<span class="welcome">) () /usrname pushuser pop
+  (</span>&nbsp;&nbsp;)
+  (\(<a href=")backtalkurl(/public/logout?goto=)
+  `backtalkurl(/)flavor scriptname(?)cgiquery' cgiquote
+  (">logout</a>\)\n)
+} {
+  (<a href=")register_url(">register</a>&nbsp;&nbsp;\n)
+  (<a href="#" onclick="poplogin(); return false">login</a>\n)
+} ifelse
+
+(</td><td class=topbar height=20 align=right>
+)
+
+(<a href="contents)confarg1(">table of contents</a>\n)
+
+maypost {
+  (&nbsp;&nbsp;)
+  (<a href="new_article)confarg1("><font color=white>new article</font></a>\n)
+} if
+
+(</td></tr>
+<tr><td class=main colspan=2 valign=top>
+)maintext
+(</td></tr>
+<tr><td class=botbar colspan=2 height=8>
+)global_footer
+(</td></tr>
+</table>
+</body>
+</html>
+)

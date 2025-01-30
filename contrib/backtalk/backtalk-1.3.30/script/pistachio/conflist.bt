@@ -1,0 +1,89 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% conflist script
+%
+% List all available conferences.  This parses and pretty prints the
+% public.txt or the confmenu file, with conference names clickable so you can
+% go straight to them.
+
+% load entrance and help buttons
+/butsel 4 defconstant flavor(buttondef)+ include
+(lib/robots.bt) include
+
+% Print the page header
+(<HTML><HEAD>
+<TITLE>) bbsname`( - )Conference cap( List</TITLE>
+<BASE HREF=")backtalkurl(/)flavor(">
+)index_robot(</HEAD>
+<BODY)'body_tags(>
+)global_header
+(<H1>)bbsname`( )Conference cap( List</H1>
+Goto <A HREF=begin>)'entrance_button(</A> or
+<A HREF=help/conflist>)help_button(</A>
+<HR><P>)
+
+/usepublic_txt constant {
+  % Load the "public.txt" file
+  bbsdir (/public.txt) + read /remainder xdef
+  0 /in_ul xdef
+
+  % Process the file, line-by-line
+  {
+    % get the next line
+    remainder (\n) parse
+      dup () eq {break} if
+      /work_line xdef
+      /remainder xdef 
+
+    % check if it is a conference line
+    work_line pt_confline sgrep {
+      aload /work_line xdef /conf xstore pop
+      in_ul ! {1 /in_ul xdef (<UL>)} if      % enter <UL> if needed
+      (<LI><A HREF="confhome?conf=)conf(">)conf quote(</A>\n)work_line quote
+    } {
+      % check if it is a header line
+      work_line pt_headline sgrep {
+	1 get /work_line xdef
+	in_ul {0 /in_ul xdef (</UL>)} if     % exit </UL> if needed
+	(<H2>) work_line quote (</H2>)
+      } if
+    } ifelse
+  } loop
+} {
+  % Load the confmenu file
+  (*confmenu) read /remainder xdef
+
+  % Process the file, line-by-line
+  /in_ul 0 def
+  {
+    % get the next line
+    remainder (\n) parse exch /remainder xdef
+    dup ! {break} if
+
+    % skip comments
+    dup 0 1 substr (#) eq {pop continue} if
+
+    % parse apart the line
+    (:) clip /cname xdef
+    (:) clip /ctitle xdef /cdes xdef
+
+    cname {
+      % Format a conference name
+      in_ul ! {/in_ul 1 def (<UL>)} if	% enter <UL> if needed
+      (<LI><A HREF="confhome?conf=)cname(">)ctitle(</A> - )cdes(\n)
+    } {
+      % Format a header line
+      in_ul {/in_ul 0 def (</UL>)} if	% exit </UL> if needed
+      (<H2>)ctitle(:</H2>\n)
+      cdes {(<BLOCKQUOTE>)cdes(</BLOCKQUOTE>\n)} if
+    } ifelse
+
+  } loop
+} ifelse
+
+% Page footer
+in_ul {/in_ul 0 def (</UL>)} if
+
+global_footer
+(</BODY></HTML>
+)

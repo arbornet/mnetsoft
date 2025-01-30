@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:carl@cyberspace.org" />
+
+  <title>Hypertext Introduction</title>
+</head>
+
+<body>
+  <h1>Carl's Introduction to Hypertext</h1>Hypertext means text
+  that has words (or icons) highlighted that can be selected.
+  Windows help files are hypertext--just double-click a green word
+  and you see something else.
+
+  <p>On Grex, the only hypertext we have is in HTML (HyperText
+  Markup Language), and it can be viewed by several viewers. Lynx
+  is the only viewer running on this system.</p>
+
+  <p>To write HTML hypertext, you just edit a file and add
+  commands.</p>
+
+  <blockquote>
+    <code>&lt;title&gt;</code>This is the Document's
+    Title<code>&lt;/title&gt;</code>
+  </blockquote>is an example of what these commands look like.
+  Hypertext can contain links to other files, but it doesn't have
+  to. Probably the most common commands are:
+
+  <dl>
+    <dt>
+    <code>&lt;title&gt;</code>...<code>&lt;/title&gt;</code></dt>
+
+    <dd>for the title (appears on top right of screen)</dd>
+
+    <dt><code>&lt;pre&gt;</code>...<code>&lt;/pre&gt;</code></dt>
+
+    <dd>for preformatted text (<code>&lt;pre&gt;</code> makes it
+    print the way it appears in the editor--as far as spacing and
+    paragraphs go.)</dd>
+
+    <dt><code>&lt;p&gt;</code></dt>
+
+    <dd>for a new paragraph (without <code>&lt;p&gt;</code> or
+    <code>&lt;pre&gt;</code>, the whole document will look like one
+    paragraph)</dd>
+
+    <dt><code>&lt;h1&gt;</code>...<code>&lt;/h1&gt;</code></dt>
+
+    <dd>for a top header (it prints a centered header in
+    capitals)</dd>
+
+    <dt><code>&lt;a
+    href=http://www.cyberspace.org/~carl/index.html&gt;</code>My
+    Home Page<code>&lt;/a&gt;</code></dt>
+
+    <dd>for a link to another file</dd>
+  </dl>If you'd like to try writing a hypertext document, start a
+  new file named "myfile.html" with your favorite editor. Put in a
+  title and a header, and then type in some text.
+
+  <p>To view this file, type "lynx myfile.html" and you'll see it
+  as hypertext. If it doesn't look right, you can edit it from
+  within lynx by typing an "e". (This gives you the editor from
+  your options page, available by pressing "o".) When you exit the
+  editor, you will see what the hypertext looks like.</p>
+
+  <p>Please <a href="mailto:carl">mail carl</a> if you have any
+  questions. I like to see people experimenting with hypertext and
+  developing their own files.</p>
+</body>
+</html>

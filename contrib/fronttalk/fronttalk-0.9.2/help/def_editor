@@ -1,0 +1,14 @@
+                            Fronttalk Define:  EDITOR
+
+Usage:  DEFINE EDITOR "gate"
+
+Whenever an item or response is to be entered, or when the conference hot
+list is being edited, then Fronttalk invokes the Unix program specified by
+the EDITOR variable to collect and edit the text.  The full path does not
+need to be given.
+
+The usual choice is the "gate" Text gatherer program.
+
+In Picospan, use of an editor is optional - if none is defined, Picospan
+has a built in text collection program.  Fronttalk lacks this, so the
+editor is always invoked, just as it is in Picospan if EDALWAYS is defined.

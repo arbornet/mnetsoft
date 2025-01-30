@@ -1,0 +1,6 @@
+% Backtalk Gumdrop Interface - (c) 2003, Jan Wolter, Steve Weiss
+
+/oneconf 1 defconstant
+/oneitem 1 defconstant
+
+(bubblegum/)scriptname+ chain

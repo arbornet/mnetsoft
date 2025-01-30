@@ -1,0 +1,39 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% Kill an article designated by conf and item arguments, after a confirm
+% screen.
+
+/confirm defined {
+
+  confirm (yes) eq {
+
+    % Open a conference
+    open_conf {
+      (Error: Could not open conference ')conf('.\n)
+      halt
+    } if
+
+    % kill the item
+    kill_item dup {
+      dup 2 eq {pop (Article )item( not found) halt} if
+      3 eq {(Permission to kill denied) halt} if
+    } if pop
+
+    % tell begin page to show a default article
+    /item 0 def
+
+  } if
+
+  flavor(begin)+ jump
+
+} if
+
+(<form method=post action=kill_article>
+<input type=hidden name=conf value=)conf(>
+<input type=hidden name=item value=)item(>
+Really delete article )item(?<br>
+<input type=radio name=confirm value=yes>Yes<br>
+<input type=radio name=confirm value=no checked>No<br>
+<input type=submit value=Continue>
+</form>
+)

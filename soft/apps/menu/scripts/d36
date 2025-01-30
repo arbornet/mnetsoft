@@ -1,0 +1,11 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: setenv TERMCAP <terminal-type>
+
+What terminal type are you using? "
+read TERM
+export TERM
+tset -Q
+echo "Your new termcap is: $TERM"

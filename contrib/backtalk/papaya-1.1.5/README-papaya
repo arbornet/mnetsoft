@@ -1,0 +1,118 @@
+			BACKTALK PAPAYA INTERFACE
+		    (c) 2002  Jan Wolter & Steve Weiss
+
+			      Version 1.1.5
+	          Requires Backtalk Version 1.3.24 through 1.3.XX
+		        or Backtalk Version 1.4.6 or later
+
+DESCRIPTION:
+
+The Backtalk Papaya Interface is a set of scripts that implement an interface
+to the Backtalk conferencing system that is designed to be familiar to users
+of Dave Thaler's Yapp web conferencing system.
+
+The papaya interface was originally developed when Arbornet's M-Net system
+converted from using Yapp's web interface to using Backtalk.  Jan Wolter
+thought a more familiar interface might be welcomed by some users, and the
+idea of a Yapp clone named "papaya" amused him, so he editted up a set of
+pistachio scripts to form papaya.
+
+Yapp's web interface is actually fairly configurable, and differs
+substantially from one installation to another.  Papaya aims at the look
+and feel that Yapp had on M-Net before the change over.  Making it look like
+other systems which run different versions of web Yapp differently configured
+may take some work.  Papaya also lacks most of the user options that Yapp
+has.  For example, no framed version has been implemented.  There have been
+many slight alterations to the screens, and some of the functionality that
+pistachio had but Yapp lacked has been carried over into papaya.   Finally,
+the author has only used yapp briefly, and likely got a lot of things wrong.
+Especially he has never been a fairwitness or administrator on a web yapp
+system, and so papaya's implementation of the special powers of such users
+is probably quite different from Yapp's.
+
+
+INSTALLATION:
+
+(1) Make sure that you have the correct version of Backtalk installed.  The
+    top of this file tells the minimum version of Backtalk needed to support
+    this scripts in this package.  Later versions of Backtalk may or may not
+    be compatible.  If we release a version of Backtalk not compatible with
+    this interface package, a new version of this package will be released.
+
+(2) Unpack the Papaya distribution.
+
+    OK, if you hadn't already done that, you wouldn't be reading this, would
+    you?  We'll refer to the full path of the new directory containing the
+    distribution as DISTDIR.
+
+(3) Versions of Backtalk after 1.1.4 have a 'btinstall' script to simplify
+    the installation of seperately distributed interface packages.  Btinstall
+    assumes that the configuration of Backtalk hasn't radically changed since
+    you used Backtalk's 'make install' commands to install the system.  If
+    you've manually rearranged what goes where on the disk, btinstall will
+    need some editing, or you'll need to install the interface manually.
+
+    TO INSTALL USING BTINSTALL:
+
+    (a)  Login either as root or as the user that owns Backtalk's files on
+         your system.
+
+    (b)  Find where the 'btinstall' script was installed, so you can run it.
+         You want to be sure you get the installed copy of the program, which
+	 has been modified with information about your installation, not
+	 the one in the distribution directory.
+
+    (c)  cd into the unpacked distribution directory, DISTDIR.
+
+    (d)  Run 'btinstall'
+
+    TO INSTALL WITHOUT BTINSTALL:
+
+    This distribution contains two subdirectories.  The 'script' subdirectory
+    contains all the Backtalk scripts that implement the interface.  The
+    'image' directory contains some button images.  These just have to be
+    moved into directories named 'papaya' under Backtalk's script and
+    image directories.  In a bit more detail:
+
+    (a) Find the Backtalk script directory.  The default pathname is
+        /usr/local/backtalk/script, but it will vary on different systems.
+        Typically it will contain the config.bt script, the userinfo.bt script
+        and subdirectories for all installed interfaces.
+
+    (b) Create a new subdirectory under the script directory, called
+        'papaya'.  Make sure the directory is writable to the Backtalk
+	account, so that compiled copies of the scripts can be written into
+	it by Backtalk.
+
+    (c) Copy all the files in DISTDIR/script to the new papaya directory.
+
+    (d) Find the Backtalk image directory.  This will normally be somewhere
+        under your http server's document root.  The "imghost" symbol defined
+	in config.bt gives the URL of this directory.
+
+    (e) Create a new subdirectory under the image directory, called
+        'papaya'.
+
+    (f) Copy all the files under DISTDIR/image into this new papaya image
+        directory.  These should all be readable by the http server.
+
+That's all.  Backtalk's 'welcome' page will automatically detect the
+presence of the papaya interface, and include it in the list of available
+interfaces.
+
+CUSTOMIZATION:
+
+Papaya may be customized by editing the SCRIPTDIR/papaya/config.bt file.
+After editting it, you should probably do "rm SCRIPTDIR/papaya/*.bb" to
+delete any previously compiled scripts, forcing the system to recompile with
+the new settings.
+
+The main things to edit in this file are the colors of the background,
+the names for things (is it a 'conference', a 'forum',
+a 'room', or a 'discussion'?), and special feature switches.
+Most of these are adequately explained in the config.bt file.
+
+Only one set of button images is included in the distribution.
+You can simply replace these with new images if you want to change the
+buttons.  Their size does not have to be the same as the existing ones,
+though you'll have screen formatting problems if you make the much wider.

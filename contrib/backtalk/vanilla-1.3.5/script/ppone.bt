@@ -1,0 +1,18 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% ppone - a web script to postpone responses and (optionally) move on
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+ppresp cvi ppitem cvi mark_unseen {
+  (Backtalk error: could not find response )ppresp( of item )ppitem( in the )
+  conf(conference.\n) stop
+} if
+
+(Postponing item )ppitem(: Responses starting with number ) ppresp 
+( will still be new next time. <hr>\n)
+
+% now move on to next function (read or begin)
+flavor
+item {(read)} {(begin)} ifelse
++ jump

@@ -1,0 +1,121 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% config script
+%
+% NOTE:  This is only the configuration file for the Abalone Interface.
+% The configuration file for backtalk as a whole has the same name but is in
+% the top level script directory.
+
+% Global page header:
+%   This macro is executed at the top of every Abalone page.  By default, it
+%   does nothing.  It's a sensible place to put ads (yuck).  If you define it,
+%   set /global_header_height to the approximate height in pixels of your
+%   global header.  This is used to enlarge the frame on the top of the page
+%   enough to hold the header.
+%
+%   For example, a typical ad rotator might be done like this:
+%   /global_header {
+%     (<A HREF="http://ad.doubleclick.net/jump/www.hsx.com/;sz=468x60;ord=x">
+%     <IMG SRC="http://ad.doubleclick.net/ad/www.hsx.com/;sz=468x60;ord=x"
+%     WIDTH="468" HEIGHT="60" BORDER=0></A><P>\n)
+%   } def
+%   /global_header_height 72 defconstant
+
+/global_header {
+(<LINK REL="SHORTCUT ICON" HREF="/favicon.ico">\n)
+} def
+/global_header_height 0 defconstant
+
+% Global page footer:
+%   This macro is executed at the bottom of every Abalone page.  It normally
+%   generates some HTML footer text.   The default is a Backtalk copyright
+%   message, but you are welcome to take that out if you want to put something
+%   else here, say, links to other parts of your web site.
+
+/global_footer {
+  (<P><SPAN CLASS=copyright>- )version
+  ( - )copyright(</SPAN>)
+} def
+
+% Default Color Schemes
+%   Abalone has several different color schemes (defined in header.bt).  You
+%   can select one as a default here.
+
+/default_scheme (coffee) defconstant
+
+% Style Sheet Inclusion
+%   Abalone's standard style sheets can included in any of three different
+%   ways, depending on how css_inclusion is defined.  (link) is probably the
+%   right choice.
+%
+%     (link) - external style sheet pulled in with HTML <LINK> directive.
+%     (import) - external style sheet pulled in with CSS @import directive.
+%     (embed) - internal style sheet embedded in each page.
+
+/css_inclusion (link) defconstant
+
+% Recent Postings:
+%   Abalone can show a summary list of the last N items/responses posted.
+%   This works only if the top-level config file defines post_log_file:
+%
+%     dflt_recent_page
+%       The entrance page will contain a control allowing you to view
+%       last N recent posts in a new page.  The default number of posts is
+%       given by the constant.  If set to zero, the page is not available.
+%
+%    dflt_recent_entrance
+%       If postive, a list of recent posting will be displayed on the entrance
+%       page.  If set to zero, nothing is shown.  The user can override this
+%       setting if post_log_file is defined.
+
+/dflt_recent_page 50 defconstant
+/dflt_recent_entrance 5 defconstant
+
+% Names for Things:
+%   Backtalk by default uses some slightly odd names for things.  Most of these
+%   are inherited from Picospan.  The following definitions let you rename
+%   them.  You might prefer 'host' to 'fairwitness', or 'topic' to 'item', or
+%   or 'forum' to 'conference'.  Note that the defined values should be all
+%   lower case, except for MarkUnseen.
+
+/Fairwitness (fairwitness) defconstant
+/AFairwitness (a fairwitness) defconstant
+/Fairwitnesses (fairwitnesses) defconstant
+/Item (item) defconstant
+/AnItem (an item) defconstant
+/Items (items) defconstant
+/Conference (conference) defconstant
+/AConference (a conference) defconstant
+/Conferences (conferences) defconstant
+/Response (response) defconstant
+/AResponse (a response) defconstant
+/Responses (responses) defconstant
+/Erase (erase) defconstant
+/Erased (erased) defconstant
+/Hide (hide) defconstant
+/Hidden (hidden) defconstant
+/Show (show) defconstant
+/Unseen (unseen) defconstant
+/MarkUnseen (Mark Unseen) defconstant	% this one (only) should be capitalized
+
+% Some sample alternate terminology:
+
+%/Fairwitness (host) defconstant
+%/AFairwitness (a host) defconstant
+%/Fairwitnesses (hosts) defconstant
+%/Item (topic) defconstant
+%/AnItem (a topic) defconstant
+%/Items (topics) defconstant
+%/Conference (forum) defconstant
+%/AConference (a forum) defconstant
+%/Conferences (forums) defconstant
+%/Response (posting) defconstant
+%/AResponse (a posting) defconstant
+%/Responses (postings) defconstant
+%/Erase (scribble) defconstant
+%/Erased (scribbled) defconstant
+%/Hide (censor) defconstant
+%/Hidden (censored) defconstant
+%/Show (uncensor) defconstant
+%/Unseen (dogear) defconstant
+%/MarkUnseen (Dogear Response) defconstant

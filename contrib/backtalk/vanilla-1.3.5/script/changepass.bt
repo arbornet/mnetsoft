@@ -1,0 +1,25 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% changepass - a backtalk form handler to update the users passwords
+
+passwd1 passwd2 ne {
+  /errmsg (The two copies of the new password are not identical) def
+} {
+  passwd1 changepass /errmsg xdef
+} ifelse
+
+errmsg { flavor (/chpwform) + jump } if
+
+(
+<HTML>
+Your password has been changed on the server. 
+The next time you try to fetch a page from the conferences, your 
+authentication should fail, and your
+browser should ask you to retry authentication. 
+<p>
+You must enter your new password in order to 
+bring the browser back in sync with the server about passwords.
+<p>
+<a href=begin>Do this now.</a>
+</HTML>
+)

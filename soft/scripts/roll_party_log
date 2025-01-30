@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /var/party/log
+/bin/mv party.log party.log.old
+/bin/mv GrexOhio.log GrexOhio.log.old > /dev/null 2>&1

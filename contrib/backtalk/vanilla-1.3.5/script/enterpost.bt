@@ -1,0 +1,54 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% enterpost - a web script to process the form filled out to enter a new item
+
+% enterpost script begins producing html code here
+
+(lib/postlog) include
+
+(<HTML>
+<HEAD>
+<TITLE>) bbsname ( ) conf ( Conference - Results of "Enter"</TITLE> </HEAD> <BODY>
+)
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+(C) flavor(meta)+ include
+
+(</HEAD>
+<BODY>\n)
+
+maypost ! {(Backtalk cannot write conference ) conf (. You may)
+(<a href=conflist> return to the list of conferences</a>.) halt } if
+
+% check fillouts for validity
+0 /bad xdef
+
+text () eq 
+{(Your message was empty, so there was nothing to post.<p>) 1 /bad xstore} if
+
+title () eq
+{(Your title was empty, You must have a one-line title.<p>) 1 /bad xstore} if
+
+bad {( Go back and fill in the response area before pressing "post") halt} if
+
+pseudo () ne {pseudo /alias xstore} if
+
+text 72 wrap /text xstore
+
+post_item
+
+(You're item was successfully created as item number ) item (.<p>
+
+At this point, you may:
+<ul>
+<li><a href=read?conf=) conf (&item=) item 
+  (&rsel=all>Read the item that you just created
+<li><a href=browse?conf=) conf (>Return to the list of items in the )
+  conf ( conference
+<li><a href=conflist>Go to the menu of conferences
+<li><a href=begin>Go to the opening screen
+
+</ul>
+</BODY></HTML>
+)

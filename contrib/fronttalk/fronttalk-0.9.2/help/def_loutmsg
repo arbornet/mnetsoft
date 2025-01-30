@@ -1,0 +1,15 @@
+                        Fronttalk Defines:  LOUTMSG
+
+Usage:  DEFINE LOUTMSG "<string>"
+
+The LOUTMSG define is a conference separator displayed when a user 
+leaves a conference.  It is also displayed by "DISPLAY LOGOUT".
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+   "%(1x%1g%)%c"
+
+This just displays the conference logout file.

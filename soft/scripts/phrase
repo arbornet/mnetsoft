@@ -1,0 +1,4 @@
+#!/bin/sh
+# XXX
+
+/usr/local/bin/fancy 6 /usr/local/lib/vocab

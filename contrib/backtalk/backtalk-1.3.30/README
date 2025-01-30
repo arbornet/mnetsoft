@@ -1,0 +1,81 @@
+
+                         BACKTALK Conferencing System
+                   (c) 1996-2003, Jan Wolter & Steve Weiss
+                             Source Distribution
+
+                      Stable Release - Version 1.3.30
+
+LICENSE:
+
+   Backtalk is free software; you can redistribute it and/or modify it under
+   the terms of the GNU General Public License as published by the Free
+   Software Foundation.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.  A copy of the license is in the file named LICENSE in
+   this distribution.
+
+CONTACT:
+
+   Official web site:  http://www.unixpapa.com/backtalk
+   Author's Email:     backtalk@hvcn.org
+   US Mail:            Jan Wolter, 2907 Logan Ct, Ann Arbor, MI 48108, USA
+
+INSTALLATION:
+
+   For installation instructions, use your web browser to read the file
+   doc/install.html.  That is, open the URL:
+
+        file:<full-path-of-this-directory>/doc/install.html
+
+SUMMARIZED CONTENTS:
+
+   LICENSE                   - GPL license covering this software
+   configure		     - configuration script
+   Makefile.in		     - top-level Makefile template
+
+   bbs/*                     - sample conference files for testing
+
+   css/abalone/*             - style sheets for abalone interface
+
+   doc/*                     - documentation
+   doc/CHANGES		     - revision history
+   doc/install*.html         - detailed Backtalk installation instructions
+   doc/admin*.html           - detailed administrative manual for Backtalk
+   doc/language.html         - Backtalk script language manual
+   doc/glossary.html         - extensive Backtalk terminology list
+
+   image/*                   - images
+   image/pistacho/*          - buttons for pistachio interface
+   image/abalone/*           - buttons for abalone interface
+
+   incl/*                    - header files for backtalk
+   incl/config.h.in          - Backtalk configuration file template
+
+   misc/*                    - miscellaneous stuff
+   misc/browser_list         - database of web browsers
+   misc/newuser.html.in      - template for form for creating accounts
+   misc/newacct.html.in      - template for page displayed to new users
+   misc/cgitest              - script to test CGI execution on your server
+
+   script/*                  - Backtalk scripts
+   script/config.bt.in       - template for Backtalk configuration script
+   script/pistachio/*        - Pistachio interface
+   script/abalone/*          - Abalone interface
+   script/admin/*            - Administrative interface
+   sript/welcome             - Default welcome script
+
+   src/*                     - Backtalk source code
+
+   sql/*                     - SQL query sets for various SQL servers
+
+NOTE:
+ * mod_auth_external.c and pwauth.c are no longer part of this distribution.
+   They have been broken out and are distributed for free at
+   http://www.unixpapa.com/mod_auth_external.html
+
+ * The vanilla interface is no longer part of this distribution.  It too is
+   now separately distributed.  You can get it, at
+   http://www.unixpapa.com/backtalk/download.html

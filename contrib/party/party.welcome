@@ -1,0 +1,31 @@
+This is the party message that is displayed to welcome new users.
+You will see this message only once.
+
+You are now entering Grex's party program.  Party is a chat program where
+several people can talk to one another at the same time.  You'll find
+different people (or sometimes nobody, or sometimes a LOT of people)
+hanging out in party at different times.  If you find a dull crowd in party
+please do check back again.  In an hour, you'll probably find a completely
+different bunch of people here.
+
+Grex (this computer system you are logged into) was created as a
+conferencing system.  To see the conferences, type "bbs" at a shell
+prompt, or choose "Conferences" from a menu.
+
+To talk, just start typing.  That will bring up a ">" prompt.  Type a
+sentence and press Enter.  The sentence you type will show up on
+everybody's screen.
+
+Sometimes people make "party noises".  For example, if your name is nephi
+you can say  <nephi hugs suzie>  by typing   /hug suzie.
+To see the list of all noises, type  /  and press enter.  And stand back:
+the list is over a thousand lines long.
+If you want to add a new noise to the list, e-mail the noise to partyadm.
+
+To leave party, type :q and press enter.
+
+The things you say in party stick around for about two weeks.  Other people
+who weren't in party at the time can look back later and see what was said.
+
+Type   !party-faq   to see a list of frequently asked questions about party.
+

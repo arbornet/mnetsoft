@@ -1,0 +1,28 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_gotoconf script
+%
+% For the gotoconf command, generate a popup window prompting for the
+% conference name.
+
+flavor(config)+ include
+
+(<HTML>\n)
+
+mainwin !  {
+  (<HEAD><SCRIPT Language="Javascript">\n<!--
+function inmain() {
+var cf=document.pop.conf.value;
+if (cf != '') opener.location=document.pop.action+'?conf='+escape(cf);
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>
+<FORM NAME=pop ACTION=")backtalkurl(/)flavor(confhome" METHOD=POST)
+mainwin!{( onSubmit="return inmain();")} if (>
+Goto )Conference(: <INPUT TYPE=text NAME=conf SIZE=25>
+<INPUT TYPE=submit VALUE="Go" onClick="inmain()">
+</FORM></BODY></HTML>\n)

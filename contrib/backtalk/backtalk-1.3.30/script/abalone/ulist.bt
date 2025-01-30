@@ -1,0 +1,145 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% ulist script
+%
+% Form for editing the lists of users and groups that may access a conference.
+% it is it's own handler
+%
+% Query Parameters:
+%   conf=       which conference (for ulist and login only)
+%   csel=       current conference selector (not used, just passed along)
+%   go=         flag equal to one if we have new values for ulist and glist
+%   glist=	groups for glist file, in comma-separated format
+%   ulist=      users for ulist file, in newline-separated format
+
+% state in form
+/hiddens `(<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+  /nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if'
+  def
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+% boot out non-fairwitnesses
+amfw ! {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+ stop
+} if
+
+/glist defined ! {/glist () def} if
+
+/go defined {
+  % do update
+
+  % check if we have write access
+  (*ulist) writable ! {(Cannot write to ulist.) stop} if
+  (*glist) writable ! {(Cannot write to glist.) stop} if
+
+  % fix up and save ulist value
+  `ulist <<[\r\n \t,;:]+>>m 0 {(\n)} rgrep dup {(\n)} if'
+  (*ulist) write
+
+  % fix up and save glist value
+  glist (,) (\n) 0 replace (\n) +
+  (*glist) write
+
+  flavor(confopt)+ jump
+} if
+
+/abalone.menujump 0 def
+
+[(Edit )/conftitle( )Conference cap('s User List)] (C)
+[/conf /csel /nextnew /go /glist /ulist]
+[/abalone.menujump] []
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+(<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">\n)
+hiddens
+(<TR><TD CLASS=mast>&nbsp;</TD><TD CLASS=mast ALIGN=right>
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=confhome>Goto )Conference cap( Home Page</OPTION>
+<OPTION VALUE=confopt>* Change )Conference cap( Options</OPTION>\n)
+csel {(<OPTION VALUE=nextconf>View Next )Conference cap(</OPTION>\n) } if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>\n)
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+)
+userlist ! {
+  (<TR><TD CLASS=alert COLSPAN=2>
+  NOTE: Access to this )Conference( is not restricted based on the user list.
+  This user list will be ignored unless and until the )Conference( is closed
+  by a conference administrator.</TD></TR>\n)
+} if
+
+(<TR>
+<TD CLASS=colhead COLSPAN=2>Edit )/conftitle( )
+Conference cap('s User List</TD></TR>
+<FORM METHOD=POST ACTION=ulist>
+)
+grouplist {(<TR><TD CLASS=odd>Groups:</TD><TD CLASS=odd>
+All users in the groups checked below may )
+fishbowl{(post to)} {(access)} ifelse
+( the <EM>)conf(</EM> )Conference
+(.
+<P>
+<STRONG>Check all that apply</STRONG>:
+<BR>
+<TABLE WIDTH=100%>\n)
+/ncol 4 defconstant
+/col 0 def
+/glist (*glist) read def
+[groups] {
+  /g xdef
+  col 0 eq {(<TR>)} if
+  /col inc
+  (<TD CLASS=odd><INPUT TYPE=checkbox NAME=glist VALUE=)g
+  g glist (\n ,;\t) inlist {( CHECKED)} if
+  (> )g(&nbsp;&nbsp;&nbsp;&nbsp;</TD>)
+  col ncol eq {(</TR>) /col 0 def} if
+} forall
+col {(</TR>)} if
+(</TABLE></TD></TR>
+)} if
+(<TR><TD CLASS=even>Users:</TD><TD CLASS=even>
+The users whose logins are listed below may )
+grouplist {(also )} if fishbowl{(post to)} {(access)} ifelse
+( the <EM>)conf(</EM> )Conference
+(.
+<P>
+<STRONG>Enter one login name per line:</STRONG>
+<BR>
+)
+
+% the form
+conf {(<INPUT TYPE="hidden" NAME=conf VALUE=)conf(>)} if
+csel {(<INPUT TYPE="hidden" NAME=csel VALUE=)csel(>)} if
+/goto defined {(<INPUT TYPE="hidden" NAME=goto VALUE=)goto(>)} if
+(<TEXTAREA NAME=ulist ROWS=20 COLS=)loginlen 1 +( WRAP=OFF>)
+(*ulist) read
+(</TEXTAREA>
+</TD></TR>
+<TR><TD CLASS=odd>&nbsp;</TD><TD CLASS=odd>
+<INPUT TYPE=hidden NAME="go" VALUE="1">
+<INPUT TYPE=submit VALUE="Update">
+</FORM>
+</TABLE>
+)
+global_footer
+(</BODY></HTML>
+)

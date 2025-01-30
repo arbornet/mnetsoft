@@ -1,0 +1,184 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% setinew script
+%
+% The "setinew" script is a form from which the fairwitness of a conference
+% can select which items will be initially new for new users.  This script
+% is its own form handler.
+%
+% Query Parameters:
+%    conf=		Name of the conference to edit.
+%    csel=		Passed through
+%
+%    which=             Which items to make new: "all", "some" or "none"
+%    do_since=          If true, use the new_since value
+%    days_since=        Number of days since
+%    isel=              List of selected items
+
+
+% state in form
+/hiddens `(<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+  /nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if'
+  def
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+% boot out non-fairwitnesses
+amfw ! {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+  stop
+} if
+
+/which defined {
+
+  % Set the new values
+  /new_since 0 def
+  which (all) eq {
+    /new_isel (1-$) def
+  } {
+    which (none) eq {
+      /new_isel () def
+    } {
+      /do_since defined { do_since {
+        /new_since /days_since defined {days_since cvi}{7}ifelse def
+      } if } if
+      /new_isel isel def
+    } ifelse
+  } ifelse
+
+  (*settings) [/new_isel /new_since] savevar
+
+  clear flavor(/confopt)+ jump
+} if
+
+/abalone.menujump 0 def
+
+[(Edit Initial New Items for the )/conftitle( )Conference cap] (C)
+[/conf /csel /nextnew]
+[/abalone.menujump] []
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+(<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">\n)
+hiddens
+(<TR><TD CLASS=mast>&nbsp;</TD><TD CLASS=mast ALIGN=right>
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=confhome>Goto )Conference cap( Home Page</OPTION>
+<OPTION VALUE=confopt>* Change )Conference cap( Options</OPTION>\n)
+csel {(<OPTION VALUE=nextconf>View Next )Conference cap(</OPTION>\n) } if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>\n)
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=colhead COLSPAN=2>
+Edit Initial New Items for the )/conftitle( )Conference cap(</TD></TR>
+)
+
+% load the current settings
+/new_isel (1,$) def
+/new_since 0 def
+(*settings) [/allowhtml /new_isel /new_since] loadvar pop
+new_isel (1-$) eq {/new_since 0 def} if
+
+% form header
+(<FORM ACTION=setinew METHOD=post>\n)
+hiddens
+(<TR><TD CLASS=odd COLSPAN=2>
+<INPUT TYPE=radio NAME=which VALUE=all> Make <STRONG>ALL</STRONG> )Items
+( new when a newuser joins.</TD></TR>
+<TR><TD CLASS=even COLSPAN=2>
+<INPUT TYPE=radio NAME=which VALUE=none> Make <STRONG>NO</STRONG> )Items
+( new when a newuser joins.</TD></TR>
+<TR><TD CLASS=odd COLSPAN=2>
+<INPUT TYPE=radio NAME=which VALUE=some CHECKED> Make the )Items( selected below
+new when a newuser joins.</TD></TR>
+)
+
+% new_since checkbox
+(<TR><TD CLASS=odd>&nbsp;&nbsp;&nbsp;</TD>
+<TD CLASS=even>
+<INPUT TYPE=checkbox NAME="do_since" VALUE=1)
+new_since {( CHECKED)} if
+(>&nbsp;&nbsp;<EM>Any )Items( that have been responded to in the last
+<INPUT TYPE=text NAME="days_since" SIZE=3 VALUE=)
+new_since {new_since}{7} ifelse (> days</EM></TD></TR>\n)
+
+% List the items
+
+/isel (1-$) store	% selector for all items
+/showforgotten 1 store	% show forgotten items as well as unforgotten items
+/cnt 0 def		% initial counter for number of items
+
+% begin loop for each item 
+{
+  % get the next item
+  isel next_item
+  {
+    break	% next_item failed - no more items
+  }{
+    this_item
+    {
+      break	% this_item failed - shouldn't happen
+    }{
+      % save new item selector
+      pop /isel xstore 
+  
+      (<TR><TD CLASS=odd>&nbsp;</TD>\n)
+      (<TD CLASS=)cnt 2 mod {(even)}{(odd)}ifelse(>\n)
+      (<INPUT TYPE=checkbox NAME="isel" VALUE=)item
+      dup new_isel in_sel {( CHECKED)} if
+      (>&nbsp;#)item(: )
+    
+      % print item number and title
+      (0) read_item {pop (Internal error "read_item") halt} if
+      title
+
+      % print status flags
+      retired {( [retired])} if
+      frozen {( [frozen])} if
+      linked {( [linked])} if
+      (</TD></TR>\n)
+
+      % update count
+      /cnt inc
+    } ifelse
+  } ifelse
+} loop
+cnt 0 eq {
+  % If there are no items, offer a checkbox for the first item anyway
+  (<TR><TD class=odd>&nbsp;</TD>\n)
+  (<TD CLASS=even>\n)
+  (<INPUT TYPE=checkbox NAME="isel" VALUE=1)
+  1 new_isel in_sel {( CHECKED)} if
+  `(>&nbsp;&nbsp;<EM>Future first )Item(</EM><BR>\n)'
+  /cnt inc
+} if
+% Add a checkbox for the last item.
+(<TR><TD CLASS=odd>&nbsp;</TD>
+<TD CLASS=)cnt 2 mod {(even)}{(odd)}ifelse(>
+<INPUT TYPE=checkbox NAME="isel" VALUE="$")
+new_isel ($) 0 search 0 gt {( CHECKED)} if
+(>&nbsp;<EM>&nbsp;&nbsp;The last )Item(</EM></TD></TR>
+<TR><TD CLASS=)cnt 2 mod {(odd)}{(even)}ifelse( COLSPAN=2>
+<INPUT TYPE=submit VALUE="Change Settings">
+</FORM>
+</TD></TR>
+</TABLE>
+</BODY>
+</HTML>
+)

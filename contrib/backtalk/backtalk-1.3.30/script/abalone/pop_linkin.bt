@@ -1,0 +1,35 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_linkin script
+%
+% Generate the contents of a popup window for the linkin command.  It asks
+% for the source conference and item number.
+
+flavor(config)+ include
+
+(<HTML>\n)
+
+mainwin!{
+  (<HEAD><SCRIPT Language="Javascript">\n<!--
+function inmain() {
+var scf=document.pop.sconf.value;
+var sit=document.pop.sitem.value;
+if (scf != '' && sit != '')
+  opener.location=document.pop.action+'?dconf=)conf(&list=)list(&sitem='+
+    escape(sit)+'&sconf='+escape(scf);
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>
+<FORM NAME=pop ACTION=")backtalkurl(/)flavor(linkin" METHOD=POST)
+mainwin!{( onSubmit="return inmain();")} if (>
+<INPUT TYPE=hidden NAME=dconf VALUE=")conf(">
+<INPUT TYPE=hidden NAME=list VALUE=")list(">
+Link )Item( number <INPUT TYPE=text NAME=sitem SIZE=4> from )
+Conference( <INPUT TYPE=text NAME=sconf SIZE=12>
+<INPUT TYPE=submit VALUE="Go">
+</FORM></BODY></HTML>
+)

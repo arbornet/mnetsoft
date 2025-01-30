@@ -1,0 +1,10 @@
+                       Fronttalk Setting:  WELCOME
+
+Usage:  DISPLAY WELCOME
+        SET WELCOME
+
+Display/Edit the welcome file for the current conference.  The welcome file
+is displayed to people connecting to the server for the first time.  See
+"HELP DEFINE LINMSG" for more information.
+
+Only the fairwitness of the conference can "SET WELCOME".

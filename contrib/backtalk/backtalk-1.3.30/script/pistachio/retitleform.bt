@@ -1,0 +1,64 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% retitleform script
+%
+% This script displays a form for retitling an item.  The "retitle.bt" script
+% is the handler for this and does the actual retitling.
+%
+% Query Parameters:
+%    conf=      current conference
+%    csel=      selector for future conferences to read
+%    item=      item to read now
+%    isel=      selector for items to read after this
+%    rsel=      response selector - (all) (new) (since) or numeric range
+%    noskip=    if true, display even items with no selected responses.
+%    since=     if rsel is (since) this gives date.
+%    showforgotten= show all, unforgotten, or forgotten items.
+
+flavor(config)+ include
+
+% header
+(<HTML><HEAD>
+<TITLE>Retitle )/conftitle( )Item cap( )item(</TITLE>
+)/metatags(</HEAD>
+)
+
+% open conference and generate <BODY> line
+flavor(openconf)+ stopped {
+  (Backtalk internal error: No such )Conference( \()conf(\)\n) stop} if
+
+global_header
+(<H1>Retitle )conftitle( Item )item(</H1>
+)
+
+% open the item
+mayread ! {(The )conf( )Conference( cannot be read.) stop } if
+rsel item this_item {Item cap( )item( does not exist.) stop} if
+read_item {Item cap( )item( does not exist.) stop} if
+pop
+
+% warn off users without retitle access
+mayretitle ! {
+ (You do not have the required access to retitle )Item( )item( in the )conf
+ ( )Conference
+ (\n</BODY></HTML>\n)
+ stop
+} if
+
+% show the retitle form
+(<FORM METHOD=POST ACTION=retitle>
+<INPUT TYPE="hidden" NAME=conf VALUE=)conf(>
+<INPUT TYPE="hidden" NAME=csel VALUE=)csel(>
+<INPUT TYPE="hidden" NAME=item VALUE=)item(>
+<INPUT TYPE="hidden" NAME=isel VALUE=)isel(>
+<INPUT TYPE="hidden" NAME=rsel VALUE=)rsel(>
+<INPUT TYPE="hidden" NAME=from VALUE=)from(>
+<TABLE>
+<TR><TD>New Title:</TD>
+<TD><INPUT NAME=newtitle VALUE=")title(" SIZE=68></TD></TR>
+<TR><TD></TD><TD><INPUT TYPE=submit VALUE="Change Title"></TD></TR>
+</TABLE>
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

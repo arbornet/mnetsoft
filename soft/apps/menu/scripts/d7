@@ -1,0 +1,12 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+#Modification(s)
+#Added UNIX command tutorial comments --mic (Dec. 26, 1998)
+
+echo "
+UNIX: write "
+sleep 1
+echo "Answering Call... "
+write
+sleep 1

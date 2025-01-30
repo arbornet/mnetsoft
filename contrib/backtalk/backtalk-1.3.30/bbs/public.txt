@@ -1,0 +1,7 @@
+This is a list of the conferences.  It should say something clever here.
+
+Various Conferences:
+ general      - General Conference
+
+Test Conferences:
+ test         - A place to experiment 

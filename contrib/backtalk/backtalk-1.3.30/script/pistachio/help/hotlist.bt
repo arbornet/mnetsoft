@@ -1,0 +1,81 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/butsel 2 defconstant flavor(buttondef)+ include
+
+(Hot List Page) (pistachio/help/header) include
+
+/global defined {
+(<H2>The Global Default Hot List:</H2>
+
+A hot list is simply a list of )Conferences(.
+When users click on the )readnew_button( buttons on the )
+hrefbegin(help/begin>entrance page</A> and then use the )nextconf_button
+( buttons on later pages, Backtalk will automatically proceed through all
+the )Conferences( in their hot list in the order they are listed.
+<P>
+The global default hot list is set up by the system administrator to serve
+as a hot list for all users who haven't created one of their own yet.
+Depending on your philosophy, it might be just a short list of the )Conferences(
+most suitable to beginners, or it might be a long list including most
+everything on your conferencing system.
+<P>
+You can edit the global hot list with the )
+hrefbegin(hotlist?global=1>Hot List</A> page.
+)
+
+/whose (the) def
+/Whose (the) def
+
+} {
+
+(<H2>The Hot List Page:</H2>
+
+Your ``hot list'' is simply a list of your favorite )Conferences(.
+If you click on the )readnew_button( button on the )
+hrefbegin(help/begin>entrance page</A> and then use the )nextconf_button
+( buttons on later pages, Backtalk will automatically proceed through all
+the )Conferences( in your hot list in the order you have them listed.
+<P>
+All users start out with a default hot list created by the system
+administrators.  You can modify this to suit your tastes by using the )
+hrefbegin(hotlist>Hot List</A> page.
+)
+
+/whose (your) def
+/Whose (Your) def
+
+} ifelse
+
+(<H2>Moving )Conferences cap( in )Whose( Hot List:</H2>
+
+On the top part of the hot list page, you will find a table containing\n)
+whose( current hot list and some brightly color command buttons.
+To change the order of the )Conferences( in )whose( hot list, click on the
+``Move'' button next to )AConference( you want to move.
+Backtalk will then display a new table showing your hot list with the
+the )Item( you are moving deleted and with ``here =&gt;'' buttons between
+each entry.  Just click the ``here =&gt;'' button that corresponds to the
+position you want to insert the moved )Conference(.
+
+<H2>Deleting )Conferences cap( from )Whose( Hot List:</H2>
+
+The current hot list table on the top of the page also contains a
+``Delete'' button for each )Conference(.
+Click on this to remove the )Conference( from )whose( hot list.
+
+<H2>Adding )Conferences cap( to )Whose( Hot List:</H2>
+
+There are two ways to add )Conferences( to )whose( hot list.
+You can type the name of the )Conference( into the )Conference( name box and
+then click the ``Add It'' button, or you can simply click one of the ``Add''
+buttons next to the entries in the list of )Conferences( at the bottom of the
+screen.
+<P>
+Either way, you will next be asked where to insert the )Conference( into\n)
+whose( hot list.  Just click the ``here =&gt;'' button corresponding to
+the position you want it to be inserted into.)
+global_footer
+(</BODY></HTML>
+)

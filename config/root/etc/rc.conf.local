@@ -1,0 +1,25 @@
+#
+# $Id: rc.conf.local 1402 2014-03-15 16:30:44Z cross $
+# /etc/rc.conf.local - Configuration localizations.
+# 1. Start mysqld before httpd.
+# Ordering constraints:
+#saslauthd_flags="-a getpwent"
+accounting=YES
+afs=YES
+inetd_flags=""
+mysqld_flags="--bind-address=127.0.0.1"
+named_flags=""
+nginx_flags="-u"
+ngircd_flags=""
+nsd_flags=
+ntpd_flags="-s"
+pf=YES
+pkg_scripts="dovecot mysqld postfix postgrey nginx ngircd"
+shlib_dirs=/cyberspace/contrib/lib
+slowcgi_flags="-p /"
+smtpd_flags=NO
+sndiod_flags=NO
+spamassassin_flags=""
+spamd_flags=""
+spamd_grey=NO
+unbound_flags=''

@@ -1,0 +1,76 @@
+                       Fronttalk Command:  DEFINE
+
+Usage:  DEFINE
+        DEFINE <name>
+        DEFINE <name> "<string>"
+	DEFINE <name> <mask> "<string>"
+
+The DEFINE command is used to define variables and macros that effect the
+behavior of Fronttalk.
+
+DEFINE without arguments lists all current definitions.
+
+DEFINE with just a <name> argument prints the current definition of that
+named object.  (Note that in Picospan this *undefines* it.  In Fronttalk
+the UNDEF command does that.)
+
+The other syntaxs assign a new value to a variable or macro.  The string can
+contain the usual backslashed codes, like '\n' for newline.  The mask value
+determines how the define will be used.  It can be a sum of the following:
+
+      1 - OK prompt command macro
+      2 - variable
+      4 - command parameter (item-range, etc)
+      8 - "Respond or Pass" macro
+    256 - environment variable
+
+If no mask value is given, 2 is assumed.  The name of a thing being defined
+(especially of types 1, 4, and 8) can include one underscore ('_') to indicate
+the minimum abbreviation.  Thus if we do:
+
+   DEFINE u_sers 9 "unix 'who'"
+
+then typing "u" or "us" or "use" or "user" or "users" at either the OK or
+the "Respond or Pass" prompt causes the Unix 'who' command to be executed.
+
+Some variables are used by Fronttalk for various things.  For more information
+on these see "HELP DEFINE <variable>".  The following variables give strings
+used for prompts in various places:
+
+    PROMPT     - The "Ok" prompt.
+    RFPPROMPT  - The "Respond or pass" prompt.
+    OBVPROMPT  - Alternate "Respond or pass" prompt for frozen items.
+
+The folowing variables give names of Unix programs to use for different
+things:
+
+    EDITOR     - The program used for text entry.  Usually 'gate'.
+    PAGER      - The program used for output filtering.  Usually 'more'.
+
+Then there are a large number of "separator" strings that specify the
+format for different kinds of output.  For more information on the
+syntax of these strings, see "HELP SEPARATORS":
+
+    BULLMSG    - Format for displaying bulletin.
+    CHECKMSG   - Format for CHECK command output.
+    CONFMSG    - Format for "DISPLAY THISCONFERENCE" command.
+    INDXMSG    - Format for displaying index file.
+    LINMSG     - Format for "login" message printed when entering a conference.
+    LOUTMSG    - Format for "logout" message printed when leaving a confernce.
+    PARTMSG    - Format for PARTICIPANTS command output.
+    PRINTMSG   - Format for title line for PRINT command output.
+
+These separators are all for the display of items:
+
+    ISEP       - Format for item headers in READ and "BROWSE LONG".
+    ISHORT     - Format for item information in "BROWSE SHORT".
+    FSEP       - Format for FIND command output.
+    FTSEP      - Format for FIND command output.
+    RSEP       - Format for response headers in READ.
+    NSEP       - Format for response count, displayed after item text in READ.
+    TXTSEP     - Format for response text in READ.
+    ZSEP       - Format for end of responses in READ.
+
+Conference rc files may use the define command to create new variables or
+macros, or to change a compiled-in default value, but they cannot change
+a value set by a previous define command.

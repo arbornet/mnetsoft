@@ -1,0 +1,76 @@
+# This is an install script for a Backtalk Interface.  It is meant to be
+# invoked by the 'btinstall' command, not to be run independently.
+
+
+# Make sure all the stuff btinstall is supposed to pass to us is here
+if test -z $DISTDIR; then
+  echo "DISTDIR not defined"
+  exit 1
+fi
+if test -z $SCRIPTDIR; then
+  echo "SCRIPTDIR not defined"
+  exit 1
+fi
+if test -z $IMAGEDIR; then
+  echo "IMAGEDIR not defined"
+  exit 1
+fi
+if test -z $OWNER; then
+  echo "OWNER not defined"
+  exit 1
+fi
+
+NAME=gumball
+
+# Create and permit the script directory
+echo "Creating $NAME script directory"
+test ! -d $SCRIPTDIR/$NAME && mkdir $SCRIPTDIR/$NAME
+chmod 775 $SCRIPTDIR/$NAME
+test $CANCHOWN && chown $OWNER $SCRIPTDIR/$NAME
+
+# Copy scripts into script directory
+echo "Copying $NAME scripts"
+cp script-$NAME/*.bt $SCRIPTDIR/$NAME
+chmod 644 $SCRIPTDIR/$NAME/*.bt
+if test $CANCHOWN; then
+  chown $OWNER $SCRIPTDIR/$NAME/*.bt
+fi
+ln $SCRIPTDIR/$NAME/begin.bt $SCRIPTDIR/$NAME/confhome.bt
+for file in changebio.bt changepass.bt chpwform.bt confopt.bt edit.bt \
+   editfile.bt editform.bt enter.bt enterpost.bt find.bt findform.bt hide.bt \
+   itemop.bt linkform.bt linkitem.bt logout.bt peekconf.bt peekresp.bt \
+   read.bt respedit.bt response.bt setsecret.bt; do
+    rm -f $SCRIPTDIR/$NAME/$file
+    ln $SCRIPTDIR/$NAME/view.bt $SCRIPTDIR/$NAME/$file
+done
+rm -f $SCRIPTDIR/$NAME/*.bb
+
+echo "Done installing $NAME"
+
+NAME=gumdrop
+
+# Create and permit the script directory
+echo "Creating $NAME script directory"
+test ! -d $SCRIPTDIR/$NAME && mkdir $SCRIPTDIR/$NAME
+chmod 775 $SCRIPTDIR/$NAME
+test $CANCHOWN && chown $OWNER $SCRIPTDIR/$NAME
+
+# Copy scripts into script directory
+echo "Copying $NAME scripts"
+cp script-$NAME/*.bt $SCRIPTDIR/$NAME
+chmod 644 $SCRIPTDIR/$NAME/*.bt
+if test $CANCHOWN; then
+  chown $OWNER $SCRIPTDIR/$NAME/*.bt
+fi
+ln $SCRIPTDIR/$NAME/begin.bt $SCRIPTDIR/$NAME/confhome.bt
+for file in changebio.bt changepass.bt chpwform.bt confopt.bt edit.bt \
+   editfile.bt editform.bt enter.bt enterpost.bt find.bt findform.bt hide.bt \
+   itemop.bt linkform.bt linkitem.bt logout.bt peekconf.bt peekresp.bt \
+   read.bt respedit.bt response.bt setsecret.bt; do
+    rm -f $SCRIPTDIR/$NAME/$file
+    ln $SCRIPTDIR/$NAME/view.bt $SCRIPTDIR/$NAME/$file
+done
+rm -f $SCRIPTDIR/$NAME/*.bb
+
+echo "Done installing $NAME"
+exit 0

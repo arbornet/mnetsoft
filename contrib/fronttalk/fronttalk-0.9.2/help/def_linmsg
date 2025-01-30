@@ -1,0 +1,41 @@
+                        Fronttalk Defines:  LINMSG
+
+Usage:  DEFINE LINMSG "<string>"
+
+The LINMSG define is a conference separator displayed when a user 
+JOINs a conference.  It can also be run by the "DISPLAY LOGIN" and
+"DISPLAY NEW" commands.  It displays various introductory information.
+
+For full details on its format, see help pages on SEPARATORS, CONFFUNC,
+CONFCOND, and SEPDATE.
+
+The default value is:
+
+  "%(1x%(2x\n%)%0g%)\
+   %(2x%(3N%3g%)\
+   (%1x\n%)\
+   %(n%(r%r newresponse item%S%)\
+   %(b%(r and %)%b brandnew item%S%)\n%)\
+   %(iFirst item %f, last %l\n%)\
+   %(sYou are a fair-witness in this conference.\n%)\
+   %(lYou are an observer of this conference.\n%)\
+   %(jYour name is \"%u\" in this conference.\n\
+   %(~O%(4F\n%4g%E\n>>>> New users: type HELP for help.\n%)%)%)%)%c"
+
+The first line displays the login file.  Because of the "%(1x" things, this
+is show by JOIN and "DISPLAY LOGIN", but not "DISPLAY NEW".  The rest is
+shown by JOIN and "DISPLAY NEW", but not "DISPLAY LOGIN".
+
+The second line displays the bulletin file if it has changed since the last
+time the user logged in.  The third line is just a blank line.
+
+The fourth and fifth line display the number of newresponse and brandnew
+items in the conferences, and the sixth displays the range of item numbers.
+
+The seventh and eighth lines remind the user that he is a fair-witness or
+an observer.
+
+The ninth line tells people joining for the first time what their name has
+defaulted to in this conference.  If they are not observers, the tenth line
+prints a welcome message - either the contents of the welcome file, if it
+exists, or a short directive to type HELP for help.

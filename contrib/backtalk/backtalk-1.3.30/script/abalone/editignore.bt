@@ -1,0 +1,69 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% editignore script
+%
+% This script adds or removes people from a twitlist, and then jumps to
+% the bio page.  This is called from the go.bt script
+%
+% Query Parameters:
+%    op=	Operation to perform:
+%                   (D) = delete an item from the list
+%                   (A) = add a new item to the list.
+%    login=	user to add or delete from list
+
+/edited 0 def		% don't write out new list
+
+% Load the twitlist into memory
+/twitlist () def
+(*.backtalk) dup /twitlist loadvar pop
+filedate cvi /filetime xdef
+
+% Make sure this is a new query, not an accidentally repeated one.
+/tm defined {
+   tm cvi filetime lt { flavor(bio.bt)+ jump } if
+} if
+
+% Do add case - sorts the list while inserting the new twit
+op (A) eq {
+  login {
+    login twitlist (,) inlist !  {
+      % Construct an array of arrays and asort it
+      [ [ login ]
+      twitlist
+      { (,) parse 
+	dup ! {pop break} if
+	[ exch ] exch
+      } loop
+      pop
+      ] 0 1 asort
+
+      % form it back into a comma separated string
+      () exch
+      {
+	0 get
+	exch dup {(,)+} if
+	exch +
+      } forall
+      /twitlist xdef
+      /edited 1 def
+    } if
+  } if
+} if
+
+% Do deletion case
+op (D) eq {
+  login {
+    `(,)twitlist(,)' `(,)login(,)' (,) 0 replace
+    dup length 2 - 1 exch substr
+    /twitlist xdef
+    /edited 1 def
+  } if
+} if
+
+% write the file back out
+edited {
+  (*.backtalk) dup /twitlist savevar
+  filedate cvi /filetime xdef
+} if
+
+flavor(bio)+ jump

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+echo "
+#24 Steven R. Weiss(srw) on Wed Nov  5 17:12:23 1997:
+ Here's a tip for you folks who are touting various conferences and 
+ items. FrontTalk users know \"Join\" as the command to get to a 
+ new conference. Since we now have a lot of backtalk usage as well, add 
+ to your request for people to join, by including a backtalk-style 
+ internal pointer. 
+ 
+ Dang almost had it right. He should have written
+ Help decide the future of Grex!  Join the co-op conf (conf:coop)
+ 
+ Back in resp:21, Walter touted item 137 of cooking. It would have been 
+ way cool to write item:cooking,137
+ 
+ FrontTalk users will just see the text, but backtalk users will note that 
+ backtalk makes these clickable links that can be followed.
+ There are three types: resp, item, and conf.
+ 
+ resp takes these args after the colon: confname,itemnum,responserange
+  it defaults the confname and item ot the current one.
+ 
+ item takes: confname,itemnumber
+  it defaults the confname to the current one.
+ 
+ conf takes just the confname.
+ 
+ Hopefully you will find these easy to remember and use. 
+"

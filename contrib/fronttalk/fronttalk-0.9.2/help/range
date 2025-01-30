@@ -1,0 +1,48 @@
+			       Item Ranges
+
+Several commands require an item range to be given to select which items to
+operate on.  They are used in the commands READ, BROWSE, FIND, FORGET,
+REMEMBER, RETIRE, UNRETIRE, FREEZE, THAW and KILL.  The defaults are
+different for different commands.
+
+Individual items are usually referenced by number.  For example:
+   73           Item number 73
+   ^ or FIRST   The first item.
+   $ or LAST    The last item.
+
+Ranges can be formed by combining individual item references with a hyphen
+or comma, plus there are short hands for all items:
+
+   12-14        Items 12 through 14.
+   12,14        Items 12 and 14.
+   * or ALL     All items - shorthand for ^-$.
+
+Various flags can be used to modify item ranges.  There are five different
+forms that select only items with "new" responses.  When used with the
+READ command, only the "new" responses will be shown.
+   NEW           Only previously seen items with new responses or newly
+                   entered items.
+   NEWRESPONSE   Only previously seen items with new responses.
+   BRANDNEW      Only newly entered items.
+   UNSEEN        All items with unseen responses.  Most items that have had
+                 no activity since before you joined the conference are
+		 considered UNSEEN but not NEW.
+   SINCE <date>  Only items with responses entered since the given date.
+                 See "HELP DATE" for date syntax.
+
+You can also select items by their author's login ID or by title keywords:
+
+   (login,login) Only items entered by the users with the given logins
+   "string"      Only items with the given string in the real or private title.
+
+The following flags effect which items are included:
+   NOFORGET      Don't omit forgotten items.
+   FORGOTTEN     Include only forgotten items.
+   FAVORITES     Include only favorite items.
+
+The following flags effect the order in which the items are processed:
+   REVERSE       Process the selected items in reverse order.
+   FAVFIRST      Process favorite items first (this is the default).
+   NOFAVFIRST    Don't process favorite items first.
+   BNEWFIRST     Process brand new items first.
+   BNEWLAST      Process brand new items last.

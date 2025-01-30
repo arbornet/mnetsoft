@@ -1,0 +1,13 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: chgrp <group> <filename>
+
+File name to change? "
+read change1
+echo -n "New group? "
+read group
+chgrp $group $change1
+echo "
+Done...."

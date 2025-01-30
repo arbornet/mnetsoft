@@ -1,0 +1,5 @@
+Header files for Backtalk.
+
+For installers, the important file here is config.h, which is generated
+by the configure script and can be editted to further customize your
+configuration.

@@ -1,0 +1,51 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% pop_mytitle script
+%
+% To set a private title, generate a popup window prompting for the
+% new title.
+
+flavor(config)+ include
+
+% Open conference and item, just to get the old title
+flavor(openconf)+ stopped { ( Backtalk internal error: )exch(\n) halt } if
+(1) item this_item {(No )Item+( )+item( in )conf( )Conference+ halt } if
+read_item {(No )Item+( )+item( in )conf( )Conference+ halt } if
+pop
+
+/oldtitle   item /mytitle get_item_note dup !{pop title} if   def
+
+(<HTML>\n)
+
+mainwin !  {
+  (<HEAD><SCRIPT Language="Javascript">\n<!--
+function inmain() {
+var nt= document.pop.newtitle.value;
+opener.location=document.pop.action+'?conf=)conf
+  (&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+  since {(&since=)since}if
+  /nextnew defined {(&nextnew=)nextnew}if
+  (&newtitle='+escape(nt);
+window.close(); return false;}
+//-->
+</SCRIPT>
+</HEAD>\n)
+} if
+
+(<BODY BGCOLOR=white>
+<FORM NAME=pop ACTION=")backtalkurl(/)flavor(mytitle" METHOD=POST)
+mainwin!{( onSubmit="return inmain();")} if (>
+<INPUT TYPE=hidden NAME=conf VALUE=")conf(">
+<INPUT TYPE=hidden NAME=item VALUE=")item(">
+<INPUT TYPE=hidden NAME=csel VALUE=")csel(">
+<INPUT TYPE=hidden NAME=isel VALUE=")isel(">
+<INPUT TYPE=hidden NAME=rsel VALUE=")rsel(">\n)
+since {(<INPUT TYPE=hidden NAME=since VALUE=")since(">\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=")nextnew(">\n)} if
+(<TABLE>
+<TR><TD>Public&nbsp;Title:</TD><TD>)title quote(</TD></TR>
+<TR><TD>Private&nbsp;Title:</TD>
+<TD><INPUT TYPE=text NAME=newtitle SIZE=50 VALUE=")oldtitle quote("></TD></TR>
+<TR><TD></TD><TD><INPUT TYPE=submit VALUE="Change It"></TD></TR>
+</TABLE>
+</FORM></BODY></HTML>\n)

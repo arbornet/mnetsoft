@@ -1,0 +1,73 @@
+% Backtalk Administration Tools -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% askconf script
+%
+% This asks for the name of a conference, and then runs another page with
+% the conf argument set to that parameter.
+%
+% Query Parameters:
+%  action=	script to run on the conference.
+%  typeit=	if defined as 1, use input box instead of list
+%  admhome=	URL of administrative menu
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+/typeit dup defined {typeit cvi}{0}ifelse def
+
+(<HTML><TITLE>Backtalk Conference Administration</TITLE>
+<BODY BGCOLOR=FFFFFF>
+<H1>Backtalk Conference Administration</H2>
+)
+
+typeit {
+
+  % use text box for conference name
+  (<FORM METHOD=post ACTION=)action(>
+  <INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>\n)
+  /target defined {(<INPUT TYPE=hidden NAME=target VALUE=)target(>\n)} if
+  /goto defined {(<INPUT TYPE=hidden NAME=goto VALUE=)goto(>\n)} if
+  (Conference: <INPUT TYPE=text NAME=conf SIZE=20>
+  <INPUT TYPE=submit VALUE="Choose It">
+  </FORM><P>
+  For a list of conferences, click
+  <A HREF=askconf?action=)action cgiquote(&typeit=0&admhome=)admhome
+  /target defined {(&target=)target cgiquote} if
+  /goto defined {(&goto=)goto cgiquote} if
+  (>here</A>\n)
+
+} {
+
+  % select conference from menu
+  (*confmenu) read /cm xdef
+  cm ! {(No conferences on Menu)} if
+  (Select the conference:\n<UL>)
+  {
+    cm (\n) clip exch /cm xdef
+    % Skip comment lines
+    dup 0 1 substr (#) eq {pop continue} if
+
+    % Pick apart the line
+    (:) clip /conf xdef
+    (:) clip /title xdef pop
+
+    conf {
+      (<LI><A HREF=)action(?conf=)conf(&admhome=)admhome
+      /target defined {(&target=)target cgiquote} if
+      /goto defined {(&goto=)goto cgiquote} if
+      (>)conf(</A> - )title(\n)
+    } if
+     cm ! {break} if
+
+  } loop
+  (</UL>
+  To operate on conferences which are not on the conference menu, click
+  <A HREF=askconf?action=)action cgiquote(&typeit=1&admhome=)admhome
+  /target defined {(&target=)target cgiquote} if
+  /goto defined {(&goto=)goto cgiquote} if
+  (>here</A>\n)
+
+} ifelse
+
+(<P>
+<A HREF=)admhome(>Return to Admin Menu</A>
+</BODY></HTML>
+)

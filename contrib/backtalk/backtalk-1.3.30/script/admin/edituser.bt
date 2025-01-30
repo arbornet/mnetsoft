@@ -1,0 +1,81 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% edituser script
+%
+% This script does simple operations on user accounts - validation,
+% invalidation, deletion, etc.  The form is in listuser.bt.
+%
+% Query Parameters:
+%    op=	operation: (V)=validate, (I)=invalidate, (D)=delete.
+%    uname=     user to operation on.
+%    confirm=   must be defined to 1 for delete to work
+%    goto=      script to run when done.
+%    admhome=   admin menu URL
+
+nopwedit {(Cannot operate on Unix accounts) stop } if
+amadm ! {
+  (gradm) () ingroup ! {
+    (Only administrators can validate or delete user accounts)
+    sessions {
+      /msg xdef
+      /bounce `serverurl anon_url (admin/begin)' def
+      (public/login) chain
+    } {
+      stop
+    } ifelse
+  } if
+} if
+
+op (V) eq { uname 1 validate } if
+
+op (I) eq { uname 0 validate } if
+
+op (D) eq {
+  /confirm defined ! {
+    (<HTML><HEAD><TITLE>Delete User )uname(</TITLE></HEAD>
+    <BODY BGCOLOR=white>\n)
+    % check existence of target
+    uname userinfo pop pop !
+      {pop pop pop (User )uname( does not exist.\n</BODY></HTML>) stop} if
+    /ufname xdef pop pop
+    (Really Delete user )uname ufname{( \()ufname quote(\))}if
+    (?\n<P><TABLE BORDER=1 CELLPADDING=3><TR><TD BGCOLOR=red ALIGN=center>
+    <A HREF=edituser?confirm=1&)cgiquery
+    (>Yes</A></TD>\n<TD BGCOLOR=00FF00 ALIGN=center><A HREF=edituser?confirm=0&)
+    cgiquery(>No</A></TD></TR></TABLE></BODY></HTML>\n)
+    halt
+  } if
+  confirm cvi {
+    % check existence of target
+    uname userinfo pop pop !
+      {pop pop pop (User )uname( does not exist.\n) stop} if
+    pop pop pop
+    % delete the user
+    uname selectuser
+    removeuser
+    () selectuser
+  } if
+} if
+
+/goto defined { goto jump } if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+(<HTML><BODY BGCOLOR=white>
+User ")uname(" )
+op (D) eq {
+  confirm cvi ! {(not )} if
+  (deleted)
+}{
+  op (I) eq {(Invalidated)}{(Validated)}ifelse
+} ifelse
+(.<P>
+<A HREF=")admhome(">Goto Admin Menu</A>
+)
+op (D) ne confirm cvi ! or {
+  (<BR><A HREF="showuser?uname=)uname(&admhome=)admhome(">Goto )uname
+  ('s page</A>\n)
+} if
+(</BODY>
+</HTML>
+)

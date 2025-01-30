@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for OpenBSD (vers 1 September 2005), see www.w3.org" />
+  <link rev="made" href="mailto:webmaster@cyberspace.org" />
+
+  <title>Internet Services</title>
+</head>
+
+<body>
+  <h1>Outgoing Internet Services on Grex</h1>Lynx can provide
+  access to the internet for many of its common protocols. Access
+  is limited to paying members on certain ports. Free accounts
+  should be able to access http and gopher servers as long as they
+  are operating on the normal service port for that service. Lynx
+  also supports ftp, telnet and other protocols, but the Grex
+  kernel blocks outgoing connections on those and on non-standard
+  http ports such as 8000 and 8080 except for members.
+
+  <p>If you are interested in membership, see <a href=
+  "../member.html">the Grex Membership Page</a>.</p>
+
+  <p>In order to use these facilities, you may check out the
+  <a href="../menu/main_menu.html">Internet Connection Page</a> or
+  else just type the "g" command at any time and you will be
+  prompted for a URL. This stands for "Universal Resource Locator"
+  and has a form like telnet://grex.cyberspace.org/ or
+  http://cad.ucla.edu/repository/useful/iching.html</p>
+
+  <p>To use anonymous ftp from within Lynx, enter:</p>
+  <pre>
+                ftp://sitename
+</pre>For example, to connect to ftp.uml.edu to download some files
+about Babylon 5, hit the "g" key, then enter "ftp://ftp.uml.edu"
+without the quotes. Lynx will list the directories, you can then
+select Babylon-5 to enter that directory, and select a file to
+download it.
+
+  <p>You can access gopher, WAIS, and telnet similarly:</p>
+  <pre>
+                gopher://sitename
+                wais://sitename
+                telnet://sitename
+</pre>If you want to telnet to a specific port, just enter:
+  <pre>
+                telnet://sitename:portnumber
+</pre>
+</body>
+</html>

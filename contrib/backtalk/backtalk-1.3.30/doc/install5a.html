@@ -1,0 +1,213 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part VA: Apache Configuration with Backtalk Accounts</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  <A HREF=install4a.html>Part IV: Installation</A><BR>
+Next:  <A HREF=install6.html>Part VI: Cron Configuration</A>
+<HR>
+If you are installing a system using Unix accounts,
+read the <A HREF=install5b.html>other version</A> of this page.
+<P>
+You may need to make some adjustments to the configuration of your
+http server before Backtalk will work properly.
+Backtalk can be used with any http server, but configuration instructions
+are given here for Apache only.  Sorry, we don't know an awful lot about
+the others.
+<P>
+<STRONG>(1) Install Needed Modules</STRONG>
+<P>
+If you selected the default <TT>--authtype=text</TT> option, then
+this should be an issue.  It is possible to build Apache without
+<TT>mod_auth</TT> installed, but would be really unusual.
+<P>
+If you selected <TT>--authtype=db</TT> or <TT>--authtype=dbm</TT> then
+you need to be sure your Apache server has <TT>mod_auth_db</TT> or
+<TT>mod_auth_dbm</TT> (respectively) installed.
+These are not installed by default
+in the standard Apache distribution.
+Redhat 6.1 installs only <TT>mod_auth_db</TT>.
+<P>
+To check, find your httpd program and run it with an <TT>-l</TT> option
+on the command line.  This will list the modules linked into it.  If
+the module you need is listed, then you are all set.  If not, check
+if <TT>mod_so.c</TT> is on the list.  If it is, then your Apache server
+is set up to dynamically load additional modules, and you should check if
+the module you need is installed as a dynamically loaded module.
+Dynamically loaded modules are normally found in the `<TT>modules</TT>'
+directory under Apache's home directory (possibly
+`<TT>/usr/local/apache/modules</TT>' or
+`<TT>/etc/httpd/modules</TT>').  Look in this directory to see if the
+module you need is installed.
+<P>
+If it is not installed, then you'll need to install it.
+To do this, follow the instructions in the Apache distribution.
+Note that if you have a server configured for dynamically loaded modules,
+installing new ones is pretty easy using the `<TT>apxs</TT>' command.
+Otherwise, you'll have to recompile Apache with the new module
+(which is not really all that hard either).
+<P>
+<STRONG>(2) Enable Authentication</STRONG>
+<P>
+The Backtalk installation scripts will have created two subdirectories
+under your CGI directory, one named `<TT>pw</TT>' the other named
+`<TT>adm</TT>'.  Into these directories it has placed some programs
+that should only be runnable by authenticated users, and it has placed
+some files named `<TT>.htaccess</TT>' which configure the authentication
+for those directories.
+<P>
+As usually distributed, Apache will ignore the `<TT>.htaccess</TT>' files.
+To enable them, we need to make a slight change in the configuration.
+<P>
+To do this, locate the `<TT>httpd.conf</TT>' configuration file for
+Apache and edit it.
+Find the section of the configuration file that configures the
+options on the cgi-bin directory.  It probably looks something like this:
+<P>
+<PRE>
+    &lt;Directory "/home/httpd/cgi-bin"&gt;
+        AllowOverride None
+        Options ExecCGI
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;</PRE>
+Change the `<TT>AllowOverride</TT>' line to say
+<P>
+<PRE>
+        AllowOverride AuthConfig</PRE>
+This says that `<TT>.htaccess</TT>' files may override the authentication
+configuration settings for this directory and its subdirectories.
+<P>
+An alternative to using the `<TT>.htaccess</TT>' files would be to
+add into `<TT>httpd.conf</TT>' some new directory configuration blocks 
+similar to the one above but for the `<TT>pw</TT>' and `<TT>adm</TT>'
+subdirectories.  The commands in the `<TT>.htaccess</TT>' files would be
+put into these blocks instead.
+<P>
+<STRONG>(3) Restart Apache</STRONG>
+<P>
+Tell the currently running apache to reload its configuration file,
+so the new settings are activated.  If your system has the `<TT>apachectl</TT>'
+program installed, do:
+<P>
+<PRE>
+        apachectl restart</PRE>
+For Redhat 6.1, which doesn't have `<TT>apachectl</TT>', do instead:
+<P>
+<PRE>
+        /etc/rc.d/init.d/httpd restart</PRE>
+
+<P>
+<STRONG>(4) Test Authentication</STRONG>
+<P>
+If you aren't confident that you have Apache and the Backtalk authentication
+system all correctly installed, then you may want to run some tests by using
+your browser to run Backtalk's little cgitest script.
+<P>
+The URLs of the cgitest program will be
+<BLOCKQUOTE>
+<EM>cgiurl</EM><TT>/cgitest</TT><EM>cgisuffix</EM><TT>/foo?bar</TT><BR>
+<EM>cgiurl</EM><TT>/pw/cgitest</TT><EM>cgisuffix</EM><TT>/foo?bar</TT><BR>
+<EM>cgiurl</EM><TT>/adm/cgitest</TT><EM>cgisuffix</EM><TT>/foo?bar</TT>
+</BLOCKQUOTE>
+For example, if you configured <TT>cgiurl</TT> to
+<TT>http://your.host.name/cgi-bin/backtalk</TT> and did not set
+<TT>cgisuffix</TT>,
+then the URLs would be
+<BLOCKQUOTE>
+<TT>http://your.host.name/cgi-bin/backtalk/cgitest/foo?bar</TT><BR>
+<TT>http://your.host.name/cgi-bin/backtalk/pw/cgitest/foo?bar</TT><BR>
+<TT>http://your.host.name/cgi-bin/backtalk/adm/cgitest/foo?bar</TT>
+</BLOCKQUOTE>
+Try hitting these URLs with your browser.
+<P>
+The first URL is just to test that you can run CGI scripts and that your
+http server is vaguely sane.
+The output will look something like:
+<BLOCKQUOTE>
+environment variables:<BR>
+HTTP_USER_AGENT=Mozilla/4.61 [en] (X11; I; Linux 2.2.12-20 i686)
+<BR>
+PATH_INFO=/foo
+<BR>
+PATH_TRANSLATED=/home/httpd/html/foo
+<BR>
+QUERY_STRING=bar
+<BR>
+REMOTE_ADDR=209.142.241.230
+<BR>
+REMOTE_HOST=undefined
+<BR>
+REMOTE_USER=undefined
+<BR>
+SCRIPT_NAME=/cgi-bin/backtalk/cgitest
+<HR>
+httpd id:<BR>
+uid=99(nobody) gid=99(nobody) groups=99(nobody)
+</BLOCKQUOTE>
+If you instead only get an error message or no output at all, something is
+definitely wrong.  The error messages displayed by the browser are often
+vague.  Check the http server's error log for a more detailed message.
+If the <TT>cgitest</TT> program was not found, the log file will get the
+path name it looked at.  Is the <TT>cgitest</TT> program there and correctly
+permitted?  If it is looking under the document root, you may need to add
+a <TT>ScriptAlias</TT> for the `<TT>cgi-bin</TT>' directory (for Apache, this
+should be in the <TT>httpd.conf</TT> file.
+<P>
+If you are seeing the contents of the <TT>cgitest</TT> program instead of its
+output, then Apache is not recognizing it as a CGI program and is just
+displaying the file instead of running it.  Your server may be configured to
+require a <TT>.cgi</TT> suffix on CGI program files.
+<P>
+If it runs, you should confirm that
+<UL>
+<LI>HTTP_USER_AGENT is a string describing your browser.
+<LI>PATH_INFO is ``/foo'' (as given in the URL above).
+<LI>PATH_TRANSLATED is the full path to your document root followed by ``/foo''.
+<LI>QUERY_STRING is ``bar'' (as given in the URL above).
+<LI>REMOTE_ADDR is the IP number of the host your browser is running on.
+<LI>REMOTE_HOST is undefined or the name of the host your browser is running on
+(whether or not it is defined depends on you server's configuration and doesn't
+particularly matter to Backtalk).
+<LI>REMOTE_USER is undefined.
+<LI>SCRIPT_NAME is ``/cgi-bin/backtalk/cgitest''
+(or whatever else was between the hostname and the
+``/foo'' in the URL you used).
+<LI>The http id is the one you defined in the <TT>httpd-id</TT> configuration
+setting.
+</UL>
+<P>
+The second two URLs run the same test script, but authentication should be
+required for them.  Your browser should pop up a login window, and
+the login ID 'cfadm' and the password you set during installation give
+you output similar to that shown above, except that <TT>REMOTE_USER</TT>
+should be 'cfadm'.
+<P>
+If you are not asked for authentication and <TT>REMOTE_USER</TT> is shown
+as undefined, then Apache is not recognizing the <TT>.htaccess</TT> file.
+Check that you have `<TT>AllowOverride AuthConfig</TT>' set for the
+<TT>cgi-bin</TT> directory.
+<P>
+Note that once you have authenticating, if you run the same program again,
+or another program in the same directory, you will not be asked to log in
+again.  Your browser remembers your old authentication and automatically
+resends it.  To log in as a different user, you need to exit and restart
+the browser.
+This is, in fact, the sole purpose of the `adm' subdirectory.
+With two links to Backtalk in directories with different AuthNames,
+it is possible for a person to be logged on simultaneously as two
+different users. This is especially useful for conference administrators,
+who may want to access the administration account without exiting their
+personal accounts. That's why the second directory is called `adm',
+though the link to Backtalk in there does not actually have any
+special properties.
+<HR>
+Prev:  <A HREF=install4a.html>Part IV: Installation</A><BR>
+Next:  <A HREF=install6.html>Part VI: Cron Configuration</A>
+</BODY></HTML>

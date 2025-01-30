@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# Use bourne shell
+#
+
+SHELL=/bin/sh
+export SHELL
+cd $HOME
+if [ -f $HOME/.profile ]; then
+	. $HOME/.profile
+fi
+SHELL=/bin/sh
+export SHELL
+
+umask 022
+
+if [ ! -d $HOME/.cfdir ]; then
+	mkdir $HOME/.cfdir
+	chmod 711 $HOME/.cfdir
+	[ -e $HOME/.cfonce ] && mv $HOME/.cfonce $HOME/.cfdir
+	[ -e $HOME/.cflist ] && mv $HOME/.cflist $HOME/.cfdir
+	mv $HOME/.??*.cf $HOME/.cfdir 2>/dev/null || true
+	mv $HOME/.??*.cfx $HOME/.cfdir 2>/dev/null || true
+fi
+
+echo "=========================================================================="
+echo "Type '!faq' at an Ok: prompt to see answers to frequently asked questions."
+echo "Type '!change' at an Ok: prompt to change your settings."
+echo "=========================================================================="
+echo -n "Please press enter to continue..."
+read junk0
+
+exec /cyberspace/bin/bbs

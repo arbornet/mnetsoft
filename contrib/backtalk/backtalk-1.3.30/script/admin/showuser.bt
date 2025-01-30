@@ -1,0 +1,199 @@
+% Backtalk Admin Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% showuser script
+%
+% The showuser script displays information about any user in the system and
+% allows that information to be editted.
+%
+% Query Parameters:
+%    uname=	Login name of user who's info we want to look at.
+%    errmsg=    If defined, an error message to display at top of page.
+%    admhome=   URL of main menu
+%
+% Edited Values:  (normally we just send these, but on error we get them)
+%    privacy=   User wants information to be secret if this is defined as 1
+%    birth=     User's birthdate
+%    email=     User's email address
+%    sex=       User's gender
+%    telephone= User's phone number
+%    bio=       User's biography text
+%    url=       User's home page url
+%    primegroup=User's primary group name or id
+%    oaltgroup= Comma-separated list of user's current other groups
+%    altgroup=  Comma-separated list of user's future other groups
+%    plan=      User's new .plan
+
+amadm ! {
+  (You must be a conference administrator to access this page\n)
+  sessions {
+    /msg xdef
+    /bounce `serverurl anon_url (admin/begin)' def
+    (public/login) chain
+  } {
+    stop
+  } ifelse
+} if
+
+/admhome defined ! {/admhome `SCRIPT_NAME(/)flavor(begin)' def} if
+
+% Get the generic userinfo code
+(lib/userinfo.bt) include
+
+% find fullname, status, and home directory from the password info
+uname userinfo 
+   /status xdef
+   /laston xdef
+   /biodir xdef
+   /ofullname xdef
+   /grpid xdef
+   pop	% discard user id number
+
+% if we are generating an error page, substitute selected values
+/errmsg defined {
+  /fullname defined {/ofullname fullname def} if
+  /primegroup defined {/grpid primegroup groupid def} if
+} if
+
+% output page header
+(<HTML><HEAD>
+<TITLE>Account Info - User )uname(</TITLE>
+<STYLE TYPE="text/css">
+<!--
+TEXTAREA {font-family: monospace;}
+//-->
+</STYLE>
+</HEAD>
+<BODY BGCOLOR="white">
+<H1>Account Info - User ")uname("</H1>
+<P>
+)
+
+
+/errmsg defined ! {
+  % userinfo returns () if there is no such user
+  biodir ! { (No account currently exists for )uname(.</BODY></HTML>) stop } if
+
+  /useplan constant {
+    % load the user's .plan file.
+    (*.plan) uname pathname /bio_fn xdef
+
+    bio_fn readable {
+      % plan is readable -- load it.
+      /plan bio_fn read def
+      plan ! { /plan ( ) def } if
+      /privacy 0 def
+    }{
+      % plan is not readable -- user wants privacy.
+      /plan () def
+      /privacy 1 def
+    } ifelse
+  }{
+    % load settings from the user's .backtalk file
+    uname getinfo
+  }ifelse
+} {
+  /privacy defined ! {/privacy 0 def} if
+} ifelse
+
+% If anonymity is set, all user info is private
+mayseefname ! {/privacy 1 def} if
+
+/errmsg defined {
+  (<FONT COLOR=red>Please correct the following errors:<BR>\n<UL><LI>)
+  errmsg chomp (\n) (\n<LI>) 0 replace(\n</UL></FONT>\n)
+} if
+
+% create a form and fill in current values
+(<FORM METHOD=POST ACTION=changeuser>
+<INPUT TYPE=hidden NAME=uname VALUE=)uname(>
+<INPUT TYPE=hidden NAME=admhome VALUE=)admhome(>
+<P><STRONG>Account Status</STRONG>: )
+status {status 1 eq {(U)}{(I)}ifelse(nvalidated)} {(Valid)} ifelse
+(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+\(<A HREF="edituser?uname=)uname(&op=)status{(V)}{(I)}ifelse
+(&goto=admin/showuser&admhome=)admhome(">)
+status{(V)}{(Inv)}ifelse(alidate</A>\)
+<BR>
+<STRONG>Primary Group</STRONG>: <SELECT NAME=primegroup>
+)
+/grpnm grpid groupname def
+/grps [groups] def
+grps {
+  (<OPTION VALUE=")exch dup(") exch dup grpnm eq {( SELECTED) exch} if
+  (>)exch(\n)
+} forall
+% if current gid has no name, include that number in pulldown
+grpnm ! { (<OPTION VALUE=")grpid(" SELECTED>)grpid(\n) } if
+(</SELECT><BR>
+<STRONG>Other Groups</STRONG>:
+)
+/oaltgrp () def
+grps {
+  /g xdef
+  (&nbsp;&nbsp;<INPUT TYPE=checkbox NAME=altgroup VALUE=")g(")
+  g grpnm ne { g uname ingroup {
+    /oaltgrp `oaltgrp (,) g' def
+    ( CHECKED)
+  } if } if
+  (>&nbsp;)g(\n)
+} forall
+/grps undef
+% delete leading comma from oaltgrp
+oaltgrp { /oaltgrp oaltgrp 1 99999 substr def } if
+(<INPUT TYPE=hidden NAME=oldaltgroup VALUE=")oaltgrp("><BR>\n)
+
+/useplan constant {
+
+   % version for systems using .plan files
+
+   (<STRONG>Full Name</STRONG>: <INPUT TYPE=text NAME=fullname VALUE=")
+   nopwedit {(" TYPE=hidden>)ofullname} {(" SIZE=40>)} ifelse
+   (<BR><STRONG>Plan</STRONG>:<BR>
+   <TEXTAREA NAME="plan" ROWS=20 COLS=72 WRAP=HARD>)plan(</TEXTAREA><BR>\n)
+
+} {
+
+   % version for systems using .backtalk files
+
+   (<STRONG>Keep Info Secret</STRONG>:
+   <INPUT NAME=privacy TYPE=radio VALUE=1) privacy {( CHECKED)} if
+   (>Yes&nbsp;&nbsp;&nbsp;<INPUT NAME=privacy TYPE=radio VALUE=0)
+   privacy ! {( CHECKED)} if(>No<BR>
+   <STRONG>Full Name</STRONG>: <INPUT NAME=fullname VALUE=")ofullname
+   nopwedit {(" TYPE=hidden>)ofullname} {(" SIZE=40>)} ifelse
+   (<BR>\n)
+   {(<BR>\n)} () () promptinfo
+} ifelse
+
+(<INPUT TYPE=submit VALUE="Submit changes">
+</FORM>
+)
+
+(<TABLE WIDTH=100% BORDER=1 CELLPADDING=5>
+<TR><TD ALIGN=CENTER><A HREF=)admhome(>Return to admin menu</A></TD>
+<TD ALIGN=CENTER><A HREF="optform?uname=)uname(&admhome=)admhome(">
+Set )uname('s conferencing options</A></TD>
+<TD ALIGN=CENTER><A HREF="timezone?uname=)uname(&admhome=)admhome(">
+Set )uname('s time zone</A></TD>
+<TD ALIGN=CENTER><A HREF="twitlist?uname=)uname(&admhome=)admhome(">
+Edit )uname('s list of users to ignore</A></TD>\n)
+
+nopwedit ! {
+
+   (<TD ALIGN=CENTER>)
+   status ! {
+     (<A HREF="chpwform?uname=)uname(&admhome=)admhome(">
+     Change )uname('s password</A>)
+   }{
+     (<FONT SIZE=-1>Must validate account before changing password</FONT>)
+   } ifelse
+   (</TD>\n)
+
+   (<TD ALIGN=CENTER><A HREF="edituser?uname=)uname(&op=D&admhome=)admhome(">
+   Delete )uname( account</A></TD>\n)
+
+} if
+
+(</TABLE>
+</BODY></HTML>
+)

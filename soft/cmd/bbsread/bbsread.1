@@ -1,0 +1,199 @@
+.\"	@(#)bbsread.1	1.0
+.\"
+.TH BBSREAD 1 "June 1, 1993"
+.AT 3
+.SH NAME
+bbsread \- read a PicoSpan conference
+.SH SYNOPSIS
+.B bbsread
+[-mpj] <confname> [<item selector>]
+.SH DESCRIPTION
+.I Bbsread
+is a program to read PicoSpan conferences.
+Running it should seem vaguely like doing a
+.B read
+command in PicoSpan, only it will look like
+all items are frozen, so you can't respond to them.
+
+It's main purpose for existing is to read read-only conferences,
+which cannot be read with the standard PicoSpan software.
+It can also be used as a quick way to print out an item from a
+conference without having to go into PicoSpan.
+.PP
+.I Bbsread
+will read and update your PicoSpan participation files in a manner
+compatible with the
+.IR bbs (1)
+system.
+So items read in
+.I bbsread
+will not be shown again if you read the conference later with
+.I bbs
+and vice versa.
+.PP
+You must give the name of the conference you want to read on the command
+line.
+You may abbreviate the conference name in the usual PicoSpan manner.
+You can also give many of the same item selector keywords
+that you could put on a
+.B read
+command in
+.IR bbs .
+These can all be abbreviated in exactly the same way they are in
+.IR bbs .
+Supported keywords are:
+.TP
+.B new
+Read brand new items and new responses to items you have previously read.
+This is the default.
+.TP
+.B all
+Read all items, old or new.
+.TP <item_number>
+Read only the item with the given number.
+.TP
+.TP <first_item>-<last_item>
+Read items in the given item number range. 
+The last item number may be omitted or given as a dollar-sign ($) to indicate
+all items through the end.
+.TP
+.B old
+Read only items you have seen before.
+.TP
+.B brandnew
+Read only items that are brand new.
+Do not read items you have seen before, even if they have new responses.
+.TP
+.B newresponse
+Read only the new responses of items that have new responses.
+Do not read brandnew items.
+.TP
+.B forgotten
+Read only items that you have forgotten.
+.TP
+.B noforget
+Read forgotten items, as well as whatever else you have selected.
+.TP
+.B reverse
+Reverse the order in which items are displayed, so the one with the highest
+number is shown first.
+.TP
+.B nopass
+At the end of each item, prompt the user for a command.
+This is the default.
+.TP
+.B pass
+Do not pause for a command at the end of each item.
+.TP
+.B noresponse
+Print only the header of each item, and then pause for a command.
+.PP
+.I Bbsread
+provides several command line options:
+.TP
+.B \-m
+Normally bbsread uses the
+.IR more (1)
+command as a pager in presenting output to your terminal.
+The
+.B \-m
+option surpresses, this, so that no pager is used.
+.TP
+.B \-j
+Normally, if you run bbsread on a conference you are not a member of,
+bbsread will join you to the conference, by creating a participation file in
+your home directory.
+If you don't want to do this, the
+.B \-j
+flag suppresses joining new conferences.
+It has no effect if the conference you read is one you are already a member
+of.
+.TP
+.B \-p
+This will suppress updating your participation file for the conference, so
+if you read it again later with
+.I bbs
+or
+.IR bbsread,
+you will see the same stuff again.
+.PP
+When
+.I bbsread
+prompts you for a command, then you can give most of the commands that
+PicoSpan excepts at the "Respond or Pass?" prompt.
+They can all be abbreviated just as they are in PicoSpan.
+The ones implemented are:
+.TP
+.B pass
+Proceed to the next item.
+Hitting return is equivalent to a pass.
+.TP
+.B forget
+Mark the item as forgotten, so it will not be displayed in the future.
+It will be forgotten in
+.I bbs
+as well as in
+.IR bbsread .
+.TP
+.B "unforget or remember"
+Mark a forgotten item as no longer forgotten.
+.TP
+.B header
+Print the item header again.
+.TP
+<number>
+Print the responses starting from the given number.
+Zero is the item text.
+.TP
+.B first
+Print the responses starting from number one.
+This is equivalent to typing 1 or '^'.
+.TP
+.B current
+Print the responses starting from the current one.
+.TP
+.B last
+Print the last response again.
+This is equivalent to typing '$'.
+.TP
+.B new
+Forget that this item has been read (so you will see the new responses
+again next time you run PicoSpan or
+.IR bbsread )
+and exit the program.
+.TP
+.B postponse.
+Forget that this item has been read (so you will see the new responses
+again next time you run PicoSpan or
+.IR bbsread )
+and proceed to the next item.
+.TP
+.B "only <n>"
+Print the text of response n only.
+Zero is the item text.
+.TP
+.B "quit or stop"
+Exit the program immediately.
+.PP
+.I Bbsread
+can read any of the usual open PicoSpan conferences.
+It can also read any closed conference if a file named
+.B readonly
+is in the conference directory.
+.SH BUGS
+.I Bbsread
+doesn't understand a lot of PicoSpan stuff.
+Notably, it doesn't do any kind of rseps or iseps or read any of
+your .cfonce or .cfrc files.
+You can't configure it to your taste at all.
+.PP
+Furthermore,
+.I bbsread
+does not currently understand censored items
+(though it does handle scribbled items).
+.SH AUTHOR
+Jan Wolter
+.SH FILES
+/usr/bbs/conflist	list of PicoSpan conferences
+.SH "SEE ALSO"
+bbs(1)

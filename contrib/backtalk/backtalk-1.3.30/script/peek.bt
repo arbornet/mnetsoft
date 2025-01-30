@@ -1,0 +1,105 @@
+% Backtalk Peek Script -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% This is a way for people to write a simple URL pointing into Backtalk
+% conferences.  Anonymous reading must be enabled on the target system
+% for this to work usefully.
+%
+% Typical URLs look like this:
+% 
+%      http://www.grex.org/cgi-bin/bt/peek:mars  
+%             - link to mars conference home page
+%
+%      http://www.grex.org/cgi-bin/bt/peek:mars:6 
+%             - link to item 6 in the mars conference
+%
+%      http://www.grex.org/cgi-bin/bt/peek:mars:6:4
+%             - link to response 4 of item 6 in the mars conference
+%
+%      http://www.grex.org/cgi-bin/bt/peek:mars:6:4-9
+%             - link to responses 4 through 9 of item 6 in the mars conference
+%
+% The user will be presented with the interface with the lowest score that
+% works for their browser.  To be used each interface must have the following
+% scripts defined in it:
+%
+%    interface.bt     - Pushs onto the stack a sort code, interface name,
+%		        description, and browser rating.
+%    peekconf.bt      - Script that shows the conference defined by the "conf"
+%			variable.
+%    peekresp.bt      - Script that shows the responses defined by the "conf",
+%			"item" and "rsel" variables.  Rsel may be a single
+%			number, a range, or the word 'all'
+
+browser 0 lt {(Not a browser)} if
+
+% parse apart the arguments
+(,:;/ ) /delim xdef
+urlarg delim parse /confname xdef
+       delim parse /itemnumber xdef
+       /respnumber xdef
+
+% no arguments - Goto welcome page
+confname ! {
+	(welcome) jump
+} if
+
+% Find best interface and stupidest interface
+
+(.) firstdir pop nextdir pop nextdir		% skip '.' and '..'
+/bestsort 999999 def
+/dumbbrow 999999 def
+{ dup ! {pop break} if
+  dup directory {
+    dup (/interface.bt)+ dup readable {
+      [
+      3 1 roll		% make the directory name the 0th element
+      call		% execute interface.bt to load rest of description
+      ]
+      /curr xdef
+      /minbrow curr 4 get def
+      /thissort curr 1 get def
+      % If this can be used by a dumber browser, record it as 'dumb'
+      minbrow dumbbrow lt {
+        /dumbbrow minbrow def
+	/dumb curr def
+      } if
+      % If usable by our browser, and better than any previous, record as 'best'
+      browser minbrow ge thissort bestsort lt and {
+        /bestsort thissort def
+	/best curr def
+      } if
+    } {
+      pop pop		% discard directory with no interface.bt file
+    } ifelse
+  } {
+    pop			% discard non-directory
+  } ifelse
+  nextdir
+} loop
+
+/best defined ! {
+  /dumb defined {
+    % found no interface dumb enough for our browser - use dumbest
+    /best dumb def
+  } {
+    (No interfaces installed!!) stop
+  } ifelse
+} if
+
+/conf confname store
+itemnumber ! {
+  % conference name only
+  best 0 get (/peekconf)+ jump
+  halt
+} if
+
+/item itemnumber cvi store
+respnumber ! {
+  % conference and item number only
+  /rsel (all) store
+} {
+  % conference and item number and response selector
+  /rsel respnumber store
+} ifelse
+
+best 0 get (/peekresp)+ jump

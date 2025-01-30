@@ -1,0 +1,26 @@
+% Backtalk Wasabi Interface -- (c) 2004, Jan Wolter
+%
+% peekconf script
+%
+% This is the entry point when we do peek:<conf>:<item> or
+% peek:<conf>:<item>:<rsel>.  The conference name is passed in in the "conf"
+% variable, the item number in the "item" variable, and the response selector,
+% in the "rsel" variable.  "rsel" will be "all" if no responses were selected.
+%
+% Wasabi does not usually display the item text and the responses on the same
+% page.  So if the rsel is 'all' or includes response 0, then we display only
+% the item text.  Otherwise we display the selected comments.
+
+/show 
+  rsel (all) eq {
+    (text)
+  } {
+    0 rsel in_sel {
+      (text)
+    } {
+      rsel
+    } ifelse
+  } ifelse
+  def
+
+(wasabi/begin) chain

@@ -1,0 +1,29 @@
+                         Fronttalk Defines:  ISEP
+
+Usage:  DEFINE ISEP "<string>"
+
+The ISEP define is an item separator used to generate the header line
+of items during "READ" and all the lines of "BROWSE LONG".
+
+For full details on its format, see help pages on SEPARATORS, ITEMFUNC,
+ITEMCOND, and SEPDATE.
+
+The default value is:
+
+  "\nItem %i entered %d by %a%(U uid %u%)\n %h"
+
+Probably a nicer value would be:
+
+  "\nItem %i: %h\nEntered by %a%(U uid %u%) (%l) on %d:"
+
+If a separator is set that doesn't include checks to generate special
+messages flagging retired, forgotten, frozen, or linked items, then
+Fronttalk will automatically extend the isep to print messages like
+"<linked item>" if appropriate.
+
+The %(V and %(W conditions are true in iseps only in contexts where the
+isep is being displayed immediately before the item text, and that item
+text has been hidden or erased.  In contexts where the isep is displayed
+without item text, such as in a BROWSE LONG or in a READ NEW when the item
+text itself isn't new, they are false.  This is because these are attributes
+of the item text only, not of the entire item.

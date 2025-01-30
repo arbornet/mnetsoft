@@ -1,0 +1,240 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: Conference Deletion</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>Conference Deletion</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Backtalk conference deletion can be done either through the web interface,
+or from Unix.
+For systems using real unix user accounts, there is one stage of the conference
+deletion that currently must be done from Unix.
+Both procedures are described here.
+<P>
+Note that if you follow the procedures here you will destroy
+all items and responses in the conference,
+as well as all the conference configuration information and all
+records of which responses each user has seen.
+If you ever want any of this information back again,
+you should <A HREF=admin-conf-backup.html>back up</A>
+the conference before deleting it.
+
+<H2>Conference Deletion From Backtalk:</H2>
+
+To delete a Backtalk conference, follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Remove the conference from the conference menu
+<P>
+First we should delete the conference from the list of conferences
+presented to users (unless you plan to start a new conference in the
+place of the old one, in which case you can skip to the next step.)
+<P>
+There is a link labelled "Edit the Conference Menu" on the administration
+page.  Click on it.
+<P>
+The next page will show the conference menu.  Click on the red "Delete"
+button next to the conference you are deleting.
+<P>
+Note that this step only deletes the conference from the menu.
+The conference itself is still there on your disk, and though people can't
+join it by selecting it off the menu, they can still join it
+it by typing the name in the "goto conference" box.
+<P>
+To actually delete the conference from your disk,
+you need to follow the rest of the steps in this procedure.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Goto the conference deletion page
+<P>
+Return to the conference adminstration page.
+There is a link there labelled "Delete a Conference".
+Click on this.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Specify the conference to be deleted.
+<P>
+You will be shown a form one box.  Enter the name of the conference that
+you want to delete here and kill the button labeled "Kill It".
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Confirm that you really want to delete it.
+<P>
+Since deleting conferences can destroy a lot of information in an 
+irreversable fashion, Backtalk is rather reluctant to do so on the strength
+of one button click.
+<P>
+So the next screen you will see will ask you if you really want to kill the
+conference.
+There are three selectable buttons displaying the letters A-A-A on this page.  
+Change them one at a time until they spell out the word Y-E-S.
+Then click on the kill button.
+<P>
+The conference will have been deleted.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> For Unix accounts, clean up participation files.
+<P>
+
+If your backtalk installation is set up so that all users have Unix accounts
+on your server and log in with those accounts (this is rare), then there is
+one more step to perform.
+You have to delete the participation files for the conference from each
+user's home directory.
+There is currently no way to do this from the Backtalk web interface.
+You need to do it from Unix, as described <A HREF=#mark>below</A>.
+
+<HR>
+</OL>
+
+<H2>Conference Deletion From Unix:</H2>
+
+<P>
+The conference deletion procedure is identical to that used for Picospan
+or Yapp 2.3 conferences.
+<P>
+To delete a Backtalk conference, follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log onto the Unix conference administration account.
+<P>
+This is the account that owns all the conference files and the backtalk
+program itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> change directory to the ``bbs'' directory.
+<P>
+This is the directory where the <TT>conflist</TT> file and all the conference
+directories normally reside.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the <TT>conflist</TT> file.
+<P>
+
+The <TT>conflist</TT> file resides in the top level "bbs" directory.
+It is used to map typed names of conferences to the actual directory names
+where the conference is stored.
+You can use any standard Unix text editor to edit it, such as:
+<PRE>
+        vi conflist
+</PRE>
+A typical conflist file might look like this:
+<PRE>
+    !&lt;hl01&gt;
+    /usr/local/backtalk/bbs/general2
+    gen_eral2:/usr/local/backtalk/bbs/general2
+    general1:/usr/local/backtalk/bbs/general1
+    oldgen_eral:/usr/local/backtalk/bbs/general1
+    tes_t1:/usr/local/backtalk/bbs/test1
+    mar_tian1:/usr/local/backtalk/bbs/martian1
+    mars:/usr/local/backtalk/bbs/martian1
+    bar_soom:/usr/local/backtalk/bbs/martian1
+</PRE>
+Or, if you are using the shortened format,
+The path names of the top level bbs directory (``<TT>/usr/local/backtalk/bbs/</TT>''
+in the example will be replaced with percent signs, so that it looks more
+like this:
+<PRE>
+    !&lt;hl01&gt;
+    %general2
+    gen_eral2:%general2
+    general1:%general1
+    oldgen_eral:%general1
+    tes_t1:%test1
+    mar_tian1:%martian1
+    mars:%martian1
+    bar_soom:%martian1
+</PRE>
+Suppose we want to delete version one of the ``Martian'' conference, which is
+stored in the <TT>martian1</TT> directory.
+<P>
+We should start by deleting all the lines in the <TT>conflist</TT> which
+point to that directory, in this case, the last three lines of the file.
+<HR>
+
+<LI><INPUT TYPE=checkbox> Edit the <TT>public.txt</TT> file.
+<P>
+The <TT>public.txt</TT> file is a human-readable list of conferences, used
+by the interfaces to generate lists of conferences.
+You should edit this file, removing any line describing the conference
+you are deleting.
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+<A NAME="mark"> Remove the user participation files</A>
+<P>
+Backtalk maintains a participation file for each user who is a member of
+a conference.
+Since we are deleting the conference, we should delete this participation
+files too.
+<P>
+The name of the participation file is in the conference's <TT>config</TT>
+file.  In this case, our conference was in the
+<TT>/usr/local/backtalk/bbs/martian1</TT>
+directory, so the configuration file is
+<TT>/usr/local/backtalk/bbs/martian1/config</TT>.
+If we look at this file, we will see something like this:
+<PRE>
+    !&lt;pc02&gt;
+    .martian1.cf
+    0
+    marvin,carter
+</PRE>
+The second line of this tells us the name of the participation file for
+the conference, in this case <TT>.martian1.cf</TT>.
+So we need to delete this file from each user's directory.
+<P>
+The easiest way to do this is with a Unix <TT>find</TT> command.
+First you need to know where your user's home directories are.
+If your Backtalk is set up to use real user accounts this may be
+place like <TT>/home</TT>, but more likely
+you are using separate Backtalk accounts for your Backtalk users, so you
+user directory may be something like <TT>/usr/local/backtalk/user</TT>.
+Supposing the latter, you could remove all the <TT>.martian1.cf</TT> files
+using a command like:
+<PRE>
+    find /usr/local/backtalk/user -name .martian1.cf -exec rm "{}" \;
+</PRE>
+This searchs under for all files named <TT>.martian1.cf</TT> under the
+<TT>/usr/local/backtalk/user</TT> directory and deletes each one.
+Obviously some caution is required with commands like this.
+<HR>
+
+<LI><INPUT TYPE=checkbox> Remove the conference directory.
+<P>
+Everything else related to the Martian conference is in the directory that
+the <TT>conflist</TT> file was pointing to (in this example, the directory
+<TT>/usr/local/backtalk/bbs/martian1</TT>).
+To finish the job of deleting the conference,
+we need only delete this directory.
+So, first make any backups of it that you might want, and then do
+<PRE>
+    rm -r /usr/local/backtalk/bbs/martian1
+</PRE>
+to delete the directory and all of its contents.
+</OL>
+</BODY></HTML>

@@ -1,0 +1,63 @@
+% Backtalk PostLog Script -- (c) 2003, Jan Wolter, Steve Weiss
+%
+% These are macro functions for logging postings.
+
+% ========= Backtalk-style postlog file =========
+
+/bt_post_log constant {
+
+   % ITEM_LOG_FORMAT:  - item_log_format <log-line>
+   % <date>\t<conf>\t<item>\t0\t<authorid>\t<authorname>\t<title>
+
+   /item_log_format {
+     `time ctime 4 20 substr (\t)
+      conf(\t)
+      item(\t0\t)
+      id(\t)
+      alias(\t)( ) 0 replace (\t)
+      title(\n)'
+   } def
+
+   % RESP_LOG_FORMAT:  <respno> resp_log_format <log-line>
+   % <date>\t<conf>\t<item>\t<respno>\t<authorid>\t<authorname>\t<title>
+
+   /resp_log_format {
+     dict begin
+     /myresp xdef
+     `time ctime 4 20 substr(\t)
+      conf(\t)
+      item(\t)
+      myresp(\t)
+      id(\t)
+      alias(\t)( ) 0 replace (\t)
+      title!{(0) read_item !{pop}if }if title(\n)'
+     end
+   } def
+
+} if
+
+% ========= Yapp-style resplog file =========
+
+/yapp_post_log constant {
+
+   % ITEM_LOG_FORMAT:  - item_log_format <log-line>
+
+   /item_log_format {
+     `(<a href=)yapp_resplog_url(/restricted/read/)conf(/)item(>)
+      time ctime( )alias quote( \()id(\) entered )conf( )item
+      ( \()title quote(\)</a>\n)'
+   } def
+
+   % RESP_LOG_FORMAT:  <respno> resp_log_format <log-line>
+
+   /resp_log_format {
+     dict begin
+     /myresp xdef
+     `(<a href=)yapp_resplog_url(/restricted/read/)conf(/)item(.)myresp(>)
+      time ctime( )alias quote( \()id(\) responded to )conf( )item( )myresp
+      ( \() title!{(0) read_item !{pop}if}if title quote(\)</a>\n)'
+     end
+   } def
+
+} if
+

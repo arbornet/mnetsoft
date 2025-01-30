@@ -1,0 +1,11 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+tty=`tty`
+echo "
+Thanks for calling Grex ...
+Disconnecting line: $tty
+
+"
+sleep 1
+kill -9 -1 0

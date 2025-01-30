@@ -1,0 +1,93 @@
+party		keeplog seecontrol seebs firstchar readlim=10
+3rdRock		mayclose makenoise="/a/p/e/pez/noisetab"                                          chanintro="/a/p/e/pez/intro" mapname="/a/p/e/pez/mapname" rename                  seecontrol seebs idleout=20
+Agency		mayclose makenoise="/a/g/r/grimaldi/noisetab" readlim=200 rename                  askname chanintro="/a/g/r/grimaldi/chanintro" seecontrol seebs idleout=20
+Al1		mayclose askname rename readlim=500                                               makenoise="/a/a/l/al1/noisetab" seecontrol seebs idleout=20
+All		readlim=500 mayclose askname rename seecontrol seebs idleout=20
+Antares		readlim=200 makenoise="/c/b/e/beamer/noisetab" mayclose rename chanintro="/c/b/e/beamer/welcome" mapname="/c/b/e/beamer/mapname"  seecontrol seebs
+Arcadia		mayclose rename askname makenoise="/a/m/a/maeve/noisetab"                         seecontrol seebs idleout=20
+B00zers		readlim=10 mayclose chanintro="/a/r/y/ryan1/party/chanintro"                      makenoise="/a/r/y/ryan1/party/noise"                                              mapname="/a/r/y/ryan1/party/mapname" seecontrol seebs idleout=20
+Badlands	readlim=300 mayclose rename askname                                               makenoise="/a/m/e/mersh/noisetab" seecontrol seebs idleout=20
+Balance		makenoise="/d/l/l/llanarth/noisetab" mapname="/d/l/l/llanarth/mapname" mayclose seecontrol seebs idleout=20
+Ben		readlim=5 makenoise="/a/t/r/tree/Ben.noise" mayclose rename                       askname seecontrol seebs idleout=20
+Bud		readlim=500 makenoise="/a/k/i/kiddeath/noisetab" mayclose rename                  askname seecontrol seebs idleout=20
+Butmunch 	readlim=500 mayclose makenoise="/a/k/i/kiddeath/noisetab" rename                  askname seecontrol seebs idleout=20
+buzby_fanz	askname mayclose rename seecontrol seebs idleout=20
+Cafe		readlim=100 makenoise="/a/n/e/nephi/noisetab" mayclose                  seecontrol seebs idleout=20
+CaerTwilight 	readlim=100 mayclose makenoise="/a/p/a/paladin/noisetab" rename                   seecontrol seebs idleout=20
+Cellblock	chanintro="/a/c/b/cb311/chanintro"                                                makenoise="/a/c/b/cb311/noisetab" mapname="/a/c/b/cb311/mapname"                  mayclose uniquename seecontrol seebs idleout=20
+Chicken 	makenoise="/var/spool/party/noisetab" mayclose rename                             mapname="/a/a/s/assassin/mapname" seecontrol seebs idleout=20
+Chrrey 		readlim=200 makenoise="/a/d/o/dolly/noisetab" mayclose askname                    rename seecontrol seebs idleout=20
+CocaCola	chanintro="/a/k/c/kcoke/.intro" makenoise="/a/k/c/kcoke/noisetab"                 mayclose rename uniquename nokeeplog                                              mapname="/a/k/c/kcoke/.mapname" idleout=20
+cobol		askname mayclose rename idleout=20
+coding		chanintro="/a/j/i/jimj/channel/chanintro"                                         makenoise="/a/j/i/jimj/channel/noisetab"                                          mapname="/a/j/i/jimj/channel/mapname" seecontrol seebs mayclose
+Control_HQ 	askname rename readlim=100 mayclose                                               makenoise="/a/a/g/agent86/kaosHQ" seecontrol seebs idleout=20
+Corruption 	readlim=250 makenoise="/a/s/n/snow/jnoisetab"                                     chanintro="/a/s/n/snow/jchanintro" mapname="/a/s/n/snow/jmapname"                 mayclose rename seecontrol seebs idleout=20
+Daemon 		readlim=100 mayclose makenoise="/a/d/e/dell/noisetab" rename                      askname seecontrol seebs idleout=20
+Davanita 	makenoise="/a/c/o/cosmos/noisetab" mayclose rename readlim=250                    mapname="/a/c/o/cosmos/mapname" seecontrol seebs idleout=20
+DayDream	chanintro="/a/j/b/jbrennan/chanintro"                                             makenoise="/a/j/b/jbrennan/noisetab"                                              mapname="/a/j/b/jbrennan/mapname" mayclose seecontrol seebs idleout=20
+devram		mayclose nokeeplog seecontrol seebs idleout=20
+Elemental	mayclose mapname="/a/d/e/dewshine/mapname" makenoise="/a/d/e/dewshine/noisetab" askname idleout=20
+Elevator 	readlim=69 mayclose makenoise="/a/k/e/keith/elevator/elenoises"                   rename seecontrol seebs idleout=20
+ENTERPRISE 	readlim=400 mayclose makenoise="/a/d/e/dell/noisetab" rename                      askname seecontrol seebs idleout=20
+FireLane 	readlim=555 mayclose makenoise="/a/c/r/creative/noisetab"                         mapname="/a/c/r/creative/mapname" seecontrol seebs idleout=20
+Froglegs	mayclose readlim=99 askname rename                                                makenoise="/a/a/i/airhead/noisetab"                                               chanintro="/a/a/i/airhead/chanintro" seecontrol seebs idleout=20
+FuzCourt	mayclose makenoise="/a/f/u/fuz/noisetab"                                          chanintro="/a/f/u/fuz/chanintro" seecontrol seebs idleout=20
+Fuzzball 	readlim=999 mayclose makenoise="/a/f/u/fuzzball/.noisetab"                        chanintro="/a/f/u/fuzzball/intro" mapname="/a/f/u/fuzzball/name"                  seecontrol seebs idleout=20
+Giggles 	readlim=900 mayclose makenoise="/a/c/r/creative/teresa"                           chanintro="/a/f/u/fuzzball/intro2" seecontrol seebs idleout=20
+GrexOhio 	readlim=400 mayclose makenoise="/c/d/y/dynamo/grexohio" seecontrol seebs idleout=20
+Harvard 	makenoise="/a/a/v/avi/p/hnoise" mayclose readlim=40 seecontrol                    seebs idleout=20
+HetterForum	readlim=50 rename mayclose seecontrol seebs idleout=20                            makenoise="/a/d/e/dewshine/noisetab"
+HetterForumChat	readlim=50 rename mayclose seecontrol seebs idleout=20                            makenoise="/a/d/e/dewshine/noisetab"
+Hideaway 	makenoise="/a/r/u/russell/noisetab" rename mayclose readlim=200                   seecontrol seebs idleout=20
+Idleing		mayclose readlim=0 nomakenoise norename  idleout=20
+Isengaard 	mayclose readlim=25 rename makenoise="/a/l/a/laotzu/noisetab"                     seecontrol seebs idleout=20
+Jamboree	rename makenoise="/var/spool/party/noisetab" seecontrol seebs idleout=20
+Katyplace	chanintro="/a/k/e/kewy/chanintro" askname                                         makenoise="/a/k/e/kewy/noisetab" mapname="/a/k/e/kewy/mapname"                    mayclose readlim=100 uniquename rename seecontrol seebs idleout=20
+KewlBANANAS	readlim=500 chanintro="/a/m/i/micaroo/chanintro"                                  mapname="/a/m/i/micaroo/mapname" mayclose rename                                  makenoise="/a/m/i/micaroo/noisetab" seecontrol seebs idleout=20
+Kiddeath 	readlim=500 makenoise="/a/k/i/kiddeath/noisetab" rename askname                   mayclose seecontrol seebs idleout=20
+Laundry		makenoise="/a/j/i/jiffer/noisetab" mapname="/a/j/i/jiffer/mapname"                mayclose seecontrol seebs idleout=20
+Lemontree	makenoise="/a/t/w/twokewl/noisetab" mayclose rename                               chanintro="/a/t/w/twokewl/chanintro"                                              mapname="/a/t/w/twokewl/mapname" seecontrol seebs idleout=20
+llan 		makenoise="/d/l/l/llanarth/noisetab" mapname="/d/l/l/llanarth/mapname" mayclose seecontrol seebs idleout=20
+Max 		readlim=72 mayclose rename askname                                                makenoise="/a/k/h/kharder/noisetab" seecontrol seebs idleout=20
+Momo		makenoise="/a/m/u/munkey/noisetab" mapname="/a/m/u/munkey/mapname"                randname="/a/m/u/munkey/randname" mayclose readlim=500 askname rename seecontrol seebs idleout=20
+Neverland 	makenoise="/a/a/n/anasazi/noisetab" mayclose readlim=100                          mapname="/a/a/n/anasazi/mapname" seecontrol seebs idleout=20
+Oldfolks 	mayclose seecontrol seebs idleout=20
+other		askname chanintro="/a/o/t/other/otherworld/intro" makenoise="/a/o/t/other/otherworld/noise" mapname="/a/o/t/other/otherworld/map" mayclose rename readlim=75 seecontrol seebs
+Paradox 	readlim=72 mayclose makenoise="/a/l/a/laotzu/noisetab" rename                     askname seecontrol seebs idleout=20
+Patheon 	mayclose rename readlim=500 askname                                               makenoise="/a/m/o/morpheus/noisetab" seecontrol seebs idleout=20
+PearlJam 	readlim=200 makenoise="/a/c/o/cosmos/noisetab"                                    chanintro="/a/c/o/cosmos/chanintro" mapname"/a/c/o/cosmos/mapname"                mayclose rename seecontrol seebs idleout=20
+Plork 		mayclose makenoise="/var/spool/party/noisetab" readlim=25 rename seecontrol seebs idleout=20
+Polyester 	readlim=200 mayclose makenoise="/a/l/u/lucy/noisetab"                             chanintro="/a/l/u/lucy/chanintro" mapname="/a/l/u/lucy/mapname"                   rename askname seecontrol seebs idleout=20
+Polytarp	mayclose rename chanintro="/a/p/o/polytarp/chaninto" makenoise="/a/p/o/polytarp/noisetab" idleout=20  seecontrol seebs  readlim=20
+PoohsCorner	chanintro="/a/w/i/winipooh/chanintro" mapname="/a/w/i/winipooh/mapname" rename mayclose readlim=999 makenoise="/a/w/i/winipooh/noisetab" seecontrol seebs idleout=20
+Qcontinuum	rename mayclose seecontrol seebs idleout=20
+Quake		mayclose readlim=50 makenoise="/var/spool/party/noisetab"                         mapname="/a/q/u/quake/mapname" chanintro="/a/q/u/quake/chanintro"                 seecontrol seebs idleout=20
+Raspberry 	makenoise="/a/c/o/colleen/raspnoise" mayclose seecontrol seebs idleout=20
+Rendezvous 	readlim=100 mayclose makenoise="/a/r/l/rlawson/noisetab" rename                   askname seecontrol seebs idleout=20
+Retro 		makenoise="/a/c/a/carson/noisetab" seecontrol seebs idleout=20
+RubberBasket 	readlim=60 makenoise="/a/a/n/annon/noisetab" mayclose                             mapname="/a/a/n/annon/mapname" chanintro="/a/a/n/annon/chanintro"                 seecontrol seebs idleout=20
+Salonika	mayclose readlim=200 rename mapname="/a/s/n/snow/smapname"                        makenoise="/a/s/n/snow/noisetab" seecontrol seebs                                 chanintro="/a/s/n/snow/schanintro" idleout=20
+Selene		readlim=999 mayclose makenoise="/a/s/n/snow/noisetab" mapname="/a/s/n/snow/selmap" chanintro="/a/s/n/snow/selintro" seecontrol seebs idleout=20	
+Snow 		readlim=999 mayclose makenoise="/a/s/n/snow/noisetab"                             mapname="/a/s/n/snow/mapname" chanintro="/a/s/n/snow/chanintro"                   seecontrol seebs idleout=20
+Somewhere 	mayclose seecontrol seebs idleout=20
+Stallion 	readlim=999 mayclose seecontrol seebs idleout=20
+Superman 	makenoise="/a/a/v/avi/p/snoise" mayclose readlim=20 rename                        seecontrol seebs idleout=20
+Talamasca 	makenoise="/a/g/i/giry/noisetab" mayclose askname rename                          seecontrol seebs idleout=20
+Theater		askname chanintro="/a/s/e/senna/chanintro" makenoise                              makenoise="/a/s/e/senna/noisetab" mapname="/a/s/e/senna/mapname"                  mayclose rename seecontrol seebs idleout=20
+TheBatcave	readlim=100 mayclose askname rename                                               makenoise="/a/b/a/batman/noisetab" mapname="/a/b/a/batman/mapname"                chanintro="/a/b/a/batman/chanintro" seecontrol seebs idleout=20
+TRAGICKINGDM	makenoise="/a/j/b/jbrennan/noisetab" mapname="/a/j/b/jbrennan/mapname" chanintro="/a/j/b/jbrennan/chanintro" readlim=200 rename mayclose  seecontrol 
+Tripawd 	readlim=200 chanintro="/a/t/r/tripod/chanintro"                                   makenoise="/a/t/r/tripod/noisetab" mayclose rename                                mapname="/a/t/r/tripod/mapname" seecontrol seebs idleout=20
+WeirdOne 	mayclose makenoise="/a/c/r/creative/weirdn"                                       chanintro="/a/c/r/creative/intro"                                                 mapname="/a/c/r/creative/mapname"   seecontrol seebs idleout=20
+who 		readlim=100 mayclose makenoise="/a/z/0/z0mbie/noisetab"                           mapname="/a/z/0/z0mbie/mapname" rename                                            chanintro="/a/z/0/z0mbie/chanintro" seecontrol seebs idleout=20
+[A-Z]*		nomakenoise readlim=0 seecontrol seebs idleout=20
+*!x 		rename askname mayclose seecontrol seebs idleout=20
+*!xz 		rename askname mayclose readlim=100 seecontrol seebs idleout=20
+*!z 		rename askname readlim=100 seecontrol seebs idleout=20
+*!zx 		rename askname readlim=100 mayclose seecontrol seebs idleout=20
+*x 		mayclose seecontrol seebs idleout=20
+*x! 		mayclose rename askname  seecontrol seebs idleout=20
+*xz! 		mayclose readlim=100 rename askname  seecontrol seebs idleout=20
+*z 		readlim=100 seecontrol seebs idleout=20
+*z! 		readlim=100 rename askname seecontrol seebs idleout=20
+*zx! 		readlim=100 mayclose rename askname seecontrol seebs idleout=20
+* 		seecontrol seebs idleout=20

@@ -1,0 +1,163 @@
+<HTML>
+<HEAD><TITLE>Backtalk Administration Guide: User Deletion</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Administration Guide:</H1>
+<H2>User Deletion</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+If your Backtalk system is set up so that users log in to Backtalk 
+with real Unix accounts, then you can't use Backtalk to delete accounts.
+Use the Unix account administration tools instead.
+<P>
+However, if your system is set up so users log in with Backtalk accounts,
+then you can delete these Backtalk user accounts using either
+the Pistachio Web interface, or with the command-line "<TT>btrmuser</TT>"
+program.
+Just follow the following steps.
+(The checkboxes below perform no function -
+they are just for your convenience.)
+
+<H2>Warning:</H2>
+
+Backtalk doesn't currently check or warn you if you delete the fairwitness
+of a conference.
+This can be a problem, because if another account is later created with
+the same name as the old fairwitness,
+then this new user becomes the fairwitness of the conference.
+We hope to fix this in a later release.
+For now, be careful.
+
+<H2>Deleting Users by using Web Interface's 'Edit User' tool</H2>
+
+This is convenient if you only want to delete one user and
+know that user's login name.
+
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Follow the 'Edit User Account' link in the 'User' section of the menu.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Enter the user's login ID and click 'Edit'.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Click the 'Delete user account' link at the bottom of the page.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Click the 'Yes' on the confirmation page.
+
+</OL>
+
+<H2>Deleting Users by using Web Interface's 'User List' tool</H2>
+
+This is convenient if you don't know the login names of
+the users you want to delete or if you want to delete more than one user.
+
+<FORM>
+<OL>
+<HR>
+
+<LI><INPUT TYPE=checkbox> Log into the administration account
+<P>
+See the <A HREF=admin-menu.html>logging in instructions</A>.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox>
+Follow the 'List Users' link in the 'User' section of the menu.
+<P>
+You will get a control panel for doing searches for users.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Select users to list.
+<P>
+Use the various controls to select which users you want to see.
+If you leave the controls in their default setting,
+you will get a list of all users.
+These controls are very flexible and can list many different subsets of
+your users.  You can select them by name, group, registration date,
+last login date, or status, or combinations of these.
+<P>
+Select the "Detailed Information and Edit Buttons" option if you just want
+to delete a few users.
+Select the "Select for Deletion" option if you want to
+delete most of the users you are listing.
+<P>
+Click the 'Do Scan' button to start your search.
+A listing of all selected users will appear below the control panel.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Delete the users.
+<P>
+If you used the "Detailed Information and Edit Buttons" option, 
+find the user you want to delete.  There is a red 'Delete' button
+next to each login name.  Click that button for the user you want to delete.
+<P>
+If you used the "Select for Deletion" option,
+go through and <EM>uncheck</EM> all users you <EM>do not</EM> want to delete.
+Note that the default is to delete every account listed, and all checkboxes
+(expect those for users whose primary group is cfadm) are pre-checked by
+default.  When you have only users you want to delete checked, click on the
+"Delete Checked Users" button.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Confirm the deletion
+<P>
+You will be asked if you really want to delete the users you selected.  If
+you do, click the "Yes" button.
+
+</OL>
+
+<H2>Deleting Users by using <TT>btrmuser</TT> from Unix</H2>
+
+<OL>
+<HR>
+<LI><INPUT TYPE=checkbox> Log into the Unix conference administration account
+<P>
+This is the account that owns all the conference files, user database
+files, and Backtalk itself.
+
+<HR>
+
+<LI><INPUT TYPE=checkbox> Run the <TT>btrmuser</TT> command
+<P>
+If you want to delete the user "<TT>victim</TT>" then issue the following
+command:
+<PRE>
+    btrmuser victim
+</PRE>
+It will ask you if you really want to delete poor "<TT>victim</TT>", and do
+so if you say yes.
+<P>
+If you want to delete several users, do:
+<PRE>
+    btrmuser larry curly moe
+</PRE>
+If you don't want to be asked for if you really want to delete
+each user you listed on the command line, do:
+<PRE>
+    btrmuser -f larry curly moe
+</PRE>
+</FORM>
+</BODY></HTML>

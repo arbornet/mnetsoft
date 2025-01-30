@@ -1,0 +1,23 @@
+/** @name libgrex
+
+\begin{center}
+ {\Large{\bf libgrex documentation}}
+\end{center}
+
+libgrex is an attempt to create tested, reusable components for
+use in locally developed software used on grex.
+
+Note that functions here are unit tested using the \Ref{minunit}
+framework under the test/ subdirectory.
+
+@memo libgrex - Reusable components for Grex software.
+
+$Id: doc.dxx 1006 2010-12-08 02:38:52Z cross $
+*/
+//@{
+	//@Include: test/minunit.h
+	//\@Include: test/skeltest.c
+	//\@Include: test/skelsuite.c
+	//@Include: *.h
+	//@Include: *.c
+//@}

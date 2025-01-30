@@ -1,0 +1,506 @@
+% Backtalk Abalone Interface -- (c) 2000, Jan Wolter, Steve Weiss
+%
+% read script
+%
+% Read all or part of an item.
+%
+% Query Parameters:
+%    conf=	current conference
+%    csel=	selector for future conferences to read
+%    item=	item to read now, if zero start with first item in isel
+%    isel=	selector for items to read after this
+%    rsel=	response selector - (all) (new) (since) or numeric range
+%    tmprsel=	responses to actually show
+%    rstart,rend= alternate form or tmprsel
+%    since=	if rsel is (since) this gives date.
+%    showforgotten= show all, unforgotten, or forgotten items.
+%    nextnew=	just passed through
+%    nosee=     if defined, don't mark things seen.
+%    slipped=   if post was canceled because text slipped in, it is here.
+%    sliptype=  type of pre-slip post
+%    slipalias= alias of pre-slip post
+
+flavor(config.bt)+include
+
+flavor(openconf)+ stopped {(\n) halt} if
+
+% if item is 0, skip to first item in isel
+item ! {
+  isel ! {/isel (1-$) store} if
+  isel next_item {(No such item) halt} if
+  /item xstore pop /isel xstore
+} if
+
+/noskip 0 def
+
+% default option values
+/rtype (text/plain) def
+/abalone.rpage 25 def
+/twitlist () def
+/allowhtml dflt_html def
+
+`bbsname ( ) conftitle ( )Conference cap( )Item cap( ) item' quote (I)
+[/conf /isel /item /rsel /tmprsel /since /showforgotten /csel /nextnew
+ /rstart /rend]
+[/rtype /abalone.rpage /timezone /twitlist] [/allowhtml]
+flavor(header.bt)+include
+/jpop_gotoconf 1 defconstant
+/jpop_resprange 1 defconstant
+%/jpop_mytitle 1 defconstant
+flavor(java_gopop.bt)+ include
+/rpage abalone.rpage def
+
+% If we enter a command while there is text in there response box, use a
+% confirm popup to check if the user really wants to do this.
+/javafunc javafunc (
+function gopop2(fname) {
+return (!document.resp || !document.resp.text.value ||
+    confirm('Really discard text in response box?')) ? gopop(fname) : false;
+}
+)+ def
+
+
+(<TR><TD CLASS=mast VALIGN=BOTTOM>)
+
+/jumptable % jump table goes here later
+
+(<TD CLASS=mast VALIGN=BOTTOM ALIGN=RIGHT>\n)
+
+/itemopts () def
+
+% <formname> shownav <text>...
+/shownav {
+  /name xdef
+(<FORM NAME=)name( METHOD=POST ACTION=go onSubmit="return gopop2\(')name('\);">
+<INPUT TYPE=hidden NAME=conf VALUE=)conf(>
+<INPUT TYPE=hidden NAME=item VALUE=)item(>\n)
+csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+/nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if
+cpass {(<INPUT TYPE=hidden NAME=cpass VALUE=)cpass(>\n)} if
+/dunno defined {(<INPUT TYPE=hidden NAME=dunno VALUE=)dunno(>\n)} if
+isel {(<INPUT TYPE=hidden NAME=isel VALUE=)isel(>\n)} if
+rsel {(<INPUT TYPE=hidden NAME=rsel VALUE=)rsel(>\n)} if
+since {(<INPUT TYPE=hidden NAME=since VALUE=)since(>\n)} if
+(<SELECT NAME=command onChange="if \(gopop2\(')name('\)\) document.)name(.submit()">\n)
+isel next_item ! {
+  pop pop (<OPTION VALUE=nextitem>View Next )Item cap(</OPTION>\n)
+} if
+csel {(<OPTION VALUE=nextconf>Visit Next )Conference cap(</OPTION>\n)} if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE=confhome>Goto )Conference cap( Home Page</OPTION>\n)
+mayresp {(<OPTION VALUE=@2respond>Respond to This )Item cap(...</OPTION>\n)} if
+(<OPTION VALUE="@1resprange">View Response Range...</OPTION>
+<OPTION VALUE="@4mytitle">Set Private Title...</OPTION>\n)
+/itemopts % forget or remember option goes here later
+(<OPTION VALUE=enteritem>Enter a New )Item cap(</OPTION>
+<OPTION VALUE=findconf>Search This )Conference cap(</OPTION>
+<OPTION VALUE="@1gotoconf">Goto Conference...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id { (<OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(<OPTION VALUE=@0help:read>Help...</OPTION>
+</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR>
+</FORM></TABLE>
+)
+} def
+
+(nav1) shownav
+
+% If a password is required, ask for it
+secret 2 eq /dunno defined ! and {
+  [/conf /isel /item /rsel] flavor(confpass)+ jump
+} if
+
+mayread ! {
+  (Permission to read items in the )conf( conference denied.\n)
+  halt
+} if
+
+/nosee defined {/blindfold 1 def} if
+
+/tmprsel defined {
+  tmprsel
+  /dopage 1 def
+} {
+ /rstart defined /rend defined or {
+   `/rstart defined {rstart}{0}ifelse (-) /rend defined {rend}{($)} ifelse'
+  /dopage 0 def
+ } {
+  rsel
+  /dopage 1 def
+ } ifelse
+} ifelse
+
+item this_item ! {
+  /nrs xstore
+} {
+  (No item )item( in )conf( conference.\n)
+  halt
+} ifelse
+
+% if seeno is set, don't mark things seen
+/seeno defined {
+  seeno cvi 2 eq {
+    % Find response number before the first response we will display
+    nrs maxresp next_int 1 - /undisp xdef pop
+    maxread undisp lt
+    {
+      % there are some undisplayed responses before what we are displaying
+      undisp maxread -   rpage  lt {
+        % extend range to include unseen responses, if it will still fit
+        % on the same page with first requested response.
+        /nrs `maxread 1 +(-)undisp(,)nrs' def
+      } {
+        % otherwise, don't mark things seen
+        /blindfold 1 store
+      } ifelse
+    } if
+  } {
+    seeno {
+      % seeno=1 - always mask
+      /blindfold 1 store
+    } if
+  } ifelse
+} if
+
+/shyfile constant {flavor(unreg)+ include} if
+
+% <what> show_text <text>...
+/show_text {
+  /what xdef
+  /ignore 0 def
+  twitlist {authorid twitlist (,) inlist {/ignore 1 def} if } if
+  hidden erased ignore or or {
+    erased {
+      (<SPAN CLASS=respstat>This )what( has been )Erased(.</SPAN>)
+    } {(<A HREF="view?conf=)conf(&csel=)csel(&item=)item
+        (&resp=)resp("><SPAN CLASS=respstat>View )
+        ignore {(ignored )}{Hidden( )+}ifelse
+        what(</SPAN></A>.)
+    } ifelse
+    resp 1 + item mark_unseen pop
+    (<P>\n)
+  } {
+    /shyfile constant {form_text} {1 read_text} ifelse
+    attachments {
+      {
+	attachments (,) clip /hand xdef /attachments xstore
+
+	(<BR>)
+	hand get_attach dup 0 gt {
+	  imgurl(attach.gif" ALT="Attachment">&nbsp;<SPAN CLASS=attach>)+ exch
+	  1 eq { (<EM>Deleted</EM>) }
+	       { (<EM>Permission Denied</EM>) } ifelse
+	} {
+	  pop
+	  /url xdef /desc xdef /size xdef /type xdef
+	  (<A HREF=")url(">)
+	  imgurl(attach.gif" ALT="Attachment"></A>&nbsp;<SPAN CLASS=attach>)
+	  desc quote( \() type mimename( - )
+          size 2048 lt { size( bytes) }
+          { size 2097152 lt {size 1024 / (K)}
+	    {size 1048576 / (M)} ifelse } ifelse
+	  (\))
+	} ifelse
+	(</SPAN>\n)
+	
+        attachments ! {break} if
+      } loop
+    } if
+  } ifelse
+} def
+
+% <time> asctime ...
+%  an abbreviated version of ztime, without weekday or second
+/asctime {
+  ztime dup 4 12 substr exch 19 9 substr
+} def
+
+% controls ...
+% Generate response control buttons
+/imgurl `(<IMG BORDER=0 HEIGHT=7 WIDTH=23 SRC=")imghost(/)flavor' def
+/imgarg `(&conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+	 since{(&since=)since}if
+	 /nextnew defined {(&nextnew=)nextnew}if ' def
+/controls {
+  mayedit {
+    (<A HREF="edit?resp=)resp(&goto=)flavor(read&lastresp=)maxresp imgarg
+    (" onmouseover="window.status='Edit Response'; return true;" onmouseout="window.status=''">)
+    imgurl
+    mayedit 2 eq {(red)} if (edit.gif" ALT="Edit"></A>&nbsp;&nbsp;\n)
+  } if
+  mayerase {
+    (<A HREF="hide?resp=)resp(&goto=)flavor`(read&fn=E)imgarg
+    (" onmouseover="window.status=')Erase cap
+    ( Response'; return true;" onmouseout="window.status=''">)'imgurl
+    mayerase 2 eq {(red)} if `(erase.gif" ALT=")Erase cap("></A>&nbsp;&nbsp;\n)'
+  } if
+  mayhide {
+    (<A HREF="hide?resp=)resp(&goto=)flavor(read&fn=)
+    hidden {(S)}{(H)}ifelse imgarg
+    (" onmouseover="window.status=')hidden {Show cap}{Hide cap} ifelse
+    ( Response'; return true;" onmouseout="window.status=''">)
+    imgurl
+    mayhide 2 eq {(red)} if
+    hidden {`(show.gif" ALT=")Show cap(")'}
+	   {`(hide.gif" ALT=")Hide cap(")'} ifelse
+    (></A>&nbsp;&nbsp;\n)
+  } if
+  (<A HREF="unseen?resp=)resp imgarg
+  `(" onmouseover="window.status=')MarkUnseen
+   ('; return true;" onmouseout="window.status=''">)'
+  imgurl`(unseen.gif" ALT=")MarkUnseen("></A>&nbsp;&nbsp;\n)'
+} def
+
+% ===== Filter Macros =====
+
+flavor(links)+ include
+
+% ===== Get to work =====
+
+nrs read_item {(Cannot access item.\n) stop} if
+/nrs xstore
+
+/fav item /fav get_item_note def
+item /mytitle get_item_note dup {/title xdef}{pop}ifelse
+
+% Add various things to the menu, based on access to this item
+id {
+  /itemopts `
+
+  fav 1 eq
+    {`(<OPTION VALUE=disfavor>Disfavor This )Item cap(</OPTION>\n)'}
+    {`(<OPTION VALUE=favor>Favor This )Item cap(</OPTION>\n)'}
+  ifelse
+
+  forgotten
+    {`(<OPTION VALUE=remember>Remember This )Item cap(</OPTION>\n)'}
+    {`(<OPTION VALUE=forget>Forget This )Item cap(</OPTION>\n)'}
+  ifelse
+
+  mayretitle
+  {
+    (<OPTION VALUE="@3retitle">) mayretitle 2 eq {(* )}{()} ifelse
+      (Retitle This )Item cap(...</OPTION>\n)
+  } if
+  mayfreeze
+  {
+    mayfreeze 2 eq {(* )}{()} ifelse
+    frozen
+      {(<OPTION VALUE=thaw>)exch(Thaw This )Item cap(</OPTION>\n)}
+      {(<OPTION VALUE=freeze>)exch(Freeze This )Item cap(</OPTION>\n)}
+    ifelse
+  } if
+  mayretire
+  {
+    mayretire 2 eq {(* )}{()} ifelse
+    retired
+      {(<OPTION VALUE=unretire>)exch(Unretire This )Item cap(</OPTION>\n)}
+      {(<OPTION VALUE=retire>)exch(Retire This )Item cap(</OPTION>\n)}
+    ifelse
+  } if
+  maykill
+  {
+    (<OPTION VALUE="@1kill">) maykill 2 eq {(* )}{()} ifelse
+      (Delete This )Item cap(...</OPTION>\n)
+  } if
+  ' def
+} if
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>
+<TR><TD CLASS=navbar COLSPAN=2>
+<TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD CLASS=navbar>\n)
+use_rss_icon expose_rss_item and {
+  (<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD>)
+} if
+(<SPAN CLASS=big><A HREF="begin">)bbsname(</A> &gt; )
+(<A HREF="confhome?conf=)conf(">)conftitle quote(</A> &gt; #)
+item(: )title quote(</SPAN>)
+use_rss_icon expose_rss_item and {
+  (</TD>\n<TD ALIGN=right><A CLASS=rss TITLE="RSS feed for )Responses( to )
+  bbsname( )conftitle( )Item cap( #)item(" HREF=")
+anon_url(cinnamon?conf=)conf(&item=)item(">RSS</A></TD></TR></TABLE>\n)
+} if
+(</TD><TD CLASS=navbar ALIGN=RIGHT>)
+fav 1 eq {( <IMG SRC=")imghost(/)flavor(fav.gif" ALT="Favorite">)} if
+fav 2 eq {( <IMG SRC=")imghost(/)flavor(tmpfav.gif" ALT="Temp Favorite">)} if
+forgotten {( <IMG SRC=")imghost(/)flavor(forgot.gif" ALT="Forgotten">)} if
+retired {( <IMG SRC=")imghost(/)flavor(retire.gif" ALT="Retired">)} if
+frozen {( <IMG SRC=")imghost(/)flavor(froze.gif" ALT="Frozen">)} if
+linked {( <IMG SRC=")imghost(/)flavor(linked.gif" ALT="Linked">)} if
+(</TD></TR></TABLE></TD></TR>\n)
+
+% Warn of slipped in responses
+/slipped dup () default def
+slipped {
+  (<TR><TD COLSPAN=2 CLASS=alert>
+  <SPAN CLASS=big>Your )Response( has NOT yet been posted.</SPAN><BR>
+  The responses listed below slipped in while you were entering your post.
+  If you still want to post your )Response(, you may edit it and hit the
+  Post button again.</TD></TR>\n)
+  /sliptype defined {/rtype sliptype store} if
+  /slipalias defined {/alias slipalias store} if
+} if
+
+(<TR><TD WIDTH=18% CLASS=colhead>Author</TD>
+<TD CLASS=colhead>Message</TD>
+</TR>
+)
+
+resp {
+  0 /odd xdef
+  (<TR><TD CLASS=sechead COLSPAN=2>)
+  nrs maxresp count_sel ( new of )
+  /lowest maxresp 1 + def		% lowest response shown
+  /highest -1 def			% highest response shown
+  /cnt 0 def
+} {
+  (<TR>\n)
+  1 /odd xdef
+  (<TD CLASS=even VALIGN=TOP>
+  <SPAN CLASS=authid><A HREF=")
+  /extern_bio constant { authorid extern_view_bio }
+    { (bio?login=)authorid cgiquote } ifelse
+  (">)authorid(</A></SPAN><BR>)
+  (<SPAN CLASS=authfn>)authorname quote(</SPAN></TD>
+  <TD CLASS=even VALIGN=TOP>
+  <TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD CLASS=even>
+  <SPAN CLASS=itemtitle>)title quote(</SPAN>
+  </TD><TD CLASS=even ALIGN=RIGHT>)controls(<SPAN CLASS=respdate>)date asctime
+  (</SPAN></TD></TR>\n)
+  editdate erased ! and {
+    (<TR><TD CLASS=even COLSPAN=2><SPAN CLASS=respnote>\(edited )
+    editdate asctime(\)</SPAN></TD></TR>\n)} if
+  (</TABLE><HR>\n)
+  Item show_text
+  (</TD></TR>\n)
+  (<TR><TD CLASS=sechead COLSPAN=2>)
+  /lowest 0 def
+  /highest 0 def
+  /cnt 1 def
+} ifelse
+maxresp ( )Responses( total.</TD></TR>\n)
+
+{ cnt rpage ge dopage and {break} if
+  nrs next_resp {break} if
+  read_resp {pop break} if
+  /nrs xstore
+  /cnt inc
+
+  /class odd {(odd)}{(even)}ifelse def
+  /odd 1 odd - def
+  (<TR><TD CLASS=)class( VALIGN=TOP>
+  <SPAN CLASS=authid><A HREF=")
+  /extern_bio constant { authorid extern_view_bio }
+    { (bio?login=)authorid cgiquote } ifelse
+  (">)authorid(</A></SPAN><BR>
+  <SPAN CLASS=authfn>)authorname 18 wrap quote(</SPAN></TD>
+  <TD CLASS=)class( VALIGN=TOP>
+  <TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD CLASS=)class(>
+  <SPAN CLASS=resphead>)Response( )resp( of ) maxresp(:</SPAN>
+  </TD><TD CLASS=)class( ALIGN=RIGHT>)controls(<SPAN CLASS=respdate>)
+  date asctime(</SPAN></TD></TR>)
+  parentresp {
+    (<TR><TD CLASS=)class
+    ( COLSPAN=2><SPAN CLASS=respnote>\(responding to )parentresp(\)</SPAN></TD></TR>\n)} if
+  editdate erased ! and {
+    (<TR><TD CLASS=)class
+    ( COLSPAN=2><SPAN CLASS=respnote>\(edited )editdate asctime
+    (\)</SPAN></TD></TR>\n)
+  } if
+  (</TABLE>\n)
+  (<HR>\n)
+  Response show_text
+  (</TD></TR>\n)
+  resp lowest lt {/lowest resp def} if
+  resp highest gt {/highest resp def} if
+} loop
+(</TABLE>
+)
+
+% <min> <max> <curr> jumptab
+% Add an entry for responses <min>-<max> to the jump table.  If <curr> is true
+% it is the current page.
+/njcol 9 def
+/njc 0 def
+/jumptab {
+  /cr xdef /rmax xdef /rmin xdef
+  rmax rmin eq {rmin}{`rmin(-)rmax'}ifelse /range xdef
+  rmax maxresp ne {range}{`rmin(-$)'}ifelse /trsel xdef
+  njc ! {(<TR>)} if
+  (<TD CLASS=jump)cr{(out)}{(in)}ifelse( ALIGN=CENTER>&nbsp;)
+  cr ! {
+    (<A HREF="read?tmprsel=)trsel(&conf=)conf(&csel=)csel
+    (&item=)item(&isel=)isel(&rsel=)rsel
+    since{(&since=)since}if
+    showforgotten{(&showforgotten=)showforgotten}if(">)
+  } if
+  range
+  cr !{(</A>)} if (&nbsp;</TD>\n)
+  /njc inc
+  njc njcol ge {(</TR>) /njc 0 def} if
+} def
+
+% build the jump table
+(<TABLE WIDTH=100%><TR><TD>
+)
+[
+(<TABLE CELLSPACING=0 CELLPADDING=0>\n)
+% do full ranges before the current page
+0 rpage lowest rpage - 1 - {
+  dup rpage + 1 - 0 jumptab
+} for
+highest 0 ge {
+  % responses immediately before current range
+  lowest 0 gt {
+    lowest rpage - dup 0 lt {pop 0 lowest} {lowest 1 -} ifelse
+    0 jumptab
+  } if
+
+  % current range
+  lowest highest 1 jumptab
+}if
+% ranges after current range
+highest 1 + rpage maxresp {
+  dup rpage + 1 - dup maxresp gt {pop maxresp} if 0 jumptab
+} for
+% fill out the rest of the last table row with blanks.
+njc {
+  njcol njc - {(<TD CLASS=mast>&nbsp;</TD>)} repeat (</TR>\n)
+} if
+(</TABLE>
+)
+] dup /jumptable xdef
+
+(</TD><TD CLASS=mast ALIGN=RIGHT>\n)
+
+% build the response form
+mayresp {
+  (nav2) shownav
+  highest maxresp eq {
+    flavor(makeresp.bt)+ include
+    (bigsechead) rtheader
+    (Respond to <A HREF="begin">)bbsname(</A> &gt; )
+    (<A HREF="confhome?conf=)conf(">)conftitle quote(</A> &gt; #)
+    item(: )title quote
+    12 rtbody
+  } if
+} {
+  (</TD><TD ALIGN=RIGHT VALIGN=TOP>\n)
+  (Response Not Possible: )
+  id {
+    frozen
+      { (Item is Frozen) }
+      { (Conference is Read-Only) } ifelse
+  } {
+    (You are Not Logged In)
+  } ifelse
+  (<BR>) (nav2) shownav (</TABLE>\n)
+} ifelse
+
+global_footer
+(</BODY>
+</HTML>
+)

@@ -1,0 +1,102 @@
+% Backtalk Vanilla Interface -- (c) 1996 Steve Weiss, Jan Wolter
+%
+% ws/response - a web script to post a response to an item
+
+(lib/postlog) include
+
+% construct variable 'expected'
+prevmax cvi 1 + /expected xstore
+
+% common code to recover from errors
+/recover {(<p>You may <a  href=read?conf=) conf (&item=) item 
+prop_csel (&rsel=) rsel (>
+go back to reading</a>.) halt} def
+
+% set up variable to propagate csel
+/csel defined {(&csel=) csel +} {()} ifelse /prop_csel xdef
+
+%============== ws/response script body begins here  ============== 
+
+open_conf {(Backtalk internal error: No such conference \()conf(\)\n) halt} if
+
+mayread ! {(The ) conf ( conference cannot be read. You may <a href=conflist>
+return to the list of conferences</a>.) halt } if
+
+% conf, item, maxresp, and rsel should be set from hidden inputs in the posting form
+rsel item this_item
+{(Due to an internal error, your message has not been posted.<br>
+(conf = )conf (, item = )item (, rsel = )rsel (, error from "this_item".))
+ recover} if
+ pop
+
+mayresp !
+{(Because of improper permissions, your message has not been posted.<br>)
+ id ! {((You have not been authenticated.))}
+ { frozen {((This item is frozen.))}
+          {((This conference is read-only.))} ifelse } ifelse
+ recover} if
+
+text () eq {(Your message was empty, so there was nothing to post. Go back
+and fill in the response area before pressing "post") halt} if
+
+pseudo () ne {pseudo /alias xstore} if
+
+text 72 wrap /text xstore
+
+% if "hide" is defined, the resonse is to be posted as hidden
+/hide defined /hidden xstore
+
+% finished checking for errors, now we'll actually try to write the message
+% post_resp
+
+post_resp /resp xstore
+
+(<title>) bbsname ( Response Posting Results ) conf (# ) item (, ) resp (</title>)
+
+resp ! 
+
+{(Your post failed. An internal error condition was returned from "post_resp") halt} if
+
+resp expected - /slipped xstore
+slipped { slipped ( response) slipped 1 gt {(s)} if ( slipped in ahead of yours.<p>)} if
+
+(Your response was posted successfully as response number ) resp (. <p>)
+
+% normalize rsel to all or new
+rsel (all) eq {(all)}{(new)} ifelse /rsel xstore
+
+% see if there are any more items to read
+isel next_item
+  {(There are no more items selected. <p>) 0 /nitem xdef}
+  { /nitem xdef pop /nisel xdef}
+  ifelse
+
+(You have several choices:<ul>\n)
+
+slipped { (<li><a href=read?conf=) conf (&item=) item prop_csel
+(&rsel=) expected (-$>read the new responses (including yours)</a>\n)} if
+
+% create a menu item to read the next item, but only if there is one.
+nitem
+  {(<li><a href=read?isel=)nisel(&conf=)conf prop_csel
+  showforgotten {(&showforgotten=)showforgotten} if
+  (&item=)nitem(&rsel=)rsel
+  (>Continue reading items</a>\n) }
+  if
+/csel defined
+  {(<li><a href=nextconf?csel=)csel(>
+  Search the remaining conferences on your conference list </a>\n)}
+  if
+
+
+% create a menu item to browse the conf for other items
+(<li>Return to the <a href=browse?conf=) conf (>menu of items</a>
+ for the )conf( conference
+ <li>Go to the <a href=conflist>list of conferences</a>
+ <li>Go to the <a href=begin>opening screen</a>\n)
+
+
+(<p>
+
+</BODY></HTML>
+)

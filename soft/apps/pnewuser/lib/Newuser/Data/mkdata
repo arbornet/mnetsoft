@@ -1,0 +1,21 @@
+#!/bin/sh
+
+mk() {
+	module=$1
+	test -z "$module" && echo "Need module" && exit 1
+	umodule=`echo $module | tr '[a-z]' '[A-Z]'`
+	lmodule=`echo $module | tr '[A-Z]' '[a-z]'`
+	cp skel.pm $module.pm
+	ed $module.pm <<EOF
+/Skel/s/Skel/$module/
+/"skel"/s/skel/$lmodule/
+/SKEL/s/SKEL/$umodule/
+w
+q
+EOF
+}
+
+for i
+do
+	mk $i
+done

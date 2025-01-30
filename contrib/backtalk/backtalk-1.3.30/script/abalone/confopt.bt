@@ -1,0 +1,331 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% confopt script
+%
+% This script, which is only accessible by fairwitnesses and system
+% administrators, allows the user to set conference options.  This is
+% both form generator and form handler for the forms that are actually on
+% the page.
+%
+% Query Parameters:
+%    conf=	    name of conference we are configuring
+%    csel=          current conference selector, if any
+%    errormsg=	    text message to display near top of page.
+%    newallow=      if defined, 0=don't allowhtml
+%				1=allowhtml/don't allowgraphics,
+%				2=allowhtml/allowgraphics
+%    passwd1=       New password.
+%    passwd2=       New password.
+%    newnorobots=   New value of norobots
+
+% state in form
+/hiddens `(<INPUT TYPE=hidden NAME=conf VALUE=)conf(>\n)
+  csel {(<INPUT TYPE=hidden NAME=csel VALUE=)csel(>\n)} if
+  /nextnew defined {(<INPUT TYPE=hidden NAME=nextnew VALUE=)nextnew(>\n)} if'
+  def
+
+/abalone.menujump 0 def
+
+% Default conference settings variables before loading them
+/login () def
+/allowhtml dflt_html def
+/new_isel (1,$) def
+/new_since 0 def
+/bgcolor () def
+/textcolor () def
+/norobots 1 def
+
+flavor(config)+ include
+
+% open the conference
+flavor(openconf)+ stopped {
+  ( Backtalk internal error: No such )Conference( \()conf(\)\n) halt
+} if
+
+% Page header
+[(Option Settings for the )/conftitle( )Conference cap] (C)
+[/conf /csel /errormsg /newallow /nextnew /passwd1 /passwd2]
+[/abalone.menujump]
+[/login /allowhtml /allowgraphics /new_isel /new_since /bgcolor /textcolor]
+flavor(header)+ include
+/jpop_gotoconf 1 defconstant
+flavor(java_gopop)+ include
+
+% boot out non-fairwitnesses
+amfw ! {
+ `(You are not a )Fairwitness( in this )Conference(.</BODY></HTML>\n)'
+ stop
+} if
+
+(<FORM NAME=nav METHOD=POST ACTION=go onSubmit="return gopop('nav');">\n)
+hiddens
+(<TR><TD CLASS=mast>&nbsp;</TD><TD CLASS=mast ALIGN=right>
+<SELECT NAME=command)
+abalone.menujump cvi!{( onChange="if (gopop('nav')) document.nav.submit()")}if
+(>
+<OPTION VALUE=confhome>Goto )Conference cap( Home Page</OPTION>\n)
+csel {(<OPTION VALUE=nextconf>View Next )Conference cap(</OPTION>\n) } if
+(<OPTION VALUE=entrance>Goto Entrance</OPTION>
+<OPTION VALUE="@1gotoconf">Goto )Conference cap(...</OPTION>
+<OPTION VALUE=finduser>Search User Profiles</OPTION>\n)
+id {(<OPTION VALUE=editpref>Set Your Preferences</OPTION>\n)
+  sessions { (<OPTION VALUE=logout>Logout</OPTION>\n)} if
+} if
+(</SELECT>&nbsp;<INPUT TYPE=SUBMIT VALUE="Go">
+</TD></TR></FORM></TABLE>\n)
+
+(<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%>\n)
+
+% change the HTML setting
+/newallow defined {
+  newallow cvi 0 eq {
+    /allowhtml 0 def
+    /allowgraphics 0 def
+  } {
+    /allowhtml 1 def
+    /allowgraphics newallow cvi 2 eq def
+  } ifelse
+  (*settings) [/allowhtml /allowgraphics] savevar
+} if
+
+% Change the Conference password
+/passwd1 defined /passwd2 defined or {
+  secret 0 eq {
+    /errmsg `(This )Conference( is not password protected.)' def
+  } {
+    passwd1 passwd2 ne {
+      /errmsg (The two passwords given did not match) def
+    } if
+    passwd1 (Dunno!) eq {
+      /errmsg `(You cannot set a )Conference
+         ('s password to "Dunno!" - this is reserved for internal use.)' def
+    } if
+    /errmsg defined ! {
+      passwd1(\n)+ (*secret) write
+      /errmsg `Conference cap( password successfully changed)' def
+    } if
+  } ifelse
+} if
+
+% Change the robots exclusion
+/newnorobots defined {
+  confrobots 1 ne {
+    /errmsg `This )Conference( is not configured to allow )Fairwitnesses
+	( to control robot exclusion)' def
+  } {
+    /norobots newnorobots cvi {1}{0} ifelse def
+    (*settings) [/norobots] savevar
+  } ifelse
+} if
+
+% print any message returned from helper scripts
+/errmsg defined { errmsg {
+  (<TR><TD CLASS=alert COLSPAN=2>)errmsg(</TD></TR>\n)
+} if } if
+
+(<TR>
+<TD CLASS=colhead COLSPAN=2>
+Option Settings for the )/conftitle( )Conference cap(</TD></TR>
+)
+
+% HTML Postings Option
+(<TR><TD CLASS=odd>HTML Postings:</TD><TD CLASS=odd>
+Currently users are )
+allowhtml {
+  `(allowed to post HTML )Responses( and )Items( with)'
+  allowgraphics !{(out)} if
+  `( images in this )Conference(.\n)'
+} {
+  `(not allowed to post HTML )Responses( and )Items( in this )Conference(.\n)'
+} ifelse
+(This may be changed below.
+<FORM METHOD=post ACTION=confopt>\n)
+hiddens
+(<SELECT NAME=newallow>
+<OPTION VALUE=0) allowhtml ! {( SELECTED)} if
+(>No HTML postings allowed</OPTION>
+<OPTION VALUE=1) allowhtml allowgraphics ! and {( SELECTED)} if
+(>HTML postings without embedded images allowed</OPTION>
+<OPTION VALUE=2) allowhtml allowgraphics and {( SELECTED)} if
+`(>HTML postings with embedded images allowed</OPTION>
+</SELECT>
+<INPUT TYPE=submit VALUE="Change">
+</FORM>
+</TD></TR>
+)
+
+
+% Initial New items
+(<TR><TD CLASS=even>Initial New )Items cap(:</TD><TD CLASS=even>
+By default, when a user joins a )Conference( for the first time, only
+the first and last )Items( will be "new".  All the other )Items( are "unseen".
+If a user does a "read new", they see only the two "new" )Items(.  Other )
+Items( won't become "new" until at least one new )Response( is made to them.
+This is done to ensure that people don't get innundated with ancient,
+inactive )Items( when they join large )Conferences( for the first time.
+<P>
+You can change which )Items( will be "new" for first-time users.  The )
+Items( that will start out "new" for first-time users of the )'conf`( )
+Conference( are:
+<BLOCKQUOTE>
+Initial New )Items cap(: <STRONG>)'
+new_isel {
+  new_isel (1-$) eq {
+    (ALL)
+  }{
+    new_isel ($) (LAST) 0 replace
+    new_since {( and )} if
+  } ifelse
+} {
+  new_since ! {(NONE)} if
+} ifelse
+dup (ALL) ne new_since and {
+  `(any )Items( which have had new )Responses( in the last )'new_since( day)
+  new_since 1 ne {(s)}if (.)
+} if
+(\n</STRONG></BLOCKQUOTE>
+<FORM METHOD=post ACTION=setinew>
+)hiddens
+(<INPUT TYPE=submit VALUE="Change Initial New Items">
+</FORM>
+</TD></TR>
+)
+
+% HTML login screen
+`(<TR><TD CLASS=odd>HTML Login Screen:</TD><TD CLASS=odd>
+When a user enters a )Conference(, he first sees the ``)Conference
+( home'' page.
+A )Conference( login screen is shown at the top of that page.  Normally this
+would include information like
+the name of the )Conference(,
+the names of the )Fairwitnesses(,
+a description of the )Conference(,
+and maybe some small logo.
+<P>
+There are two versions of this screen.  Backtalk prefers to use the HTML
+version, which is currently )'
+login{
+  (set to: <BR><HR><TABLE BORDER=0><TR STYLE=")
+  bgcolor {( background: #)bgcolor} if 
+    ("><TD STYLE=")textcolor {(color: #)textcolor(;)} if(" COLSPAN=2>)
+  login(</TD></TR></TABLE>\n)
+} {
+  (not defined.<P>)
+} ifelse
+(
+<FORM ACTION=editlogin>
+)hiddens
+(<INPUT TYPE=hidden NAME=target VALUE="HTML">
+<INPUT TYPE=submit VALUE="Edit HTML Login Screen">
+</FORM>
+</TD></TR>
+)
+
+% load the ascii login screen text
+/asciilogin (*login) read def
+
+
+% Text login screen
+(<TR><TD CLASS=even>ASCII Login Screen:</TD><TD CLASS=even>
+If no HTML version is defined, Backtalk will use the ASCII version.
+This is also used by Picospan and Yapp.  It is currently )
+asciilogin {
+  (set to: <BR><HR><TABLE BORDER=0><TR STYLE=")
+  bgcolor {( background: #)bgcolor} if 
+    ("><TD STYLE=")textcolor {(color: #)textcolor(;)} if(" COLSPAN=2><PRE>)
+  asciilogin expand(</PRE></TD></TR></TABLE>\n)
+} {
+  (not defined.<P>)
+} ifelse
+(
+<FORM ACTION=editlogin>
+)hiddens
+(<INPUT TYPE=hidden NAME=target VALUE="ASCII">
+<INPUT TYPE=submit VALUE="Edit ASCII Login Screen">
+</FORM>
+</TD></TR>
+)
+
+/oddbg 1 def
+
+% Robot Exclusion
+confrobots 1 eq {
+  /class oddbg {(odd)}{(even)} ifelse def
+  (<TR><TD CLASS=)class(>Robot Exclusion:</TD><TD CLASS=)class(>
+  Currently robots are ) norobots {(not )} if
+  (allowed to index this )Conference(.  Robot exclusion works by generating
+  headers on each page requesting that robots not index this page.  These
+  will be respected by civilized robots, like Google's web spider, but
+  probably not by things like email address harvesters run by spammers.
+  You can change the setting for this conference below.
+  <FORM ACTION=confopt>\n) hiddens
+  (<SELECT NAME=newnorobots>
+  <OPTION VALUE=0) norobots ! {( SELECTED)} if
+  (>Allow robots to index this )Conference(</OPTION>
+  <OPTION VALUE=1) norobots {( SELECTED)} if
+  (>Do not allow robots to index this )Conference(</OPTION>
+  </SELECT>
+  <INPUT TYPE=submit VALUE="Change">
+  </FORM>
+  </TD></TR>\n)
+  /oddbg 1 oddbg - def
+} if
+
+
+% Edit Conference Password
+secret {
+  /class oddbg {(odd)}{(even)} ifelse def
+  (<TR><TD CLASS=)class(>Conference Password:</TD><TD CLASS=)class(>
+  Users must give a password to access this )Conference(.
+  <P>
+  <FORM METHOD=post ACTION=confopt>
+  )hiddens
+  (<TABLE BORDER=0>
+  <TR><TD CLASS=)class(>New Password:</TD>
+  <TD CLASS=odd><INPUT TYPE=password NAME=passwd1></TD></TR>
+  <TR><TD CLASS=)class(>Confirm:</TD>
+  <TD CLASS=odd><INPUT TYPE=password NAME=passwd2></TD></TR>
+  <TR><TD CLASS=)class(></TD>
+  <TD CLASS=odd><INPUT TYPE=submit VALUE="Change Password"></TD></TR>
+  </FORM>
+  </TABLE>
+  </TD></TR>
+  )
+  /oddbg 1 oddbg - def
+} if
+
+% Edit Ulist
+userlist grouplist or {
+  /class oddbg {(odd)}{(even)} ifelse def
+  (<TR><TD CLASS=)class(>User List:</TD><TD CLASS=)class(>
+  Access to this )Conference( is restricted to the following)
+  grouplist {( groups) userlist {( and)} if} if userlist {( users)} if (:
+  <P>
+  <TABLE BORDER=0>\n)
+  grouplist {
+  (<TR><TD CLASS=)class( VALIGN=TOP>Groups:</TD>
+  <TD CLASS=)class(>)
+  `(*glist) read chomp dup
+    {<<[\n ]+>> 0 {(, )} rgrep}{pop(<EM>none</EM>)}ifelse '
+  (</TD></TR>\n)} if
+  userlist {
+  (<TR><TD CLASS=)class( VALIGN=TOP>Users:</TD>
+  <TD CLASS=)class(>)
+  `(*ulist) read chomp dup
+    {<<[\n ]+>> 0 {(, )} rgrep}{pop(<EM>none</EM>)}ifelse '
+  (</TD></TR>\n)} if
+  (</TABLE><P>
+  <FORM METHOD=post ACTION=ulist>
+  )hiddens
+  (<INPUT TYPE=submit VALUE="Edit Access List">
+  </FORM>
+  </TD></TR>
+  )
+  /oddbg 1 oddbg - def
+} if
+
+(
+</TABLE>
+)global_footer
+(</BODY></HTML>
+)

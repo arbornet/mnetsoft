@@ -1,0 +1,42 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% resignconfirm script
+%
+% This script displays a form asking you to confirm that you really want
+% to resign from a conference.  The "resignconf.bt" script is the handler
+% for this.
+%
+% Query Parameters:
+%    conf=      name of conference
+%    csel=      current conference selector
+
+flavor(config)+ include
+
+(<HTML><HEAD>
+<TITLE>Confirm Resignation from )/conftitle( )Conference cap(</TITLE>
+)/metatags(</HEAD>
+)
+
+flavor(openconf)+ include
+secret 2 eq { [/conf /csel ] flavor(confpass)+ jump } if
+
+global_header
+
+(<H1>Confirm Resignation from )conftitle( )Conference cap(</H1>
+)
+
+(This command will delete all record of your participation in the )conftitle
+( )Conference(.  This saves some disk storage, but means that if you ever
+return to the )conftitle( )Conference(, all )Items( will appear to be new,
+since the system no longer has any memory of what you have seen here.
+<P>
+To perform the resignation, check the box below, and hit "Continue".
+<FORM METHOD=POST ACTION=resignconf>
+<INPUT TYPE="hidden" NAME=conf VALUE=)conf(>
+<INPUT TYPE="checkbox" NAME=really VALUE="Y"> Really resign from )conftitle
+(.<BR>
+<INPUT TYPE=submit VALUE="Continue">
+</FORM>)
+global_footer
+(</BODY></HTML>
+)

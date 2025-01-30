@@ -1,0 +1,18 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+(Participants List) (pistachio/help/header) include
+
+(<H2>Participants List Page:</H2>
+
+The participants list page lists all users who are current participants
+of a )Conference(.  This includes all users who have ever entered the )
+Conference( but have not resigned or had their accounts deleted.
+<P>
+For each user, the last date upon which they read any )Items( in the )
+Conference( is printed.
+)
+global_footer
+(</BODY></HTML>
+)

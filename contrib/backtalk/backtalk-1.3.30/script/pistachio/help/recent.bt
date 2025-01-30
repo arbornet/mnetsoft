@@ -1,0 +1,21 @@
+% Backtalk Pistachio Interface -- (c) 2003, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/butsel 6 defconstant flavor(buttondef)+ include
+
+flavor(config.bt)+ include
+
+`(Last )dflt_recent_page( Postings Page)' (pistachio/help/header) include
+
+(For sites that maintain a posting log file \(this site <EM>does)
+post_log_file !{( not)} if
+(</EM>\), this page allows you to easily view a list of all the most recent
+postings.  You can select the number of postings to show at the top of the
+page.  Clicking on a button next to a line shows you that posting.
+<P>
+If no response number is shown, then this is a new item.
+)
+global_footer
+(</BODY></HTML>
+)

@@ -1,0 +1,10 @@
+#!/bin/sh
+#Authors- Valerie Mates, Michelangelo Giansiracusa
+
+echo -n "
+UNIX: locate <filename>
+
+Name of file you would like to find? "
+read foo
+echo ""
+locate $foo | menumore

@@ -1,0 +1,104 @@
+#!/bin/sh
+#
+# This is a script to install party.  It should be usable for
+# upgrades as well as for initial installs.
+
+VERSION=$1
+
+if test "${VERSION}" == ""
+then
+   echo "Version must be given on command like:"
+   echo "  ./install party-2.12"
+   exit
+fi
+
+if test \! -d /usr/local/src/party/${VERSION}
+then
+   echo "Build directory does not exist!  Did you run:"
+   echo "  ./build ${VERSION}"
+   exit
+fi
+
+GREXDOCDIR=`pwd`
+
+# Goto build directory
+cd /usr/local/src/party/${VERSION}
+
+# Save any old copy of party in /suid/bin
+if test -f /suid/bin/party
+then
+   mv -f /suid/bin/party /suid/bin/party.old
+   chmod 000 /suid/bin/party.old
+fi
+
+# Install new copy of party in /suid/bin
+cp -f party /suid/bin
+chown party.bin /suid/bin/party
+chmod 4711 /suid/bin/party
+
+# Install suidbin link in /usr/local/bin
+if test \! -L /usr/local/bin/party_
+then
+   ln -s /suid/bin/party /usr/local/bin/party_
+fi
+
+# Install wrapper script
+if test -f /usr/local/bin/party
+then
+   mv -f /usr/local/bin/party /usr/local/bin/party.old
+   chmod 644 /usr/local/bin/party.old
+fi
+cp -f ${GREXDOCDIR}/party.wrap /usr/local/bin/party
+chown party.bin /usr/local/bin/party
+chmod 755 /usr/local/bin/party
+
+# Install links to wrappers script for alternate party names
+if test \! -L /usr/local/bin/pwho
+then
+   ln -s /usr/local/bin/party /usr/local/bin/cafe
+   ln -s /usr/local/bin/party /usr/local/bin/silicon
+   ln -s /usr/local/bin/party_ /usr/local/bin/pwho
+fi
+
+cp -f party.1 /usr/local/man/man1/party.1
+
+# Make the party configuration directory, if it doesn't exist
+mkdir -p /usr/local/etc/party
+chown party.partyadm /usr/local/etc/party
+chmod 775 /usr/local/etc/party
+cd /usr/local/etc/party
+
+# Install config files if not already there
+if test -f /usr/local/etc/party/partytab
+then
+   echo "***************************"
+   echo "Using existing config files"
+   echo "***************************"
+else
+  cp -f ${GREXDOCDIR}/partytab ${GREXDOCDIR}/chantab ${GREXDOCDIR}/noisetab .
+  cp -f ${GREXDOCDIR}/partyhlp ${GREXDOCDIR}/party.welcome .
+  touch /usr/local/etc/party/party.motd
+  chown party.partyadm partytab chantab noisetab partyhlp party.motd party.welcome
+  chmod 664 partytab chantab noisetab partyhlp party.motd party.welcome
+fi
+
+# Make the party state directory, if it doesn't exist
+test -d /var/party/log || mkdir -p /var/party/log
+chown party.partyadm /var/party /var/party/log
+chmod 775 /var/party /var/party/log
+
+# Nuke any existing partytmp file and restart
+rm -f /var/party/partytmp
+touch /var/party/partytmp
+chown party.partyadm /var/party/partytmp
+chmod 664 /var/party/partytmp
+
+# Install roll_party_log script
+if test -f /usr/local/libexec/roll_party_log
+then
+   mv -f /usr/local/libexec/roll_party_log /usr/local/libexec/roll_party_log.old
+   chmod 644 /usr/local/libexec/roll_party_log.old
+fi
+cp -f ${GREXDOCDIR}/roll_party_log /usr/local/libexec/roll_party_log
+chown party.bin /usr/local/libexec/roll_party_log
+chmod 755 /usr/local/libexec/roll_party_log

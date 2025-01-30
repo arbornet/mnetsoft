@@ -1,0 +1,306 @@
+% Backtalk Pistachio Interface -- (c) 1996, Jan Wolter, Steve Weiss
+
+/hrefbegin [ (<A HREF=)SCRIPT_NAME(/)flavor ] def
+
+/rpage 30 def
+(*.backtalk) [/rpage] loadvar pop
+
+/butsel 94 defconstant flavor(buttondef)+ include
+(Read )Item cap( Page)++ (pistachio/help/header) include
+
+(<H2>The Read )Item cap( Page:</H2>
+
+The read )Item( page is one the most important page in the Backtalk systems,
+since it is used for what Backtalk is mainly there to do:  reading what
+other people have read, and posting your own )Responses(.
+<P>
+If your browser supports frames, and you have turned on the ``use frames''
+option, the read )Item( page will be divided into two subwindows. 
+The small window at the top of your screen, which doesn't
+scroll contains a number important buttons for manuvering around.
+The large scrollable window on the bottom of the screen is used to display
+the contents of the )Item( and to enter your own )Responses(.
+<P>
+If you aren't using frames, there will be just one window, with the control
+panel buttons appearing both on the top and the bottom of the window.
+
+<H2>The Navigation Buttons:</H2>
+
+Most of the buttons in the top panel are for moving around from page to page.
+The )nextitem_button( button moves you to the next )Item( in the current
+)Conference( \(it is gray if there is no next )Item(\).  The )nextconf_button(
+button moves you to the next )Conference( in your hot list.
+<P>
+There is also an )itemlist_button( button that sends you to the )hrefbegin
+(help/browse>list of )Items(</A> in the current )Conference
+(, a) confhome_button( button that sends you back to
+the )hrefbegin(help/confhome>)Conference( home page</A>, an )entrance_button
+( button that sends you to the )hrefbegin(help/begin>entrance page</A>, and a )
+help_button( button that gets you right here.
+<P>
+These buttons (along with your browser's ``back'' button) are pretty much the
+only ways to get off a particular )Item( page.  Most of the other controls
+do things to the current )Item( without moving you away from it.
+
+<H2>The )Item cap( Text:</H2>
+
+The text of the )Item( and its )Responses( are displayed in the bottom window,
+which you can scroll up and down if the )Item( is a long one.
+<P>
+The title of the )Item( is always displayed, including the name of its author
+and the date it was entered.
+Similarly, each )Response( will also have a number, the author's name, and
+the date it was posted.
+To find out more about the author of )AnItem( or )AResponse(, you can click on
+the person's login id.  This will send you to their
+)hrefbegin(help/bio>personal information page</A>.
+<P>
+If you are not reading anonymously, you will see an )unseen_button( next to
+each )Response(.  This is used if you don't want to read through all the
+)Responses( right now, but want to continue reading it next time  you come
+through.  Just click the )Unseen( button for the first )Response( you haven't
+read yet, and that and all subsequent )Responses( will still be ``new'' so that
+the next time you do a ``read new'' you will see the )Responses( starting at
+that point.
+
+<H2>Scrolling Controls:</H2>
+
+Normally no more than )rpage( )Responses( will be printed on any one page.
+You can reset this value by going to the ``)hrefbegin
+(help/optform>Option Setting Page</A>.''
+<P>
+Whenever less then the whole )Item( is displayed to you, some scrolling buttons
+will be displayed.  At the top will be a button to display the previous )
+rpage( )Responses(, and the first )rpage( )Responses(.  At the bottom will be a
+button to display the next )rpage( )Responses(, and the last )rpage( )Responses(.
+<P>
+There is also a ``view )Responses('' button at the top of the text window lets
+you select any set of )Responses( you want to view.  To use it, first type the
+range of )Responses( you want to see in the little window, and click the button.
+Here are some typical kinds of things you could type into the little box to
+display chosen )Responses(:
+<TABLE>
+<TR><TD>4-17</TD><TD>)Responses( 4 through 17</TD></TR>
+<TR><TD>0</TD><TD>the )Item( text</TD></TR>
+<TR><TD>$</TD><TD>the last )Response( of the )Item(</TD></TR>
+<TR><TD>-4</TD><TD>the last four )Responses( of the )Item(</TD></TR>
+<TR><TD>4-$</TD><TD>)Responses( 4 through the end of the )Item(</TD></TR>
+<TR><TD>0-$</TD><TD>the entire )Item(, from the )Item( text through the last )Response(</TD></TR>
+<TR><TD>4,7,19</TD><TD>)Responses( 4, 7 and 19</TD></TR>
+<TR><TD>19-3,22,24</TD><TD>)Responses( 19 through 3 in reverse order followed by 
+                      )Responses( 22 and 24</TD></TR>
+</TABLE>
+
+<H2>The Response Form:</H2>
+
+If you scroll to the bottom of the text window, you will find a form for
+posting responses.  If you are reading anonymously, or if the )Item( is frozen,
+or the )Conference( is read-only, this will be missing.
+<P>
+You post simply by typing your )Response( in the big box, and pressing the
+<IMG )post_button_src( button.  Your new )Response( will then be displayed.
+Sometimes someone else will have posted a response between the time you
+read the )Item( and the time you posted your response.
+In this case, your )Response( will not be entered immediately.  The
+``slipped in'' )Responses( will be shown, and you will be given a chance to
+revise your response before posting it.
+<P>
+After you respond you will also be given a new response box, so you can
+enter another response to the same )Item(.
+<P>
+You can change the version of your name that will be attached to )AResponse(
+by editing the full name box above the response window before pressing the
+post button.
+
+<H3>)Response cap( Formatting</H3>
+
+Backtalk offers three slightly different )Response( formatting options:
+<UL>
+<LI><STRONG>Plain Text</STRONG>
+    <P>
+    The )Response( will be displayed pretty much just as it was when you typed
+    it in, in a fixed width font with the spacing unaltered.
+    <P>
+<P>
+<LI><STRONG>HTML</STRONG>
+    <P>
+    Your )Item( text will be treated as HTML text.
+    HTML is the standard markup language used to create web pages.
+    HTML text is automatically formatted by the reader's browser, usually
+    in a proportional font.
+    <P>
+    You can use some <A HREF=html>HTML tags</A> in your )Response( to control
+    spacing, formatting, text size and style, to include images,
+    and to create links.
+<P>
+<LI><STRONG>Lazy HTML</STRONG>
+    <P>
+    Normally in HTML you need to enter a <TT>&lt;P&gt;</TT> tag every
+    time you want to leave a blank line.
+    The "lazy HTML" option is just like the "HTML" option,
+    but it automatically converts blank lines to <TT>&lt;P&gt;</TT> tags.
+    This is intended to allow you to forget that you are entering HTML
+    text, and still have it come out reasonable looking.
+</UL>
+In all cases, certain types of strings will be automatically made
+clickable.  For example:
+<UL>
+<LI><TT>http://www.unicef.org</TT><BR>
+    URL's beginning with <TT>http:</TT> or <TT>https:</TT> connect to
+    that site when clicked.
+<P>
+<LI><TT>mailto:backtalk@hvcn.org</TT><BR>
+    E-mail addresses with a <TT>mailto:</TT> prefix send mail to the
+    given E-mail address when clicked.
+<P>
+<LI><TT>ftp://someplace.com/pub/filename</TT><BR>
+    Strings starting the <TT>ftp:</TT> prefix connect to an ftp server
+    and fetch the named file or directory listing when clicked.
+<P>
+<LI><TT>conf:general</TT><BR>
+    If you type <TT>conf:</TT> followed by )AConference( name, then
+    click it will connect to the <A HREF=confhome>)Conference( home page</A>
+    for that )Conference(.
+<P>
+<LI><TT>item:9</TT><BR>
+    <TT>item:general,9</TT><BR>
+    If you type <TT>item:</TT> followed by a number, or )AConference( name
+    and number, then clicking on it displays the named )Item(.  If no
+    )Conference( name is given, that )Item( in the current )Conference( is
+    displayed.
+<P>
+<LI><TT>resp:53</TT><BR>
+    <TT>resp:9,53</TT><BR>
+    <TT>resp:general,9,53</TT><BR>
+    If you type <TT>resp:</TT> followed by )AResponse( number, then
+    clicking on it will display that )Response( of the current )Item(.
+    Alternately, you can specify the )Conference( name and )Item( number
+    as well.
+</UL>
+You can use dots or colons in place of the commas in the above examples.
+<P>
+In HTML and lazy HTML modes, you can also enter tags like
+<PRE>
+     I like &lt;A HREF="resp:general,9,53">General Conference Item 9 Response 53&lt;/A&gt;
+</PRE>
+The "<TT>resp:general,9,53</TT>" inside the URL will automatically be replaced
+with an appropriate URL referencing response 53 of general item 9.
+
+<H3>)Response cap( Previewing</H3>
+
+If you hit the <IMG )preview_button_src( button you will be shown how
+your )Response( would look
+to other Backtalk users )
+/text_interface defined {
+  (and to )text_interface( users )
+} if
+(if you posted it now.  This is especially useful if you are using the
+"HTML" or "Lazy HTML" formatting options.
+
+)
+author_hide {(<H2>)Hidden cap( )Responses cap(:</H2>
+
+Sometimes people post long )Responses( that not all other users will want to
+read.  You can hide such )Responses( either by clicking the little ``)Hide cap
+('' box next to the ``Post'' button before you post it, or by clicking the
+)hide_button( button that will appear next to all your )Responses( the )Item(
+text.
+<P>
+When )AResponse( is )Hidden(, the text will not be displayed when people read
+the )Item(.  Instead, just the header and a ``this )Response( is )Hidden(''
+message will appear.  Anyone can see the full text by clicking on the message.
+<P>
+Your )Hidden( )Responses( will also have a )show_button( button next to them.
+This can be used to turn the )Response( back into a normal )Response( that is
+shown automatically to anyone reading the )Item(.
+
+)} if
+author_erase {(<H2>)Erasing cap( )Responses cap(:</H2>
+
+You can )Erase( your own )Responses( with the )erase_button( button that appears
+next to the )Response(.  )Erased cap( )Responses( are rubbed out (though on some
+systems a copy may be stashed someplace out of sight).  One should exercise
+restraint in )Erasing( )Responses(, since it interferes with the flow of the
+discussion.
+
+)} if
+author_edit {(<H2>Editing )Responses cap(:</H2>
+
+You can edit your own )Responses( with the )edit_button( button that appears
+next to the )Response(.  One should exercise restraint
+in editing )Responses(, since it interferes with the flow of the discussion.
+Usually the better way to correct things after other people have responded
+is to post another )Response( correcting your previous one.
+
+)} if
+(<H2>Favoring )Items cap(:</H2>
+
+You can use the )favor_button( button to mark )AnItem( as a favorite.  Favorite
+)Items( will be shown first the next time you read the )Conference(, and they
+are listed first in the )Item( list.
+If an )Item( is already a favorite, there will be a )disfavor_button( button
+instead, and this can be used to remove the )Item( from your list of favorites.
+
+<H2>Forgetting )Items cap(:</H2>
+
+If, as you are reading )AConference(, you run across and )Item( that really
+doesn't interest you at all, you can use the )forget_button( button to
+forget it.  This means that it will not be shown to you again when you
+read new )Items( in the future.  If you really want to, you can still access it
+or even unforget it from the )hrefbegin(help/browse>)Item( list page</A>.
+
+)
+author_retitle {(<H2>Retitling )Items cap(:</H2>
+
+If you are the author of the )Item(, you will be able to change the title of
+your )Item(, either to correct an error or to modify it as the discussion there
+changes.  If you have this power, there will be a ``retitle )Item('' button at
+the top of the screen.  If you click it, you will be prompted for a new title.
+<P>
+Though not everyone can retitle )AnItem(, any user can set their own
+private title for any )Item(.  Private titles are seen only by the user who
+set them.  The ``Set Private )Item cap( Title'' button at the top of the text
+window lets you do this.  To restore the original title, just set your private
+title to a blank.
+
+)} if
+(<H2>)Fairwitness cap( Powers:</H2>
+
+If you are )AFairwitness(, you will see many additional )Fairwitness( buttons.
+These are usually shown in a contrasting color (normally red) to remind you
+that you are using your )Fairwitness( powers when you click them.
+<P>
+)
+fw_retitle {
+  ( The )Item( will have a red retitle button will be at the top)
+  author_retitle ! {
+  (.  The retitle button lets you change the )Item('s title.  This is usually
+  done to give a title that more accurately reflects the discussion in the
+  )Item} if (. )
+} if
+
+fw_erase {
+  (Each )Response( will have a )fw_erase_button( button)
+  author_erase ! {( which allows you to delete the text of the )Response(
+  (a copy is kept in a log file in case the system administrators ever
+  want to recover it))} if (. )
+} if
+
+fw_hide {
+  (Each )Response( will )fw_erase{(also )}if( have a )fw_hide_button( button)
+  author_hide ! {( which sets a flag on the )Response( so that it won't be
+  shown unless the reader clicks a button asking to see it)} if (. )
+} if
+
+fw_edit {
+  fw_hide fw_erase and {(Finally e)}{(E)} ifelse
+  (ach )Response( will have a )fw_edit_button( button)
+  author_edit ! {( which allows you to change the content of )AResponse(.
+  A copy of the original text will be saved in the censored log)} if (. )
+} if
+(For many of the other functions, like killing and retiring )Items(, go to
+the )hrefbegin(help/browse>)Item( list page</A> for the )Conference(.
+)
+global_footer
+(</BODY></HTML>
+)

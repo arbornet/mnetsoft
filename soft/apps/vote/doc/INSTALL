@@ -1,0 +1,120 @@
+These are instructions for building and installing the voting
+software used on Grex for Board of Directors elections.
+
+Author:  John Remmers
+Date:    December 22, 2006
+
+EXECUTABLES
+-----------
+The following executable files should be installed in the indicated locations.
+Instructions for building them are in the next section.
+
+    castvote
+    voting-booth
+
+	These are extremely simple CGI scripts that output the "text/html"
+	content header and then invoke suid executables, described next.
+	They should be read- and execute-permitted and stored in the 'pw'
+	subdirectory of Apache's ScriptAlias directory.  On Grex as currently
+	configured, that would be /usr/local/libexec/cgi-bin/pw.
+	They are located in ../scripts/.
+
+    webballot
+    webcast
+
+	These are binary executables that support the web voting interface.  
+	They should be owned by and suid 'voteadm', executable by all, and
+	stored in /suid/bin.
+
+    vote
+
+	A simple shell script that exec's the terminal-interface version
+	of the vote program.  It should be stored in /usr/local/bin and
+	read- and execute-permitted to all.  It is located in ../scripts/.
+
+    board
+
+	This is the terminal-interface version of the vote program.
+	It should be owned by and suid 'voteadm', executable by all, and
+	located in /suid/bin.
+
+    date2epoch
+
+	A utility to set the start and end times of an election.  See
+	the 'CONFIGURING' section below for how to use it.
+
+COMPILING
+---------
+
+    cd src
+    make all
+
+	This builds board, webballot, webcast, and date2epoch.
+
+INSTALLING
+----------
+
+    As root, in the vote directory, do this:
+
+	cp src/{board,webballot,webcast} /suid/bin
+	chown voteadm.vote /suid/bin/{board,webballot,webcast}
+	chmod 4711 /suid/bin/{board,webballot,webcast}
+	cp src/date2epoch /usr/local/bin
+	chmod 755 /usr/local/bin/date2epoch
+
+	cp scripts/{castvote,voting-booth} /usr/local/libexec/cgi-bin/pw
+	chmod 755 /usr/local/libexec/cgi-bin/pw/{castvote,voting-booth}
+	cp scripts/vote /usr/local/bin
+	chmod 755 /usr/local/bin/vote
+
+    Note: If /suid is mounted read-only, you will have to change it
+    to read-write before copying anything into it, then change it back to
+    read-only when done.  See 'man mount' for instructions on how to do this.
+
+CONFIGURING
+-----------
+
+    The vote program reads files in /var/spool/vote to display candidate
+    lists and other election information.  Votes are recorded in a
+    subdirectory of this directory.
+
+    info.txt
+	General information about the election.
+    info.html
+	Same, but html-formatted.
+    title
+	Title to use for the web ballot page.
+    votemsg
+	Prompt displayed in the terminal version of the program
+	when the user is casting a ballot.
+    start, end
+	Starting and ending time of the election, expressed in
+	"seconds since the Epoch" format (i.e. rather large
+	non-human-readable integers).  To set these, use the
+	'date2epoch' utility, which accepts arguments 'year',
+	'mon', 'mday', 'hour', 'min' and converts this to
+	seconds-since-Epoch format, writing the result to
+	standard output.  For example, if you want the election
+	to start at midnight on December 1, 2006, you'd type:
+
+	    date2epoch 2006 12 1 0 0 > start
+
+	which will output a human-readable form of the date to
+	stderr and store the integer form in the file 'start'.
+    candlist
+	The list of candidates, formatted as follows:
+	    1st line: the number of candidates
+	    2nd line: the number of board positions to be filled
+	    subsequent lines: the candidates, one per line, in
+	    the colon-separated format
+	    NAME:LOGIN-ID:FULL-PATH-TO-STATEMENT
+    votes/
+	Directory containing the votes.  Each users vote is stored
+	in a file whose name is the login id of the user.  The file
+	lists the candidates they voted for, one candidate per line,
+	with line lengths blank-padded to 32 characters.
+
+    All files and directories should be owned and readable by 'voteadm', 
+    have group 'vote', and be readable by group.
+
+    See the 'examples' directory for examples of the above-mentioned files.

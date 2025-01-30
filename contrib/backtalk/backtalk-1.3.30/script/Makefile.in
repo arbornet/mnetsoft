@@ -1,0 +1,31 @@
+SHELL= /bin/sh
+
+srcdir= @srcdir@
+hdrdir= @srcdir@/../incl
+VPATH= @srcdir@
+
+INSTALL= @INSTALL@
+
+prefix= @prefix@
+scriptdir= @scriptdir@
+owner= @owner@
+
+binaries:
+
+install: install-scripts
+
+install-scripts:
+	../install-sh -d -o $(owner) -m 755 $(scriptdir)
+	$(INSTALL) -o $(owner) -m 644 config.bt $(scriptdir)
+	$(INSTALL) -o $(owner) -m 644 peek.bt $(scriptdir)
+	$(INSTALL) -o $(owner) -m 644 begin.bt $(scriptdir)
+	for dir in lib public pistachio pistachio/help abalone admin email; do \
+	    ../install-sh -d -o $(owner) -m 755 $(scriptdir)/$$dir; \
+	    for file in $$dir/*.bt; do \
+	       $(INSTALL) -o $(owner) -m 644 $$file $(scriptdir)/$$file; \
+	    done; \
+	done
+	-rm $(scriptdir)/welcome.bt
+	ln $(scriptdir)/public/welcome.bt $(scriptdir)/welcome.bt
+
+clean:

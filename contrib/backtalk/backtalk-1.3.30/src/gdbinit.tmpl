@@ -1,0 +1,87 @@
+
+define ptok
+  if (($arg0).flag & $TK_CLASS) == $TKC_INTEGER
+
+    # integer types
+    if ($arg0).flag == $TK_INTEGER
+      printf "INT %d",(int)($arg0).val
+    else
+      if ($arg0).flag == $TK_MARK
+        printf "MARK [%d]",(int)($arg0).val
+      else
+        if ($arg0).flag == $TK_BOUND_SYMBOL
+          printf "BOUND %s",sysdict[(int)($arg0).val].key
+        else
+          printf "BOUND /%s",sysdict[(int)($arg0).val].key
+        end
+      end
+    end
+
+  else
+    if (($arg0).flag & $TK_CLASS) == $TKC_STRING
+
+      # string types
+      if (($arg0).flag & $TKT_SYMBOL)
+        # unbound symbols
+        if (($arg0).flag & $TKT_CONSTANT)
+          printf "UNBOUND /%s",(char *)($arg0).val
+        else
+          printf "UNBOUND %s",(char *)($arg0).val
+        end
+      else
+        printf "STR (%s)",(char *)($arg0).val
+      end
+
+      if (($arg0).flag & $TKF_FREE)
+        printf " FREE"
+      end
+
+    else
+
+      if (($arg0).flag & $TK_CLASS) == $TKC_ARRAY
+
+        # arrays
+        if (($arg0).flag & $TKT_CONSTANT)
+          printf "ARRAY"
+        else
+          printf "PROC"
+        end
+
+      else
+
+        if ($arg0).flag == $TK_TIME
+          printf "TIME %d",(long)($arg0).val
+        else
+          if ($arg0).flag == $TK_FUNCTION
+            printf "FUNCTION"
+          else
+	    if (($arg0).flag & $TK_CLASS) == $TKC_REGEX
+	      printf "REGEX"
+	    else
+	      if ($arg0).flag == $TK_DYNAMIC
+	        printf "DYNAMIC '%s' lib %d",(char *)($arg0).val,($arg0).line
+	      else
+		if (($arg0).flag & $TK_CLASS) == $TKC_DICT
+		  printf "DICTIONARY size=%d",((HashTable *)(($arg0).val))->numEntries
+		else
+                  print $arg0
+	        end
+	      end
+	    end
+          end
+        end
+
+      end
+    end
+  end
+
+  if (($arg0).sfid >= 0) && (($arg0).sfid < filelist_size)
+    printf " [%s:%d]",filelist[($arg0).sfid],($arg0).line
+  end
+
+  printf "\n"
+end
+
+document ptok
+Print out a Backtalk token object in a pretty format.
+end

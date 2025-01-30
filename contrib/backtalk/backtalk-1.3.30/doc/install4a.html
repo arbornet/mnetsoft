@@ -1,0 +1,114 @@
+<HTML>
+<HEAD><TITLE>Backtalk Installation Guide</TITLE></HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<CENTER>
+<H1>Backtalk Installation Guide</H1>
+<H2>Part IVA: Installation with Backtalk Accounts</H2>
+Version 1.3.30
+<P>
+&copy; 1996-2003 Jan Wolter, Steve Weiss
+</CENTER>
+<P>
+Prev:  <A HREF=install3.html>Part III: SQL Configuration</A><BR>
+Next:  <A HREF=install5a.html>Part VA: Apache Configuration</A>
+<HR>
+If you are installing a system using Unix accounts,
+read the <A HREF=install4b.html>other version</A> of this page.
+<P>
+<STRONG><FONT COLOR=red>If you are upgrading a
+previous Backtalk installation:</FONT></STRONG>
+<OL>
+<LI><STRONG><FONT COLOR=red>Backup Your Old Files:</FONT></STRONG><BR>
+The install scripts will not save your old customizations.  You should make a
+backup of your old installation.  The following files are especially likely
+to have been customized on your site, and may be especially important to save:
+<BR>&nbsp;<BR><TT>
+&nbsp;&nbsp;&nbsp;&nbsp;script/config.bt<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;script/pistachio/config.bt<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;script/abalone/config.bt<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;etc/backtalk.conf
+</TT><BR>&nbsp;<BR>
+<LI><STRONG><FONT COLOR=red>Don't run 'make install-users'.</FONT></STRONG><BR>
+This may mess up all your existing accounts.
+<BR>&nbsp;<BR>
+
+<LI><STRONG><FONT COLOR=red>Don't run 'make install-bbs'.</FONT></STRONG><BR>
+This may mess up all your existing conferences.
+</OL>
+
+In a normal Backtalk installation, most files and directories
+are owned by the owner account (usually called 'backtalk') but a few must be
+owned by the account httpd runs under (usually 'nobody').  The easy way
+to create files owned by two different users is to do the installation as
+root.  But it can still be done if are not root so long as you have access
+to both the owner and httpd accounts.
+<TABLE BORDER=1 WIDTH=100%>
+<TR><TD WIDTH=50% VALIGN=TOP>
+        <CENTER><STRONG>Commands If You Have Root Access:</STRONG></CENTER><P>
+        As root in top-level distribution directory:
+	<BLOCKQUOTE><TT>
+	make install-binaries<BR>
+	make install-scripts<BR>
+	<FONT SIZE=-1><EM># if you want new conferences:</EM></FONT><BR>
+	make install-bbs<BR>
+	<FONT SIZE=-1><EM># if you want a new user database:</EM></FONT><BR>
+	make install-users<BR>
+	</TT></BLOCKQUOTE></TD>
+    <TD WIDTH=50% VALIGN=TOP>
+        <CENTER><STRONG>Commands If You Lack Root Access:</STRONG></CENTER><P>
+        As <TT>owner-id</TT> in top-level distribution directory:
+	<BLOCKQUOTE><TT>
+	make install-binaries-owner<BR>
+	make install-scripts<BR>
+	<FONT SIZE=-1><EM># if you want new conferences:</EM></FONT><BR>
+	make install-bbs<BR>
+	<FONT SIZE=-1><EM># if you want a new user database:</EM></FONT><BR>
+	make install-users-owner<BR>
+	<FONT SIZE=-1><EM># before running httpd-id commands:</EM></FONT><BR>
+	make open-perms
+	</TT></BLOCKQUOTE>
+        As <TT>httpd-id</TT> in top-level distribution directory:
+	<BLOCKQUOTE><TT>
+	make install-binaries-httpd<BR>
+	<FONT SIZE=-1><EM># if you want a new user database:</EM></FONT><BR>
+	make install-users-httpd
+	</TT></BLOCKQUOTE>
+        As <TT>owner-id</TT> in top-level distribution directory:
+	<BLOCKQUOTE><TT>
+	<FONT SIZE=-1><EM># after running httpd-id commands:</EM></FONT><BR>
+	make restore-perms
+	</TT></BLOCKQUOTE>
+	</TD></TR>
+</TABLE>
+Note that if you are installing a system that will run under <TT>suExec</TT>
+or <TT>cgiwrap</TT> then <TT>owner-id</TT> and <TT>httpd-id</TT> are the same.
+If you are logged into that account, you should be able to use the root
+installation commands.
+<P>
+If you are creating a new user database, then the Backtalk conference
+administration account will also be created.  The last of the make commands
+will ask you to enter a password to use for this account.
+<P>
+If you aren't root and you can't actually log in as <TT>httpd-id</TT> to
+execute the commands,
+then write a little CGI program named something like <TT>install.cgi</TT>
+containing commands something like this:
+<P>
+<PRE>
+	#!/bin/sh
+	echo "Content-type: text/plain"
+	echo
+	cd /distribution/directory/for/backtalk
+	make install-binaries-httpd
+	make install-users-httpd
+</PRE>
+Install the script in the appropriate cgi-bin directory and
+permit it to be executable ("<TT>chmod 755 install.cgi</TT>").
+Then use your browser to execute that script.  The web server should run
+the script as the appropriate user, and display the output on your browser
+screen.
+<STRONG>Remove the script from the cgi-bin directory when you are done.</STRONG>
+<HR>
+Prev:  <A HREF=install3.html>Part III: SQL Configuration</A><BR>
+Next:  <A HREF=install5a.html>Part VA: Apache Configuration</A>
+</BODY></HTML>

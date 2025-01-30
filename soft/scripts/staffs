@@ -1,0 +1,2 @@
+#!/bin/sh
+members -ps -g staff

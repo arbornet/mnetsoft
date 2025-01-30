@@ -1,0 +1,81 @@
+#!/bin/sh
+cat <<EOF
+#include <stdio.h>
+
+const int HIGH = 0x80;
+
+static void
+eggbeater(unsigned char egg[], size_t egglen)
+{
+	size_t i;
+
+	for (i = 0; i < egglen; i++)
+		putchar(egg[i] ^ HIGH);
+	fflush(stdout);
+}
+EOF
+
+yolks=""
+for egg
+do
+	yolk=`basename $egg .egg | sed 's,.*/,,'`
+	yolks="$yolks $yolk"
+	cat <<EOF
+
+static void
+${yolk}(void)
+{
+	unsigned char egg[] = {
+EOF
+	awk 'BEGIN {
+		for (c = 0; c < 255; c++) {
+			o[sprintf("%c", c)] = c
+		}
+		prefix = "\t\t"
+	}
+	{
+		line = $0 "\n"
+		for (i = 1; i <= length(line); i++) {
+			t = sprintf("%02x ^ HIGH", o[substr(line, i, 1)])
+			printf("%s0x%s", prefix, t)
+			prefix = !(++l % 4) ? ",\n\t\t" : ", "
+		}
+	}' $egg
+	cat <<EOF
+
+	};
+	eggbeater(egg, sizeof(egg));
+}
+EOF
+done
+
+cat <<EOF
+
+static struct dispatch {
+	char *name;
+	void (*function)(void);
+} eggs[] = {
+EOF
+
+for yolk in $yolks
+do
+	printf '\t{ "%s", %s },\n' $yolk $yolk
+done
+printf '\t{ NULL, NULL }\n};\n'
+
+cat <<EOF
+
+int
+tryegg(char *cmd)
+{
+	struct dispatch *p;
+
+	for (p = eggs; p->name != NULL; p++)
+		if (strcmp(cmd, p->name) == 0) {
+			(p->function)();
+			return(1);
+		}
+
+	return(0);
+}
+EOF

@@ -1,0 +1,1140 @@
+<HTML>
+<HEAD>
+<TITLE>Backtalk Glossary</TITLE>
+<HEAD>
+<BODY BGCOLOR=FFFFFF>
+<CENTER>
+<H1>Backtalk Glossary</H1>
+Version 1.3.30
+<P>
+(c) 1996-2003 <A HREF=#wolter>Jan Wolter</A>, <A HREF=#weiss>Steve Weiss</A>
+</CENTER>
+<P>
+This document provides definitions of some of the terms used in Backtalk
+and its documentation.
+Much of the terminology used in Backtalk is inherited from Marcus Watts'
+<A HREF=#picospan>Picospan</A> conferencing system.
+<DL>
+
+<P><DT><STRONG><A NAME=abalone>Abalone Interface</A></STRONG>
+<DD>
+The abalone <A HREF=#interface>user interface</A> 
+is a Backtalk <A HREF=#flavor>flavor</A> that makes better use of the
+capabilities of modern browsers than the older <A HREF="#pistachio">flavor</A>
+did.  The basic looks were originally inspired by InfoPop's OpenForum system,
+but many other ideas have been stirred into the pot.
+In makes substantial use of Javascript in many places, but has been designed
+so that as much as possible will still work for users with Javascript
+disabled.
+It is better looking than the standard
+<A HREF=#pistachio>pistachio</A> interface, but probably slower to use
+for people with sluggish internet connections.
+
+<P><DT><STRONG><A NAME=account>Accounts</A></STRONG>
+<DD>
+Accounts, or login IDs, are assigned to each Backtalk user.
+Each account is protected by a password to ensure only that user can
+use it.
+Normally these Backtalk accounts are completely distinct from any real
+Unix accounts that may be on the host machine.
+Having a Backtalk account on such a system would give the user no access
+to any part of the system except the Backtalk conferences.
+<P>
+In this normal case, accounts are created using any of several Backtalk
+web-based account creation forms, or with the <A HREF=#cmdline>command-line</A>
+btmkuser tool.
+Users can change their passwords, edit other settings,
+or delete their own accounts through Backtalk.
+<A HREF=#administrator>Conference administrators</A> can perform all these
+functions on any user's account.
+<P>
+It is possible to configure Backtalk to use the real Unix accounts on the
+host computer as Backtalk accounts.  This is normally done on systems
+where administrators want to give users a choice of either using Backtalk
+or using the <A HREF=#yapp>Yapp</A> or <A HREF=#picospan>Picospan</A>
+tty-based conferencing systems, since users must have Unix accounts
+to access the latter.
+<P>
+If Unix accounts are used, account administration is done through the
+standard Unix administration tools, not through Backtalk.
+
+<P><DT><STRONG><A NAME=administrator>Administrator</A></STRONG>
+<DD>
+Conference administrators are those users who have access to a Backtalk
+Administration account.
+Any account in the <A HREF=#group>group</A> called 'cfadm' is an administrator
+account.
+The Backtalk installation scripts automatically create and administration
+account called 'cfadm'.
+Such accounts have a large number of special powers.
+With Backtalk,
+all normal administrative functions can be performed through the web using
+an administrator account.
+<P>
+Normally administrator accounts are not used for day-to-day conferencing
+even by conference administrators.
+Ideally they should switch over to that account
+only to perform administrative functions.
+<P>
+Administrators have the powers of <A HREF=#fairwitness>fairwitnesses</A>
+in all <A HREF=#conference>conferences</A>.
+They can <A HREF=#kill>kill</A>,
+<A HREF=#erase>censor</A>, <A HREF=#hide>hide</A>,
+and <A HREF=#retitle>retitle</A> items even on systems
+where fairwitnesses are denied those powers.
+Administrators can also reassign fairwitnesses, and
+<A HREF=#open>open</A> or <A HREF=#close>close</A> conferences.
+It is the administrators alone who can create and destroy conferences.
+<P>
+Administrators also can create, destroy, <A HREF=#validate>validate</A>
+and invalidate
+<A HREF=#account>user accounts</A> on most Backtalk installations.
+They can also change the passwords of other users.
+<P>
+Obviously the conference administration job is one that should be filled
+by a trustworthy and capable person.
+
+<P><DT><STRONG><A NAME=anonymous>Anonymous Users</A></STRONG>
+<DD>
+Normally all Backtalk users must establish their identity through some
+<A HREF=#authentication>authentication</A> scheme, but Backtalk can be
+configured to allow users who have not identified themselves to have read-only
+access to the conferences.
+These anonymous users cannot post,
+and because they do not have <A HREF=#participation>participation files</A>,
+Backtalk will not remember for them which items they have already seen.
+If there is a <A HREF=#shy>shy list</A> installed, anonymous users will not
+be able to read responses entered by users on that list.
+
+<P><DT><STRONG><A NAME=apache>Apache HTTP Daemon</A></STRONG>
+<DD>
+Apache is a modular <A HREF=#httpd>HTTP daemon</A> distributed by the
+Apache group.  Though Backtalk can be used with any standard HTTP daemon,
+Apache has several features that make it ideal for use with Backtalk.
+<P>
+First, it supports using <A HREF=#dbm>dbm files</A> for
+<A HREF=#passwordfile>password database</A>.
+For systems with large numbers of users,
+this can mean much faster authentication than the standard flat files.
+<P>
+Second, there is a separately distributed
+<A HREF=#externauth>external authentication</A> module for Apache.
+Together with our <A HREF=#pwauth>pwauth</A> program, this provides a
+simple and secure method for authenticating real Unix accounts even on
+Unix systems where passwords are hidden in a shadow database and can
+thus not be read by the HTTP daemon itself.
+<P>
+Apache is available from the <A HREF=http://www.apache.org/>Apache web
+page</A>.
+
+<P><DT><STRONG><A NAME=authentication>Authentication</A></STRONG>
+<DD>
+Authentication is the process by which users establish their identity to
+Backtalk.
+Backtalk can be set up to allow limited access to
+<A HREF=#anonymous>anonymous</A> users, but to participate fully users
+must authenticate.
+Authentication allows Backtalk to reliably tag all postings with the name
+of the author.  It also helps Backtalk maintain individual information
+about each user in the <A HREF=#udb>user databases</A>.
+<P>
+Normally authentication is done using the standard authentication methods
+built into all modern <A HREF=#browser>web browsers</A>.
+The first time the user accesses a
+Backtalk page he or she
+will be asked to give a login name and password in a little
+pop-up box on his screen.
+This authentication process is handled entirely by the host system's
+<A HREF=#httpd>HTTP Daemon</A> and the user's web browser and is based
+on the information in the <A HREF=#passwordfile>password file</A>.
+
+<P><DT><STRONG><A NAME=.backtalk>.Backtalk File</A></STRONG>
+<DD>
+The .backtalk file, kept in the user's <A HREF=#homedir>home directory</A>,
+contains all sorts of information and switch settings.
+It is a <A HREF=#tagfile>tag file</A> and is the catch-all place for
+miscellaneous user information.
+<P>
+On most systems
+it contains the publicly readable biographical information
+(email address, phone number, life story, etc) displayed when users
+ask for information about the user.
+On systems where real Unix accounts are used, that information is
+taken preferentially from the user's .plan file.
+It is used to keep option settings on all installations.
+<P>
+There is also a ``dflt.backtalk'' file kept in the bbs directory where the
+system administrator can store default values for user who don't set there
+own.
+
+<P><DT><STRONG><A NAME=language>Backtalk Script Language</A></STRONG>
+<DD>
+Backtalk is an <A HREF=#interpret>interpretor</A> which follows the
+instructions in a <A HREF=#script>script</A>.
+The Backtalk script language is actually a very powerful programming language
+which includes such facilities as loops, conditionals, user-definable
+functions, recursion, multi-dimensional arrays, and global and local
+variables.
+It is designed for very rapid execution.
+It is not, however, very readable or easy for beginners to understand.
+<P>
+Backtalk's language is an stack-based <A HREF=#rpn>RPN</A> language, very
+similar in syntax to <A HREF=#postscript>Postscript</A>.
+An introduction to the Backtalk Script Language can be found in the
+<A HREF=tutorial.html>Tutorial Manual</A> and a full description
+can be found in the <A HREF=language.html>Language Manual</A>.
+
+<P><DT><STRONG><A NAME=binaryfile>Binary Files</A></STRONG>
+<DD>
+To improve performance, Backtalk automatically compiles all
+<A HREF=#script>script files</A> into binary files which can be loaded and
+executed much more efficiently.
+Many symbols are resolved at compile time, regular expressions are precompiled,
+and code optimizations are done, including the elimination of chunks of code
+not relevant to your configuration.
+The <A HREF=#compiler>Backtalk compiler</A> makes this translation.
+A binary file has the same name as its corresponding script file, except
+that the ``<TT>.bt</TT>'' suffix is replace with a ``<TT>.bb</TT>'' suffix.
+
+<P><DT><STRONG><A NAME=booktalk>Booktalk</A></STRONG>
+<DD>
+Booktalk is an discussion forum created by the Canton Public Library
+for elementary school students.
+It is based on Backtalk,
+but uses the kid-friendly <A HREF=#bubblegum>Bubblegum</A>
+user interface, and some custom administrative tools to simplify the
+creation of special conferences for each class, public conferences shared
+across all classes in all schools, and restricted staff-only conferences.
+These administrative tools are available in a separate distribution.
+They are mostly only useful if you want to create a very similar kind
+of system.
+
+<P><DT><STRONG><A NAME=browser>Browsers</A></STRONG>
+<DD>
+A web browser is a program for accessing documents on remote systems and
+formating <A HREF=#html>HTML</A> documents for display.
+There are hundreds of web browsers around, but the best known are Netscape,
+Microsoft Internet Explorer, Mozilla and <A HREF=#lynx>Lynx</A>.
+All users must use a web browser to access Backtalk.
+<P>
+Unfortunately, browsers aren't very well standardized.
+Backtalk can automatically recognize which types of features some of the
+more common browsers have by looking them up in its browser database.
+This allows Backtalk scripts to adapt to the capabilities of a particular
+user's browser.
+
+<P><DT><STRONG><A NAME=bubblegum>Bubblegum Interface</A></STRONG>
+<DD>
+The bubblegum interface was designed for the Canton Public Library's
+<A HREF=#booktalk>Booktalk</A> project.  It is a simplified interface
+originally designed for school-age children.  It features big buttons,
+bright colors, and slightly reduced feature set.
+It is distributed separately from Backtalk, but is also open source
+freeware.
+
+<P><DT><STRONG><A NAME=.cflist>.Cflist File</A></STRONG>
+<DD>
+The .cflist file, kept in the user's <A HREF=#homedir>home directory</A>,
+maintains his hot-list of favorite conferences.
+Backtalk allows him to quickly browse through these conferences in the
+given order.
+<P>
+There is also a ``dflt.cflist'' file kept in the bbs directory which the
+system administrator can set to a conference list to be used for all users
+who do not define their own .cflist files.
+The ``dflt.cflist'' file can also specify conferences that are only to be
+listed for certain <A HREF=#group>groups</A> of user, and may include some
+subheadings to be displayed in user's hot-lists.
+
+<P><DT><STRONG><A NAME=cgi>CGI Programs</A></STRONG>
+<DD>
+Programs which are designed to be run from a <A HREF=#httpd>HTTP daemon</A>,
+and which generate <A HREF=#html>HTML</A> output are called ``CGI programs.''
+Backtalk is an unusually large and sophisticated CGI program.
+On most systems, all CGI programs must be installed under a system
+directory called <A HREF=#cgibin>cgi-bin</A>.
+
+<P><DT><STRONG><A NAME=cgibin>Cgi-bin Directory</A></STRONG>
+<DD>
+The cgi-bin directory is the standard place to keep <A HREF=#cgi>CGI
+programs</A> on Unix systems.
+Where exactly this directory is in the Unix directory tree seems to
+vary wildly from one system to the next.  It is usually defined
+in the <A HREF=#httpd>HTTP daemon</A> configuration file called ``httpd.conf,''
+however the location of that file also varies wildly from system to the next.
+<P>
+Normally Backtalk will be installed not in the cgi-bin directory itself, but
+in a subdirectory of the cgi-bin directory, usually called ``pw''.  This
+subdirectory will also contain a file called
+``<A HREF=#.htaccess>.htaccess</A>'' which tells the HTTP daemon that users
+must be <A HREF=#authentication>authenticated</A>
+before running the programs in that directory.
+<P>
+Often a link to Backtalk will be installed in the cgi-bin directory to
+allow <A HREF=#anonymous>anonymous</A> users to have read-only access to
+the conferences.
+<P>
+A link to Backtalk may also be installed in a subdirectory of cgi-bin called
+``adm.''  The ``adm'' directory would have a .htaccess file which points
+to the same password database as the one in ``pw'' but has a different
+keyword.  This is used primarily when a
+<A HREF=#administrator>administrator</A> wants to switch from his personal
+<A HREF=#account>account</A> to the administration account.
+Most <A HREF=#browser>web browsers</A> are very reluctant to let a user
+change authentications, so running an apparently different copy of of
+Backtalk which happens to have a different keyword in its .htaccess file
+will fool the browser into letting you re-authenticate.
+
+<P><DT><STRONG><A NAME=close>Closed Conferences</A></STRONG>
+<DD>
+Normally all <A HREF=#authentication>authenticated</A>
+users will have access to each <A HREF=#conference>conference</A>.
+But conferences can be set up so that only a limited subset of the
+users may fully participate.
+Other users may be completely banned from accessing the conference,
+or may have read-only access to it.
+(The latter type of conference is sometimes called a
+<A HREF=#fishbowl>fishbowl</A> conference.)
+<P>
+Access to a closed conference may be limited either by a list of which
+users may join, or by a list of which <A HREF=#group>groups</A> may join,
+by a password that must be given to join, or by any combination of these.
+The lists of users and groups and the password are maintained by the
+<A HREF=#fairwitness>fairwitnesses</A> of the conferences.
+
+<P><DT><STRONG><A NAME=cmdline>Command-Line Administrative Tools</A></STRONG>
+<DD>
+Though all Backtalk user administration tasks can be done
+through the web interface, it is sometimes useful to be able to perform
+these functions from Unix shells.  Backtalk includes a set of command-line
+administrative programs that can help with this:
+<UL>
+<LI><TT>btmkuser</TT> - create a <A HREF="#account">user account</A>.
+<LI><TT>btpasswd</TT> - change a user's password.
+<LI><TT>btrmuser</TT> - delete a user account.
+<LI><TT>btvalid</TT> - <A HREF="#validate">validate</A> or
+                       invalidate a user account.
+</UL>
+
+<P><DT><STRONG><A NAME=compiler>Compiler</A></STRONG>
+<DD>
+The Backtalk Compiler (<TT>btc</TT>) preprocesses Backtalk
+<A HREF=#script>scripts</A> into <A HREF=#binaryfile>binary files</A> which
+can be executed much more quickly then the original scripts.
+You don't normally need to compile Backtalk scripts yourself. Backtalk will
+do so all by itself, as needed.
+<P>
+To explain more precisely what it does, we need to get a bit more technical
+than this glossary normally does, but lets have at it anyway....
+<P>
+It converts the original free-format text file into
+a compact fixed-format binary file, stripping out all comments and white
+space as it does so.
+It binds names of built-in functions and system variables so they do
+not have to be looked up in the system dictionary at run time.
+Some Backtalk variables are constants,
+whose names are known to the system at compile time.
+Any regular expressions are precompiled.
+The compiler removes all constants from the program
+and replaces them with their values
+so they do not have to be evaluated at run time.
+If you are applying built-in functions to constant arguments,
+Backtalk will often be able to evaluate them at compilation time.
+This mechanism enables conditionally compiled instructions to be included in
+Backtalk scripts, making it easy to write efficient scripts that behave
+differently on different system configurations.
+The compiler can also insert copies of other script files
+that your script calls directly into the binary,
+so that the other file doesn't have to be found and loaded at run time
+(this can result in binary files being bigger than the source files).
+<P>
+Binary files are written in an architecture independent format, so that they
+can be shared between different types of computers.
+
+<P><DT><STRONG><A NAME=confer>Confer Conferencing System</A></STRONG>
+<DD>
+``Confer'' is the name of a conferencing system written in 1975 by
+Robert Parnes at the University of Michigan in Ann Arbor.
+It was a predecessor to the <A HREF=#picospan>Picospan</A> and
+Caucus conferencing systems.
+Confer pioneered many of the design features in Backtalk.
+
+<P><DT><STRONG><A NAME=conference>Conferences</A></STRONG>
+<DD>
+A Backtalk conferencing system may have any number of conferences on it.
+A Conference is a forum for discussing some broad subject area.
+Conferences correspond roughly to newsgroups or mailing lists,
+but are differently structured.
+Each conference has a short name,
+like ``cooking'', ``internet'' or ``chess.''
+One or more people are assigned to
+<A HREF=#fairwitness>fairwitness</A> the conference.
+Users may enter <A HREF=#item>items</A> into the conference,
+each of which would have some narrower subject.
+<P>
+Only the <A HREF=#administrator>conference administrator</A> can
+create new conferences.
+
+<P><DT><STRONG><A NAME=dbm>DBM Files</A></STRONG>
+<DD>
+Most modern Unixes have support for some form of dbm database.
+These are specially designed to allow finding specific entries in very
+large databases very quickly, without having to search the whole database.
+Backtalk can be configured to use dbm files for various parts of its
+<A HREF=#udb>user database</A>.
+This can significantly improve performance on systems with thousands of
+users.
+
+<P><DT><STRONG><A NAME=erase>Erasing Responses</A></STRONG>
+<DD>
+Backtalk makes it possible to erase or censor individual
+<A HREF=#response>responses</A>.
+Depending on the configuration, the power to erase responses may be allowed
+to the user who posted it, or to the <A HREF=#fairwitness>fairwitness</A>
+of the conference it was posted in.
+<A HREF=#administrator>Administrators</A> can always erase
+responses.
+<P>
+Backtalk can be configured to save a copy of any erased response in a file
+not normally accessible through Backtalk.  This make it possible to
+recover inappropriately censored text.
+
+<P><DT><STRONG><A NAME=externauth>External Authentication</A></STRONG>
+<DD>
+External <A HREF=#authentication>authentication</A>
+is a feature supported by one of the
+<A HREF=#apache>Apache HTTP daemon</A>'s contributed modules.
+With external authentication, the HTTP daemon does not check the
+validity of a login/password combination itself.  Instead it runs another
+program which is given the login and password, and returns a flag telling
+if the authentication is good or not.
+This is used in Backtalk installations where real Unix accounts are used
+to run the <A HREF=#pwauth>pwauth</A> program.
+
+<P><DT><STRONG><A NAME=fairwitness>Fairwitnesses</A></STRONG>
+<DD>
+This is the title Backtalk uses to describe the person or persons
+``in charge'' of a <A HREF=#conference>conference</A>.
+Other systems use the names ``host'' or ``moderator'' to mean the same thing.
+Fairwitnesses oversee a particular conference and work to maintain a suitable
+tone and atmosphere.  They have various special powers over their conferences.
+Only a fairwitness can enter the first <A HREF=#item>item</A> in a conference.
+Only fairwitnesses can <A HREF=#link>link</A>
+items from other conferences into their conference.
+They can edit the conference <A HREF=#login>login screens</A> and may
+be able to adjust other conference-specific settings.
+Depending on how Backtalk is set up,
+fairwitnesses may have the power to
+<A HREF=#kill>kill</A>, <A HREF=#retitle>retitle</A>, 
+<A HREF=#freeze>freeze</A> or
+<A HREF=#retire>retire</A> items.
+They may be able to <A HREF=#hide>hide</A> and <A HREF=#erase>erase</A>
+responses.
+In <A HREF=#close>closed</A> conferences,
+the fairwitness can maintain the list of users who may access the conference,
+or the secret password through which must be given to access the conference.
+<P>
+Backtalk inherits the rather odd name ``fairwitness'' from
+<A HREF=#picospan>Picospan</A>, which lifted it from Robert Heinlein's novel
+<EM>Stranger in a Strange Land</EM>, where it means something different.
+
+<P><DT><STRONG><A NAME=fishbowl>Favorites</A></STRONG>
+<DD>
+Users can mark items that they are especially interested in as ``favorites''.
+These items will then be listed first in lists of items, and shown first
+when the user reads items.
+Options can be set to automatically favor items that the user posts him or
+herself, or that the user responds too.
+By default, when you enter an item, it automatically becomes a permanent
+favorite.
+When you respond to an item, it becomes a temporary favorite - that is,
+it will only be a favorite until you next read it.
+
+<P><DT><STRONG><A NAME=fishbowl>Fishbowl Conferences</A></STRONG>
+<DD>
+A fishbowl <A HREF=#conference>conference</A> is a <A HREF=#close>closed</A>
+conference which anybody can read,
+but which only a limited number of users can post to.
+(Incidentally,
+a lot of Backtalk's conference reading code evolved from a program
+called <EM>bbsread</EM> that <A HREF="#wolter">Jan Wolter</A>
+wrote long ago to simulate fishbowl
+conferences in the Picospan environment.)
+
+<P><DT><STRONG><A NAME=flavor>Flavors</A></STRONG>
+<DD>
+Backtalk can support a wide range of different
+<A HREF=#interface>user interfaces</A>.
+When a choice of different interfaces is installed on a Backtalk system,
+they are called ``flavors.''
+<P>
+Current available flavors of Backtalk include <A HREF=#vanilla>vanilla</A>,
+<A HREF=#pistachio>pistachio</A>, <A HREF=#abalone>abalone</A>,
+<A HREF=#bubblegum>bubblegum</A> and <A HREF=#papaya>papaya</A>.
+<P>
+We expect to continue developing flavors in the future.
+
+<P><DT><STRONG><A NAME=forget>Forgetting Items</A></STRONG>
+<DD>
+A user can forget any <A HREF=#item>item</A> in any conference he or she
+is a member of.
+This means that new responses to that item
+will not be shown to the user in the future; the
+item will seem to disappear from the conference
+unless the user specifically requests to read it.
+This has no effect on any other user's ability to continue reading the
+item.
+
+<P><DT><STRONG><A NAME=freeze>Freezing Items</A></STRONG>
+<DD>
+A frozen <A HREF=#item>item</A>
+is one to which no more <A HREF=#response>responses</A> may be posted.
+Items may be frozen or thawed by the conference's
+<A HREF=#fairwitness>fairwitness</A>
+or, if Backtalk is configured to allow it,
+by the user who originally entered the item.
+Frozen items may also not be <A HREF=#retitle>retitled</A>,
+and responses in them may not be <A HREF=#hide>hidden</A> or
+<A HREF=#erase>erased</A>.
+
+<P><DT><STRONG><A NAME=fronttalk>Fronttalk</A></STRONG>
+<DD>
+The fronttalk program is a command-line front-end to backtalk.
+It looks and feels very much like <A HREF=#picospan>Picospan</A>
+or <A HREF=#yapp>Yapp</A>, enough so that it could be reasonably considered
+a clone, but it functions quite differently.  Instead of accessing the
+conference databases directly, it makes HTTP requests
+to a Backtalk <A HREF=#cgi>CGI</A> program.  This enables it to access
+conferences on remote systems, not just those on the local server.
+<P>
+When accessing conferences on the local system, it can directly execute
+Backtalk, thus saving the overhead of going through an <A HREF=#httpd>HTTP
+Deamon</A>.
+<P>
+Fronttalk is distributed separately from Backtalk, but is also free, open
+source software.
+
+<P><DT><STRONG><A NAME=grex>Grex</A></STRONG>
+<DD>
+Backtalk was originally written for Grex and HVCN.  Grex is a free,
+public-access computer system, run as a 501c3 non-profit corporation
+by a staff of volunteers.  It was a spinoff from <A HREF="#mnet">M-Net</A>
+in 1996.  It is on the web at <A HREF="http://www.cyberspace.org">
+http://www.cyberspace.org</A>.
+Grex has a history of running on extremely slow, extremely obsolete
+computers.  This has encouraged us to design Backtalk for performance.
+
+<P><DT><STRONG><A NAME=group>Groups</A></STRONG>
+<DD>
+Backtalk user <A HREF=#account>accounts</A> can be associated with one or
+more groups, in much the same way that Unix accounts can be in one or more
+groups.
+(In fact, the underlaying data file used by Backtalk to record groups looks
+almost exactly like a standard Unix <TT>/etc/group</TT> file).
+<P>
+As in Unix, every account has exactly one 'primary group' but can be a member
+of any number of other groups too.  For the most part, it makes no different
+which groups are 'primary' and which groups are 'other'.  The distinction is
+maintained only for compatibility with systems that use real Unix accounts.
+<P>
+Two groups are special.
+Any account that is a member of the 'cfadm' group is an
+<A HREF=#administrator>administrator</A> account, and has <EM>lots</EM> of
+special power to create, destroy and edit conferences and other user accounts.
+Any account that is a member of the 'gradm' group is a
+group leader account.  It has the ability to create and administrate other
+accounts in its primary group.
+<P>
+Other groups can be defined by administrators.
+The most common use for them is to create
+<A HREF=#close>closed</A> conferences that only that group can access.
+
+<P><DT><STRONG><A NAME=hide>Hiding Responses</A></STRONG>
+<DD>
+Backtalk makes it possible to hide <A HREF=#response>responses</A>.
+These hidden responses
+will not be displayed when the item is read, but instead a button will be
+shown that can be clicked to read the text of the response.
+This is useful for very long responses.
+Users may always hide their own responses,
+and the <A HREF=#fairwitness>fairwitnesses</A> may be able to do so for
+other user's responses if the system has been configured to allow this.
+<A HREF=#administrator>Administrators</A> can always hide any
+user's responses.
+
+<P><DT><STRONG><A NAME=homedir>Home Directories</A></STRONG>
+<DD>
+Each Backtalk <A HREF=#account>account</A> has a home directory on the
+Unix file system where various files are kept with information about the
+user.
+The file kept in users' home directories include
+their <A HREF=#participation>participation</A> files,
+their <A HREF=#.backtalk>.backtalk</A> file,
+their <A HREF=#.cflist>.cflist</A> file, and,
+in some configurations, an ``id'' file containing
+the <A HREF=#primaryudb>primary user database</A> information.
+<P>
+On systems where real Unix accounts are used,
+a user's Backtalk home directory is his real Unix home directory.
+To prevent clutter in the home directory,
+the user may keep all his Backtalk files in a subdirectory called ``.cfdir''.
+The files will be owned by the user, which would normally
+make it impossible for Backtalk to update them.
+The <A HREF=#partutil>partutil</A> program,
+which must be used in such installations, provides a work-around for this
+problem.
+<P>
+In the more usual case of systems where Backtalk accounts are distinct from
+Unix accounts, the user's home directory is maintained by backtalk and it
+owns all the files in it.  The user would have no access to the directory
+except through Backtalk and would normally not be aware that it exists.
+
+<P><DT><STRONG><A NAME=.htaccess>.Htaccess File</A></STRONG>
+<DD>
+A .htaccess file in a directory tells the <A HREF=#httpd>HTTP daemon</A>
+who should have access to the files in that directory.
+The .htaccess files in the <A HREF=#cgibin>cgi-bin</A> subdirectories where
+Backtalk is installed
+tell the HTTP daemon how to do authentication for Backtalk.
+<P>
+Normally the .htaccess file will point to the <A HREF=#passwordfile>password
+file</A> which Backtalk maintains,
+but on systems where real Unix <A HREF=#account>accounts</A> are used,
+it will instead tell the <A HREF=#apache>Apache HTTP daemon</A>
+to run the <A HREF=#pwauth>pwauth</A> program to do authentication.
+
+<P><DT><STRONG><A NAME=html>HTML Document Language</A></STRONG>
+<DD>
+HTML is a simple document language most commonly used in writing web
+pages.
+It consists of ordinary English text with various tags inserted into
+it that tell things like what font to use and where to make paragraph
+breaks and section headings.
+It also includes codes for including in-line images and clickable pointers
+to other documents.
+Most <A HREF=#browser>web browsers</A> will let you see the HTML code
+from which the pretty display on your screen was generated by selecting
+``View Document Source.''
+<P>
+The Backtalk program generates all its output as HTML, which is then
+converted into handsomely formatted text by your web browser.
+Unfortunately, HTML isn't as well standardized as one would like, so
+what appears on your screen may vary depending on which browser you use.
+<P>
+HTML stands for ``HyperText Markup Language.''
+
+<P><DT><STRONG><A NAME=htmlresp>HTML Responses</A></STRONG>
+<DD>
+Normally Backtalk users enter responses by typing them in exactly as they
+want them to be displayed.  However, Backtalk also allows users to enter
+responses containing <A HREF=#html>HTML</A> commands.
+This makes it possible to do fancy formatting and to include images, tables
+and links in responses.
+Backtalk automatically sanitizes all HTML responses, ensuring that all
+opened tags are closed, and completely removing certain tags that would
+tend to mess up the page.
+<P>
+In installations where Backtalk coexists with
+<A HREF="#picospan>Picospan</A> or <A HREF="#yapp>Yapp</A>,
+HTML responses would be a problem, because users of the text-based
+conferencing interface would see ugly HTML tags in the responses instead
+of neatly formatted text.  So on such systems, Backtalk automatically
+generates a plaintext version of each HTML response and stores both versions
+in such a way that Picospan or Yapp will only display the plaintext version.
+<P>
+To help out authors of HTML responses, Backtalk allows them to preview their
+postings.  On systems where Picospan or Yapp are used, it can be set to
+show how the response will look in <STRONG>both</STRONG> interfaces.
+
+<P><DT><STRONG><A NAME=httpd>HTTP Daemons</A></STRONG>
+<DD>
+Any computer that is to serve web pages
+(<EM>i.e.</EM>, make them available on the internet)
+must be running some kind of HTTP daemon, usually called ``httpd.''
+The HTTP daemon waits to receive incoming requests and dispatches
+the appropriate output, usually an <A HREF=#html>HTML</A> document.
+It also takes care of handling any authentication necessary to access
+documents, and maintains logs of HTTP requests served.
+<P>
+HTTP daemons can be configured to allow <A HREF=#cgi>CGI programs</A>
+to be run.  In this case, instead of sending some static HTML file in
+response to a request, the HTTP daemon runs some other program which,
+in real time, generates the HTML to be sent to the remote user.
+Backtalk is a very elaborate CGI program, and the normal way it is run
+is by an http daemon.
+<P>
+Thus Backtalk has a fairly intimate relationship with the host system's
+http daemon, and correct configuration of the HTTP daemon is important
+to Backtalk's correct functioning.  Luckily, these things are pretty
+well standardized, and Backtalk will work well with any of the common
+HTTP daemons.
+<P>
+However, if the <A HREF=#apache>Apache HTTP daemon</A> is used, Backtalk
+can be configured in ways that will improve its performance on systems
+with large numbers of users, and if you wish to use real Unix
+<A HREF=#account>accounts</A> for authentication, we only support Apache.
+<P>
+HTTP stands for ``HyperText Transfer Protocol.''
+
+<P><DT><STRONG><A NAME=ignore>Ignore Lists</A></STRONG>
+<DD>
+Ignore lists are sometimes called ``bozo filters'' or ``twit filters,''
+but that's rude.
+If you place a user on your ignore list, then the
+<A HREF=#pistachio>pistachio</A> and <A HREF=#abalone>abalone</A> flavors
+will automatically supress all messages posted by them.
+This is for use when some other user has driven you utterly to distraction,
+but you lack the self-discipline to just not read their postings.
+Personally I think it's a dumb feature, but lots of people seem to think
+it's one they can't live without.
+
+<P><DT><STRONG><A NAME=interpret>Interpretor</A></STRONG>
+<DD>
+The Backtalk program is actually an interpretor for the
+<A HREF=#language>Backtalk script language</A>.
+The content and layout of the pages displayed by Backtalk and the function
+and appearance of the controls on them is not programmed into Backtalk.
+Instead, a large set of <A HREF=#script>scripts</A> is used to drive the
+generation of the pages.
+Backtalk works by following the instructions in a script.
+Doing this is called ``interpreting the script.''
+<P>
+The Backtalk Interpretor does not actually execute the script files directly.
+Instead, the <A HREF=#compiler>Backtalk Compiler</A> first translates them
+into <A HREF=#binaryfile>binary files</A>, doing quite a bit of optimization.
+The binary files are saved so that the scripts do not need to be recompiled
+everytime they are run (unlike Perl scripts).  Backtalk is smart enough to
+recompile them only when there has been some change in the scripts or the
+system configuration.
+<P>
+Implementing Backtalk as an interpreter makes it is easy to change and
+redesign the pages, so that Backtalk is an extremely flexible and new
+features can quickly be incorporated.
+However, this makes Backtalk a bit slower than some systems where the
+look-and-feel is completely fixed (though, compared to most other interpreters,
+like Perl, Backtalk is very fast).
+
+<P><DT><STRONG><A NAME=index>Index Files</A></STRONG>
+<DD>
+The <A HREF=#picospan>PicoSpan</A> file structure had one major weakness.
+The program didn't a fast way to find the 200th response to a item without
+reading through all responses of the item, counting as it went.
+This made it slow in some ways.
+Backtalk addresses this problem by maintaining an index file for each
+item, that tell exactly where to find each response.
+On systems where Backtalk coexists with PicoSpan or Yapp, Backtalk can't
+count on them to do their part to maintain this file, so Backtalk is very
+good about fixing them up as needed.
+Use of index files significantly speeds up Backtalk.
+
+<P><DT><STRONG><A NAME=item>Items</A></STRONG>
+<DD>
+Users may enter any number of items in any <A HREF=#conference>conference</A>
+that they have access to
+(except that only the <A HREF=#fairwitness>fairwitness</A> may enter the
+first item in a conference).
+The item author supplies a title and introductory text when he or she
+enters the item.
+The system assigns it a unique identifying number within the conference.
+Other users may then attach <A HREF=#response>responses</A>
+sequentially to the end of the item.
+Some systems call items ``topics.''
+<P>
+
+<P><DT><STRONG><A NAME=kill>Killing Items</A></STRONG>
+<DD>
+When an item is killed it is permanently removed from a conference.
+If it is not <A HREF=#link>linked</A> to any other conference, then it
+permanently disappears from Backtalk and the disk space consumed by the
+item is recovered.
+Both <A HREF=#administrator>administrators</A> and
+conference <A HREF=#fairwitness>fairwitnesses</A> can kill items.
+If Backtalk is so configured, item authors may also kill their own items,
+but only if nobody else has yet responded to them.
+
+<P><DT><STRONG><A NAME=link>Linking Items</A></STRONG>
+<DD>
+Backtalk allows the same <A HREF=#item>item</A> to appear in two different
+<A HREF=#conference>conferences</A> via the mechanism of linked items.
+The <A HREF=#fairwitness>fairwitness</A> of a conference may link any item
+from any <A HREF=#open>open</A> conference into his conference.
+After that, the same item will appear in both places, as will any future
+<A HREF=#response>responses</A>.
+<P>
+Fairwitnesses cannot <A HREF=#retitle>retitle</A> linked items or
+<A HREF=#hide>hide</A> or <A HREF=#erase>erase</A> responses in them.
+This is to prevent fairwitnesses of one conference from
+exercising power of items in all other conferences simply by temporarily
+linking them into their own conferences.
+
+<P><DT><STRONG><A NAME=login>Login Screens</A></STRONG>
+<DD>
+Each <A HREF=#conference>conference</A>
+has a login screen that is displayed when a user first
+enters it.  This usually displays the name of the conference and may give
+a bit of information about it, including the
+<A HREF=#fairwitness>fairwitnesses</A>' names.
+It may be edited by the conference's fairwitnesses.
+<P>
+In Backtalk there may be two versions of it.
+An ASCII version which would also be seen by any
+<A HREF=#yapp>Yapp</A> or <A HREF=#picospan>Picospan</A> users,
+and an <A HREF=#html>HTML</A> version that may include images and web links.
+Backtalk will see only the HTML version if both exist.
+
+<P><DT><STRONG><A NAME=lynxcgi>Lynxcgi</A></STRONG>
+<DD>
+The <A HREF=#lynx>lynx</A> <A HREF=#browser>web browser</A>
+has an optional feature called ``lynxcgi,''
+which allows lynx to run <A HREF=#cgi>CGI</A> programs directly, without
+need for communicating with an <A HREF=#httpd>HTTP daemon</A>.
+<P>
+We were once interested in using this to provide a way for users logged into
+the host system to run Backtalk directly, without having to have internet
+access.  The <A HREF=#mapuid>mapuid</A> file and the
+<A HREF=#linkconf>linkconf</A> program were part of this.
+This was never fully developed and probably never will be.
+However, parts of the code originally written for this were eventually
+used to support <A HREF=#fronttalk>fronttalk</A>.
+
+<P><DT><STRONG><A NAME=lynx>Lynx Web Browser</A></STRONG>
+<DD>
+The lynx <A HREF=#browser>web browser</A>
+was written and distributed by the University of Kansas.
+It is a text-only web browser that will work on almost any computer terminal.
+Lynx has an interesting optional feature called <A HREF=#lynxcgi>lynxcgi</A>
+which some experimental Backtalk code uses.
+
+<P><DT><STRONG><A NAME=mapuid>Mapuid File</A></STRONG>
+<DD>
+The mapuid <A HREF=#dbm>dbm</A> file
+will not be used in the vast majority of Backtalk installations.
+It is only used
+where it is desirable to have Backtalk accessible via both the normal
+web interface using Backtalk-only accounts and via
+<A HREF=#lynxcgi>lynxcgi</A>.
+It maps the user's Unix login ID to his Backtalk account name and is only 
+used when accessing Backtalk through lynxcgi.
+
+<P><DT><STRONG><A NAME=mnet>M-Net</A></STRONG>
+<DD>
+The <A HREF="#picospan">Picospan</A> conferencing system was originally
+written by Marcus Watts for M-Net.  Started by Mike Myers in Ann Arbor,
+Michigan, 1983, it was one of the first free, public-access Unix systems in
+the world.  It is now operated by a non-profit corporation called
+Arbornet, and is on the web at <A HREF="http://www.arbornet.org"</A>
+http://www.arbornet.org</A>.  It currently runs <A HREF="#yapp">Yapp</A>
+and Backtalk.
+
+<P><DT><STRONG><A NAME=open>Open Conferences</A></STRONG>
+<DD>
+An open conference is any conference that is not
+<A HREF=#close>closed</A>.
+That is, any user with an account can participate in the conference.
+
+<P><DT><STRONG><A NAME=partutil>Partutil Program</A></STRONG>
+<DD>
+The partutil program is used only on systems where real Unix accounts
+are used and Backtalk is to cooperate with <A HREF=#picospan>Picospan</A> or
+<A HREF=#yapp>Yapp</A>.
+In this case, the files stored in the user's
+<A HREF=#homedir>home directory</A> are owned by the user, and thus not
+writable by the Backtalk program.  The partutil program is a work-around
+for this problem.
+It is an suid-root program which can be called by Backtalk to
+creates or destroys these files, and to permit the to be writable to a
+Backtalk's Unix group-ID.  Various safeguards are built-in to prevent
+partutil from being run by anyone other than Backtalk.
+
+<P><DT><STRONG><A NAME=papaya>Papaya Interface</A></STRONG>
+<DD>
+Backtalk's papaya interface was constructed for Arbornet's
+<A HREF=#mnet>M-Net</A> system
+after they converted from using <A HREF=#yapp>Yapp</A>'s web interface
+to using Backtalk's.
+It is a custom interface that provides a look and feel similar to Yapp,
+at least as configured on M-Net.  (Yapp is actually fairly configurable,
+so different Yapp installations are quite different from each other.)
+It is distributed separately from Backtalk but is also open-source
+free-ware.
+
+<P><DT><STRONG><A NAME=participation>Participation Files</A></STRONG>
+<DD>
+For each <A HREF=#conference>conference</A> that a user joins,
+the user is given a participation file, which is kept in his or her
+<A HREF=#homedir>home directory</A>.
+The participation file keeps track of which <A HREF=#item>items</A> and
+<A HREF=#response>responses</A> the user has seen,
+so that the next time the user joins the conference, he can look at only 
+the new material that has been posted since his or her last visit.
+<P>
+The participation file also keeps track of which items the user has
+<A HREF=#forget>forgotten</A>, and his current name in this conference.
+(Users can have a different default name in each conference.)
+
+<P><DT><STRONG><A NAME=passwordfile>Password File</A></STRONG>
+<DD>
+This is a database that keeps an encrypted passwords for each Backtalk
+<A HREF=#account>account</A>.
+It is used by the <A HREF=#httpd>HTTP daemon</A> to
+<A HREF=#authentication>authenticate</A> users.
+This password stored here may be changed by the user,
+but is never displayed.
+<P>
+On some installations the password database
+will be identical to the Unix system's password database,
+but more often it will be a separate file used only for Backtalk.
+In the latter case it may be either a flat file (which is slow to access but
+easy to maintain), or a dbm file (which is fast but harder to maintain and
+works only with the <A HREF=#apache>Apache</A> http daemon).
+
+<P><DT><STRONG><A NAME=peek>Peek</A></STRONG>
+<DD>
+The peek <A HREF=#script>script</A> is a simple tool that makes it possible
+to write simple URLs pointing at particular conferences, items or responses
+with in a Backtalk conferencing system that allows
+<A HREF=#anonymous>anonymous reading</A>.
+Thus, any web page can point to anything in any
+<A HREF=#open>open</A> Backtalk conference.
+
+<P><DT><STRONG><A NAME=picospan>Picospan</A></STRONG>
+<DD>
+Picospan is a conferencing system written by Marcus Watts sometime around
+1983 and sold by him to a company called NETI sometime thereafter.
+It is a text-based system with a design strongly influenced by
+<A HREF=#confer>Confer</A>.  It has no web interface.
+Unfortunately, NETI died a spectacular death (Fortune magazine called it
+the biggest stock scam in the history of the Vancouver Exchange), and
+sucked Picospan down into a blackhole when it finally imploded,
+so it is impossible to buy Picospan these days.
+Picospan still runs at <A HREF="http://www.cyberspace.org/">Grex</A>
+and <A HREF="http://www.well.com/">The Well</A>.
+<P>
+<A HREF=#yapp>Yapp</A> is a good clone of Picospan.
+Backtalk is designed to be compatible with both Picospan and Yapp,
+and it's design has been heavily influenced by Picospan.
+
+<P><DT><STRONG><A NAME=pistachio>Pistachio Interface</A></STRONG>
+<DD>
+The pistachio <A HREF=#interface>user interface</A> was Backtalk's first
+full-featured interface flavor.
+It was originally a testbed for playing with various
+advanced <A HREF=#html>HTML</A> features,
+like images and tables, which, by this date, are no longer considered
+advanced.  It's still a very competant and complete interface, that will
+work on almost any browser, while placing minimal demands on the web
+server or on network bandwidth.
+
+<P><DT><STRONG><A NAME=postscript>Postscript Language</A></STRONG>
+<DD>
+Postscript is a document language devised by the Adobe Corporation.
+Though it is best known as a way to communicate to printers, it is, in fact,
+a rich and powerful programming language.
+The <A HREF=#language>Backtalk script language</A> is in many ways
+similar to Postscript.
+
+<P><DT><STRONG><A NAME=primaryudb>Primary User Database</A></STRONG>
+<DD>
+The primary user database keeps the user's full name,
+user-id number, group-id number and
+<A HREF=#homedir>home directory</A> path name.  
+Only the first of these may ever be changed by the user.
+The rest is for internal use by Backtalk.
+<P>
+On systems where real Unix accounts are used this information is kept in
+the same Unix database as the encrypted passwords, and is not maintained
+by Backtalk.
+On the more usual installation where Backtalk accounts are distinct from
+Unix accounts,
+this can be stored in several different places.
+It can in the same file as the <A HREF=#passwordfile>password database</A>,
+but only if the <A HREF=#httpd>HTTP daemon</A> will tolerate having extra
+information there (most won't).
+Otherwise the primary user database can be kept in a separate file or dbm
+with entries formatted similarly to those in a Unix passwd file.
+Alternatively, on systems where users have no direct access to their home
+directories, the directory name can be constructed from the user's login
+name, and the rest of the information can be kept in a
+<A HREF=#tagfile>tag file</A> called ``id'' in their home directories.
+
+<P><DT><STRONG><A NAME=pwauth>Pwauth Program</A></STRONG>
+<DD>
+The pwauth program is an <A HREF=#externauth>external authentication</A>
+program for use with the <A HREF=#apache>Apache HTTP daemon</A> in Backtalk
+installations where real Unix <A HREF=#account>accounts</A> are to be used.
+Given a Unix login id and password, it check if this is a valid login.
+Most Unix systems these days have shadow password databases, so that pwauth
+has to be an suid-root program to access password information.  This is
+the whole reason for using external authentication - the HTTP daemon is
+not (and should not be) root, so it can't do the authentication itself.
+<P>
+Pwauth can also be configured to update the lastlog database on systems
+where that information is used to expire accounts.
+<P>
+Pwauth is no longer distributed with Backtalk.  It is in a separate free
+package available
+<A HREF=http://www.unixpapa.com/mod_auth_external.html>here</A>.
+
+<P><DT><STRONG><A NAME=response>Responses</A></STRONG>
+<DD>
+Any user may post responses to any <A HREF=#freeze>unfrozen</A>
+<A HREF=#item>item</A> in any <A HREF=#conference>conference</A> that
+he can join.
+Responses are appended onto the item, with each response having its own
+number sequentially assigned.
+Like the text of an item,
+responses may be <A HREF=#hide>hidden</A> or <A HREF=#erase>erased</A>,
+but they cannot be edited once posted.
+
+<P><DT><STRONG><A NAME=retire>Retiring Items</A></STRONG>
+<DD>
+A retired <A HREF=#item>item</A> still is on the system, but will not
+normally be displayed when users read the conference.
+In effect, all users automatically <A HREF=#forget>forget</A> retired
+items.
+They can still access the item if they specifically request to see it,
+but it won't be shown if they are just reading new items in the ordinary
+way.
+Items may be retired or unretired by the conference's
+<A HREF=#fairwitness>fairwitness</A>,
+the <A HREF=#administrator>administrator</A>,
+or, if Backtalk is configured to
+allow it, by the item's original author.
+
+<P><DT><STRONG><A NAME=retitle>Retitling Items</A></STRONG>
+<DD>
+Every <A HREF=#item>item</A> in Backtalk has a one-line title, initially
+assigned by the person who entered the item.
+This title can be changed to clarify it or to make it more accurately
+describe the trend of the discussion in that item.
+The <A HREF=#administrator>administrator</A> can do this on all Backtalk
+installations, and the <A HREF=#fairwitness>fairwitness</A> and the original
+item author may be able to do so if Backtalk is configured to allow this.
+Frozen items may not be retitled.
+
+<P><DT><STRONG><A NAME=rpn>RPN Expressions</A></STRONG>
+<DD>
+RPN is a way of writing expressions with the operators after the
+arguments instead of between them.
+Thus instead of ``3 * (2 + 4)'' we write ``3 2 4 + *''.
+RPN is best known as the notation used in old Hewlett-Packard calculators,
+but it is also the basis of a number of very simple and powerful programming
+languages, like Forth, <A HREF=#postscript>Postscript</A> and
+the <A HREF=#language>Backtalk script language</A>.
+<P>
+RPN stands for ``Reverse Polish Notation.'' This is not a Polish joke.
+It's named in honor of the Polish logician Jan Lukasiewisz.
+It's also called ``postfix notation''.
+
+<P><DT><STRONG><A NAME=script>Scripts</A></STRONG>
+<DD>
+Backtalk's behavior is driven by script files.
+Each script is a program written in the <A HREF=#language>Backtalk script
+language</A>, which is run to draw a page on the display, with all the
+buttons and controls required.
+All script files are kept under in the script directory, and have names
+ending with a ``<TT>.bt</TT>'' suffix.
+
+<P><DT><STRONG><A NAME=shy>Shy lists</A></STRONG>
+<DD>
+One one of the early systems where Backtalk was installed, some users objected
+to having <A HREF=#anonymous>anonymous users</A> being able to read their
+responses.   So we added support for an optional ``shy list.''  When an
+anonymous person reads conference through Backtalk, any messages entered by
+users whose names are on the shy list are automatically hidden from view.
+<P>
+The ``shy'' program can be used by people to add themselves to the shy list.
+
+<P><DT><STRONG><A NAME=tagfile>Tag Files</A></STRONG>
+<DD>
+Backtalk uses tag files for internal purposes in various places.
+These are simply files containing a number of labeled fields, where each
+field can be loaded individual into a variable.
+Specific fields can be marked as being read-only.
+Tag files are a flexible way to store random miscellaneous information in
+a single file.
+
+<P><DT><STRONG><A NAME=udb>User Database</A></STRONG>
+<DD>
+Backtalk maintains a variety of information associated with each
+<A HREF=#account>user account</A>.
+Some of it is in various user databases,
+some resides in a user's home directory.
+The structure of these databases is very installation dependent.
+It comprises the <A HREF=#passwordfile>password file</A>,
+the <A HREF=#primaryudb>secondary user database</A>,
+the users' <A HREF=#.backtalk>.backtalk</A> files,
+the users' <A HREF=#participation>participation</A> files,
+and the users' <A HREF=#.cflist>.cflist</A> files.
+
+<P><DT><STRONG><A NAME=interface>User Interfaces</A></STRONG>
+<DD>
+The functionality and appearance of a Backtalk user interface is
+controlled entirely by a set of <A HREF=#script>scripts</A>.
+Backtalk allows several different interfaces to be installed on the system,
+so that each user can choose his or her favorite.
+These are called <A HREF=#flavor>flavors</A>.
+
+<P><DT><STRONG><A NAME=validate>Validation of Accounts</A></STRONG>
+<DD>
+User <A HREF=#account>accounts</A> can be
+``valid,'' ``unvalidated,'' or ``invalidated.''
+Only valid accounts can be used to access the conferences,
+and only the <A HREF=#administrator>administrator</A> can change the
+validation status of an account.
+Backtalk can optionally
+be configured to create accounts in an unvalidated state, so they cannot
+be used until the conference administrator has validated them.
+Accounts can be invalidated if the administrator wants to stop a user
+from using his account, but does not want to destroy the account.
+
+<P><DT><STRONG><A NAME=vanilla>Vanilla Interface</A></STRONG>
+<DD>
+The vanilla interface is the more basic of Backtalk's
+<A HREF=#interface>user interfaces</A>.
+It is not very flashy, but it will work on even simple-minded non-graphical
+browsers like <A HREF=#lynx>lynx</A>.
+At this point it has fallen far behind the
+<A HREF=#pistachio>pistachio</A> and <A HREF=#abalone>abalone</A>
+in the features it provides, and is no longer part of the default installation.
+
+<P><DT><STRONG><A NAME=weiss>Weiss, Steve</A></STRONG>
+<DD>
+Steve Weiss is one of the co-authors of Backtalk, being especially responsible
+for the text formatting code.  He is not very active in continuing development,
+being more involved in his volunteer work for <A HREF="#grex">Grex</A> and
+the <A HREF="http://www.hvcn.org">Huron Valley Community Network</A> (among
+others).  Steve's got a web page at
+<A HREF="http://mywebpages.comcast.net/srweiss/">http://mywebpages.comcast.net/srweiss/</A>.
+
+<P><DT><STRONG><A NAME=wolter>Wolter, Jan</A></STRONG>
+<DD>
+Jan Wolter is one of the co-authors of Backtalk, and the primary maintainer.
+He was one of the early staff members on <A HREF=#mnet>M-Net</A>, the first
+<A HREF=#picospan>Picospan</A> system and one of the first public access
+Unix conferencing systems.
+He has been an avid users of on-line conferencing systems for over
+twenty years, and has been doing software development for them almost as
+long.  He has been a professor of computer science, and is now a freelance
+contract programmer.
+Jan's got a web page at <A HREF="http://www.unixpapa.com/">http://www.unixpap.com</A>.
+
+<P><DT><STRONG><A NAME=yapp>Yapp</A></STRONG>
+<DD>
+The Yapp 2.3 conferencing system was written sometime around 1993 or 1994
+by Dave Thaler of Armidale Industries.
+It is a clone of <A HREF=#picospan>Picospan</A> with a few added features,
+like <A HREF=#fishbowl>fishbowl</A> conferences.
+It has a text-based interface almost identical to Picospan.
+It is available as shareware from
+<A HREF=http://www.armidalesoftware.com/yapp/yapp.html>Armidale's Web
+site</A>.
+Backtalk stores its conferences in almost exactly the same format as Yapp 2.3,
+and can thus be used as an alternative interface to the same conferences.
+<P>
+Yapp 3.0 also exists and includes a full Web-based conferencing system.
+It seems to be sometimes, but not usually, be called "WebYapp".
+Backtalk can be configured for compatability with this too.
+</DL>
+</BODY>
+</HTML>

@@ -1,0 +1,9 @@
+                       Fronttalk Setting:  BULLETIN
+
+Usage:  DISPLAY BULLETIN
+        SET BULLETIN
+
+Display/Edit the bulletin file for the current conference.  Normally the
+bulletin file is displayed only if it has changed since the last time you
+joined the conference.  You need to be a fairwitness in the conference to
+change the bulletin.

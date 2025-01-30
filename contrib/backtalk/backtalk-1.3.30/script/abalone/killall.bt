@@ -1,0 +1,19 @@
+% Backtalk Abalone Interface -- (c) 2002, Jan Wolter, Steve Weiss
+%
+% killall script
+%
+% Given 'conf' a conference name, and 'isel' an item selector, delete all the
+% selected items.
+
+open_conf {(Conference ')conf(' does not exist\n) halt} if
+
+/isel defined {
+  {
+    isel maxitem next_int /item xstore /isel xstore
+    item 1 lt {break} if
+    kill_item pop
+  } loop
+} if
+
+/http_location `backtalkurl(/)flavor(confhome?conf=)conf(&csel=)csel(&list=)list  /nextnew defined{(&nextnew=)nextnew}if '
+  store

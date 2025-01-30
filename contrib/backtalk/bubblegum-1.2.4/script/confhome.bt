@@ -1,0 +1,297 @@
+% Backtalk Bubblegum Interface -- (c) 1996, Jan Wolter, Steve Weiss
+%
+% confhome script
+%
+% The conference home page script displays the "front door" screen for a
+% conference.
+%
+% This also implements an important part of the "next conference" button.  If
+% the "nextnew" variable is defined, we automatically skip ahead to the next
+% conference.
+%
+% Query Parameters:
+%    conf=	conference name
+%    csel=	rest of list of conferences to visit
+%    nextnew=	if defined, skip conferences with no new responses
+%    secret=    password for the conference to join (optional)
+%    dunno=     defined if we don't know password for conference
+
+% page header
+(<HTML><HEAD>
+<BASE HREF=")backtalkurl(/)flavor(confhome">
+)
+
+flavor(buttondef)+ include
+
+% check that we have a conference name.
+conf ! {
+  (No )Conference( name given.</BODY></HTML>)
+  halt
+} if
+
+% The following loop skips through conferences to find one with newresponses.
+% We collect the output of that process in an array so that we can swap some
+% header information on top of it after we are done.
+
+[
+(</HEAD><BODY )background(>)global_header(\n)
+{
+  % check if the conference is accessible and has new responses
+  flavor(openconf)+ stopped {
+    `(The )Conference( ")'conf(" does not exist.\n)
+    /skip 1 def
+    /conf () store
+  } {
+    mayread ! secret 2 ne /dunno defined or and {
+      (You do not have access to the ")conf`(</A>" )Conference(.\n)'
+      /skip 1 def
+      /conf () store
+    } {
+      % get number of new responses (nnr) and number of new items (nni)
+      conf_new pop 3 copy /nnr xdef /nni xdef /nit xdef + exch pop
+      ! /nextnew defined and dup /skip xdef {
+        `(No new )Responses( in the ")
+        (<A HREF=confhome?conf=)'conf(>)conf`(</A>" )Conference(.\n)'
+      } if
+    } ifelse
+  } ifelse
+
+  % If skip was set above, and we have more conferences, go on to them
+  skip /nextnew defined /csel defined and and {
+    csel {
+      % skip to next conference
+      close_conf
+      csel next_conf /conf xstore /csel xstore
+      % erase any password given for the last conference
+      /dunno undef /cpass () store
+      (<HR>\n)
+      conf {continue} if
+    } if
+    % no more conferences
+    ]
+    [(<TITLE>No New )Conferences cap(</TITLE>)]
+    exch
+    `(No more )Conferences(.\n<P>)
+    (<A HREF=begin>)entrance_button(</A>\n</BODY></HTML>\n)'
+    halt
+  } {
+    % read this conference
+    conf {break} {halt} ifelse
+    break
+  } ifelse
+} loop
+]
+
+% swap the title line into the proper place
+[
+(<TITLE>)bbsname( )conftitle`( )Conference cap( Home Page</TITLE>\n)'
+use_rss_autodiscovery expose_rss_conf and {
+  (<LINK REL="alternate" TYPE="text/xml" Title="RSS feed for )Items( in )
+  bbsname( )conftitle( )Conference cap(" HREF=")
+  anon_url(cinnamon?conf=)conf(">\n)
+} if
+]
+exch
+
+% If we haven't got the password, ask for it
+secret 2 eq /dunno defined ! and {
+   [/conf /csel /nextnew] flavor(confpass)+ jump
+} if
+
+% If we still haven't got read access, say goodbye
+mayread ! {
+      (You do not have access to the ")conf`(</A>" )Conference(.\n)'
+} if
+
+% we have found the conference we wanted - display the conference home page
+
+% display the BBS name and logo
+showlogo
+
+(<TABLE CELLPADDING=8>
+<TR><TD VALIGN=top ROWSPAN=2>)
+
+% Controls on the left:
+
+% readnew button
+/rsel (new) store
+(1-$) next_item ! {
+  /item xstore pop /isel xstore
+  (<A HREF=read?conf=)conf(&csel=)csel(&item=)item(&isel=)isel(&rsel=)rsel
+  showforgotten {(&showforgotten=)showforgotten} if
+  (>)readnew_button`(</A><BR>\n)spacer
+} {
+  booktalk_buttons {
+    nonew_button(<BR>)spacer
+  } if
+} ifelse
+
+/state [(conf=)conf csel {(&csel=)csel} if (>)] def
+
+booktalk_buttons ! {
+  % next conference button
+  csel next_conf /nconf xdef /ncsel xdef
+  nconf {
+    (<A HREF=confhome?conf=)nconf(&csel=)ncsel(&nextnew=>)nextforum_button
+    (</A><BR>\n)spacer
+  } if
+} if
+
+% entrance button
+/oneconf constant ! {
+  (<A HREF=begin>)entrance_button(</A><BR>\n)spacer
+} if
+
+% For authenticated users, an enter item button
+maxitem 0 gt amfw or {
+  maypost { (<A HREF=enter?)state newtopic_button(</A><BR>)spacer} if
+} if
+
+% search button
+(<A HREF=findform?)state search_button(</A><BR>\n)
+
+% For fairwitnesses, buttons for linking and passwords
+booktalk_nolink {amadm}{amfw} ifelse
+{
+  spacer(<A HREF=linkform?)state link_button(</A><BR>\n)
+  secret {
+    spacer(<A HREF=setsecret?) state forumpass_button(</A><BR>\n)
+  } if
+} if
+
+% If using sessions, for authenticated user, a logout button
+sessions { id {
+  spacer(<A HREF=")backtalkurl(/public/logout">)logout_button(</A><BR>\n)
+} if } if
+
+(</TD><TD VALIGN=TOP BGCOLOR=)text_bg(>\n)
+
+% display the conference login screen, prefering the html version
+/login () def
+(*settings) /login loadvar login ! or {
+  /login `(<PRE>)conf_login expand(</PRE>\n)' def
+} if
+login(<HR>\n) print
+
+% print a message telling how many new items there are
+(<STRONG>)conftitle( has )nit( )nit 1 eq {Item}{Items} ifelse (; )
+nni( brand new, )
+nnr( with new )Responses+(:</STRONG><P>\n)+
+
+
+% list all items
+
+mark
+(<P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>\n)
+
+/showforgotten amfw {1}{0} ifelse def
+/isel (1-$) store	% selector for all items
+/rsel (all) store	% show all items
+/cnt 0 def		% initial counter for number of items
+
+% begin loop for each item 
+{
+  % get the next item
+  isel next_item
+  {
+    break	% next_item failed - no more items
+  }{
+    this_item
+    {
+      break	% this_item failed - shouldn't happen
+    }{
+      % save new item selector
+      pop /isel xstore 
+
+      % Count new responses - skip non-new ones if only showing new stuff
+      id { /nnew maxresp maxread - def } if
+  
+      % print item number and title
+      (<TR)cnt 2 mod !{( BGCOLOR=)bg_color}if 
+      (><TD ALIGN=right VALIGN=top>)item(:&nbsp;</TD><TD VALIGN=top>)
+      (0) read_item {pop (</TABLE></TABLE><B>Internal error) halt} if
+      (<STRONG>)title quote(</STRONG>)
+
+      % print status flags
+      forgotten showforgotten 2 ne and {( [forgotten])} if
+      retired {( [hidden])} if
+      frozen {( [frozen])} if
+      linked {( [shared])} if
+      (</TD>\n)
+
+      % print number of new responses (not for anonymous users)
+      id {
+        /nnew maxread 0 lt {maxresp 1 +} {nnew} ifelse def
+	nnew {
+          (<TD ALIGN=right>&nbsp;<A HREF="read?conf=)conf
+	  (&csel=)csel(&item=)item(&isel=)item 1 +
+	  (-$&rsel=new">)
+          nnew`(</A> new of</TD>)'
+	} {
+	  (<TD>&nbsp;</TD>)
+        } ifelse
+      } if
+
+      % print total number of responses
+      (<TD ALIGN=right>)
+      (&nbsp;<A HREF="read?conf=)conf(&csel=)csel(&item=)item(&isel=)item 1 +
+      (-$&rsel=all">)maxresp 1 + dup
+      (</TD><TD>&nbsp;)exch 1 eq {Response}{Responses}ifelse(</A></TD></TR>\n)
+
+      % update count
+      /cnt inc
+    } ifelse
+  } ifelse
+} loop
+(</TABLE>
+)
+
+cnt 0 eq
+{
+  % if there were no items, print a message to that effect
+  cleartomark
+  `(<STRONG>There are no )Items(.</STRONG>\n)'
+} if
+
+(</TD></TR>
+)
+
+(<TR><TD VALIGN=TOP>)
+cnt {
+  (<FONT SIZE=-1>
+  <UL>
+  <LI>To view entire )Item(, click on total number of )Responses(.
+  <LI>To view new )Responses( to )AnItem(, click on number of new )Responses(.
+  </UL>\n)
+} if
+booktalk_teachtools { amfw { (gradm) () ingroup {
+  (<A HREF=)SCRIPT_NAME
+  (/booktalk/teacher>Goto Class Administration Page</A>)
+} if } if } if
+(</TD></TR>\n)
+
+(</TABLE>
+)
+
+id ! {
+  (<HR>
+  You are reading this )Conference( as an unregistered user.  Because of this:
+  <UL>
+  <LI> The system will not remember which )Items( and )Responses( you have seen.
+  <LI> You will not be able to post or respond to )Items(.
+  </UL>
+  If you have a Booktalk account, we recommend <A HREF=)
+  sessions {
+    anon_url(public/login?bounce=http://)HTTP_HOST anon_url
+    flavor(confhome%3Fconf%3D)conf cgiquote(%26csel%3D)csel
+  } {
+    pw_url flavor(confhome?conf=)conf cgiquote(&csel=)csel
+  } ifelse
+  (>logging in</A>
+  before reading this )Conference(.\n)
+} if
+
+% page footer
+global_footer
+(</BODY></HTML>
+)

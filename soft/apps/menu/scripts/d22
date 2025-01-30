@@ -1,0 +1,17 @@
+#!/bin/sh
+#Author- Michelangelo Giansiracusa
+
+echo "
+UNIX: rm <filename>"
+sleep 1
+echo "Listing Directory (`pwd`):
+"
+sleep 1
+ls -p | grep -v /\$ | menumore
+echo -n "
+File name to remove? "
+read delfile
+echo "Removing file $delfile...."
+/bin/rm -i $delfile
+echo "Done..."
+

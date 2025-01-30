@@ -1,0 +1,19 @@
+                       Fronttalk Command:  LINK
+
+Usage:  LINK <source conference> <item range>
+
+Link all selected items from the given conference to current conference.
+Linked items will appear in both conferences, under different item numbers.
+Responses posted to either copy will appear in the other.  You must be a
+fairwitness in the destination conference to be able to link in an item.
+
+The CONFIRM flag can be given in the item range of a LINK command.  This
+causes Fronttalk to ask for confimation before linking each item.
+
+Fairwitnesses have somewhat reduced powers over linked items.  They can't,
+for example, erase responses in linked items.  If they could, then a
+fairwitness in one conference could erase responses in any conference
+just by temporarily linking the item into his or her own conference.
+
+You can move items between conferences by first linking them into the
+destination conference, and then killing them in the source conference.
