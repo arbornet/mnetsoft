@@ -3,6 +3,7 @@
 int cant_tab= 0;	/* If non-zero, assume terminal doesn't tab */
 int dont_tab= 0;	/* Terminal can't tab, or tab stops being offset */
 
+term_mode cooked, cbreak;
 
 #ifdef HAVE_SIGACTION
 /* SIGACT:  A slightly more convenient interface to sigaction().

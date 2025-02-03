@@ -47,7 +47,7 @@ char *strchr(), *strrchr();
 #ifdef F_TERMIOS
 #include <termios.h>
 typedef struct termios term_mode;
-term_mode cooked, cbreak;
+extern term_mode cooked, cbreak;
 #define GTTY(fd, st)	tcgetattr(fd, (st))
 #ifdef TCSASOFT
 #define STTY(fd, st)	tcsetattr(fd, TCSASOFT | TCSADRAIN, (st))
@@ -80,7 +80,7 @@ term_mode cooked, cbreak;
 #ifdef F_TERMIO
 #include <termio.h>
 typedef struct termio term_mode;
-term_mode cooked, cbreak;
+extern term_mode cooked, cbreak;
 #define GTTY(fd, st)    ioctl(fd, TCGETA, (st))
 #define STTY(fd, st)    ioctl(fd, TCSETAW, (st))
 #define EOF_CHAR    (cooked.c_cc[VEOF])

@@ -1,6 +1,6 @@
 # $Id: Makefile 1601 2017-05-25 19:22:38Z cross $
 
-PREFIX=		/cyberspace
+PREFIX=		/arbornet
 PEOPLEBIN=	/suid/people
 O=		o
 A=		a
@@ -52,8 +52,8 @@ tail+2:		tail+2.$O
 twit:		twit.$O
 		$(CC) -o $@ twit.$O $(LIBS)
 
-#watch:		watch.$O
-#		$(CC) -o $@ watch.$O $(LIBS)
+watch:		watch.$O
+		$(CC) -o $@ watch.$O $(LIBS)
 
 whoa:		whoa.go
 		go build whoa.go

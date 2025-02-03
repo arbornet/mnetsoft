@@ -35,6 +35,8 @@
  *
  * 13-FEB-2005  Modified to use libgrex.  - Dan Cross
  *
+ * 03-FEB-2025  Modified to work under FreeBSD 14.  - Dan Cross
+ *
  *	$Id: watch.c 1485 2014-05-21 14:18:50Z cross $
  *
  * No Copyright by Jan Dithmar Wolter.
@@ -52,46 +54,56 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <utmp.h>
+#include <utmpx.h>
 
 #include "libgrex.h"
 
 enum {
-	SNOOZE = 10
+	SNOOZE = 2
+};
+
+#define	UT_NAMESIZE	32
+#define	UT_LINESIZE	16
+
+typedef struct line Line;
+struct line {
+	char line[UT_LINESIZE + 1];
 };
 
 typedef struct person Person;
 struct person {
-	char *user;
-	char *line;
+	Line line;
+	char user[UT_NAMESIZE + 1];
 };
 
 const int DEBUG = 0;
 
 char *prog;
 char *mytty;
+void *lines;
 void *people;
 void *wason;
+void *seenlines;
 
-char bell = '\a';
+const char *bell = "\a";
 
-void usage(char *);
+void usage(const char *);
 void initialize(char *[]);
-int initdb(void);
-Person *getperson(char *);
-int interesting(char *);
-void delta(int);
+Line *findline(const char *);
+Person *getperson(const char *);
+int interesting(const char *);
+void delta(void);
 
 int
 main(int argc, char *argv[])
 {
-	int ch, fd;
+	int ch;
 
 	prog = progname(argv[0]);
 	while ((ch = getopt(argc, argv, "s?")) != -1) {
 		switch (ch) {
 		case 's':
-			bell = ' ';
+			bell = "";
 			break;
 		case '?':	/* FALLTHROUGH */
 		default:
@@ -104,19 +116,16 @@ main(int argc, char *argv[])
 	if (!DEBUG && isatty(0))
 		background();
 	printf("Started %s process %d on %s\n", prog, getpid(), mytty);
-	fd = initdb();
 	for (;;) {
-		delta(fd);
+		delta();
 		sleep(SNOOZE);
 	}
-	/* NOTREACHED */
-	close(fd);
 
 	return (EXIT_SUCCESS);
 }
 
 int
-interesting(char *name)
+interesting(const char *name)
 {
 	return (tfind(name, &people, cmpstring) != NULL);
 }
@@ -124,42 +133,89 @@ interesting(char *name)
 static int
 cmpline(const void *a, const void *b)
 {
-	return (strcmp(((Person *) a)->line, ((Person *) b)->line));
+	return (strcmp(((const Line *) a)->line, ((const Line *) b)->line));
+}
+
+static int
+cmptrue(const void *a, const void *b)
+{
+	(void)a;
+	(void)b;
+
+	return (0);
+}
+
+Line *
+findline(const char *line)
+{
+	Line key, *p, **pp;
+
+	memset(&key, 0, sizeof(key));
+	strlcpy(key.line, line, sizeof(key.line));
+	pp = tfind(&key, &lines, cmpline);
+	if (pp == NULL) {
+		p = malloc(sizeof(*p));
+		if (p == NULL)
+			fatal("can't malloc: %r");
+		memset(p, 0, sizeof(*p));
+		strlcpy(p->line, line, sizeof(p->line));
+		pp = tsearch(p, &wason, cmpline);
+	}
+
+	return (*pp);
 }
 
 Person *
-getperson(char *line)
+getperson(const char *line)
 {
 	Person key, *p, **pp;
 
 	memset(&key, 0, sizeof(key));
-	key.line = line;
+	strlcpy(key.line.line, line, sizeof(key.line));
 	pp = tfind(&key, &wason, cmpline);
 	if (pp == NULL) {
 		p = malloc(sizeof(*p));
 		if (p == NULL)
 			fatal("Can't malloc: %r");
 		memset(p, 0, sizeof(*p));
-		p->line = strdup(line);
-		if (p->line == NULL)
-			fatal("Can't strdup \"%s\": %r", line);
+		strlcpy(p->line.line, line, sizeof(p->line));
 		pp = tsearch(p, &wason, cmpline);
 	}
 	return (*pp);
 }
 
 void
-delta(int fd)
+prune(const posix_tnode *pp, VISIT v, int dummy)
+{
+	Person *p;
+	Line *l;
+	(void)dummy;
+	(void)v;
+
+	p = *(Person **)pp;
+	if (p->user[0] == '\0')
+		return;
+	l = tfind(&p->line, &seenlines, cmpline);
+	if (l != NULL)
+		return;
+	printf("out:%s   %s (%s)\r\n", bell, p->user, p->line.line);
+	p->user[0] = '\0';
+}
+
+void
+delta()
 {
 	char user[UT_NAMESIZE + 1];
 	char line[UT_LINESIZE + 1];
-	struct utmp ut;
+	struct utmpx *ut;
 	Person *p;
-	static int seenme;
+	Line *l;
+	int seenme = 0;
 
-	while (read(fd, &ut, sizeof(ut)) == sizeof(ut)) {
-		strncpy(user, ut.ut_name, UT_NAMESIZE);
-		strncpy(line, ut.ut_line, UT_LINESIZE);
+	setutxent();
+	while ((ut = getutxent()) != NULL) {
+		strncpy(user, ut->ut_user, UT_NAMESIZE);
+		strncpy(line, ut->ut_line, UT_LINESIZE);
 		user[UT_NAMESIZE] = '\0';
 		line[UT_LINESIZE] = '\0';
 
@@ -169,29 +225,41 @@ delta(int fd)
 		 */
 		if (line[0] == '\0')
 			continue;
+
 		/*
-		 * If it's our line, and it's not the first time we've
-		 * seen it (i.e., initial scan through utmp), exit.
+		 * If it's our line, make a note of it.
 		 */
-		if (strcmp(line, mytty) == 0 && seenme++ != 0)
-			exit(EXIT_SUCCESS);
+		if (strcmp(line, mytty) == 0)
+			seenme = 1;
+
 		/*
 		 * Otherwise, get the line and if there was a previous
 		 * user, say s/he left.  If there is a new user, say
 		 * s/he entered.
 		 */
+		l = findline(line);
 		p = getperson(line);
-		if (p->user != NULL) {
-			printf("out:%c   %s (%s)\r\n", bell, p->user, line);
-			free(p->user);
-			p->user = NULL;
-		} else if (user[0] != '\0' && interesting(user)) {
-			printf("in:%c    %s (%s)\r\n", bell, user, line);
-			p->user = strdup(user);
-			if (p->user == NULL)
-				fatal("can't strdup \"%s\": %r", user);
+		if (strcmp(p->user, user) != 0 && interesting(user)) {
+			printf("in:%s    %s (%s)\r\n", bell, user, line);
+			strlcpy(p->user, user, sizeof(p->user));
 		}
+		tsearch(l, &seenlines, cmpline);
 	}
+	endutxent();
+
+	/*
+	 * If we didn't see our line during the loop, we
+	 * assume we logged out and exit.
+	 */
+	if (!seenme)
+		exit(0);
+
+	/*
+	 * Look for logouts and prune the tree.
+	 */
+	twalk(wason, prune);
+	while ((l = tdelete(l, &seenlines, cmptrue)) != NULL)
+		;
 }
 
 void
@@ -216,26 +284,8 @@ initialize(char *argv[])
 	}
 }
 
-int
-initdb(void)
-{
-	int wtmpfd, fd;
-
-	wtmpfd = open(WTMP, O_RDONLY);
-	if (wtmpfd < 0)
-		fatal("Can't open %s: %r", WTMP);
-	lseek(wtmpfd, (off_t) 0, SEEK_END);
-	fd = open(UTMP, O_RDONLY);
-	if (fd < 0)
-		fatal("Can't open %s: %r", UTMP);
-	delta(fd);
-	close(fd);
-
-	return (wtmpfd);
-}
-
 void
-usage(char *prog)
+usage(const char *prog)
 {
 	fprintf(stderr, "Usage: %s [ -s ]\n", prog);
 	exit(EXIT_FAILURE);

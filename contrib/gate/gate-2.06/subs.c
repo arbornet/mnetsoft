@@ -429,7 +429,7 @@ int cliplast(char *lastbuf, int bufsize)
 #endif
 
     /* Make a copy of the file */
-    if ((cfp= make_copy()) == NULL) return;
+    if ((cfp= make_copy()) == NULL) return 0;
     fflush(cfp);
     fseek(cfp,0L,0);
 
@@ -487,4 +487,5 @@ int cliplast(char *lastbuf, int bufsize)
 	    lastbuf[i++]= ch;
     }
 
+    return 0;
 }

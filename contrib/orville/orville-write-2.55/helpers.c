@@ -27,7 +27,7 @@ struct hlp *curr, *prev;
 
     for (curr= list, prev= NULL; curr != NULL; prev= curr,curr= prev->next)
     {
-	if (!strncmp(tty, curr->line, ((struct utmpx *)0)->ut_line -1))
+	if (!strncmp(tty, curr->line, sizeof(curr->line)))
 	{
 	    if (prev == NULL)
 	    	list= curr->next;

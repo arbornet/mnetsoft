@@ -70,6 +70,7 @@ char *txbuf= inbuf + INDENT;    /* Text buffer - pointer to respose portion */
 				/*               of inbuf */
 FILE *debug= NULL;		/* Debug file, if one is open */
 RETSIGTYPE (*oldsigpipe)();	/* Old SIGPIPE handler */
+struct termios cooked, cbreak;
 
 jump_buf jenv;
 
@@ -626,7 +627,7 @@ off_t backup(int lines)
     off_t off;
     int n;
 
-    if (lines <= 0) return;
+    if (lines <= 0) return 0;
 
     p= bub;
     off= lseek(rst,0L,1);

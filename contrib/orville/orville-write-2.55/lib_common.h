@@ -19,7 +19,7 @@ extern int f_disconnect, f_exceptions, f_helpers, f_loglevel, f_answertel,
 extern char *progname;
 extern char mydevname[];
 extern int wstream;
-struct wrthdr wt_head;
+extern struct wrthdr wt_head;
 
 #ifdef TTYPERMS
 int saveperms(void);

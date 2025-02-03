@@ -178,7 +178,7 @@ char *strchr(), *strrchr();
 
 #ifdef F_TERMIOS
 #include <termios.h>
-struct termios cooked, cbreak;
+extern struct termios cooked, cbreak;
 #define GTTY(fd, st)    tcgetattr(fd, (st))
 #ifdef TCSASOFT
 #define STTY(fd, st)    tcsetattr(fd, TCSASOFT | TCSANOW, (st))
@@ -430,8 +430,8 @@ extern RETSIGTYPE (*oldsigpipe)();
  */
 
 #define INDENT UT_NAMESIZE+2	/* Just changing this value won't work */
-char inbuf[BFSZ+INDENT+2];	/* Text buffer - first 10 for "name:   " */
-char *txbuf;			/* Text buffer - pointer to respose portion */
+extern char inbuf[BFSZ+INDENT+2];	/* Text buffer - first 10 for "name:   " */
+extern char *txbuf;			/* Text buffer - pointer to respose portion */
 				/*               of inbuf */
 
 #define CHN_LEN 12		/* Maximum length of channel name */

@@ -67,7 +67,7 @@ int get_status(int rep);
 int find_me(void);
 int may_help(void);
 void do_disconnect(void);
-int window_warning(int newmode);
+void window_warning(int newmode);
 char *myhomedir(void);
 int maywriteme(char *user, int mode);
 
@@ -641,7 +641,7 @@ char myname[sizeof(myutmp.ut_user)+1];
  * four minute window rule, print a warning message.
  */
 
-int window_warning(int newmode)
+void window_warning(int newmode)
 {
 struct wrthist *hist;
 struct wrttmp w;

@@ -1,21 +1,10 @@
 #
 
-# BACKTALK VERSIONS
-BACKTALK=	backtalk-1.3.30
-BUBBLEGUM=	bubblegum-1.2.4
-GUMBALL=	gumball-0.1.0
-PAPAYA=		papaya-1.1.5
-VANILLA=	vanilla-1.3.5
-CINNAMON=	cinnamon-0.8.6
-FRONTTALK=	fronttalk-0.9.2
-
 GATEDIR=	gate/gate-2.06
-BACKTALKDIR=	backtalk/$(BACKTALK)
-FRONTTALKDIR=	fronttalk/$(FRONTTALK)
 PARTYDIR=	party/party-2.12
 ORVILLEDIR=	orville/orville-write-2.55
 
-PREFIX=		/cyberspace
+PREFIX=		/arbornet
 BINDIR=		$(PREFIX)/bin
 ETCDIR=		$(PREFIX)/etc
 LIBDIR=		$(PREFIX)/lib
@@ -26,52 +15,10 @@ VARDIR=		$(PREFIX)/var
 
 SUIDBIN=	/suid/bin
 
-WWWPREFIX=	/var/www
-HTDOCSDIR=	$(WWWPREFIX)/htdocs
-CGIBINDIR=	$(WWWPREFIX)/cgi-bin
-
-WEBSITE=	https://grex.org
-
 all:
 	@echo 'Run make [configure|build|install|clean|distclean]'
 
 configure:
-	@echo 'Configuring backtalk....'
-	(cd $(BACKTALKDIR) && \
-	 rm -f config.cache && \
-	 ./configure \
-	    --prefix=$(PREFIX) \
-	    --htmldir=$(HTDOCSDIR)/${BACKTALK} \
-	    --docdir=$(HTDOCSDIR)/${BACKTALK} \
-	    --htmlurl=$(WEBSITE)/backtalk \
-	    --cgidir=$(CGIBINDIR) \
-	    --cgiurl=$(WEBSITE)/cgi-bin \
-	    --httpd-id=www \
-	    --owner-id=cfadm \
-	    --owner-group=cfadmg \
-	    --admin-group=cfadmg \
-	    --bindir=$(SBINDIR) \
-	    --libexecdir=$(LIBEXECDIR)/${BACKTALK} \
-	    --bbsdir=/cyberspace/grex/bbs \
-	    --scriptdir=$(LIBDIR)/${BACKTALK}/script \
-	    --etcdir=$(LIBDIR)/${BACKTALK} \
-	    --logdir=/var/log \
-	    --mandir=$(MANDIR) \
-	    --login=basic \
-	    --auth=shadow \
-	    --ident=authfile \
-	    --group=unix \
-	    --session=none \
-	    --disable-edituser \
-	    --with-aspell \
-	    --with-picospan \
-	    --enable-exec \
-	    --disable-attachments)
-	    #--lastlog=unix \
-
-	@echo 'Configuring fronttalk....'
-	(cd $(FRONTTALKDIR) && true)
-
 	@echo 'Configuring gate....'
 	(cd $(GATEDIR) && \
 	 ./configure \
@@ -83,22 +30,16 @@ configure:
 	@echo 'Configuring party....'
 	(cd $(PARTYDIR) && \
 	 ./configure \
-	    --prefix=$(PREFIX)/grex \
+	    --prefix=$(PREFIX) \
 	    --with-suid=party \
 	    --bindir=$(SUIDBIN) \
-	    --localstatedir=$(PREFIX)/grex/var \
-	    --sysconfdir=$(PREFIX)/grex/etc)
+	    --localstatedir=$(PREFIX)/var \
+	    --sysconfdir=$(PREFIX)/etc)
 
 	@echo 'Configuring orville write....'
 	(cd $(ORVILLEDIR) && ./configure --prefix=$(PREFIX))
 
 build:
-	@echo 'Building backtalk....'
-	(cd $(BACKTALKDIR) && make && cd src && make shy)
-
-	@echo 'Building fronttalk....'
-	(cd $(FRONTTALKDIR) && true)
-
 	@echo 'Building gate....'
 	(cd $(GATEDIR) && make)
 
@@ -109,12 +50,6 @@ build:
 	(cd $(ORVILLEDIR) && make)
 
 install:
-	@echo 'Installing backtalk....'
-	(cd $(BACKTALKDIR)/.. && sh install)
-
-	@echo 'Installng fronttalk....'
-	(cd $(FRONTTALKDIR) && true)
-
 	@echo 'Installing gate....'
 	(cd $(GATEDIR) && make install)
 
@@ -130,21 +65,21 @@ install:
 	    ln -fs $(SUIDBIN)/party $(BINDIR)/silicon && \
 	    ln -fs $(SUIDBIN)/party $(BINDIR)/pwho && \
 	    ( [ -d $(VARDIR)/party ] || mkdir $(VARDIR)/party ) && \
-	    chown party:partyadm $(VARDIR)/party && \
+	    chown party:party $(VARDIR)/party && \
 	    chmod 775 $(VARDIR)/party && \
 	    ( [ -d $(VARDIR)/party/log ] || mkdir $(VARDIR)/party/log ) && \
-	    chown party:partyadm $(VARDIR)/party/log && \
+	    chown party:party $(VARDIR)/party/log && \
 	    chmod 775 $(VARDIR)/party/log && \
 	    ( rm -f $(VARDIR)/party/log/partytmp; \
-	        install -c -o party -g partyadm -m 664 \
+	        install -c -o party -g party -m 664 \
 		    /dev/null $(VARDIR)/party/log/partytmp ) && \
 	    ( [ -d $(ETCDIR)/party ] || mkdir $(ETCDIR)/party ) && \
-	    chown party:partyadm $(ETCDIR)/party && \
+	    chown party:party $(ETCDIR)/party && \
 	    chmod 775 $(ETCDIR)/party && \
 	    touch $(ETCDIR)/party/party.motd && \
 	    for f in partytab chantab noisetab partyhlp party.welcome; do \
 	        [ -f $(ETCDIR)/party/$$f ] || install \
-		    -c -o party -g partyadm -m 664 ../$$f $(ETCDIR)/party/$$f; \
+		    -c -o party -g party -m 664 ../$$f $(ETCDIR)/party/$$f; \
 	    done \
 	)
 
@@ -161,8 +96,8 @@ install:
 	    ln -sf $(SUIDBIN)/amin $(BINDIR)/amin && \
 	    install -c -o root -g wheel -m 755 huh helpers $(BINDIR) && \
 	    ( [ -f $(ETCDIR)/orville.conf ] || \
-	        install -c -o root -g wheel -m 755 \
-	            ../../../config/root/cyberspace/etc/orville.conf \
+	        install -c -o root -g wheel -m 644 \
+	            ../../../config/root/arbornet/etc/orville.conf \
 		    $(ETCDIR) ) && \
 	    ( [ -f $(LIBDIR)/write.help ] || \
 	        install -c -o root -g wheel -m 755 \
@@ -183,12 +118,6 @@ install:
 	)
 
 clean:
-	@echo 'Cleaning backtalk....'
-	(cd $(BACKTALKDIR) && $(MAKE) clean)
-
-	@echo 'Cleaning fronttalk....'
-	(cd $(FRONTTALKDIR) && true)
-
 	@echo 'Cleaning gate....'
 	(cd $(GATEDIR) && $(MAKE) clean && rm -f gate.1)
 
@@ -199,12 +128,6 @@ clean:
 	(cd $(ORVILLEDIR) && $(MAKE) clean)
 
 distclean:	clean
-	@echo 'Distribution cleaning backtalk....'
-	(cd $(BACKTALKDIR) && $(MAKE) clean)
-
-	@echo 'Distribution cleaning fronttalk....'
-	(cd $(FRONTTALKDIR) && true)
-
 	@echo 'Distribution cleaning gate....'
 	(cd $(GATEDIR) && $(MAKE) distclean && rm -f gate.1)
 
