@@ -1,0 +1,622 @@
+.TH PARTY 1  "6 March 1988"
+.SH NAME
+party \- real-time multi-user communication program
+.SH SYNOPSIS
+.B party
+[
+.RI # channel
+] [
+.I option-list
+]
+.SH DESCRIPTION
+.I party
+lets you chat in real time with any other users who are currently running
+.IR party .
+There are several channels on which separate conversations can take place.
+When you run it, it puts you at first into "read" mode.
+In this mode lines typed by other users are displayed as they are entered,
+each with the speaker's login name as a prefix.
+Keep in mind that a person does not see comments entered while he is typing
+until he is done typing, so his message may be slightly out of date.
+Whenever a person enters or leaves the program, a banner is printed.
+.LP
+Note that
+.I party
+keeps all messages in a file that is readable to any user that can run
+.IR party .  
+It is therefore not a good place to hold private conversations.
+.LP
+In read mode you can also enter any of several one-character commands
+which
+temporarily stop the display of messages while you do something else.
+.I
+party
+returns to "read" mode after any command
+(except, of course, the quit command).
+.IP space 1i
+Brings up a ">" prompt so you can type a message.
+Messages should not be longer than about 250 characters,
+or they may get clipped off.
+You can return to "read" mode without entering a message
+by entering an EOF (control-D) at the ">" prompt.
+.IP "#" 1i
+Brings up the "#" prompt so you can enter a new channel name.
+You normally start in the channel named "party."
+Some channels may be permitted to only certain groups of users.
+You can return to "read" mode without changing channels
+by entering an EOF (control-D) at the "#" prompt.
+If no name is entered, a list of channels is printed with your current
+channel marked with an arrow.
+The ":join" command is equivalent to this.
+.IP "!" 1i
+Brings up the "!" prompt so you can enter a shell command to be run.
+You can return to "read" mode without running a command
+by entering an EOF (control-D) at the ":" prompt.
+The ":!" and ":shell" commands are equivalent to this.
+.IP "-" 1i
+Brings up the "-" prompt so you can type the number of old message lines
+you would like to see redisplayed.
+The redisplay can be interrupted to return you quickly to "read" mode,
+unless you have an output filter defined, in which case interrupting
+a tailback exits you from party.
+.IP ":" 1i
+Brings up the ":" prompt so you can type in a special command.
+Special commands are listed below.
+You can return to "read" mode without entering any command
+by entering an EOF (control-D) at the ":" prompt.
+.IP "/" 1i
+Brings up the "/" prompt for making vaguely MUD-like sound effects.
+For a list of possible noises (if any), do a "/" with no argument.
+For more information about noises, see the "makenoise" option below.
+.IP "=" 1i
+Prints all current settings of user options.
+This is equivalent to ":print".
+.IP "? or h" 1i
+Prints the help message.
+The help message can be interrupted to return you quickly to "read"
+mode.
+The "h" command goes away if you use the firstchar option.
+.IP "q or EOF" 1i
+Exits party.  An interrupt will also work.
+The "q" command goes away if you use the firstchar option.
+.LP
+The following special commands are supported at the colon prompt.
+All commands can be abbreviated.
+.IP ":join <channel>" 1i
+This exits from the current channel and joins the named channel.
+The '#' command is a shorthand for this.
+.IP ":who [-cnt]" 1i
+This lists all users currently in party, together with the time they
+entered and their current channel numbers.  A flag may be given to indicate
+whether to sort the names by channel (-c, the default), by name (-n), or
+by start time (-t).
+.IP ":list <channel>" 1i
+This lists all current channels telling how many users are in each.
+The channel you are in is marked with a carat.
+.IP ":name <newname>" 1i
+This changes your name in the current channel to the newname specified.
+It only works in channels where the "rename" option is enabled.
+.IP ":read <filename>" 1i
+This reads the lines of the named file into the party file.
+The maximum number of lines that can be read into the file is set by
+"readlim" option.
+Tilde expansion is done on the filename.
+.IP ":save [-<count>] <filename>" 1i
+This saves a copy of the log for the current party channel in the named
+file.  If a count is given, only the last
+.I <count>
+lines of the log file are saved.
+.IP ":set <option-list>" 1i
+This sets the options listed.
+.IP ":print <option-list>" 1i
+This displays the current values of the options listed.
+If no options are given, a selection of the more interesting options are
+displayed
+(this is equivalent to the "=" command).
+If the argument "all" is given, then all options, including system options
+are displayed.
+.IP ":shell <command>" 1i
+This executes the a shell escape.  You can also just use the "!" command
+or the ":!" command.
+The shell used to execute the command is determined by the "shell" and
+"fastshell" options described below.
+.IP ":close" 1i
+Closes the current channel.  This means not permitting any users not already
+in the channel to join, and depermitting the log file so no outsider users
+can read it.  This only works if the "mayclose" option is enabled.
+In some installations, this may not exist at all, or it may not
+depermit the log file.  Note that things typed in a closed channel become
+readable to everyone again if the channel is opened.
+The only way to get anything like real secrecy is to close a nokeeplog channel
+and never reopen it.  Just let it be destroyed when all users leave.
+.IP ":open" 1in
+Opens the current channel, if it has been closed.
+Opening a channel makes the whole history of the conversation there readable
+to all.
+.IP ":invite <login>" 1in
+Add the given login id to the list of users who may join the current channel,
+if it is closed.
+This does not send any kind of message to that user.
+.IP ":ignore <user>..." 1i
+The named users will be added to the list of ignored users.
+No messages from ignored users will be displayed.
+If no user names are given on the command line,
+the names of all currently ignored users will be listed.
+Note that if you are in a channel where name changing is allowed and
+.I uniquename
+is set, then if a person you are ignoring changes his name,
+your ignore list will automatically be updated to the new name.
+.IP ":notice <user>..." 1i
+The named users will be deleted from the list of ignored users,
+so that their messages will once again be displayed.
+If no user names are given on the command line,
+all currently ignored users will be removed from the list.
+.IP ":back <count>" 1i
+Backs up in the file by the given number of lines.
+The '-' command character is a shorthand for this.
+.IP ":version" 1i
+Prints the current party version number.
+.IP ":quit" 1i
+Yet another way to exit party.
+.LP
+The behavior of
+.I party
+can be altered with a number of options.
+There are six ways to set party options.
+Options in option lists are always separated by spaces.
+.IP "1)" 0.5i
+Compiled in defaults.
+These should be set to sane values by whoever installed
+.I party
+on your system.
+.IP "2)" 0.5i
+Partytab file.
+The file /usr/bbs/party/partytab contains several lines of the form:
+.IP "" 1i
+<program-name> <option-list>
+.IP "" 0.5i
+When invoked, party searches the partytab file for a line with the
+program-name that it was invoked under.
+(For example, if there was a link to the party program named
+.I cb
+and you ran the 
+.I cb
+program, it would look for a line starting with
+. I cb
+in the partytab).
+It then applies the option settings listed after that program-name.
+This is an easy way to change the default options without recompiling,
+and allows several "different" versions of the
+.I party
+program to be
+supported on the system without having to make separate physical copies.
+.IP "3)" 0.5i
+PARTYOPTS environment variable.
+This may be set to a list of options which will always be set when you
+enter any
+.I party
+program.
+.IP "4)" 0.5i
+Command line.
+A list of options may be given as arguments on the command line of any
+party program.
+.IP "5)" 0.5i
+Chantab file.
+The file /usr/bbs/party/chantab contains several lines of the form:
+.IP "" 0.5i
+<channel-name-pattern> <option-list>
+.IP "" 0.5i
+When you enter a party channel,
+party searches for a chantab line starting with a pattern that matches the
+channel name.  The syntax of the pattern is similar to the shell's filename
+substitution.
+For example, a ? matches any one character, a * matches any sequence of
+characters.
+Party sets the options listed after the first pattern that matches
+the channel name.
+This allows different channels to have different rules.
+Normally only system options should be set in the chantab.
+Most of these are automatically reset to the state they were in
+after reading the partytab every time you can change channels.
+Channel names that don't match any pattern in the chantab file may not be used.
+.IP "6)" 0.5i
+The ":set" command.
+Options may be reset while the program is running by using
+the "set" special command at the colon prompt.
+.LP
+The options are read in the order listed above,
+so options set from the last places listed
+override ones set from the earlier places.
+.LP
+There are four types of values an option named <option> can take.
+Boolean values are set with "<option>" and reset with "no<option>"
+A few options can also take take prefixes other than "no".
+Numeric options are set with "<option>=<value>".
+String options are set with "<option>=<string>".
+If the string includes spaces or tabs,
+it must be quoted with either single or double quotes.
+.LP
+Most options are user-settable, but others are reserved for the administrator
+to use in configuring the party program and individual channels.
+Those can be set only in the partytab or chantab files.
+The user-settable options are:
+.IP "alias=<name>"
+This is the default name to use when joining a channel where the
+rename option is enabled.
+It defaults to the user's real login name.
+.IP "[no]arg" 1i
+If noarg is set,
+.I party
+does not read options from the command argument list.
+Obviously this is only meaningful in the partytab or in PARTYOPTS,
+since otherwise they has already been read.
+The default is arg.
+.IP "back=<count>" 1i
+This defines the number of old lines to display when you enter
+.I party
+or change channels.
+The default is back=10.
+.IP "[no][see]bs" 1i
+This determines how to handle backspaces in messages.
+The default, bs, is just to print them.
+This allows tricky users to "cursor-dance", possibly backing over their
+names and changing them.
+Setting nobs causes all backspace characters to be stripped out.
+Setting seebs causes backspace characters to be displayed as "^H".
+noseebs is the same as bs.
+.IP "[no]colon" 1i
+If nocolon is set,
+.I party
+does not recognize the ":" command to set options.
+This may be used, together with noenv and noarg, to create a party program
+that cannot be customized by the user.
+The default is colon.
+.IP "[no][see]control" 1i
+This determines how to handle other control characters in messages.
+The default, control, is just to print them.
+Setting nocontrol causes all control characters to be stripped out.
+Setting seecontrol causes control characters to be displayed as "^E"
+or whatever.
+.IP "[no]env" 1i
+If noenv is set,
+.I party
+does not read options from the PARTYOPTS variable.
+Obviously this is only meaningful in the partytab,
+since otherwise they has already been read.
+The default is env.
+.IP "knockwait=<seconds>"
+This tells how long to wait for an invitation when attempting to join a
+closed channel.
+The default is 30 seconds.
+The user can always interrupt the wait if he gets impatient.
+.IP "[no]fastshell" 1i
+If fastshell is set, party will execute most shell escape commands directly
+instead of starting a shell to execute them.
+It will start a shell for commands that look like they contain
+wildcards, IO-redirection, or other things that normally require
+a shell to execute.
+This will generally speed up the execution of shell escapes.
+If nofastshell is set, all commands will actually be processed by the shell
+in the shell variable.
+Mainly nofastshell is useful if you have weird shells or if you have
+shell=/bin/csh and want aliases defined in your .cshrc file to work.
+The default is fastshell.
+.IP "filter=<cmd>" 1i
+This starts the named command as an output filter.
+Only messages and entry/exit banners are printed through the filter.
+Prompts, help messages, and shell escape output are not.
+Output filters can be used in many clever ways.
+For example, to stop displaying messages from the user 'janc',
+you could set filter="grep -v '^janc:'".
+filter commands are processed by the shell specified by the shell option,
+so pipes and aliases and such like can be used.
+If there is already a filter defined, setting a new one will turn off
+the old one.
+The default filter is filter="" (ie, there is no default).
+.IP "[no]filter" 1i
+If you have a filter defined, this turns it on and off.
+Note that setting a new filter automatically turns it on.
+.IP "[no]firstchar" 1i
+If firstchar is enabled, then whatever key you hit to bring up the
+">" input prompt, will also become the first character of your input text.
+This is mainly meant to be less confusing for regular IRC users.
+In this mode, party does all the input processing instead of letting the
+Unix tty driver do it.
+This means there are some inevitable differences in the way input is processed,
+but most are minor.
+As a side effect, the "q" command to quit and the "h" command to get help
+go away, since otherwise you wouldn't easily be able to enter lines starting
+with these letters.
+You can still quit with and EOF character or a ":q" command.
+You can still get help with w "?" character.
+The default is nofirstchar.
+.IP "fullmesg=<string>" 1i
+This is a text string to be printed out when a user attempts to join party
+when the
+.I capacity
+option is set and party is full.
+If the string starts with a '!', the rest of the string is taken as a command
+to execute instead.
+If the string starts with a '/', it is assumed to be the full path of a file
+name to print.
+.IP "[no]help" 1i
+This can be used to turn the help commands ('?' and 'h') on and off.
+The ":help" command still works even if nohelp is set.
+The default is help.
+.IP "help=<filename>" 1i
+This sets the name of the file containing
+the message printed by the help commands.
+As a side effect, it turns on the help commands.
+The default is help=/usr/bbs/party/partyhlp.
+.IP "intro=<text>" 1i
+This defines the banner message to be printed when you first enter party.
+It is, of course, not particularly useful to set from the ":" command,
+since by that time it has already been printed.
+If the first character of the text is a exclamation point ('!'), then
+the rest of the string is taken as a command to run instead.
+If the string starts with a '/', it is assumed to be the full path of a file
+name to print.
+The default is intro="Welcome to PARTY!  Type '?' for help:".
+.IP "maildir=<dirname>" 1i
+This sets the name of the directory where mail files are kept.
+The default is maildir=/usr/mail.
+If it is set to something where there is no readable mailfile for the user,
+you will not get "you have mail" messages.
+If you have a "MAIL" environment variable set, the
+.I maildir
+variable will be ignored and your "MAIL" variable will be used instead.
+.IP "prompt=<text>" 1i
+This sets the prompt to be printed when you enter input mode.
+The default is prompt=">".
+.IP "[no]raw" 1i
+This turns off or on the raw mode flag.
+Raw mode displays certain parts of the party log file that are meant more for
+system use than for user use.  Right now it doesn't make much difference,
+except that there are name tags in the front of noises.
+The default is noraw.
+.IP "[no]repeat" 1i
+This turns off or on
+the display of any line that is identical to the previous
+line in the party log.
+It intended as a countermeasure against the less imaginative pests of the world.
+The default is repeat.
+.IP "[no]shell" 1i
+If noshell is defined, shell escapes from party are not allowed.
+This may be useful to make a secure party that does not allow further access to
+Unix, if it is combined with nocolon, and possibly noenv and noarg.
+The default is shell.
+.IP "shell=<file>" 1i
+This defines the shell to be used in shell escapes.
+The full path name should be given.
+If you have the SHELL environment variable set, the default value for the
+party shell variable is taken from that.  Otherwise the default is
+shell=/bin/sh.
+.IP "[no]showevent" 1i
+This turns off or on the display of all events, such as people entering
+or leaving, people changing their names, or people knocking at closed
+channels.
+It effects only what you see.
+The default is showevent.
+.IP "[no]shownoise" 1i
+This turns off or on the display of all noises.
+It effects only what you see.
+The default is shownoise.
+.IP "[no]showread" 1i
+This turns off or on the display of files read into the party log
+with the ":read" command.
+It effects only what you see, not what others see.
+The default is showread.
+.IP "[no]spaceonly" 1i
+If spaceonly is set, only a space will get you from "read" mode
+to input mode.
+Otherwise, any other none command character will do the same.
+The spaceonly option is sometimes preferred on noisy connections,
+so you don't constantly get blown into input mode.
+The default is nospaceonly.
+.IP "spaceonly=<text>" 1i
+When the spaceonly option is set,
+this defines the error message that is printed when someone hits an
+illegal command in read mode.
+Note that redefining the spaceonly message turns on the spaceonly option
+as a side effect.
+The default is spaceonly="Type '?' for help.".
+.IP "start=<channel>" 1i
+This tells which channel to start in when you enter the
+.I party
+program.
+The default is start=party,
+which causes people to start in a channel named 'party'.
+On the command line, it is possible simply to write
+.RI # <channel>
+instead.
+.IP "tpmorp=<text>" 1i
+This sets a message to be printed when exiting input mode.
+It is meant for tricks like highlighting your input text
+by putting the control code to start highlighting in the prompt string and
+resetting it in the tpmorp string.
+The default is tpmorp="".
+.IP "[no]wrap" 1i
+This turns on and off word wrapping for party output.
+The default is "nowrap".
+.IP "cols=<number>" 1i
+This sets the number of columns to be used for word wrapping.
+The default is set from the user's stty modes or termcap if possible.
+If not, it defaults to 80 columns.
+.IP "wrap=<number>" 1i
+This sets the number of columns to indent any lines after the first when
+line wrapping.  The default is 10 columns.
+.LP
+Other options are intended to be used to configure individual channels.
+They may not be set by users, but only in the chantab or the partytab.
+They are always automatically reset to their default values whenever you
+change from one channel to another (though, of course, those defaults my
+be overridden by the chantab entry of the new channel).
+The chantab options are:
+.IP "[no]askname" 1i
+If askname is set,
+the user is prompted for the name to be used on a prefix on his messages in
+.IR party .
+If he gives no name,
+the algorithm defined by the other naming options is used.
+This is often used along with the rename option.
+Askname originated to support M-Net Halloween parties.
+The default is noaskname.
+.IP "[no]chanintro=<string>" 1i
+This is the string to print when you join a channel.  If
+.I nochanintro 
+is set, it just prints the name of the channel.
+Otherwise it prints the given string.
+If the string starts with a !, the rest of the string is a unix command
+to run instead.  If the string starts with a /, the string is the full
+path name of a file to print.
+.IP "[no]keeplog" 1i
+Normally channel log files are automatically deleted when the last person
+leaves the channel.  If the keeplog option is set, the channel's log file
+is never deleted by the party program.
+Channels with keeplog set have a .log suffix.
+Channels with nokeeplog set have a .tmp suffix.
+If keeplog is set on any channels, the installer should arrange to have
+files with .log suffixes deleted regularly by
+.IR cron (8)
+least they eat up all your disk space.
+.IP "[no]idleout" 1i
+Turns on and off the idleout feature.  If idleout is turned on, idle users
+will be booted out after the number of minutes given by the option below.
+With noidleout, you can hang around forever.
+.IP "idleout=<minutes>" 1i
+This sets the number of minutes for which a user can sit there, sending no
+messages, making no noises, issuing no commands, before he gets booted out
+of the program.
+It may sometimes take a couple minutes longer before he is booted out.
+The default is 10 minutes.
+.IP "[no]makenoise=<file>" 1i
+This option determines
+if noises are allowed and define which file containing the list of legal
+noises.
+Each noise is defined by one line in the file, which contains three
+fields.
+The first field is the command name, the second is the minimum number
+of arguments, and the third is the noise text.
+The text must be enclosed in angle brackets and may contain $0 to
+indicate the place where the user's name is to be substituted and
+$1, $2, etc to indicate places where the arguments are substituted.
+If there are multiple lines for the same command with different argument
+counts, the largest must be first.
+.IP "[no]mapname=<file>" 1i
+If mapname is set and a file is defined, then
+.I party
+will pick read through the file looking for a line on which the the first
+word matches the user's real login name.
+If found, it will change his name to second word on that line.
+If both mapname and randname are set, then users whose names don't appear
+in the mapname file will be assigned a random name out of the randname
+file.
+.IP "[no]mayclose" 1i
+If mayclose is set, the "close" command is enabled for the channel.
+Normally this makes most sense when used with nokeeplog,
+though it works with permanent channels too.
+The default is "nomayclose".
+In some installations, this option may not be compiled in.
+.IP "[no]randname=<file>" 1i
+If randname is set and a file is defined, then
+.I party
+will pick an alias for the user at random from the file.
+The file should contain one name per line. 
+The name my be terminated by a newline or by a colon
+(this allows the password file to be used).
+.IP "readlim=<number>" 1i
+This sets the maximum number of lines that can be read into a
+a party channel with the "read" comand.
+It should always have some reasonable finite limit,
+to prevent users from, for example,
+reading the party log file into the party log file.
+.IP "[no]rename" 1i
+If rename is set, the user may use the ":name" command
+to change his name while he is in the channel.
+The default is norename.
+.IP "[no]uidname" 1i
+If uidname is set,
+user's login id's are determined by getting their uid and looking it up in
+the password file.
+If nouidname is set,
+user's login id's are determined by getting their tty number and looking it
+up in the wtmp file.
+This option exists to support former M-Net administrators prankish
+tendancy to edit people's names in the wtmp file.
+Current M-Net administrators seem to have outgrown such games.
+The default is uidname.
+.IP "[no]uniquename" 1i
+If uniquename is set, users may not set their names to a name already being
+used by another person in the channel.
+This is relevant only in channels where
+.I rename
+or
+.I askname
+are set.
+You may always set your alias to your real login name,
+even if someone else is using it too.
+If nouniquename is set, then users may duplicate names all they like.
+The default is uniquename.
+.LP
+The remaining options are meant to be set in the partytab file.
+They may not be reset by users.
+The partytab options are:
+.IP "chantab=<filename>" 1i
+This identifies the channel table.
+The default is chantab=/usr/local/party/chantab.
+.IP "[no]capacity" 1i
+If enabled, this turns on the enforcement of capacity limits.
+This sets an upperbound on the number of users who may be running party
+at the same time.
+If
+.I nocapacity
+is set, then there is no limit to the number of users who may be in party.
+.IP "capacity=<number>" 1i
+This is the maximum number of users that may be in party at a time
+if capacity checking is enabled.
+If a user tries to join party when it is full, extry will be refused
+and the text specified by the
+.I fullmesg
+option will be printed.
+.IP "dir=<dirname>" 1i
+This option defines the pathname of the directory in which the
+transcript files for the channels are kept.
+The default is dir=/usr/local/party/log
+unless something else has been compiled in.
+This option cannot be reset by the user.
+The installer must create the party log directory.
+It should be readable and writable to the party program.
+.IP "[no]userlist" 1i
+This is a strange option.
+If it is set, running party will not get you into party.  Instead it will
+just print a list of who is in party.
+This is normally set in the partytab on a link to party called
+.IR pwho
+thus creating a unix command that lets you list who is in party.
+.IP "whofile=<filename>" 1i
+This identifies the file used to keep track of what users are in which
+channels.
+The :who command reports the contents of this file.
+.SH HISTORY
+The original version of this program was written by Marcus Watts sometime
+around 1983 or 1984 for use on M-Net, a public unix-based conferencing
+system.  It used two synchronized processes, one writing to the file, and
+the other reading from the file.
+Jan Wolter started modifying that version around 1985,
+mostly changing look-and-feel to meet Meg Geddes' specifications.
+
+Eventually, Jan did a complete rewrite of Marcus's party, finally turning
+up a program that behaved exactly like Marcus's party, but avoided a variety
+of process synchronization bugs, because there was just one process.
+The current program is a direct descendant of that version.
+
+An early version of Jan's party migrated to Chinet, another early Unix-based
+conferencing system, where it sprouted many new features, including channels.
+Many of those ideas were borrowed back into the M-Net version, though none
+of the actual code was.
+Noises were inspired by a user who wanted party to be more MUD-like.
+After the appearance of IRC, several irc-like features migrated into party.
+.SH FILES
+/usr/bbs/party/partytab
+.SH "SEE ALSO"
+write(1)

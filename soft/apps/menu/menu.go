@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	menuLibDir = "/cyberspace/lib/menu"
+	menuLibDir = "/c/r/cross/sys/m-net/soft/apps/menu/menus"
 	helpFile   = menuLibDir + "/help.txt"
 	colWidth   = 34
 )

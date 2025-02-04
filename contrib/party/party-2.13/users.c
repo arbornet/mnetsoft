@@ -506,6 +506,8 @@ int who_uniqalias(char *alias, char *name, char *channel)
 /*********  P A R T Y T M P   S C A N N I N G   R O U T I N E S  *********/
 
 
+struct utmp *utmp= NULL;  /* Pointer to internal copy of the utmp file */
+int nutmp;	          /* Number of entries in utmp */
 int subcnt;	          /* Number of subfields read so far */
 long curtime;	          /* Time stamp from utmp file */
 
@@ -513,10 +515,29 @@ long curtime;	          /* Time stamp from utmp file */
 
 void wscan_init()
 {
+    FILE *utfp;
+    struct stat utst;
+
     if (!pwfp) return;
+
+    /* Open utmp file */
+    if ((utfp= fopen(UTMP,"r")) == NULL)
+    {
+	err("cannot open utmp file %\n",UTMP);
+	return;
+    }
+
+    if (utmp != NULL) free(utmp);
+
+    /* Load a copy of utmp file into memory */
+    fstat(fileno(utfp),&utst);
+    utmp= (struct utmp *)malloc(utst.st_size+2*sizeof(struct utmp));
+    for (nutmp=0;fread(utmp+nutmp,sizeof(struct utmp),1,utfp);nutmp++)
+	    ;
+    fclose(utfp);
+
     fseek(pwfp,0L,0);
     subcnt= 0;
-    setutxent();
 }
 
 /* WSCAN_NEXT -- Get the next valid head/body pair from the party file.  If
@@ -528,7 +549,6 @@ void wscan_init()
 
 int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 {
-    struct utmpx *ut, uts;
     int j;
     int ignore;
 
@@ -542,17 +562,21 @@ int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 	    if (fread(phead,sizeof(struct pwho),1,pwfp) == 0)
 		return 0;
 
-	    memset(&uts,0,sizeof(uts));
-	    strncpy(uts.ut_line,phead->line,UT_LINESIZE);
-            ut= getutxline(&uts);
+	    /* Look for matching, non-obsolete utmp line */
+	    for(j= 0; j<nutmp; j++)
+	    {
+		if (strncmp(utmp[j].ut_line,phead->line,UT_LINESIZE) == 0 && 
+		    !strncmp(utmp[j].ut_name,phead->logname,UT_NAMESIZE))
+		    break;
+	    }
 
 	    /* If no utmp entry exists for this line or the user on the line
 	     * isn't the one in the partytmp file, then this is an obsolete
 	     * entry.  We will ignore it.
 	     */
-	    ignore= (ut == NULL);
+	    ignore= (j == nutmp);
 
-	    curtime= ignore?0:ut->ut_tv.tv_sec;
+	    curtime= utmp[j].ut_time;
 	}
 	else
 	    ignore= 0;
@@ -578,7 +602,8 @@ int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 /* WSCAN_DONE -- Finish up a scan of the partytmp file */
 int wscan_done()
 {
-    endutxent();
+    free(utmp);
+    utmp= NULL;
 }
 
 
@@ -605,15 +630,16 @@ void ncstrncpy(char *s1, char *s2, int n)
 
 int finduser(char *logtty, char *logname, time_t *logtime)
 {
+    FILE *fp;
     char *tty;
-    struct utmpx *ut, uts;
+    struct utmp ut;
     int i;
 
     /* See if we can find a useful ttyname for stderr, stdout, or stdin */
     for (i= 2; i >= 0; i--)
     {
 	if ((tty= ttyname(i)) == NULL ||
-	    strcmp(tty,"/dev/pts"))
+	    strcmp(tty,"/dev/tty"))
 		break;
     }
     if (i < 0)
@@ -622,22 +648,28 @@ int finduser(char *logtty, char *logname, time_t *logtime)
 	    "Try running %s from a different prompt\n",progname);
 	return 1;
     }
-    memset(&uts, 0, sizeof(uts));
-    strcpy(uts.ut_line,tty+5);
+    strcpy(logtty,tty);
 
     /* Open the utmp file */
-    setutxent();
+    if ((fp= fopen(UTMP,"r")) == NULL)
+    {
+	err("Cannot open utmp file "UTMP"\n");
+	return 1;
+    }
 
     /* Search the utmp file */
-    ut = getutxline(&uts);
-    if (ut == NULL)
+    while (fread(&ut,sizeof(struct utmp),1,fp) != 0)
     {
-	err("Cannot find your tty (%s) in utmpx\n",logtty);
-	return 1;
-     }
-
-    *logtime= ut->ut_tv.tv_sec;
-    strncpy(logname,ut->ut_user,UT_NAMESIZE);
-    logname[UT_NAMESIZE]= '\0';
-    return 0;
+	if (!strncmp(ut.ut_line,logtty+5,UT_LINESIZE))
+	{
+	    fclose(fp);
+	    *logtime= ut.ut_time;
+	    strncpy(logname,ut.ut_name,UT_NAMESIZE);
+	    logname[UT_NAMESIZE]= '\0';
+	    return 0;
+	}
+    }
+    err("Cannot find your tty (%s) in utmp\n",logtty);
+    fclose(fp);
+    return 1;
 }

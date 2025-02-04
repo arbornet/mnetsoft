@@ -52,13 +52,13 @@ read ans
 		echo " "
 		echo "Starting party for: ($LOGNAME), on channel: (party)."
 		echo " "
-		koala start=party $PARTYOPTS
+		party $PARTYOPTS
 		echo " "
 		else
 		echo " "
 		echo "Starting party for: ($LOGNAME), on channel: ($channel)."
 		echo " "
-		koala start=$channel $PARTYOPTS
+		party $channel $PARTYOPTS
 		echo " "
 		fi
 		sleep 1
@@ -75,11 +75,14 @@ echo " "
 echo "*** looking for string: ($string) in channel: ($string2) for: $LOGNAME"
 echo " "
 echo " "
-if [ -f /usr/party/log/$string2.log ]
+if [ -f /arbornet/var/party/$string2 ]
 then
-grep $string /usr/party/log/$string2.log | more
+grep $string /arbornet/var/party/$string2 | less -rEX
+elif [ -f /arbornet/var/party/$string2.log ]
+then
+grep $string /arbornet/var/party/$string2.log | less -rEX
 else
-grep $string /usr/party/log/$string2.tmp | more
+grep $string /arbornet/var/party/$string2.tmp | less -rEX
 fi
 echo " "
 echo -n "Please hit <RETURN> to continue "
@@ -90,7 +93,7 @@ clear;;
 	echo " "
 	echo "Here are the (*.log, *.tmp, *.bak) files in party ..."
 	echo " "
-	cd /usr/party/log
+	cd /arbornet/var/party
 	ls -C
 	cd
 	echo " "
@@ -112,20 +115,20 @@ echo " "
 echo -n "What party channel would you like to read? "
 read channel
 echo " "
-	if [ -f /usr/party/log/$channel.log ]
+	if [ -f /arbornet/var/party/$channel.log ]
 	then
 echo " "
 echo " "
 echo "Reading channel: ($channel) for ($LOGNAME)     [NOTE]: INTERRUPT to quit."
 echo " "
-tail -f /usr/party/log/$channel.log
-	elif [ -f /usr/party/log/$channel.tmp ]
+tail -f /arbornet/var/party/$channel.log
+	elif [ -f /arbornet/var/party/$channel.tmp ]
 	then
 echo " "
 echo " "
 echo "Reading channel: ($channel) for ($LOGNAME)     [NOTE]: INTERUPT to quit."
 echo " "
-tail -f /usr/party/log/$channel.tmp
+tail -f /arbornet/var/party/$channel.tmp
 	else
 echo " "
 echo -n "$channel: is not a valid party channel."
@@ -139,12 +142,12 @@ clear;;
 	echo -n "What party channel would you like to tail? "
 	read channel
 	echo " "
-if [ -f /usr/party/log/$channel.log ]
+if [ -f /arbornet/var/party/$channel.log ]
 then
-	tail /usr/party/log/$channel.log
-elif [ -f /usr/party/log/$channel.tmp ]
+	tail /arbornet/var/party/$channel.log
+elif [ -f /arbornet/var/party/$channel.tmp ]
 then
-	tail /usr/party/log/$channel.tmp
+	tail /arbornet/var/party/$channel.tmp
 else
 	echo -n "$channel: is not a valid party channel."
 	sleep 2
@@ -178,7 +181,7 @@ R)ead		* This command will allow you to READ any party channel without
 		  great way to SPY on people. NOTE: Interupt will exit you.
 T)ail		* Tail will give you the last 10 lines of any channel you ask
 		  for. This can be a channel currently in use or a channel that
-		  has a *.tmp file remaining in the /usr/party/log directory.
+		  has a *.tmp file remaining in the /arbornet/var/party directory.
 H)elp		* Print this file.
 E)xit		* EXIT this program.
 HELP

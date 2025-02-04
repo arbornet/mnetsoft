@@ -1,7 +1,7 @@
 #
 
 GATEDIR=	gate/gate-2.06
-PARTYDIR=	party/party-2.12
+PARTYDIR=	party/party-2.13
 ORVILLEDIR=	orville/orville-write-2.55
 
 PREFIX=		/arbornet

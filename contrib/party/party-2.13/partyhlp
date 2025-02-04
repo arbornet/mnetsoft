@@ -1,0 +1,22 @@
+--------------------------------------------------------------------
+PARTY command characters (typed when there is no prompt):
+
+  <space>      Bring up a > prompt so you can enter a response.
+  q or ctrl-D  Exit the party program.
+  #            Bring up a # prompt for a new channel number.
+  !            Bring up the ! prompt for a unix command.
+  -            Bring up the - prompt for a count of lines to back up.
+  /            Bring up the / prompt to make a noise.
+  =            Display the current party option settings.
+  ? or h       Display this message.
+  :            Bring up the : prompt for special commands:
+                 :set <option>       To set an option.
+                 :read <file>        To read in a file.
+                 :print <option>     To display options.
+                 :who                To list party users.
+
+Typing ctrl-D at any prompt will return you to "command/listening" 
+mode silently.  Do "!man party" for more information.
+
+Things said here can be read later by folks not currently in party.
+--------------------------------------------------------------------

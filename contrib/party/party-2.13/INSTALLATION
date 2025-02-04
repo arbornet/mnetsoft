@@ -1,0 +1,128 @@
+Installation of the party program version 2.13:
+
+1.  Create user account or group for party to run as.
+
+    Party can either be a set-user-id (suid) or set-group-id (sgid) program.
+    The suid option is generally to be prefered.
+
+    The suid option has the advantage of making it possible to have "keeplog"
+    channels permitted only to certain groups by playing with the group
+    permissions of the log file.  Note that with sgid, volatile channels
+    will be created with files owned by the user.  This allows the user to
+    play with the permissions which may or may not be considered desirable.
+
+    If possible, a new account or group should be created for party to run
+    in.  If not, an existing account or group can be used.
+
+2.  Run ./configure
+
+    The following options are interesting:
+
+     --with-suid=<login>
+     --with-sgid=<group>
+
+            Only one of these options should be set.  If you want party to
+	    Run suid, name the login on the --suid option.  If you want party
+	    to run sgid, name the group on the --sgid option.
+
+            If neither option is given, the default is --suid=party
+
+     --prefix=<dir>
+     --exec-prefix=<dir>
+
+	    Main installation directory.  Prefix defaults to /usr/local, and
+	    exec-prefix defaults to prefix.
+
+     --bindir=<dir>
+
+	    Where executable is installed.  Default is <exec-prefix>/bin
+
+     --sysconfdir=<dir>
+
+	    Most party config files live in the <sysconfdir>/party/ directory.
+	    Default is <prefix>/etc.
+
+     --localstatedir=<dir>
+
+	    Party log files are kept in <localstatedir>/party.   Default is
+	    <prefix>/var.
+
+     --mandir=<dir>
+
+	    The party manual page will be installed in <mandir>/man1.
+	    Default is <prefix>/man.
+
+     --disable-close
+
+	    Disable the feature that allows users to close channels, so that
+	    only the users already in the channel and those invited to the
+	    channel may join.  This works best with suid party.  If you set
+	    it up with sgid, closed channels are still readable to other
+	    users.
+
+     --disable-ignore
+
+            Disable the feature that allows users to maintain a list of
+	    users who's remarks they do not wish to see.
+        
+2.  Compile with a "make" command.
+
+3.  If you are doing an upgrade, it is probably not a good idea to do a
+    'make install', as this will overwrite all your configuration files.
+    Instead, just copy the binary to the same place as the old one, permitting
+    it suid or sgid the appropriate user or group.  You might also install
+    the manual page.
+
+     For an initial installation, run 'make install' as 'root' (or as
+     whatever user you are running suid as, if that user has write access to
+     all the relavant directories).
+
+    This will install the binary in <bindir> and set it suid or sgid, as
+    configured (changing the permission setup requires recompilation, or
+    log files will be created with inappropriate permissions).  A link
+    name 'pwho' is created.  This command will list the users currently
+    in party.  A log directory will be created and default configuration files
+    will be installed.
+
+4.  If you want to have multiple entries to party with different default
+    options, or starting in different channels, or in whole different
+    universes of channels, make a link to the party binary for each program
+    and add a line to the party tab starting with the link name and listing
+    all the options you like.  This file must be readable by party.
+
+5.  Edit the chantab file (whose path name is given by the "chantab" option
+    which may be either compiled in or set in the partytab file).  Each line
+    of the starts with the name of a channel, and is followed by a list
+    of options for that channel.  You don't need to specify any options,
+    but having different options in different channels is more fun.  You
+    can use wildcard characters (* and ? and [..]) in the channel names.
+    Users may use any channel whose name matches any pattern in the chantab.
+
+    Channels whose names don't have wildcards in them will be listed by
+    the ":list" command even if nobody is in them.  It is probably a good
+    idea to put the keeplog option only on these channels.  Normally the
+    last line of the chantab would just have the pattern "*", so that users
+    can use any channel name.  A sample chantab is included in the
+    distribution.
+
+6.  Put something in the crontab to restart each channel with the "keeplog"
+    option regularly.  This consists simply of removing the log files (or
+    mv'ing them to a backup place).  You don't need to create new files unless
+    you want them to have strange permissions.  Party will do that as needed.
+
+    Note that if you don't give any channels the "keeplog" option, the you
+    don't have to bother with this.
+
+    Log files for channels with "nokeeplog" set are supposed to be removed
+    when the last person leaves the channel.  This mechanism is not completely
+    reliable, mainly because people can "kill -9" their party processes,
+    which causes them to exit without giving party a chance to clean up after
+    them.  So you may find some "name.tmp" files in the log directory long
+    after everyone has left that channel.  Usually joining that channel and
+    leaving will cause it to be cleaned up.  But it would probably be a good
+    idea to include some command like 
+
+	    find <party-log-dir> -name \*.tmp -ctime +2 -exec rm -f {} \;
+
+    in the cron's daily script to eliminate "nokeeplog" log files more than
+    two days old.
