@@ -1,0 +1,86 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/party
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			p|P)
+		/usr/bin/clear
+		/usr/umb/koala
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			r1|R1)
+		echo " "
+		echo "Reading Party Channel #1 on: `date`  (Control-D = EXIT)"
+		echo " "
+		/usr/spool/mnet/public/kite/read1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			r2|R2)
+		echo " "
+		echo "Reading Party Channel #2 on: `date`  (Control-D = EXIT)"
+		echo " "
+		/usr/spool/mnet/public/kite/read2
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			r3|R3)
+		echo " "
+		echo "Reading Party Channel #3 on: `date`  (Control-D = EXIT)"
+		echo " "
+		/usr/spool/mnet/public/kite/read3
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			r4|R4)
+		echo " "
+		echo "Reading Party Channel #4 on: `date`  (Control-D = EXIT)"
+		echo " "
+		/usr/spool/mnet/public/kite/read4
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			w|W)
+		echo " "
+		/usr/spool/mnet/public/kite/wpar
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			q|Q)
+		echo " "
+		tail -13 /usr/bbs/party/log
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/party
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		exit;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

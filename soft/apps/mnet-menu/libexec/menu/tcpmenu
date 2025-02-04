@@ -1,0 +1,202 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << TCP
+
+
+                   *  I N T E R N E T   M E N U  *
+
+          T). Telnet around the world      W). Weather check
+	  F). FTP around the world         P). Ping a site
+          N). Network site listings        L). Lynx (run lynx)
+	  I). IRC around the world	   S). Status of TCP
+	  G). Gopher (M-Net's server)      E). Exit this Menu
+
+
+TCP
+echo -n "Command: "
+}
+
+expert () {
+echo -n "
+INTERNET MENU:
+
+T,F,N,I,G,W,P,L,S,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+
+t|T)
+echo " "
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo " "
+echo "Sorry you -MUST- be at least a patron to telnet off site."
+clear
+continue
+else
+echo -n "Telnet to what site? "
+read site
+telnet $site
+fi
+clear ;;
+
+f|F)
+echo " "
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo " "
+echo "Sorry you -MUST- be at least a patron to FTP off site."
+clear
+continue
+else
+echo -n "FTP to what site? "
+read site
+ftp $site
+fi
+clear ;;
+
+p|P)
+echo " "
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo " "
+echo "Sorry you -MUST- be at least a patron to ping a site."
+clear
+continue
+else
+echo -n "Ping what site? (name or IP address) "
+read site
+ping $site
+fi
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk
+clear;;
+
+
+g|G)
+echo " "
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo " "
+echo "Sorry you -MUST- be at least a patron to use the gopher."
+clear
+continue
+else
+gopher
+clear
+fi ;;
+
+
+
+i|I)
+echo " "
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo " "
+echo "Sorry you -MUST- be at least a patron to use the gopher."
+clear
+continue
+else
+echo
+irc
+clear
+fi ;;
+
+
+
+s|S)
+echo
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo
+echo "Sorry you -MUST- be at least a patron to use the gopher."
+clear
+continue
+else
+echo
+netstat
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk
+clear
+fi ;;
+
+
+
+				e|E)
+			clear
+			exit;;
+
+
+		!*)
+		prog=`echo $ans | sed 's/^!//'`
+		echo " "
+		eval $prog
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+
+		w|W)
+		clear
+		echo " "
+		echo "Searching for S.E. Michigan's weather...  Please wait."
+		echo " "
+		echo " "
+		weather
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+
+		l|L)
+		echo
+		lynx
+		clear ;;
+
+
+		n|N)
+		echo
+		/usr/local/lib/menus/netmenu
+		clear ;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

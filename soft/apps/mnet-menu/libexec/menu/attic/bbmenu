@@ -1,0 +1,94 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/bbs
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			f|F)
+		echo " "
+		echo "Unix: grep <string> <file>"
+		echo " "
+		echo -n "String in system name to look for? "
+		read look
+		echo " "
+		grep $look /usr/spool/sno/bbslist
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/bbs
+		echo -n "Command: "
+		read ans;;
+
+			h|H)
+		/usr/bin/clear
+		more /usr/spool/sno/bbslist
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/bbs
+		echo -n "Command: "
+		read ans;;
+
+			u|U)
+		/usr/bin/clear
+		more /usr/spool/sno/nixpub
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/bbs
+		echo -n "Command: "
+		read ans;;
+
+			y|Y)
+		/usr/bin/clear
+		echo " "
+		echo "These are the listed BBS's in Ypsilanti, Mich."
+		echo " "
+		grep Ypsi /usr/spool/sno/bbslist
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/bbs
+		echo -n "Command: "
+		read ans;;
+
+			a|A)
+		/usr/bin/clear
+		echo " "
+		echo "These are the listed BBS's in Ann Arbor, Mich."
+		echo " "
+		grep AnArb /usr/spool/sno/bbslist
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/bbs
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		/usr/bin/clear
+		exit;;
+
+			m|M)
+		/usr/bin/clear
+		more /usr/bbs/protos/merit
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkm
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/bbs
+		echo -n "Command: "
+		read ans;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

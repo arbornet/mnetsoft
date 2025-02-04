@@ -1,0 +1,50 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/system
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+
+			d|D)
+		/usr/bin/clear
+		/bin/cat /usr/bbs/protos/donations
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/system
+		echo -n "Command: "
+		read ans;;
+
+			h|H)
+		/usr/bin/clear
+		more /usr/bbs/protos/hints
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/system
+		echo -n "Command: "
+		read ans;;
+
+			s|S)
+		/usr/bin/clear
+		more /usr/bbs/protos/staff
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/system
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		/usr/bin/clear
+		exit;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

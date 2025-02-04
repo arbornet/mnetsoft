@@ -1,0 +1,81 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/id
+cat /usr/local/lib/menus/screens/games
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			p|P)
+		/usr/bin/clear
+		echo " "
+		cd /usr/games
+		ls -C
+		echo " "
+		echo -n "Type name of game you would like to play> "
+		read game
+		echo " "
+		$game
+		cd
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkp
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/games
+		echo -n "Command: "
+		read ans;;
+
+			t|T)
+		echo " "
+		echo "Your terminal type is: $TERM"
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/games
+		echo -n "Command: "
+		read ans;;
+
+			c|C)
+		echo " "
+		echo -n "What type terminal are you using? "
+		read TERM
+		export TERM
+		tset -Q
+		echo "Your new termcap is: $TERM"
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/games
+		echo -n "Command: "
+		read ans;;
+
+			u|U)
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk4
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/games
+		echo -n "Command: "
+		read ans;;
+
+			d|D)
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/games
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		/usr/bin/clear
+		exit;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

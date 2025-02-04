@@ -1,0 +1,103 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << MORE
+
+
+		        *  O T H E R   M E N U S   *
+
+	  B). BBS Information Menu	     M). M-Net Programs Menu
+	  S). System Information Menu	     I). Internet (world access)
+	  T). Transfer Protocols Menu	     E). Exit this Menu
+
+MORE
+echo -n "Command: "
+}
+
+
+expert () {
+echo -n "
+OTHER MENUS:
+
+B,S,T,M,I,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			b|B)
+		clear
+		/usr/local/lib/menus/bbmenu
+		clear;;
+
+	s|S)
+clear
+/usr/local/lib/menus/smenu
+clear;;
+
+				m|M)
+			clear
+			/usr/local/lib/menus/pmenu
+			clear;;
+
+					d|D)
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			f|F)
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk4
+		clear;;
+
+	t|T)
+/usr/local/lib/menus/momenu
+clear;;
+
+	i|I)
+/usr/local/lib/menus/tcpmenu
+clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+			e|E)
+		clear
+		exit;;
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

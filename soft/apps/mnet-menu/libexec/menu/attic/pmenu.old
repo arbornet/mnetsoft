@@ -1,0 +1,65 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/programs
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			v|V)
+		/usr/bin/clear
+		/usr/local/lib/vote/menu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/programs
+		echo -n "Command: "
+		read ans;;
+
+			p|P)
+		echo " "
+		/usr/umb/patron
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/programs
+		echo -n "Command: "
+		read ans;;
+
+			r|R)
+		/usr/bin/clear
+		/usr/umb/express
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/programs
+		echo -n "Command: "
+		read ans;;
+
+			b|B)
+		echo " "
+		/usr/umb/bank
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/programs
+		echo -n "Command: "
+		read ans;;
+
+			s|S)
+		/usr/umb/shadow
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/programs
+		echo -n "Command: "
+		read ans;;
+
+			g|G)
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		/usr/bin/clear
+		exit;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

@@ -1,0 +1,84 @@
+M-NET SUPPORT INFORMATION:
+=========================
+
+Access Levels:
+------ ------
+
+-  There are 3 basic types of user access:
+
+     Guest:   This is the status of a user when first calling in, and
+              access is free to the phone lines beginning at 313/996-4644,
+              plus 1 of the Merit ports (host: m-net), and can telnet to 
+              M-net.
+
+     Member:  This is a paying user who has access to the member phone
+              lines beginning at 313/994-5278, plus the guest phone lines,
+              all 3 Merit ports, and can telnet to M-net.
+
+     Patron:  This is a paying user who has access to the patron phone
+              lines beginning at 313/994-6352, plus all member and guest
+              phone lines, all 3 Merit ports, and can telnet to M-net.  
+              Patrons also have access to the Internet services such as
+              ftp, telnet, irc, news, etc., as well as M-net games.
+              Discounts are available for students (student patron) and
+              members of the same household as an existing patron (co-patron),
+              with the same access as a regular patron account.
+               
+     Note:    All user access levels are able to use the popular local 
+              conferencing system (bbs), multi-user chat (party), and
+              local & Internet e-mail.
+
+              All phone lines trunk-hunt, for example, if you dial into
+              the first patron line and all patron lines are busy, you
+              will be trunked down to the first open member or guest line.
+
+M-Net Payment Structure:
+----- ------- ---------
+
+                 Standard   Student   Co-Patron   Member     Guests
+                  Patron     Patron                
+                 --------   --------  ---------  ---------  --------      
+     Annual        $150       $100      $100        $60       Free
+     Quarterly      $42        $30       $30        $15        
+     Monthly        $15        $12       $12         $5        
+
+-  Payment can be mailed to:
+                              ARBORNET
+                              Accounting Department/Craig Plesco
+                              P.O. Box 806091
+                              St Clair Shores, MI  48080-9998
+
+     Checks and money orders should be made out to "Arbornet".
+     Please do not send cash in the mail.
+     Include the loginid of the account being processed.
+
+ Express Requests:
+ ------- --------
+
+ - This utility lets you avoid waiting for your payment to arrive via
+   the post office, by giving you some additional access upon promise
+   of payment.
+ 
+ - You may use the 'express' command to request member or patron access,
+   which will generally require up to 36 hours to process, but usually
+   is handled the same day.  Some delays may occur during holidays, etc.
+
+     Accounts upgraded to member status via 'express' will gain
+     access to all member phone lines upon processing and approval.
+
+     Accounts upgraded to patron status via 'express' will gain access 
+     to all patron phone lines upon processing and approval, and access
+     to full Internet functions upon receipt of payment.  These accounts
+     may start Internet access AND phone lines access upon receipt of 
+     payment if you desire (to lengthen Internet access term).
+
+
+More Information:
+---- -----------
+
+-  If you need further information or assistance, feel free to send E-mail
+   to the Treasurer (!mail treasure@m-net.arbornet.org) or ask an online 
+   helper (!chat help).
+
+Thank you!
+

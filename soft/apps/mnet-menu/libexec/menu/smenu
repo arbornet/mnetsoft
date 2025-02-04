@@ -1,0 +1,114 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << SYSTEM
+
+
+		       *  S Y S T E M   I N F O *
+
+	  D). Donations           	    S). Staff information
+          P). Phone lines available         B). Bylaws of Arbornet
+	  H). Hints on the system & Pico    E). Exit this Menu
+
+
+SYSTEM
+echo -n "Command: "
+}
+
+
+expert () {
+echo -n "
+SYSTEM INFO:
+
+D,P,H,S,B,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+
+			d|D)
+		clear
+		echo " "
+		more /usr/local/lib/menus/protos/support
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+	h|H)
+clear
+more /usr/bbs/protos/hints
+
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk5
+clear;;
+
+	p|P)
+	clear
+	echo " "
+	more /usr/bbs/protos/phones
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk5
+	clear;;
+
+b|B)
+clear
+echo " "
+more /usr/bbs/protos/bylaws
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk5
+clear;;
+
+			s|S)
+		clear
+		more /usr/bbs/protos/staff
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+				e|E)
+			clear
+			exit;;
+
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

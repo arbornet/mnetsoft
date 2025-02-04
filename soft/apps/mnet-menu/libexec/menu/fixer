@@ -1,0 +1,36 @@
+#!/usr/bin/perl -i
+# converts original Dave Parks menu shell into what can run on BSDI
+# invoke via: fixer *menu
+# changes files in place
+# don't think you can run it twice in a row
+# - uhclem 6/93
+while(<>)
+{
+$ix=index($_,"\\c");
+if($ix > 0)
+	{
+	s/\\c//;
+	s/echo/echo -n/;
+	};
+s/ps -fu /ps -au | grep ^/;
+s/ps -aef/ps -aux/;
+s/ps -af/ps -u/;
+s*^#sh*#!/bin/sh*;
+s#/usr/bin/ksh# bin/ksh#;
+s#/bin/du# /usr/bin/du#;
+s#/usr/umb/koala#/usr/local/bin/koala#;
+s#/usr/bbs/party/log#/usr/party/log/party.log#;
+s#/usr/spool/mnet/public/kite/wpar#/usr/local/bin/pwho#;
+s#/usr/local/vspell/vspell# /usr/bin/spell#;
+s#vspell#spell#;
+s#/usr/ucb/more# /usr/bin/more#;
+s#/usr/umb/bbs# /usr/local/bin/bbs#;
+s#/usr/umb/clear# /usr/bin/clear#;
+s#/usr/umb/chsh# /usr/bin/chpass -s #;
+s#/usr/umb/f# /usr/bin/finger#;
+s#/bin/Mail# /usr/bin/Mail#;
+s#/bin/write# mesg y;/usr/local/bin/write -c#;
+s#/usr/umb/talk# /usr/local/bin/write -c#;
+s#/bin/passwd#/usr/bin/passwd#;
+print;
+};

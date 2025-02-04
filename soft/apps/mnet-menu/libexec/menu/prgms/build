@@ -1,0 +1,23 @@
+#!/bin/sh
+echo " "
+echo "Building your Conference Directory..."
+echo " "
+cd
+   if [ -d = .cfdir ]
+   then
+   mkdir .cfdir
+   chmod 755 .cfdir
+   sync;sync
+   mv .*.cf .cfdir 2> /dev/null
+   mv .cfonce .cfdir 2> /dev/null
+   mv .cfrc .cfdir 2> /dev/null
+   mv .cflist .cfdir 2> /dev/null
+   sync;sync
+   echo " "
+   echo "Done..."
+   else
+   echo " "
+   echo "Looks like you already have a Conference Directory."
+   echo " "
+   echo "Done..."
+   fi

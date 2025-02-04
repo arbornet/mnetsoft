@@ -1,0 +1,8 @@
+#	Copyright information.
+
+trap '' 2
+clear
+echo "
+			       M-Net Menu 3.1
+			       Copyright 1994
+			  	 Dave Parks"

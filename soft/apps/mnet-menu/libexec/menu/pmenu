@@ -1,0 +1,153 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << PROGRAMS
+
+
+		    *  M - N E T    P R O G R A M S   *
+
+	  M). Message a logged in user    V). Voting Program
+          T). TRN Threaded read news      N). Network site listings
+	  P). Patron Check Program        B). Bank (Gribblies)
+          I). Internet (world access)     W). Weather check
+	  R). Run EXPRESS Patron Program  E). Exit this Menu
+
+
+PROGRAMS
+echo -n "Command: "
+}
+
+
+expert () {
+echo -n "
+M-NET PROGRAMS:
+
+M,T,P,I,R,V,N,B,W,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			v|V)
+		clear
+		vote
+		clear;;
+
+		p|P)
+	echo " "
+	patron
+	echo
+	echo -n "What option would you like? "
+	read ans
+	echo
+	patron $ans
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk5
+	clear;;
+
+					r|R)
+				clear
+				echo " "
+				express
+				clear;;
+
+			b|B)
+		echo " "
+		bank
+		clear;;
+
+
+
+		t|T)
+	echo
+	trn
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk5
+	clear;;
+
+
+		n|N)
+	echo
+	/usr/local/lib/menus/netmenu
+	clear;;
+
+
+				e|E)
+			clear
+			exit;;
+
+
+		!*)
+		prog=`echo $ans | sed 's/^!//'`
+		echo " "
+		eval $prog
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+i|I)
+echo " "
+GID=`grep ^$LOGNAME /etc/passwd | awk -F: '{print $4}'`
+if [ ! "$GID" -eq 25 -a ! "$GID" -gt 25 ]
+then
+echo " "
+echo -n "Sorry you -MUST- be a patron to access the internet menu(s) \c"
+sleep 2
+continue
+else
+/usr/local/lib/menus/tcpmenu
+fi ;;
+
+
+		w|W)
+		clear
+		echo " "
+		echo "Searching for S.E. Michigan's weather...  Please wait."
+		echo " "
+		echo " "
+		weather
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+
+				m|M)
+				echo " "
+				echo "Please keep text to 1 line."
+				echo " "
+				msg
+				sleep 1
+				clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

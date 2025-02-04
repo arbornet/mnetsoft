@@ -1,0 +1,283 @@
+#!/bin/sh
+#
+# Modification history
+#	980318	by Leeron Kopelman (lk)
+#		changed all 'echo " "' to 'echo'
+# 		verified proper shell selection prior to chsh
+
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << FILE
+
+		             **  FILE  UTILITIES  **
+
+	    E). Exit to Main Menu	      K). Kill a directory
+	    D). Directory change	      N). New directory (mkdir)
+	    S). Shell change		      P). Permission file change
+	    L). List Directory		      O). Owner file change
+	    V). View a file (cat)             G). Group file change
+	    R). Remove a file (rm filename)   F). File move (file1 file2)
+	    I). Invoke editor (pico,ed,vi)    C). Copy a file (file1 file2)
+	    M). Manuals for this system       B). Build Conference Directory
+
+FILE
+echo -n "Command: "
+}
+
+expert () {
+echo -n "
+FILE MENU:
+
+D,S,L,V,R,I,M,K,N,P,O,G,F,C,B,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			e|E)
+			   exit;;
+
+		d|D)
+	echo
+	echo "Unix: cd path"
+	echo
+	echo "Your current directory is: (`pwd`)"
+	echo
+	echo -n "What directory would you like? "
+	read dir1
+	cd $dir1
+	echo
+	echo "You are now in: (`pwd`)"
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk1
+	clear;;
+
+			s|S)
+		echo
+		echo "Unix: chsh shell"
+		echo
+		echo "Choices... bbs, menu, sh, ksh, csh, tcsh & bash"
+		echo
+		echo -n "Which shell? "
+		read shell
+		case "$shell" in
+			sh|ksh|csh|tcsh|bash)	chsh /bin/$shell
+				echo "Shell changed to $shell";;
+			bbs)	chsh /bin/b
+				echo "Shell changed to $shell";;
+			menu)	chsh /bin/msh
+				echo "Shell changed to $shell";;
+			*)	echo "Invalid Shell Selection";;
+		esac
+		echo
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+				l|L)
+			clear
+			echo "Unix: ls -al"
+			echo
+			echo "Listing Directory... `pwd`"
+			echo
+			/bin/ls -al | more
+			echo
+			echo -n "Please hit <RETURN> to continue "
+			read junk4
+			clear;;
+
+		v|V)
+	echo
+	echo -n "File to view? "
+	read view
+	echo
+	echo "Unix: more <$view>"
+	echo
+	echo "Viewing..."
+	echo
+	more $view
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk5
+	clear;;
+
+			r|R)
+		echo
+		echo -n "File name to remove? "
+		read file
+		echo
+		echo "Unix: rm <$file>"
+		echo
+		echo "Removing file...."
+		/bin/rm $file
+		echo "Done..."
+		clear;;
+
+		i|I)
+	echo
+	echo "Editors: (Pico) (ed) (vi) (emacs)"
+	echo
+	echo -n "Which editor? "
+	read editor
+	echo
+	echo -n "File name to be edited? "
+	read edit
+	echo
+	echo "Unix: <$editor> <$edit>"
+	sleep 1
+	echo
+	$editor $edit
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk7
+	clear;;
+
+				m|M)
+			echo
+			echo -n "Read manuals on what subject? "
+			read man
+			echo
+			echo "Unix: man <$man>"
+			echo
+			echo "Searching...."
+			man $man
+			echo
+			echo -n "Please hit <RETURN> to continue "
+			read junk8
+			clear;;
+
+	k|K)
+echo
+echo -n "Directory to remove? "
+read kill
+echo
+echo "Unix: rm -r <$kill>"
+echo
+rm -r $kill
+echo
+echo -n "Please hit <RETURN> to continue "
+read junk9
+clear;;
+
+			p|P)
+		echo
+		echo "Unix: chmod <permissions> <filename>"
+		echo
+		echo -n "File name to chmod? "
+		read file1
+		echo -n "New permissions? "
+		read file2
+		chmod $file2 $file1
+		echo
+		echo "Done..."
+		clear;;
+
+				o|O)
+			echo
+			echo "Unix: chown <userid> <filename>"
+			echo
+			echo -n "File to change? "
+			read file
+			echo -n "New owner? "
+			read owner
+			chown $owner $file
+			echo
+			echo "Done..."
+			clear;;
+
+		g|G)
+	echo
+	echo "Unix: chgrp <group> <filename>"
+	echo
+	echo -n "File name to change? "
+	read change1
+	echo -n "New group? "
+	read group
+	chgrp $group $change1
+	echo
+	echo "Done...."
+	clear;;
+
+				f|F)
+			echo
+			echo "Unix: mv <file1> <file2>"
+			echo
+			echo -n "File name to be moved? "
+			read moved
+			echo -n "New file name? "
+			read new
+			/bin/mv $moved $new
+			echo
+			echo "File was moved..."
+			clear;;
+
+					c|C)
+				echo
+				echo "Unix: cp <filename1> <filename2>"
+				echo
+				echo -n "File name to be copied? "
+				read named
+				echo -n "Copies name? "
+				read copy
+				/bin/cp $named $copy
+				echo
+				echo "File was copied..."
+				clear;;
+
+		n|N)
+	echo
+	echo "Unix: mkdir <directory name>"
+	echo
+	echo -n "Name for your new directory? "
+	read dir
+	mkdir $dir
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk22
+	clear;;
+
+			b|B)
+		clear
+		/usr/local/lib/menus/prgms/build
+		echo
+		echo -n "Please hit <RETURN> to continue "
+		read junk23
+		clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo
+				eval $prog
+				echo
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			*)
+		echo
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

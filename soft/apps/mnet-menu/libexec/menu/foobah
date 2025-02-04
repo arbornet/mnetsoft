@@ -1,0 +1,3 @@
+#!/usr/bin/perl -pi
+s#/usr/local/vspell/vspell#/usr/bin/spell#;
+s#vspell#spell#;

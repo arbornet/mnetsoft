@@ -1,0 +1,163 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/protocols
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			1)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to receive from Altos: "
+		read file1
+		sx -a $file1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			2)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to receive from Altos: "
+		read file2
+		sx -b $file2
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			3)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to send Altos: "
+		read file3
+		rx -a $file3
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			4)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to send Altos: "
+		read file4
+		rx -b $file4
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			5)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to receive from Altos: "
+		read file5
+		sb -a $file5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			6)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to receive from Altos: "
+		read file6
+		sb -b $file6
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			7)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to send Altos: "
+		read file7
+		rb -a $file7
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			8)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to send Altos: "
+		read file8
+		rb -b $file8
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			9)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to receive from Altos: "
+		read file9
+		sz -a $file9
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			10)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to receive from Altos: "
+		read file10
+		sz -b $file10
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			11)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to send Altos: "
+		read file11
+		rz -a $file11
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			12)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to send Altos: "
+		read file12
+		rz -b $file12
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			c|C)
+		echo " "
+		echo "Your currnetly in: `pwd`"
+		echo " "
+		echo -n "What directory would you like? "
+		read dir
+		cd $dir
+		echo " "
+		echo "Your now in: `pwd`"
+		sleep 1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/protocols
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		exit;;
+
+			*)
+		echo -n "Try 1-12 (C or E): "
+		read ans;;
+	esac
+done

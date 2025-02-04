@@ -1,0 +1,140 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+clear
+while true
+	do
+beginner () {
+cat << BBS
+
+
+			    *   B B S   M E N U  *
+
+	  F). Find other (313) BBS numbers        Y). Ypsilanti BBS's
+	  H). Horst Manns list         		  A). Ann Arbor BBS's
+	  U). Unix boards (nationwide)		  K). Key to BBS lists
+	  M). Merit numbers			  E). Exit this menu
+
+
+BBS
+echo -n "Command: "
+}
+
+expert () {
+echo -n "
+BBS MENU:
+
+F,H,U,M,Y,A,K,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			f|F)
+		echo " "
+		echo "Unix: grep <string> <file>"
+		echo " "
+		echo -n "String in system name to look for? "
+		read look
+		echo " "
+		cat /usr/local/lib/menus/protos/header
+		grep $look /usr/local/lib/menus/protos/bbslist | more
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		clear;;
+
+			h|H)
+		clear
+		more /usr/local/lib/menus/protos/bbslist
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+			u|U)
+		clear
+		more /usr/local/lib/menus/protos/nixpub
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		clear;;
+
+			y|Y)
+		clear
+		echo " "
+		echo "These are the listed BBS's in Ypsilanti, Mich."
+		echo " "
+		cat /usr/local/lib/menus/protos/header
+		grep Ypsi /usr/local/lib/menus/protos/bbslist | more
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		clear;;
+
+			a|A)
+		clear
+		echo " "
+		echo "These are the listed BBS's in Ann Arbor, Mich."
+		echo " "
+		cat /usr/local/lib/menus/protos/header
+		grep AnArb /usr/local/lib/menus/protos/bbslist | more
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		clear;;
+
+			e|E)
+		clear
+		exit;;
+
+			m|M)
+		clear
+		more /usr/local/lib/menus/protos/merit
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkm
+		clear;;
+
+			k|K)
+		echo " "
+		more /usr/local/lib/menus/protos/key
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkm
+		clear;;
+
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

@@ -1,0 +1,71 @@
+:
+#
+#
+# Syntax: internet [string] [-a {all} | -h {help}]
+#
+# Shell script to grep out interesting internet addresses from a
+# given file. This file should be kept in /usr/bbs/protos and called
+# addresses.
+#
+# Last modified: 03/11/94   By: Dave Parks
+#
+if [ "$1" = -a ]
+then
+echo
+more /usr/local/lib/menus/protos/netlist
+echo
+exit 0
+elif [ "$1" = -h ]
+then
+echo
+echo "Useage: `basename $0` [string] [-a {all} | -h {help}]"
+echo
+exit 0
+elif [ "$#" = 1 ]
+then
+echo
+grep $1 /usr/local/lib/menus/protos/netlist
+echo
+exit 0
+fi
+echo " "
+echo "      **** Search for interesting internet sites/addresses. ****"
+while true
+	do
+	echo " "
+	echo -n "Enter string to search for: [all] "
+	read string junk
+		if [ "$string" = quit -o "$string" = q ]
+		then
+		echo
+		exit 0
+		elif [ "$string" = exit -o "$string" = e ]
+		then
+		echo
+		exit 0
+		elif [ "$string" = stop -o "$string" = s ]
+		then
+		echo
+		exit 0
+		elif [ "$string" = "" ]
+		then
+		echo
+		more /usr/local/lib/menus/protos/netlist
+		elif [ "$string" = "all" ]
+		then
+		echo
+		more /usr/local/lib/menus/protos/netlist
+		else
+		echo " "
+		grep $string /usr/local/lib/menus/protos/netlist | more
+		fi
+		echo " "
+		echo -n "Would you like to search again? (y/n) [y] "
+		read ans junk
+			if [ "$ans" = n -o "$ans" = no ]
+			then
+			echo
+			exit 0
+			else
+			fi
+	done

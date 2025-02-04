@@ -1,0 +1,179 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+clear
+while true
+	do
+beginner () {
+cat << PROTOCOLS
+
+
+		   **  T R A N S F E R    P R O T O C O L S  **
+
+	  C). Change Current Directory		 E). Exit Transfer Menu
+	  1). XMODEM text (send)		 2). XMODEM binary (send)
+	  3). XMODEM text (receive)		 4). XMODEM binary (receive)
+	  5). YMODEM text (send)		 6). YMODEM binary (send)
+	  7). YMODEM text (receive)		 8). YMODEM binary (receive)
+	  9). ZMODEM text (send)		10). ZMODEM binary (send)
+	 11). ZMODEM text (receive)		12). ZMODEM binary (receive)
+
+		       Send = From M-Net / Receive = To M-Net
+				Control-X to Abort
+PROTOCOLS
+echo -n "Command: "
+}
+
+
+expert () {
+echo -n "
+TRANSFER PROTOCOLS:
+
+C,1,2,3,4,5,6,7,8,9,10,11,12,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			1)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to receive from M-Net: "
+		read file1
+		sx -a $file1
+		clear;;
+
+			2)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to receive from M-Net: "
+		read file2
+		sx -b $file2
+		clear;;
+
+			3)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to send M-Net: "
+		read file3
+		rx -a $file3
+		clear;;
+
+			4)
+		echo " "
+		echo "XMODEM"
+		echo -n "File to send M-Net: "
+		read file4
+		rx -b $file4
+		clear;;
+
+			5)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to receive from M-Net: "
+		read file5
+		sb -a $file5
+		clear;;
+
+			6)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to receive from M-Net: "
+		read file6
+		sb -b $file6
+		clear;;
+
+			7)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to send dM-Net: "
+		read file7
+		rb -a $file7
+		clear;;
+
+			8)
+		echo " "
+		echo "YMODEM"
+		echo -n "File to send M-Net: "
+		read file8
+		rb -b $file8
+		clear;;
+
+			9)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to receive from M-Net: "
+		read file9
+		sz -a $file9
+		clear;;
+
+			10)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to receive from M-Net: "
+		read file10
+		sz -b $file10
+		clear;;
+
+			11)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to send M-Net: "
+		read file11
+		rz -a $file11
+		clear;;
+
+			12)
+		echo " "
+		echo "ZMODEM"
+		echo -n "File to send M-Net: "
+		read file12
+		rz -b $file12
+		clear;;
+
+			c|C)
+		echo " "
+		echo "Your currnetly in: `pwd`"
+		echo " "
+		echo -n "What directory would you like? "
+		read dir
+		cd $dir
+		echo " "
+		echo "Your now in: `pwd`"
+		sleep 1
+		clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+			e|E)
+		exit;;
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

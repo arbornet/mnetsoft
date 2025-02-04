@@ -1,0 +1,260 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/file
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			e|E)
+			   exit;;
+
+			d|D)
+		echo " "
+		echo "Unix: cd path"
+		echo " "
+		echo "Your current directory is: (`pwd`)"
+		echo " "
+		echo -n "What directory would you like? "
+		read dir1
+		cd $dir1
+		echo "Your're  now in: (`pwd`)"
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			s|S)
+		echo " "
+		echo "Unix: chsh shell"
+		echo " "
+		echo "Choices... /bin/sh, /usr/bin/ksh, /bin/csh"
+		echo " "
+		echo -n "Which shell? "
+		read shell
+		/usr/umb/chsh $shell
+		echo " "
+		echo "Completed..."
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			l|L)
+		/usr/bin/clear
+		echo "Unix: ls -al"
+		echo " "
+		echo "Listing Directory... `pwd`"
+		echo " "
+		/bin/ls -al
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk4
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			v|V)
+		echo " "
+		echo "Unix: /usr/umb/more <filename>"
+		echo " "
+		echo -n "File to view? "
+		read view
+		echo " "
+		echo "Viewing..."
+		echo " "
+		more $view
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk5
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			r|R)
+		echo " "
+		echo "Unix: rm <filename>"
+		echo " "
+		echo -n "File name to remove? "
+		read file
+		echo " "
+		echo "Removing file...."
+		/bin/rm $file
+		echo "Done..."
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			i|I)
+		echo " "
+		echo "Unix: editor type <filename>"
+		echo " "
+		echo "Editors: (bbsed) (ed) (vi)"
+		echo " "
+		echo -n "Which editor? "
+		read editor
+		echo " "
+		echo -n "File name to be edited? "
+		read edit
+		$editor $edit
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk7
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			m|M)
+		echo " "
+		echo "Unix: man <topic>"
+		echo " "
+		echo -n "Read manuals on what subject? "
+		read man
+		echo " "
+		echo "Searching...."
+		/usr/bin/man $man
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk8
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			k|K)
+		echo " "
+		echo "Unix: rm -r <directory>"
+		echo " "
+		echo -n "Directory to remove? "
+		read kill
+		rm -r $kill
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk9
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+
+			p|P)
+		echo " "
+		echo "Unix: chmod <permissions> <filename>"
+		echo " "
+		echo -n "File name to chmod? "
+		read file1
+		echo -n "New permissions? "
+		read file2
+		chmod $file2 $file1
+		echo " "
+		echo "Done..."
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			o|O)
+		echo " "
+		echo "Unix: chown <userid> <filename>"
+		echo " "
+		echo -n "File to change? "
+		read file
+		echo -n "New owner? "
+		read owner
+		chown $owner $file
+		echo " "
+		echo "Done..."
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			g|G)
+		echo " "
+		echo "Unix: chgrp <group> <filename>"
+		echo " "
+		echo -n "File name to change? "
+		read change1
+		echo -n "New group? "
+		read group
+		chgrp $group $change1
+		echo " "
+		echo "Done...."
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			f|F)
+		echo " "
+		echo "Unix: mv <file1> <file2>"
+		echo " "
+		echo -n "File name to be moved? "
+		read moved
+		echo -n "New file name? "
+		read new
+		/bin/mv $moved $new
+		echo " "
+		echo "File was moved..."
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			c|C)
+		echo " "
+		echo "Unix: cp <filename1> <filename2>"
+		echo " "
+		echo -n "File name to be copied? "
+		read named
+		echo -n "Copies name? "
+		read copy
+		/bin/cp $named $copy
+		echo " "
+		echo "File was copied..."
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			n|N)
+		echo " "
+		echo "Unix: mkdir <directory name>"
+		echo " "
+		echo -n "Name for your new directory? "
+		read dir
+		mkdir $dir
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk22
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+
+			b|B)
+		/usr/bin/clear
+		/usr/local/lib/menus/prgms/build
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk23
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/file
+		echo -n "Command: "
+		read ans;;
+		
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

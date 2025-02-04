@@ -1,0 +1,139 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+
+
+#	Copyright information.
+
+trap '' 2
+clear
+echo "
+			        M-Net Menu 3.1
+			        Copyright 1994
+			   	  Dave Parks"
+
+while true
+	do
+beginner () {
+#!/bin/sh
+cat << GAMES
+
+			  *   G A M E   M E N U  *
+
+	         P). Play a Game	   U). Upload Game
+	         T). Test your TERMCAP	   D). Download Game
+	         C). Change your TERMCAP   E). Exit Game Menu
+
+GAMES
+echo -n "Command: "
+}
+
+expert () {
+echo -n "
+GAME MENU:
+
+P,T,C,U,D,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+	p|P)
+trap 2
+clear
+echo " "
+cd /arbornet/libexec/menu/games
+echo "These games are available on M-Net:  (Some are available to patrons ONLY)"
+echo " "
+ls -C
+echo " "
+echo -n "Game to play? "
+read game
+if [ -f "$game" -a -x "$game" ]
+then
+echo " "
+$game
+cd
+else
+echo
+echo -n "`basename $0`: $game is not executable. "
+sleep 1
+trap '' 2
+clear
+continue
+fi
+trap '' 2
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junkp
+clear;;
+
+		t|T)
+	echo " "
+	echo "Your terminal type is: $TERM"
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk1
+	clear;;
+
+				c|C)
+			echo " "
+			echo -n "What type terminal are you using? "
+			read TERM
+			export TERM
+			tset -Q
+			echo "Your new termcap is: $TERM"
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junk
+			clear;;
+
+	u|U)
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk4
+clear;;
+
+		d|D)
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk5
+	clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+			e|E)
+		clear
+		exit;;
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

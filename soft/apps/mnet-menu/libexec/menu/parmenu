@@ -1,0 +1,217 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << PARTY
+
+
+			    ** M-Net  PARTY MENU **
+
+		W) Who's in party	R) Read a party channel
+		S) Search for a string	T) Tail a party channel
+		L) List party logs	H) Help screen
+		P) Party (Join)		E) Exit program
+
+PARTY
+echo -n "Command: "
+}
+
+
+expert () {
+echo -n "
+PARTY MENU:
+
+W,S,L,P,R,T,H,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			p|P)
+		echo " "
+		echo -n "Join what party channel? [party] "
+		read channel
+		if [ -f $HOME/.partyopts ];
+		then
+			PARTYOPTS=`cat $HOME/.partyopts`
+		fi
+		if [ "$channel" = "" ]
+		then
+		echo " "
+		echo "Starting party for: ($LOGNAME), on channel: (party)."
+		echo " "
+		koala start=party $PARTYOPTS
+		echo " "
+		else
+		echo " "
+		echo "Starting party for: ($LOGNAME), on channel: ($channel)."
+		echo " "
+		koala start=$channel $PARTYOPTS
+		echo " "
+		fi
+		sleep 1
+		clear;;
+
+s|S)
+echo " "
+echo -n "What string (login, name etc...) would you like to look for? "
+read string
+echo " "
+echo -n "What party channel would you like to look for this string in? "
+read string2
+echo " "
+echo "*** looking for string: ($string) in channel: ($string2) for: $LOGNAME"
+echo " "
+echo " "
+if [ -f /usr/party/log/$string2.log ]
+then
+grep $string /usr/party/log/$string2.log | more
+else
+grep $string /usr/party/log/$string2.tmp | more
+fi
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk
+clear;;
+
+	l|L)
+	echo " "
+	echo "Here are the (*.log, *.tmp, *.bak) files in party ..."
+	echo " "
+	cd /usr/party/log
+	ls -C
+	cd
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk
+	clear;;
+			w|W)
+			echo " "
+			pwho
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junk
+			clear;;
+
+r|R)
+trap 2
+trap 'clear ; continue' 2
+echo " "
+echo -n "What party channel would you like to read? "
+read channel
+echo " "
+	if [ -f /usr/party/log/$channel.log ]
+	then
+echo " "
+echo " "
+echo "Reading channel: ($channel) for ($LOGNAME)     [NOTE]: INTERRUPT to quit."
+echo " "
+tail -f /usr/party/log/$channel.log
+	elif [ -f /usr/party/log/$channel.tmp ]
+	then
+echo " "
+echo " "
+echo "Reading channel: ($channel) for ($LOGNAME)     [NOTE]: INTERUPT to quit."
+echo " "
+tail -f /usr/party/log/$channel.tmp
+	else
+echo " "
+echo -n "$channel: is not a valid party channel."
+echo " "
+sleep 2
+	fi
+clear;;
+
+	t|T)
+	echo " "
+	echo -n "What party channel would you like to tail? "
+	read channel
+	echo " "
+if [ -f /usr/party/log/$channel.log ]
+then
+	tail /usr/party/log/$channel.log
+elif [ -f /usr/party/log/$channel.tmp ]
+then
+	tail /usr/party/log/$channel.tmp
+else
+	echo -n "$channel: is not a valid party channel."
+	sleep 2
+	echo " "
+fi
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk
+	clear;;
+
+h|H)
+echo " "
+cat << HELP
+
+Party HELP screen.                                  Copyright: Dave Parks 1994
+      ----
+W)ho		* This will tell a user WHO is currently in the party program.
+S)earch		* Search any party log for a string you'd like to read about.
+L)ist		* A list of all *.log, *.tmp & *.bak files in the party dir.
+		  This will show you what files you can read/tail/search/join.
+P)arty		* Type in any party channel you'd like to join (the "L" command
+		  will list those parties in progress). You can also join any
+		  NEW channel by typing a party name you thought up. By using a
+		  capital letter as the first letter of your new party channel,
+		  the *.tmp file will NOT be deleted as the last person leaves
+		  that channel (all other channels will go away as the last
+		  person leaves). For more information, type: !man party.
+R)ead		* This command will allow you to READ any party channel without
+		  really joining that channel. NOTE: anyone using the "ps -aux"
+		  command can see you reading that channel (it's not really a
+		  great way to SPY on people. NOTE: Interupt will exit you.
+T)ail		* Tail will give you the last 10 lines of any channel you ask
+		  for. This can be a channel currently in use or a channel that
+		  has a *.tmp file remaining in the /usr/party/log directory.
+H)elp		* Print this file.
+E)xit		* EXIT this program.
+HELP
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk
+clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+		e|E)
+	exit;;
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done

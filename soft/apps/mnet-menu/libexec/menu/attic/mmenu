@@ -1,0 +1,66 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/more
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			b|B)
+		/usr/bin/clear
+		/usr/local/lib/menus/bbmenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			s|S)
+		/usr/bin/clear
+		/usr/local/lib/menus/smenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			m|M)
+		/usr/bin/clear
+		/usr/local/lib/menus/pmenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			d|D)
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			f|F)
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk4
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			t|T)
+		/usr/local/lib/menus/momenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/more
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		/usr/bin/clear
+		exit;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

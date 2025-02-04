@@ -1,0 +1,66 @@
+
+----------------------------------------------------------------------------
+HERE'S A KEY TO THE CODES USED IN HORST MANN'S LIST'S:
+----------------------------------------------------------------------------
+AL=AmigaLine   FV=FutureVision MT=MichTron    PT=ProTree       ST=Stark
+AM=AMIS        GA=GAP          MX=Maximus     PU=Plexus        SV=System V
+AN=AppleNet    GB=GBBS         NL=NovaLink    PX=Phoenix       SW=ShockWave
+AP=Apocolis    GS=GABBS        OA=Oasis       QB=QBBS          TA=T.A.G.
+BE=BBS Express GT=GT Power     OM=Omega BBS   RA=Remote Access TB=TBBS
+BP=BBS-PC      HB=HyperBBS     OP=Opus        RB=RBBS          TG=Telegard
+BS=BBS-ST      HE=Hermes       OR=OracomPlus  RC=RCP/M         TF=TeleFind
+CE=Celebrity   IM=Image        PA=Paragon     RI=RiBBS         TL=TripLink
+CN=C-Net       IV=Ivory        PB=PBBS        RG=Renegade      TN=T-Net
+CS=Color 64    JR=JR-BBS       PC=PCBoard     SB=Super BBS     TR=TriBBS
+DL=DLX BBS     LA=LA-BBS       PD=ProBoard    SH=Stealth       TU=TuBBS
+DP=DLG Pro     MA=Major        PH=ProcomHost  SI=Silicosis     UC=UltraCom
+ES=Elliot Sys. MC=MCBoard      PI=Plazma Ice  SK=Skyline       UL=Ultimate
+EX=Excelsior   ME=Metro        PL=ProLine     SH=Searchlight   VI=Vision
+FA=Falcon      MG=Magnum       PM=Prime       SN=StarNet       VR=Virtual
+FC=FirstClass  MH=MegaHost     PO=POPS BBS    SP=Spritfire     WI=Wildcat
+FI=Fido        ML=MicroLink    PR=PowerBBS    SR=StarLink      WW=WWIV
+FO=FoRem       MN=Multi-Net    PS=PicoSpan    SS=SecondSight   UN=Unknown
+---------------------------------------------------------------------------
+FEATURES: Types of computers supported in MESSAGE and/or FILE sections:
+
+Ad=Adam        Cp=CP/M OS      Jr=IBM Junior    Sa=Sanyo        Ux=Unix
+Am=Amiga       De=DEC          Ky=Kaypro        St=Atari ST     Vx=VAX
+Ap=Apple       Ep=Epson        Mc=Macintosh     Ti=Texas Inst.  Ze=Zenith
+At=Atari       He=Heath        Nx=NeXt          Tr=TRS-80       > =many
+Cc=ColorComp.  Hp=Hewlett Pkd. Os=Osborne       Tx=Timex           other
+Cm=Commodore   Ib=IBM/MS-DOS   Ps=IBM OS/2      Ty=Tandy           brands
+---------------------------------------------------------------------------
+In addition to  GENERAL  and  COMPUTER discussion areas, most BBS also have
+areas devoted to special interests, including:
+
+AD=Advertising     DO=Dogs            LE=Legal Topics    RE=Real Estate
+AN=Aviation        DP=Desktop Pub.    MA=Martial Arts    RP=Role Play Games
+AS=Astronomy       DT=Dating          MD=Media           RR=Railroads
+AT=Adult topics    DW=Dr. Who         ME=Medical         SA=For Sale/Trade
+AU=Automotive      ED=Education       MF=Manufacturing   SB=Story Board
+AV=Audio/Video     EL=Electronics     MI=MIDI Interface  SC=Scuba diving
+BB=Body building   EM=Employment      MO=Motorcycles     SF=Science Fiction
+BC=Baseball Cards  EN=Entertainment   MU=Music/Sound     SI=Science/space
+BI=Birds           EV=Environment     MV=Movies/TV       SK=Skiing
+BK=Books           FA=Firearms        MY=Military        SP=Sports
+BT=Boating         FI=Finance/Bus.    NI=Nintendo, etc.  ST=Star Trek
+BU=Building        FS=Fish/aquariums  NT=Networks, LANs  SW=Short Wave
+BZ=Business        FY=Fantasy         OC=Occult topics   TA=Trivia
+CA=Cats            GE=Genealogy       OD=Outdoors        TE=Technical
+CD=CAD/CAM         GY=Gay interests   OG=Online Games    TR=Travel
+CF=Conferencing    HB=Home Business   PH=Photography     UF=UFO's
+CH=Christian       HG=Home & Garden   PN=Paranormal      US=Usenet
+CK=Cooking/Recipes HO=Hobbies         PO=Politics, etc.  VE=Veterans
+CM=Comics          HR=Ham Radio       PR=Programming     WE=Welding
+CR=CD-ROM          HU=Humor           PS=Psychology      WI=Windows
+CY=Cycling         IN=International   RA=Radio           WR=Writing
+DE=HW/SW Dealer    IV=Inventors       RC=Radio Control    +=Others
+----------------------------------------------------------------------------
+Hours (H):  *=24 hour operation   L=Limited, usually only nights & weekends
+              (wherever possible, specific hours of operation are listed)
+Baud(B) rates: 3=300 baud only  /=No 300   1=up to 1200 baud   2=up to 2400
+            9=9600 baud (and higher) -- Wherever possible there is a prefix
+              to indicate the kind of high speed modem being used:
+              h=Hayes  u=USR HST v.42  v=V.32  d=Dual v.42,v.32  c=CompuCom
+F=Free access is limited    $=Fee charged for higher access    R=Restricted
+---------------------------------------------------------------------------

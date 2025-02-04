@@ -1,0 +1,322 @@
+#!/bin/sh
+
+# Modification History
+# 971009	by Leeron Kopelman
+#		Modified change cflist for Yapp3.1
+
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+EDITOR=$EDITOR
+if [ "$EDITOR" = "" ]
+then
+EDITOR=pico
+fi
+clear
+while true
+	do
+beginner () {
+echo -n "
+
+			 *  Conferencing  MENU  *
+
+        Y). YAPP (Join the conferences)        L). List Conferences
+	H). Help files for using YAPP          V). View .cfonce/.cflist
+	B). Build a conference directory       W). Work on .cfonce/.cflist
+	C). Community Calendar (join)          E). Exit this menu
+
+
+Command: "
+}
+
+
+expert () {
+echo -n "
+CONFERENCING MENU:
+
+Y,H,B,C,L,V,W,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+
+""|y|Y)		# Figure out what conference to join then join it.
+
+	echo
+	echo -n "Conference to join? [general] "
+	read conf
+	  if [ "$conf" = "" ]
+	  then
+	  bbs general
+	  else
+	  bbs $conf
+	  fi
+	sleep 1
+	clear;;
+
+
+
+h|H)	# Help files for YAPP/PicoSpan
+
+	while true
+	do
+	  echo
+	  echo
+	  echo "*** List of available help directories ..."
+	  echo
+ 	  ls -f /usr/bbs/help
+	  echo
+	  echo -n "Directory to view? "
+	  read subject
+	      if [ "$subject" = "" ]
+	      then
+	      echo
+	      echo -n "`basename $0`: $subject not found."
+	      sleep 1
+	      clear
+	      continue
+	      elif [ "$subject" = e -o "$subject" = q -o "subject" = exit ]
+	      then
+	      break
+	      fi
+	    if [ -d /usr/bbs/help/"$subject" ]
+	    then
+	    echo
+	    echo
+	    echo
+	    echo "*** List of available help in the ($subject) directory ..."
+ 	    echo
+	    ls -f /usr/bbs/help/$subject
+	    else
+	    echo
+	    echo -n "$subject: is not a directory."
+	    sleep 1
+	    clear
+	    continue
+	    fi
+	  echo
+	  echo -n "Help file to read? "
+	  read help
+	    if [ -f /usr/bbs/help/$subject/$help ]
+	    then
+	    clear
+ 	    echo
+	    more /usr/bbs/help/$subject/$help
+	    elif [ "$help" = e -o "$help" = q -o "$help" = exit ]
+	    then
+	    break
+	    else
+	    echo
+	    echo -n "`basename $0`: $help: not found."
+	    sleep 1
+	    fi
+	  echo
+	  echo
+	  echo
+	  echo
+	  echo
+	  echo
+	  echo -n "Would you like more help? (y/n) [y] "
+	  read yn
+	    if [ "$yn" = n -o "$yn" = no ]
+	    then
+	    break
+	    else
+	    clear
+	    continue
+	    fi
+	done
+	clear;;
+
+
+
+v|V)	# View both the .cfonce & .cflist (or either one)
+
+	echo
+	echo -n "View .cfonce? (y/n) [n] "
+	read yn
+	  if [ "$yn" = y ]
+	  then
+	    if [ -f $HOME/.cfonce ]
+	    then
+	    clear
+	    echo
+	    echo
+	    echo "Viewing $HOME/.cfonce ..."
+	    echo
+	    echo
+	    more $HOME/.cfonce
+	    else
+	    clear
+	    echo
+	    echo
+	    echo "Viewing $HOME/.cfdir/.cfonce ..."
+	    echo
+	    echo
+	    more $HOME/.cfdir/.cfonce
+	    fi
+	  fi
+	echo
+	echo
+	echo -n "View .cflist? (y/n) [n] "
+	read yn
+	  if [ "$yn" = y ]
+	  then
+	    if [ -f $HOME/.cflist ]
+	    then
+	    echo
+	    echo
+	    echo "Viewing $HOME/.cflist ..."
+	    echo
+	    echo
+	    more $HOME/.cflist
+	    else
+	    echo
+	    echo
+	    echo "Viewing $HOME/.cfdir/.cflist ..."
+	    echo
+	    echo
+	    more $HOME/.cfdir/.cflist
+	    fi
+	  fi
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk
+	clear;;
+
+
+
+l|L)	# List all the conferences (/usr/bbs/public.txt)
+
+	echo
+	echo -n "Long or Short listing? (l/s) [l] "
+	read listing
+	  if [ "$listing" = s ]
+	  then
+	echo
+	cat /usr/bbs/public.txt | tr "." "%" | sed -n 's/%.*//p' | sort | more
+	echo
+	else
+	echo
+	more /usr/bbs/public.txt
+	echo
+	fi
+	echo -n "Please hit <RETURN> to continue "
+	read junk
+	clear;;
+
+
+
+b|B)	# Make a .cfdir for conferencing files (mkdir)
+
+	echo
+	echo "Building you a Conference Directory ..."
+	cd
+	  if [ -d = .cfdir ]
+	  then
+	  mkdir .cfdir
+	  chmod 755 .cfdir
+	  sync;sync
+	  mv .*.cf .cfdir 2> /dev/null
+	  mv .cfonce .cfdir 2> /dev/null
+	  mv .cfrc .cfdir 2> /dev/null
+	  mv .cflist .cfdir 2> /dev/null
+	  sync;sync
+	  echo
+	  echo "Done ..."
+	  else
+	  echo
+	  echo "You already have a Conference Directory."
+	  echo
+	  echo "Aborting ..."
+	  fi
+	echo
+	echo -n "Please hit <RETURN> to continue "
+	read junk5
+	clear;;
+
+
+
+w|W)	# Edit both the .cfonce & .cflist (or either one)
+
+	echo
+	echo -n "Edit .cfonce? (y/n) [n] "
+	read yn
+	  if [ "$yn" = y ]
+	  then
+	    if [ -f $HOME/.cfdir/.cfonce ]
+	    then
+	    $EDITOR $HOME/.cfdir/.cfonce
+	    else
+	    $EDITOR $HOME/.cfonce
+	    fi
+	  fi
+	echo 
+	echo 
+	echo -n "Edit .cflist? (y/n) [n] "
+	read yn
+	  if [ "$yn" = y ]
+	  then
+	  /usr/local/lib/menus/chglist
+	  # if [ -f $HOME/.cfdir/.cflist ]
+	  # then
+	  # $EDITOR $HOME/.cfdir/.cflist
+	  # else
+	  # $EDITOR $HOME/.cflist
+	  # fi
+	  fi
+	clear;;
+
+
+
+c|C)	# Join Community Calendar
+
+	echo
+	bbs cal
+	sleep 1
+	clear;;
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+
+e|E)	# Exit this menu
+
+	clear
+	exit;;
+
+
+!*)	# Special BANG shell escape.
+
+	prog=`echo $ans | sed 's/^!//'`
+	echo " "
+	eval $prog
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk
+	clear;;
+
+
+*)	# Catch all.
+
+	echo " "
+	echo -n "$ans: Is not supported in this version of the menu ..."
+	sleep 1
+	clear;;
+
+	esac
+done

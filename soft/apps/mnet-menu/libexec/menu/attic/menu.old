@@ -1,0 +1,219 @@
+#sh
+UNIX_MENU_PRESENT="TRUE" ; export UNIX_MENU_PRESENT
+/usr/bin/clear
+#cat /etc/motd
+cat /usr/local/lib/menus/screens/id
+cat /usr/local/lib/menus/screens/main
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			 w|W)
+		/usr/bin/clear
+		echo "Unix: who or finger"
+		echo " "
+		echo "These are M-Net's current users..."
+		echo "------------------------------------------------"
+		echo " "
+		/usr/bin/finger
+		echo "------------------------------------------------"
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk0
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			b|B)
+		/usr/bin/clear
+		/usr/umb/bbs
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			m|M)
+		echo " "
+		echo "Checking your /usr/mail..."
+		echo " "
+		/usr/usr/bin/Mail
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			s|S)
+		echo " "
+		echo "Unix: mail <userid>"
+		echo " "
+		echo -n "Send mail to who? "
+		read who
+		echo " "
+		echo "Terminate your entry with a ctrl-D"
+		echo "or a \".\" on a separate line."
+		echo " "
+		/usr/usr/bin/Mail $who
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			p|P)
+		/usr/bin/clear
+		/usr/local/lib/menus/parmenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			g|G)
+		/usr/bin/clear
+		/usr/local/lib/menus/gmenu
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			a|A)
+		echo " "
+		echo "Answering Call..."
+		/usr/bin/talk
+		echo " "
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			t|T)
+		echo " "
+		echo "Unix: write -c <userid>"
+		echo " "
+		echo "Login      Line-(tty)    Date  Time"
+		echo "------------------------------------"
+		who
+		echo "------------------------------------"
+		echo " "
+		echo -n "Who would you like to talk to? "
+		read junk6
+		echo " "
+		echo "Please wait for answer...     (ctrl-D to exit)"
+		echo " "
+		/bin/write $junk6
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+
+			n|N)
+		echo " "
+		echo -n "Newsreader (trn, rn): "
+		read news
+		if [ "$news" = trn ]
+		then
+		echo " "
+		echo "******** Setting up USENET News World wide:"
+		echo " "
+		echo "Unix: trn  (Threaded read news)"
+		echo " "
+		/usr/bin/trn
+		else
+		if [ "$news" = rn ]
+		then
+		echo " "
+		echo "******** Setting up USENET News World wide:"
+		echo " "
+		echo "Unix: rn  (read news)"
+		echo " "
+		/usr/bin/rn
+		else
+		echo " "
+		echo "No choice made, loading default reader."
+		echo " "
+		echo "******** Setting up USENET News World wide:"
+		echo " "
+		echo "Unix: trn  (Threaded read news)"
+		echo " "
+		/usr/bin/trn
+		echo " "
+		fi
+		fi
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk9
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			c|C)
+		echo " "
+		echo "This program will allow you to change passwords."
+		/bin/passwd
+		echo "Your password has been changed..."
+		echo -n "Please hit <RETURN> to continue "
+		read pass
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			r|R)
+		echo " "
+		echo -n "What Unix program would you like to run? "
+		read program
+		$program
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkr
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			u|U)
+		/usr/bin/clear
+		/usr/local/lib/menus/bmenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			 o|O)
+		/usr/bin/clear
+		/usr/local/lib/menus/mmenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			f|F)
+		/usr/local/lib/menus/fmenu
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/main
+		echo -n "Command: "
+		read ans;;
+
+			e|E)
+		echo " "
+		echo "Leaving M-Net's menu system..."
+		echo "Type: \"menu\" (to go back to it)"
+		echo " "
+		exit;;
+
+			l|L)
+		echo " "
+		kill -9 0;;
+
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

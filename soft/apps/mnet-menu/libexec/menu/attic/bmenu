@@ -1,0 +1,238 @@
+#sh
+/usr/bin/clear
+cat /usr/local/lib/menus/screens/basic
+echo -n "Command: "
+read ans
+while true
+	do
+	case $ans in
+			e|E)
+			   exit;;
+
+			k|K)
+		/usr/bin/clear
+		/usr/ucb/more /usr/bbs/protos/support
+		echo -n "Please hit <RETURN> to continue "
+		read junk1
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			q|Q)
+		/usr/bin/clear
+		/usr/ucb/more /usr/bbs/protos/staff
+		echo -n "Please hit <RETURN> to continue "
+		read junkh
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			i|I)
+		echo " "
+		echo "Unix: finger -m <userid>"
+		echo " "
+		echo -n "Find information on who? "
+		read who
+		echo " "
+		f -m $who
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk4
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			m|M)
+		echo " "
+		echo "Unix: mail -f"
+		echo " "
+		echo "Checking your mailbox...."
+		echo " "
+		mail -f
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk8
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			c|C)
+		echo " "
+		echo "Unix: setenv TERMCAP <term type>"
+		echo " "
+		echo -n "What type terminal are you using? "
+		read TERM
+		export TERM
+		tset -Q
+		echo "Your new termcap is: $TERM"
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkc
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			t|T)
+		echo " "
+		echo "Unix: \$TERM"
+		echo " "
+		echo "Your terminal type is: $TERM"
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk22
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			l|L)
+		/usr/bin/clear
+		echo "Unix: last | more"
+		echo " "
+		echo "Todays M-Net users...."
+		echo " "
+		last | more
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk22
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			s|S)
+		/usr/bin/clear
+		echo "Unix: ps -aef"
+		echo " "
+		echo "Who's doing what?...."
+		echo " "
+		ps -aef | sort
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junks
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			u|U)
+		echo " "
+		echo "Unix: ps -fu <userid>"
+		echo " "
+		echo -n "Check process's of what user? "
+		read process
+		echo " "
+		ps -fu $process
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junks
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			d|D)
+		echo " "
+		echo "Unix: date"
+		echo " "
+		date
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkd
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			y|Y)
+		echo " "
+		echo "Unix: mesg y"
+		echo " "
+		echo "Now users can talk you again...."
+		mesg y
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkd
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			n|N)
+		echo " "
+		echo "Unix: mesg n"
+		echo " "
+		echo "Now users can't talk you...."
+		mesg n
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junke
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			a|A)
+		echo " "
+		echo "Unix: kill -9 <process PID>"
+		echo " "
+		ps -af
+		echo " "
+		echo -n "Your process number to kill? "
+		read process
+		echo " "
+		kill -9 $process
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junka
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			h|H)
+		/usr/bin/clear
+		echo " "
+		echo "Unix: du"
+		echo " "
+		echo "Here is how much disk your using:"
+		echo "In BLOCKS (Guests allowed 100)"
+		echo " "
+		echo "Checking..."
+		echo " "
+		/bin/du
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junka
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+
+			v|V)
+		echo " "
+		echo "Unix: vspell"
+		echo " "
+		echo "<RETURN> to enter vspell."
+		echo -n "File name to spell check? "
+		read spell
+		echo " "
+		/usr/local/vspell/vspell $spell
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkv
+		/usr/bin/clear
+		cat /usr/local/lib/menus/screens/basic
+		echo -n "Command: "
+		read ans;;
+		
+			*)
+		echo -n "Command: "
+		read ans;;
+	esac
+done

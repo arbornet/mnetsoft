@@ -1,0 +1,255 @@
+#!/bin/sh
+  if [ -z "$MODE" ]
+  then
+  MODE=$MODE
+  fi
+trap '' 2
+clear
+while true
+	do
+beginner () {
+cat << BASIC
+
+		             **  BASIC UTILITIES  **
+
+	    E). Exit to Main Menu	        S). System Process's
+	    T). Test your Termcap	        U). Users Process's
+	    C). Change your Termcap		A). Abort Process
+	    M). Mbox (check old mail)		N). Message NO
+	    I). Information on a user           Y). Message YES
+	    K). M-Net Support                   L). Last Users
+	    F). Find a file (locate)  	        H). How much disk used
+	    V). spell (spelling/dictionary)	Q). Questions (HELP)
+
+BASIC
+echo -n "Command: "
+}
+
+expert () {
+echo -n "
+BASIC FILE MENU:
+
+T,C,M,I,K,F,V,S,U,A,N,Y,L,H,Q,Exit: "
+}
+
+  if [ "$MODE" = expert ]
+  then
+  expert
+  else
+  beginner
+  fi
+
+read ans
+	case $ans in
+			e|E)
+			   exit;;
+
+		k|K)
+	clear
+#	more /usr/local/lib/menus/protos/support
+	more /usr/bbs/protos/staff
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk1
+	clear;;
+
+				q|Q)
+			clear
+			more /usr/local/lib/menus/protos/staff
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junkh
+			clear;;
+
+	i|I)
+echo " "
+echo -n "Find information on who? "
+read who
+echo " "
+echo "Unix: finger -m <$who>"
+echo " "
+f -m $who
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junk4
+clear;;
+
+			m|M)
+		echo " "
+		echo "Unix: mail -f"
+		echo " "
+		echo "Checking your mailbox...."
+		echo " "
+		mail -f
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk8
+		clear;;
+
+				c|C)
+			echo " "
+			echo "Unix: setenv TERMCAP <term type>"
+			echo " "
+			echo -n "What type terminal are you using? "
+			read TERM
+			export TERM
+			tset -Q
+			echo "Your new termcap is: $TERM"
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junkc
+			clear;;
+
+		t|T)
+	echo " "
+	echo "Unix: \$TERM"
+	echo " "
+	echo "Your terminal type is: $TERM"
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junk22
+	clear;;
+
+			l|L)
+		clear
+		echo "Unix: last | more"
+		echo " "
+		echo "Todays M-Net users...."
+		echo " "
+		last | more
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junk22
+		clear;;
+
+				s|S)
+			clear
+			echo "Unix: ps -aux"
+			echo " "
+			echo "Who's doing what?...."
+			echo " "
+			ps -aux | sort | more
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junks
+			clear;;
+
+		u|U)
+	echo " "
+	echo -n "Check process's of what user? "
+	read process
+	echo " "
+	echo "Unix: ps -au | grep ^<$process>"
+	echo " "
+	ps -au | grep ^$process
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junks
+	clear;;
+
+			f|F)
+		echo " "
+		echo -n "Name of file you would like to find? "
+		read foo
+		echo " "
+		echo "Unix: locate <$foo>."
+		echo " "
+		locate $foo | more
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junkd
+		clear;;
+
+				y|Y)
+			echo " "
+			echo "Unix: mesg y"
+			echo " "
+			echo "Now users can talk you again...."
+			mesg y
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junkd
+			clear;;
+
+			n|N)
+		echo " "
+		echo "Unix: mesg n"
+		echo " "
+		echo "Now users can't talk you...."
+		mesg n
+		echo " "
+		echo -n "Please hit <RETURN> to continue "
+		read junke
+		clear;;
+
+		a|A)
+	echo " "
+	echo "Unix: kill -9 <process PID>"
+	echo " "
+	ps -u
+	echo " "
+	echo -n "Your process number to kill? "
+	read process
+	echo " "
+	kill -9 $process
+	echo " "
+	echo -n "Please hit <RETURN> to continue "
+	read junka
+	clear;;
+
+	h|H)
+clear
+echo " "
+echo "Unix: du"
+echo " "
+echo "Here is how much disk you're using:"
+echo "This is in 1K BLOCKS."
+echo " "
+echo "Checking..."
+echo " "
+du
+echo " "
+echo -n "Please hit <RETURN> to continue "
+read junka
+clear;;
+
+				v|V)
+			echo " "
+			echo "Unix: spell"
+			echo " "
+			echo "<RETURN> to enter spell."
+			echo -n "File name to spell check? "
+			read spell
+			echo " "
+			 /usr/bin/spell $spell
+			echo " "
+			echo -n "Please hit <RETURN> to continue "
+			read junkv
+			clear;;
+
+
+ex|EX|expert|EXPERT)	# Changes menu mode to expert
+MODE=expert
+clear;;
+
+be|BE|beginner|BEGINNER)	# Changes menu mode to beginner
+MODE=beginner
+clear;;
+
+
+				!*)
+				prog=`echo $ans | sed 's/^!//'`
+				echo " "
+				eval $prog
+				echo " "
+				echo -n "Please hit <RETURN> to continue "
+				read junk
+				clear;;
+
+			*)
+		echo " "
+		echo -n "$ans: Is not supported in this version of the menu ..."
+		sleep 1
+		clear;;
+	esac
+done
