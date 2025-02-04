@@ -2,7 +2,9 @@
 
 #include "party.h"
 #include "opt.h"
+
 #include <sys/stat.h>
+#include <pwd.h>
 
 #define CMD_LEN 20
 #define SUB_PARTY 8
@@ -67,7 +69,6 @@ FILE *pwfp= NULL;
 struct pwho myhead;
 struct sub_pwho mybody;
 long myoff, mysuboff;
-char *ttyname();
 
 /* WHO_ENTER: Called when the user enters party.  If finds a slot for him in
  * the partywho file and writes in his current status.
@@ -85,7 +86,7 @@ int who_enter()
     strncpy(myhead.logname,logname,UT_NAMESIZE);
 
     mybody.time= time(0L);
-    if (name) strncpy(mybody.alias,name,UT_NAMESIZE);
+    if (name[0] != '\0') strncpy(mybody.alias,name,UT_NAMESIZE);
     if (channel) strncpy(mybody.channel,channel,CHN_LEN);
     strncpy(mybody.shelled,"",CMD_LEN);
 
@@ -109,8 +110,8 @@ int who_enter()
 
 	    if (strncmp(myhead.logname,ahead.logname,UT_NAMESIZE) ||
 		fread(&abody,sizeof(struct sub_pwho),1,pwfp) == 0 ||
-		abody.alias[0] == '\0' ||
-		abody.time < logtime)
+		abody.alias[0] == '\0'/* ||
+		abody.time < logtime*/)
 	    {
 		/* No valid user in it -- take first subslot */
 		who_clear(off,myhead.line);
@@ -506,8 +507,6 @@ int who_uniqalias(char *alias, char *name, char *channel)
 /*********  P A R T Y T M P   S C A N N I N G   R O U T I N E S  *********/
 
 
-struct utmp *utmp= NULL;  /* Pointer to internal copy of the utmp file */
-int nutmp;	          /* Number of entries in utmp */
 int subcnt;	          /* Number of subfields read so far */
 long curtime;	          /* Time stamp from utmp file */
 
@@ -515,27 +514,7 @@ long curtime;	          /* Time stamp from utmp file */
 
 void wscan_init()
 {
-    FILE *utfp;
-    struct stat utst;
-
     if (!pwfp) return;
-
-    /* Open utmp file */
-    if ((utfp= fopen(UTMP,"r")) == NULL)
-    {
-	err("cannot open utmp file %\n",UTMP);
-	return;
-    }
-
-    if (utmp != NULL) free(utmp);
-
-    /* Load a copy of utmp file into memory */
-    fstat(fileno(utfp),&utst);
-    utmp= (struct utmp *)malloc(utst.st_size+2*sizeof(struct utmp));
-    for (nutmp=0;fread(utmp+nutmp,sizeof(struct utmp),1,utfp);nutmp++)
-	    ;
-    fclose(utfp);
-
     fseek(pwfp,0L,0);
     subcnt= 0;
 }
@@ -549,6 +528,10 @@ void wscan_init()
 
 int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 {
+    struct passwd *pw;
+    struct stat s;
+    char login[UT_NAMESIZE + 1];
+    char line[UT_LINESIZE + 1 + 5];
     int j;
     int ignore;
 
@@ -556,30 +539,29 @@ int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 
     for (;;)
     {
+        ignore= 0;
 	if (subcnt == 0)
 	{
 	    /* Get the next header */
 	    if (fread(phead,sizeof(struct pwho),1,pwfp) == 0)
 		return 0;
 
-	    /* Look for matching, non-obsolete utmp line */
-	    for(j= 0; j<nutmp; j++)
-	    {
-		if (strncmp(utmp[j].ut_line,phead->line,UT_LINESIZE) == 0 && 
-		    !strncmp(utmp[j].ut_name,phead->logname,UT_NAMESIZE))
-		    break;
-	    }
-
-	    /* If no utmp entry exists for this line or the user on the line
-	     * isn't the one in the partytmp file, then this is an obsolete
+            strlcpy(line, "/dev/", sizeof(line));
+            strlcat(line, phead->line, sizeof(line));
+            strlcpy(login, phead->logname, sizeof(login));
+	    /* If the user does not exist or does not own the line
+	     * in the partytmp file, then this is an obsolete
 	     * entry.  We will ignore it.
 	     */
-	    ignore= (j == nutmp);
-
-	    curtime= utmp[j].ut_time;
+            ignore= 1;
+            pw= getpwnam(login);
+            if (pw != NULL)
+            {
+                if (stat(line, &s) == 0 && s.st_uid == pw->pw_uid)
+                    ignore= 0;
+	        curtime= s.st_ctime;
+            }
 	}
-	else
-	    ignore= 0;
 
 	/* Read in sub-records */
 	for (subcnt++; subcnt<=SUB_PARTY; subcnt++)
@@ -587,8 +569,8 @@ int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 	    if (fread(pbody,sizeof(struct sub_pwho),1,pwfp) == 0)
 		return 0;
 	    else if (!ignore &&
-		     pbody->alias[0] != '\0' &&
-		     pbody->time >= curtime)
+		     pbody->alias[0] != '\0'/* &&
+		     pbody->time >= curtime*/)
 	    {
 		*n= subcnt;
 		return 1;
@@ -602,8 +584,7 @@ int wscan_next(struct pwho *phead, struct sub_pwho *pbody, int *n)
 /* WSCAN_DONE -- Finish up a scan of the partytmp file */
 int wscan_done()
 {
-    free(utmp);
-    utmp= NULL;
+    return 0;
 }
 
 
@@ -630,46 +611,42 @@ void ncstrncpy(char *s1, char *s2, int n)
 
 int finduser(char *logtty, char *logname, time_t *logtime)
 {
-    FILE *fp;
-    char *tty;
-    struct utmp ut;
+    struct passwd *pw;
+    const char *tty;
     int i;
+    struct stat s;
 
-    /* See if we can find a useful ttyname for stderr, stdout, or stdin */
+    /* Find our login name */
+    pw= getpwuid(getuid());
+    if (pw == NULL)
+    {
+        err("Who are you?\n");
+        return 1;
+    }
+    strlcpy(logname, pw->pw_name, sizeof(logname));
+
+    /* See if we can find a useful ttyname for stderr, stdout, or stdin.
+     * default to "(none)". */
+    strlcpy(logtty, "(none)", sizeof(logtty));
     for (i= 2; i >= 0; i--)
     {
-	if ((tty= ttyname(i)) == NULL ||
-	    strcmp(tty,"/dev/tty"))
-		break;
-    }
-    if (i < 0)
-    {
-	err("cannot identify your tty\n"
-	    "Try running %s from a different prompt\n",progname);
-	return 1;
-    }
-    strcpy(logtty,tty);
-
-    /* Open the utmp file */
-    if ((fp= fopen(UTMP,"r")) == NULL)
-    {
-	err("Cannot open utmp file "UTMP"\n");
-	return 1;
+        if ((tty= ttyname(i)) != NULL &&
+            strcmp(tty,"/dev/tty") != 0)
+        {
+            strlcpy(logtty, tty, UT_LINESIZE + 1);
+            break;
+        }
     }
 
-    /* Search the utmp file */
-    while (fread(&ut,sizeof(struct utmp),1,fp) != 0)
+    /* Figuring out our login time is a bit more complex.
+     * Approximate this by looking at the inode ctime on
+     * our tty.  Default to the current time.
+     */
+    time(logtime);
+    if (stat(logtty,&s) == 0)
     {
-	if (!strncmp(ut.ut_line,logtty+5,UT_LINESIZE))
-	{
-	    fclose(fp);
-	    *logtime= ut.ut_time;
-	    strncpy(logname,ut.ut_name,UT_NAMESIZE);
-	    logname[UT_NAMESIZE]= '\0';
-	    return 0;
-	}
+        *logtime= s.st_ctime;
     }
-    err("Cannot find your tty (%s) in utmp\n",logtty);
-    fclose(fp);
-    return 1;
+
+    return 0;
 }

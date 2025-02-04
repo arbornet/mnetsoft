@@ -4,19 +4,20 @@
 #include "opt.h"
 #include <ctype.h>
 #include <errno.h>
-extern int errno;
+#include <termios.h>
 
 char *cancel= " XXX\n";		  /* Cancel string */
 char name[UT_NAMESIZE+2];	  /* User's internal name or alias */
 char realname[UT_NAMESIZE+2]= ""; /* User's real name (used for mail check) */
-char logname[UT_NAMESIZE+2];	  /* Name user logged in under (utmp) */
-char logtty[18];		  /* Tty user logged in to (utmp) */
-time_t logtime;			  /* Time user logged in at (utmp) */
+char logname[UT_NAMESIZE+2];	  /* Name user logged in under (utmpx) */
+char logtty[UT_LINESIZE+1];	  /* Tty user logged in to (utmpx) */
+time_t logtime;			  /* Time user logged in at (utmpx) */
+struct termios cooked, cbreak;
 
 struct cc_tab {
 	char cmd;	/* command character that brings up prompt */
 	char prompt;	/* prompt character brought up */
-	void (*func)();	/* procedure to call to interpret the command */
+	void (*func)(char *);	/* procedure to call to interpret the command */
 	int enable;	/* option that enables this command */
 	char *failmsg; /* message to print if not enabled */
 	} cmd_char[]={	/* TABLE OF INPUT MODE COMMAND CHARACTERS */
@@ -117,7 +118,7 @@ void speak(int ch1)
 	return;
     }
     fputs(opt[OPT_PROMPT].str,stderr);
-    if (getline(txbuf,BFSZ,ch1) && txbuf[0] != '\0')
+    if (pgetline(txbuf,BFSZ,ch1) && txbuf[0] != '\0')
     {
 	fputs(opt[OPT_TPMORP].str,stderr);
 	append(inbuf,wfd);
@@ -557,7 +558,7 @@ void setrealname()
 	    strcpy(realname,logname);
     else
     {
-	if (pwd= getpwuid(getuid()))
+	if ((pwd= getpwuid(getuid())) != NULL)
 	    strcpy(realname, pwd->pw_name);
 	else
 	    sprintf(realname, "%d", getuid());
@@ -581,7 +582,7 @@ void setname(char *chan)
     else
     {
 	/* take name from utmp file */
-	if (ch= getlogin())
+	if ((ch= getlogin()) != 0)
 	    strcpy(name, ch);
 	else
 	    strcpy(name, "(unknown)");
@@ -918,13 +919,13 @@ void initmodes()
 }
 
 
-/* GETLINE -- read in a line from the user.  If ch1 is not EOF and the
+/* PGETLINE -- read in a line from the user.  If ch1 is not EOF and the
  * firstchar option is set, it will be the first character read.  The
  * interfaces is vaguely fgetslike since it returns the newline in the
  * string.
  */
 
-char *getline(char *bf, int n, int ch1)
+char *pgetline(char *bf, int n, int ch1)
 {
     int col,ch,i;
     char *rc;

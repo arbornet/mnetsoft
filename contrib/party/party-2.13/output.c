@@ -12,6 +12,7 @@
 #include "party.h"
 #include "opt.h"
 #include <errno.h>
+#include <term.h>
 
 extern int errno;
 

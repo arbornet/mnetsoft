@@ -167,7 +167,7 @@ int ignore_line(char *line)
 
 	    *nameend= '\0';
 	    *newnameend= '\0';
-	    if (ignored_last= !delignore(name))
+	    if ((ignored_last= !delignore(name)) != 0)
 	    	addignore(newname);
 	    *nameend= ' ';
 	    *newnameend= '\n';

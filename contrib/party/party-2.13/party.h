@@ -176,9 +176,8 @@ char *strchr(), *strrchr();
 # endif /* HAVE_TERMIO_H */
 #endif /* HAVE_TERMIOS_H */
 
-#ifdef F_TERMIOS
 #include <termios.h>
-struct termios cooked, cbreak;
+extern struct termios cooked, cbreak;
 #define GTTY(fd, st)    tcgetattr(fd, (st))
 #ifdef TCSASOFT
 #define STTY(fd, st)    tcsetattr(fd, TCSASOFT | TCSANOW, (st))
@@ -203,53 +202,6 @@ struct termios cooked, cbreak;
 #else
 #define LNEXT_CHAR '\026'
 #endif
-#endif /*F_TERMIOS*/
-
-#ifdef F_TERMIO
-#include <termio.h>
-struct termio cooked, cbreak;
-#define GTTY(fd, st)    ioctl(fd, TCGETA, (st))
-#define STTY(fd, st)    ioctl(fd, TCSETAF, (st))
-#define EOF_CHAR    (cooked.c_cc[VEOF])
-#define ERASE_CHAR  (cooked.c_cc[VERASE])
-#define KILL_CHAR   (cooked.c_cc[VKILL])
-#ifdef VREPRINT
-#define REPRINT_CHAR (cooked.c_cc[VREPRINT])
-#else
-#define REPRINT_CHAR '\022'
-#endif
-#ifdef VWERASE
-#define WERASE_CHAR (cooked.c_cc[VWERASE])
-#else
-#define WERASE_CHAR '\027'
-#endif
-#ifdef VLNEXT
-#define LNEXT_CHAR (cooked.c_cc[VLNEXT])
-#else
-#define LNEXT_CHAR '\026'
-#endif
-#endif /*F_TERMIO*/
-
-#ifdef F_STTY
-#include <sgtty.h>
-struct tchars tch;
-struct ltchars ltch;
-struct sgttyb cooked, cbreak;
-#define GTTY(fd, st)    ioctl(fd, TIOCGETP, (st))
-#define STTY(fd, st)    ioctl(fd, TIOCSETN, (st))
-#define EOF_CHAR (tch.t_eofc)
-#define ERASE_CHAR  (cooked.sg_erase)
-#define KILL_CHAR   (cooked.sg_kill)
-#ifdef TIOCGLTC
-#define WERASE_CHAR  (ltch.t_werasc)
-#define REPRINT_CHAR (ltch.t_rprntc)
-#define LNEXT_CHAR   (ltch.t_lnextc)
-#else
-#define WERASE_CHAR  '\027'
-#define REPRINT_CHAR '\022'
-#define LNEXT_CHAR   '\026'
-#endif
-#endif /*F_STTY*/
 
 #ifdef TIOCGWINSZ
 #define WINDOW		/* Get terminal size from kernal */
@@ -352,12 +304,11 @@ struct sgttyb cooked, cbreak;
 #endif
 #endif
 
-#include <utmp.h>
 #ifndef UT_NAMESIZE
-#define UT_NAMESIZE 8
+#define UT_NAMESIZE 32
 #endif
 #ifndef UT_LINESIZE
-#define UT_LINESIZE 8
+#define UT_LINESIZE 16
 #endif
 
 /* UTMP is the location of the utmp file, which varies on some systems */
@@ -366,7 +317,7 @@ struct sgttyb cooked, cbreak;
 #ifdef _PATH_UTMP
 #define UTMP _PATH_UTMP
 #else
-#define UTMP "/etc/utmp"
+#define UTMP "/var/run/utx.active"
 #endif
 #endif
 
@@ -428,8 +379,8 @@ extern RETSIGTYPE (*oldsigpipe)();
  */
 
 #define INDENT UT_NAMESIZE+2	/* Just changing this value won't work */
-char inbuf[BFSZ+INDENT+2];	/* Text buffer - first 10 for "name:   " */
-char *txbuf;			/* Text buffer - pointer to respose portion */
+extern char inbuf[BFSZ+INDENT+2]; /* Text buffer - first 10 for "name:   " */
+extern char *txbuf;		/* Text buffer - pointer to respose portion */
 				/*               of inbuf */
 
 #define CHN_LEN 12		/* Maximum length of channel name */
@@ -499,7 +450,8 @@ void cmd_shell(char *buf);
 int makenoise(char *);
 void append(char *, FILE *);
 void initmodes(void);
-char *getline(char *, int, int);
+char *pgetline(char *, int, int);
+RETSIGTYPE setcols(void);
 
 /* output.c */
 int output(void);

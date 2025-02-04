@@ -572,6 +572,8 @@ int listchn()
 	chn= ch->next;
 	free(ch);
     }
+
+    return 0;
 }
 
 /* ADDCHN:  Add an entry to the channel list in alphabetical order.

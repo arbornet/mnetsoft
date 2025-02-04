@@ -75,6 +75,7 @@ RETSIGTYPE (*oldsigpipe)();	/* Old SIGPIPE handler */
 
 jump_buf jenv;
 
+int
 main(int argc, char **argv)
 {
     register int n;
@@ -673,7 +674,7 @@ off_t backup(int lines)
     off_t off;
     int n;
 
-    if (lines <= 0) return;
+    if (lines <= 0) return 0;
 
     p= bub;
     off= lseek(rst,0L,1);

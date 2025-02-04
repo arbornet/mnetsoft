@@ -20,7 +20,8 @@ void define(char *prefix, char *string, int val)
     printf("\t%d\n",val);
 }
 
-main()
+int
+main(void)
 {
     int i;
     int chn_done = 0;

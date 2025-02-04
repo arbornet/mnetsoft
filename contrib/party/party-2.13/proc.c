@@ -1,5 +1,7 @@
 /* PARTY PROGRAM -- FILTER MANAGEMENT AND SIMILAR TRICKY STUFF -- Jan Wolter */
 
+#include <sys/wait.h>
+
 #include "party.h"
 #include "opt.h"
 
@@ -77,8 +79,7 @@ int p_lastpop;			/* process id of last upopened command */
 FILE *upopen(char *cmd, char *mode)
 {
     int pip[2];
-    register int chd_pipe,par_pipe;
-    FILE *fdopen();
+    int chd_pipe,par_pipe;
 #ifndef HAVE_DUP2
     int t;
 #endif

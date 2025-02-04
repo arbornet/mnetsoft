@@ -203,7 +203,7 @@ int enter_closed(char *newchannel)
     int i= 0;
 
     /* If he already has access, let him in */
-    if (was_open= check_open(newchannel)) return(was_open);
+    if ((was_open= check_open(newchannel))!=0) return(was_open);
 
     /* If the user doesn't want to knock, keep him out */
     err("channel %s is a closed channel\n",newchannel);
