@@ -1,0 +1,200 @@
+<HTML>
+<HEAD>
+	<TITLE>Arbornet</TITLE>
+<STYLE TYPE="text/css">
+BODY {
+	background-color: white;
+	font-family: sans-serif;
+	font-size: 14px;
+	margin: 0px;
+}
+TD {
+	font-family: sans-serif;
+	font-size: 14px;
+}
+TD.nav {
+	font-size: 14px;
+	font-weight: bold;
+	color: white;
+}
+A {
+	font-weight: bold;
+	color: 0033ff;
+}
+A:hover {
+	font-weight: bold;
+	color: cc0033;
+}
+A.nav {
+	font-weight: bold;
+	color: white;
+	text-decoration: none;
+}
+A.nav:hover {
+	font-weight: bold;
+	color: ffff00;
+	text-decoration: none;
+}
+.spotlight {
+	border: 1px solid #330099;
+	padding: 5px;
+	background-color: #ffffcc;
+}
+</STYLE>
+</HEAD>
+<BODY>
+<A NAME="top"></A>
+<table width=100% border=0 cellspacing=0 cellpadding=0 height=100%>
+<tr><td colspan=4 bgcolor=000066><img src=/images/spacer.gif width=1 height=2 border=0></td></tr>
+  <tr>
+    <td bgcolor=6699FF colspan=4>
+		<img src=/images/header.gif width=300 height=62></td>
+	</td>
+</tr>
+<tr><td colspan=4 bgcolor=000066><img src=/images/spacer.gif width=1 height=2 border=0></td></tr>
+<tr>
+	<td align=center bgcolor=000066 colspan=4 class=nav>
+<a class=nav href=index.php>Home</a> &nbsp;&#149;&nbsp;
+<a class=nav href=arbornet.php>About Arbornet</a> &nbsp;&#149;&nbsp;
+<a class=nav href=m-net.php>M-Net</a> &nbsp;&#149;&nbsp;
+<a class=nav href=email.php>E-Mail</a> &nbsp;&#149;&nbsp;
+<a class=nav href=conferences.php>Web Conferences</a> &nbsp;&#149;&nbsp;
+<a class=nav href=support.php>Make a Donation</a> &nbsp;&#149;&nbsp;
+<a class=nav href=help.php>Help / Contact</a>
+	</td>
+</tr>
+<tr><td colspan=4 bgcolor=000066><img src=/images/spacer.gif width=1 height=2 border=0></td></tr>
+<tr>
+	<td valign=top style="background-repeat: repeat-y;" background=images/left_background.jpg>
+	<br>
+	<IMG SRC="images/spacer.gif" WIDTH=225 HEIGHT=1 BORDER=0>
+<div style="text-align: center; margin: 0; margin-bottom: 10px;">
+<form method="get" action="http://www.google.com/search" style="margin: 0;">
+<b>Google: <input type="text"   name="q" size="10" maxlength="255" value="" /><input type="submit" value=">>" /><br/>
+<input type="radio"  name="sitesearch" value="" />web
+<input type="radio"  name="sitesearch" value="arbornet.org" checked/>arbornet.org</b>
+</form>
+</div>
+<div style="background-color: white; width: 200px; border-width: 3px; border-color: black; border-style: dashed; padding: 4px;">
+<b>Please help</b> support M-Net, the world's longest running 
+public access UNIX system.  PayPal and most major credit cards are accepted.
+<CENTER>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="treasure@arbornet.org">
+<input type="hidden" name="no_shipping" value="1">
+<input type="hidden" name="return" value="http://www.arbornet.org/payment_successful.php">
+<input type="hidden" name="cancel_return" value="http://www.arbornet.org/payment_cancelled.php">
+<input type="hidden" name="no_note" value="1">
+<input type="hidden" name="currency_code" value="USD">
+<input type="hidden" name="tax" value="0">
+<input type="image" src="/images/paypal_makepayment.gif" width="110" height="23" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+</form>
+</CENTER>
+<p>Or support Arbornet through purchases made on
+Amazon.com using our <a href="/amazon.php">affiliate page</a>.
+</div>
+	<P>
+<div style="width: 200px; padding: 4px;">
+	<CENTER>
+	<b>Please support our host!</B><br>
+        <a href="http://www.a2hosting.com"><img src="http://www.a2hosting.com/i/tagline-logo-211x64.gif" width="200" height="60" border="0" ALT="Please support our host!"></a>
+        <p>
+
+	<a href="http://www.eff.org/br/" target=_blank><img src="/images/rib_bar_wh.gif" alt="Blue Ribbon Campaign - Free Speech Online" width=143 height=30></a>
+	</CENTER>
+</div>
+	
+
+	</td>
+	<td>&nbsp;</td>
+	<td width=100% height=100% valign=top style="background-repeat: no-repeat;" background=images/logo_bg.gif>
+<br>
+	<H3><a href=help.php>Help and Contact Information</a>: Setting up a Web Site</H3>
+<!--
+<blockquote>
+<fieldset>
+<legend><b>Important Note</b></legend>
+We maintain an <a href=user_pages.php>index</a> of user home pages.  To
+find out how to add your home page to the index, <a href="help_www_add2index.php">click here</a>.
+</fieldset>
+</blockquote>
+<p>
+-->
+This guide was written to help the users of M-Net to setup their own homepage.
+Please read the entire document first to get a general idea of what needs to
+be done and then follow each individual step.  Commands given in <b>bold</b>
+must be preceeded by an explanation point (<b>!</b>) by users who use the
+menu system.
+<p>
+<h4>Step 1 - Request Activation</h4>
+<p>Because M-Net doesn't want to be a provider of phishing and scam web sites,
+you must first request that your personal web space be activiated.  If
+you don't do this, anyone attempting to access your webspace will receive
+a 403 "Permission Denied" error.</p>
+<p>To do this, please visit M-Net's sysop conference, www conference, or
+send email to <b>staff at arbornet dot org</b>. Do not forget to mention what
+you plan to do with your personal web-space and your M-Net account name, when
+you send us your request.</p>
+<h4>Step 2: Prepare your WWW directory</h4>
+Make a directory called <i>public_html</i> in your home directory on M-Net.
+You can do this by typing <b>mkdir ~/public_html</b> while logged onto M-Net.
+Make sure this directory is publicly accessible by typing <b>chmod 755
+~/public_html</b>.  This directory will contain all of your WWW pages.
+<p>
+<b>Note:</b> Your home directory must also be publicly accessible.  Type
+<b>chmod 711 ~</b> if unsure.
+<p>
+<h4>Step 3: Make your page(s)</h4>
+If your page is already made, make sure it is in your <i>public_html</i>
+directory and the files are publicly readable, (<b>chmod 644
+<i>filename</i></b> will make <i>filename</i> publicly readable).  If you do
+not know how to make a WWW page, check out
+<a href="http://www.w3schools.com/html/default.asp">The W3Schools HTML tutorial</a>.
+Some pointers to remember when your making a page:
+<p>
+<ul>
+<li>Save your main page as <i>index.html</i>.
+<li>Limit graphics to a total of 100K on all of your pages combined.
+</ul>
+<p>
+<!--
+<h4>Step 4: Add a comment for the index file (optional)</h4>
+M-Net keeps an
+<a href="http://www.arbornet.org/m-net/user_pages.html">index</a> of all user
+pages on the system.  This list is automatically updated daily.  Users can add
+a comment next to their index entry by creating a file called
+<i>IndexComment</i> in their <i>public_html</i> directory.  The first 80
+characters in this file will be used as the comment.
+<p>
+<b>Note:</b> HTML code is stripped from comments.
+<p>
+-->
+<h4>Step 4: Test your page</h4>
+Once your page is made and setup, you should try it out.  If you followed the
+instructions correctly, then the URL of your page should be:
+<p>
+<tt>http://m-net.arbornet.org/users/yourloginid</tt>
+<p>
+So if your login id is jdoe, then your URL is:
+<p>
+<tt>http://m-net.arbornet.org/users/jdoe</tt>
+<p>
+You can try out your page with lynx on M-Net or using another browser offsite.
+<p>
+If you have any further questions about the WWW system, please browse the
+<a href="help.php">help files</a> or send E-Mail to
+<a href="mailto:www@arbornet.org">www@arbornet.org</a>.
+
+	</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td width=225 background=images/left_background.jpg></td>
+	<td colspan=3 align=center><hr noshade size=1>Copyright &copy; 2010 Arbornet  Site maintained by <a href="mailto:www@arbornet.org">www@arbornet.org</a><br>All users must abide by the <a href=aup.php>Acceptable Use Policy</a>
+<p>Box 130784 Ann Arbor, MI 48113 United States of America<br><br>
+</td>
+</tr>
+</table>
+</BODY>
+</HTML>
