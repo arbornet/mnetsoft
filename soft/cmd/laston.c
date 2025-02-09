@@ -62,7 +62,7 @@ static void
 laston(const char *account)
 {
 	struct utmpx *u;
-	time_t lltime = u->ut_tv.tv_sec;
+	time_t lltime;
 	char tmp[32];
 
 	if (getpwnam(account) == NULL) {

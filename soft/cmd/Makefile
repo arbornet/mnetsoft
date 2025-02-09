@@ -4,9 +4,8 @@ PREFIX=		/arbornet
 PEOPLEBIN=	/suid/people
 O=		o
 A=		a
-PROGS=		backspace checkgrps grexmore grexmoresh members \
-		probe pwlookup realnames tail+2 twit whoa ylc zengame
-FBSDPROGS=	laston watch
+PROGS=		backspace checkgrps grexmore grexmoresh laston members \
+		probe pwlookup realnames tail+2 twit whoa ylc zengame watch
 INSTALLPROGS=	newly-validated pickashell
 SPEOPLEPROGS=	setmyshell
 LIBS=		-L../libgrex -lgrex

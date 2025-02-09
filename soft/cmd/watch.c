@@ -86,9 +86,10 @@ void *wason;
 void *seenlines;
 
 const char *bell = "\a";
+const char *interests = "/dev/null";
 
 void usage(const char *);
-void initialize(char *[]);
+void initialize(const char *, char *[]);
 Line *findline(const char *);
 Person *getperson(const char *);
 int interesting(const char *);
@@ -100,8 +101,11 @@ main(int argc, char *argv[])
 	int ch;
 
 	prog = progname(argv[0]);
-	while ((ch = getopt(argc, argv, "s?")) != -1) {
+	while ((ch = getopt(argc, argv, "f:s?")) != -1) {
 		switch (ch) {
+		case 'f':
+			interests = optarg;
+			break;
 		case 's':
 			bell = "";
 			break;
@@ -112,7 +116,7 @@ main(int argc, char *argv[])
 	}
 	argc -= optind;
 	argv += optind;
-	initialize(argv);
+	initialize(interests, argv);
 	if (!DEBUG && isatty(0))
 		background();
 	printf("Started %s process %d on %s\n", prog, getpid(), mytty);
@@ -263,9 +267,12 @@ delta()
 }
 
 void
-initialize(char *argv[])
+initialize(const char *interests, char *argv[])
 {
 	Person e;
+	char line[1024];
+	char *u, *p;
+	FILE *fp;
 
 	memset(&e, 0, sizeof(e));
 	if ((mytty = ttyname(0)) == NULL) {
@@ -275,13 +282,29 @@ initialize(char *argv[])
 	mytty += strlen("/dev/");
 	people = NULL;
 	wason = NULL;
-	while (*argv != NULL)
-		tsearch(*argv++, &people, cmpstring);
 	if (!DEBUG) {
 		signal(SIGINT, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGTSTP, SIG_IGN);
 	}
+	while (*argv != NULL)
+		tsearch(*argv++, &people, cmpstring);
+	fp = fopen(interests, "r");
+	if (fp == NULL) {
+		perror(interests);
+		return;
+	}
+	while (fgets(line, sizeof(line), fp) != NULL) {
+		p = strchr(line, '#');
+		if (p != NULL)
+			*p = '\0';
+		p = line;
+		while ((u = strsep(&p, ", \t\r\n\v\f")) != NULL)
+			if (*u != '\0') {printf("watching '%s'\n", u);
+				tsearch(u, &people, cmpstring);
+}
+	}
+	fclose(fp);
 }
 
 void
