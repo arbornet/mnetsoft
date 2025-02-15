@@ -87,7 +87,7 @@ void open_chan()
     /*fchmod(rst,CHN_MODE);*/
 
     sprintf(txbuf, "---- %s opened this channel (%.12s)\n",name,ctime(&now)+4);
-    append(txbuf,wfd);
+    append(txbuf,wfd,lfd);
 }
 
 
@@ -121,7 +121,7 @@ void close_chan()
     /*fchmod(rst,DEP_MODE);*/
 
     sprintf(txbuf, "---- %s closed this channel (%.12s)\n",name,ctime(&now)+4);
-    append(txbuf,wfd);
+    append(txbuf,wfd,lfd);
 }
 
 
@@ -150,7 +150,7 @@ void invite(char *login)
 
     sprintf(txbuf, "---- %s invited %s to this channel (%.12s)\n",name,
 	    login,ctime(&now)+4);
-    append(txbuf,wfd);
+    append(txbuf,wfd,lfd);
 }
 
 
@@ -173,8 +173,9 @@ int read_yn()
 
 int knock(char *chn)
 {
-char bf[BFSZ], *fn;
+char bf[BFSZ], *fn, *lfn;
 FILE *tmp_wfd;
+int tmp_lfd;
 
     sprintf(bf,"---- %s knocking on the door\n",logname);
     /* No time on this message so norepeat can be used against knock bombers */
@@ -182,8 +183,17 @@ FILE *tmp_wfd;
 	fn= chn_file_name(chn,1);
     if ((tmp_wfd= fopen(fn,"a")) == NULL)
 	return(1);
-    append(bf,tmp_wfd);
+    lfn= chn_lockfile_name(chn,1);
+    if ((tmp_lfd = open(lfn, O_RDONLY|O_CREAT, 0600)) < 0)
+    {
+	fclose(tmp_wfd);
+	return(1);
+    }
+    append(bf,tmp_wfd,tmp_lfd);
     fclose(tmp_wfd);
+    close(tmp_lfd);
+    free(fn);
+    free(lfn);
     return(0);
 }
 

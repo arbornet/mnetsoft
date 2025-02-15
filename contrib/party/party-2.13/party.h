@@ -211,16 +211,16 @@ extern struct termios cooked, cbreak;
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
-#define LOCK(file)      setlock(fileno(file), F_WRLCK);
-#define UNLOCK(file)    setlock(fileno(file), F_UNLCK);
+#define LOCK(fd)      setlock(fd, F_WRLCK);
+#define UNLOCK(fd)    setlock(fd, F_UNLCK);
 #endif /* LOCK_FCNTL */
 
 #ifdef LOCK_FLOCK
 #ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
 #endif
-#define LOCK(file)      flock(fileno(file), LOCK_EX)
-#define UNLOCK(file)    flock(fileno(file), LOCK_UN)
+#define LOCK(fd)      flock(fd, LOCK_EX)
+#define UNLOCK(fd)    flock(fd, LOCK_UN)
 #endif /* LOCK_FLOCK */
 
 #ifdef LOCK_LOCKF
@@ -230,16 +230,16 @@ extern struct termios cooked, cbreak;
 #ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
 #endif
-#define LOCK(file)      fseek(file, 0L, 0), lockf(file, 1, 0L)
-#define UNLOCK(file)    fseek(file, 0L, 0), lockf(file, 0, 0L)
+#define LOCK(fd)      lseek(fd, 0L, 0), lockf(fd, 1, 0L)
+#define UNLOCK(fd)    lseek(fd, 0L, 0), lockf(fd, 0, 0L)
 #endif /* LOCK_LOCKF */
 
 #ifdef LOCK_LOCKING
 #ifdef HAVE_SYS_LOCKING_H
 #include <sys/locking.h>
 #endif
-#define LOCK(file)      fseek(file, 0L, 0), chk_lock(file, 1)
-#define UNLOCK(file)    fseek(file, 0L, 0), chk_lock(file, 0)
+#define LOCK(fd)      fseek(fd, 0L, 0), chk_lock(fd, 1)
+#define UNLOCK(fd)    fseek(fd, 0L, 0), chk_lock(fd, 0)
 #endif /* LOCK_LOCKING */
 
 #ifdef LOCK_NONE
@@ -358,6 +358,7 @@ extern struct cmdent cmd[];	/* Command structure -- see opttab.c */
 
 extern int rst;			/* Party file open for read */
 extern FILE *wfd;		/* Party file open for write */
+extern int lfd;			/* Party file lock (not the party log) */
 extern int out_fd;		/* Stream to terminal or filter */
 extern char *progname;		/* Program name */
 extern char *channel;		/* Current channel number (NULL is outside)*/
@@ -408,6 +409,7 @@ void help(char *, int);
 char *exptilde(char *);
 void readfile(char *);
 char *chn_file_name(char *, int);
+char *chn_lockfile_name(char *, int);
 int join_party(char *);
 void setmailfile(void);
 char *leafname(char *);
@@ -448,7 +450,7 @@ void stashname(void);
 void checkname(char *);
 void cmd_shell(char *buf);
 int makenoise(char *);
-void append(char *, FILE *);
+void append(char *, FILE *, int);
 void initmodes(void);
 char *pgetline(char *, int, int);
 RETSIGTYPE setcols(void);

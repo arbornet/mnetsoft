@@ -121,7 +121,7 @@ void speak(int ch1)
     if (pgetline(txbuf,BFSZ,ch1) && txbuf[0] != '\0')
     {
 	fputs(opt[OPT_TPMORP].str,stderr);
-	append(inbuf,wfd);
+	append(inbuf,wfd,lfd);
     }
     else
     {
@@ -705,7 +705,7 @@ void changename(char *newname)
     /* Print the message */
     /* If you change the format of this at all, edit ignore_line() too */
     sprintf(txbuf, "~~~~ %s turns into %s\n",onmbuf,name);
-    append(txbuf,wfd);
+    append(txbuf,wfd,lfd);
 
     /* Record it in the partytmp file */
     who_chan();
@@ -849,7 +849,7 @@ int makenoise(char *cmd)
 	    nbuf[i]= '\0';
 
 	    /* Put noise in the party file */
-	    append(nbuf,wfd);
+	    append(nbuf,wfd,lfd);
 
 	    fclose(fp);
 	    return(0);
@@ -867,14 +867,14 @@ int makenoise(char *cmd)
 
 /* APPEND: Output a string to the end of the party log file */
 
-void append(char *string, FILE *wfd)
+void append(char *string, FILE *wfd, int lfd)
 {
-    LOCK(wfd);
+    LOCK(lfd);
     fseek(wfd,0L,2);
     fputs(string,wfd);
     if (strchr(string,'\n') == NULL) fputc('\n',wfd);
     fflush(wfd);
-    UNLOCK(wfd);
+    UNLOCK(lfd);
 }
 
 

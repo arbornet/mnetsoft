@@ -60,6 +60,7 @@ char *version= "2.13";		/* current party version */
 int inhelp=0;			/* Are we printing help text? */
 off_t tailed_from=0L;		/* File offset we last tailed back from */
 FILE *wfd;			/* Party file open for write */
+int lfd;			/* Party file lock */
 int rst;			/* Party file open for read */
 char *channel= NULL;		/* Current channel name (NULL is outside)*/
 char *progname;			/* Program name */
@@ -348,7 +349,7 @@ void readfile(char *filename)
     /* Print user's name */
     txbuf[0]= '\n';
     txbuf[1]= '\0';
-    LOCK(wfd);
+    LOCK(lfd);
     fseek(wfd,0L,2);
     fputs(inbuf,wfd);
     fflush(wfd);
@@ -361,7 +362,7 @@ void readfile(char *filename)
 	if (strchr(txbuf,'\n') == NULL) fputc('\n',wfd);
 	fflush(wfd);
     }
-    UNLOCK(wfd);
+    UNLOCK(lfd);
     fclose(fp);
 }
 
@@ -373,13 +374,49 @@ void readfile(char *filename)
 char *chn_file_name(char *chn, int keeplog)
 {
     char *file;
+    size_t len;
 
-    file= (char *)malloc(strlen(opt[OPT_DIR].str)+CHN_LEN+6);
-    sprintf(file,"%s/%s.%s",
+    len= strlen(opt[OPT_DIR].str)+strlen(chn)+5+1;
+    file= (char *)malloc(len);
+    if (file == NULL)
+    {
+	err("malloc failed\n");
+	exit(1);
+    }
+    snprintf(file,len,"%s/%s.%s",
 	opt[OPT_DIR].str,
 	chn,
 	keeplog?"log":"tmp");
     return(file);
+}
+
+/* CHN_LOCKFILE_NAME:  return the channel lock file name for the named
+ * channel.  This is malloc'ed; the caller must free.
+ *
+ * Note that the lock file is separate from the channel file and is
+ * permitted only to the party user.  This separation prevents abusive
+ * users from doing antisocial things, like opening the channel file
+ * and taking a lock on it, preventing other users from joining, while
+ * still allowing us to keep (most) channel files world-readable, so
+ * that interested users can peek at them without joining.
+ */
+char *chn_lockfile_name(char *chn, int keeplog)
+{
+    char *lockfile;
+    size_t len;
+
+    len= strlen(opt[OPT_DIR].str)+strlen(chn)+1+strlen(".lock")+1+strlen("log")+2+1;
+    lockfile= (char *)malloc(len);
+    if (lockfile == NULL)
+    {
+	err("malloc failed");
+	exit(1);
+    }
+    snprintf(lockfile,len,"%s/.lock/%s.%s",
+        opt[OPT_DIR].str,
+	chn,
+	keeplog?"log":"tmp");
+    return(lockfile);
 }
 
 
@@ -390,8 +427,9 @@ char *chn_file_name(char *chn, int keeplog)
 int join_party(char *nch)
 {
     char *file;
+    char *lockfile;
     FILE *tmp_wfd;
-    int tmp_rst,oumask,waskept;
+    int tmp_lfd,tmp_rst,oumask,waskept;
     time_t now= time((time_t *)0);
     char newchannel[CHN_LEN+1];
     static char ch[CHN_LEN+1];
@@ -454,11 +492,26 @@ int join_party(char *nch)
 	{
 	    err("Cannot write partyfile %s\n",file);
 	    close(tmp_rst);
+	    close(tmp_lfd);
 	    free(file);
 	    if (channel != NULL) chnopt(channel);
 	    return(1);
 	}
 	free(file);
+
+	lockfile= chn_lockfile_name(newchannel,opt[OPT_KEEPLOG].yes);
+	tmp_lfd= open(lockfile,O_RDONLY|O_CREAT, 0600);
+	if (tmp_lfd < 0)
+	{
+	    err("channel %s not accessible\n(lock %s unreadable)\n",
+	        newchannel,lockfile);
+	    close(tmp_rst);
+	    free(lockfile);
+	    umask(oumask);
+	    if (channel != NULL) chnopt(channel);
+	    return(1);
+	}
+	free(lockfile);
 
 	if (debug) db("join_party: new channel open\n");
     }
@@ -476,10 +529,11 @@ int join_party(char *nch)
 	    write(out_fd,txbuf,strlen(txbuf));
 
 	    /* Put departure message in the file */
-	    append(txbuf,wfd);
+	    append(txbuf,wfd,lfd);
 
 	    /* Close the old files */
 	    fclose(wfd);
+	    close(lfd);
 	    close(rst);
 
 	    /* If it was a temporary channel and it is empty, delete it */
@@ -502,6 +556,7 @@ int join_party(char *nch)
     {
 	/* Make the new file the current file */
 	rst= tmp_rst;
+	lfd= tmp_lfd;
 	wfd= tmp_wfd;
 	tailed_from= 0L;
 
@@ -529,7 +584,7 @@ int join_party(char *nch)
 	setname(newchannel);
 
 	/* Put in a join message */
-	LOCK(wfd);
+	LOCK(lfd);
 	fseek(wfd,0L,2);
 	if (channel == NULL)
 	    fprintf(wfd,"---- %s joining (%.12s)\n",
@@ -538,7 +593,7 @@ int join_party(char *nch)
 	    fprintf(wfd,"---- %s joining from channel %s (%.12s)\n",
 		    name,channel,ctime(&now)+4);
 	fflush(wfd);
-	UNLOCK(wfd);
+	UNLOCK(lfd);
 
 	/* Wind back a few lines */
 	lseek(rst,0L,2);			/* Goto end of file */
@@ -653,11 +708,11 @@ void setlock(int fd, int type)
  * properly. There may be problems with this.
  */
 
-void chk_lock(FILE *file, int request)
+void chk_lock(int fd, int request)
 {
     register int i= 5;
 
-    while (locking(fileno(file), request, -1L) && i--)
+    while (locking(fd, request, -1L) && i--)
 	sleep(1);
 }
 #endif /*LOCK_LOCKING*/
