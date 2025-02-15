@@ -123,34 +123,16 @@
 
 #define BFSZ 1035
 
-#ifdef HAVE_PATHS_H
 #include <paths.h>
-#endif
 
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#else
-char *getlogin();
-#endif
 
 #ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
 
-#ifndef HAVE_STRCHR
-#define strchr index
-#define strrchr rindex
-#endif
-
-#ifdef STDC_HEADERS
 #include <stdlib.h>
 #include <stdarg.h>
-#else
-/* Honestly, we don't really support non-ANSI compilers any more */
-char *getenv();
-void *malloc(), *realloc();
-char *strchr(), *strrchr();
-#endif
 
 #ifdef HAVE_RANDOM
 #define RAND() random()
@@ -207,63 +189,17 @@ extern struct termios cooked, cbreak;
 #define WINDOW		/* Get terminal size from kernal */
 #endif
 
-#ifdef LOCK_FCNTL
-#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
 #define LOCK(fd)      setlock(fd, F_WRLCK);
 #define UNLOCK(fd)    setlock(fd, F_UNLCK);
-#endif /* LOCK_FCNTL */
-
-#ifdef LOCK_FLOCK
-#ifdef HAVE_SYS_FILE_H
-#include <sys/file.h>
-#endif
-#define LOCK(fd)      flock(fd, LOCK_EX)
-#define UNLOCK(fd)    flock(fd, LOCK_UN)
-#endif /* LOCK_FLOCK */
-
-#ifdef LOCK_LOCKF
-#ifdef HAVE_SYS_FILE_H
-#include <sys/lockf.h>
-#endif
-#ifdef HAVE_SYS_FILE_H
-#include <sys/file.h>
-#endif
-#define LOCK(fd)      lseek(fd, 0L, 0), lockf(fd, 1, 0L)
-#define UNLOCK(fd)    lseek(fd, 0L, 0), lockf(fd, 0, 0L)
-#endif /* LOCK_LOCKF */
-
-#ifdef LOCK_LOCKING
-#ifdef HAVE_SYS_LOCKING_H
-#include <sys/locking.h>
-#endif
-#define LOCK(fd)      fseek(fd, 0L, 0), chk_lock(fd, 1)
-#define UNLOCK(fd)    fseek(fd, 0L, 0), chk_lock(fd, 0)
-#endif /* LOCK_LOCKING */
-
-#ifdef LOCK_NONE
-#define LOCK(file)
-#define UNLOCK(file)
-#endif /* LOCK_NONE */
 
 #ifdef SUID
 #define CHN_MODE 0644
 #define DEP_MODE 0600
 #define USR_MODE 0600
 
-#ifdef _POSIX_SAVED_IDS
 #define be_user()  seteuid(real_id)
 #define be_party() seteuid(eff_id)
-#else
-#ifdef HAVE_SETREUID
-#define be_user()  setreuid(eff_id,real_id)
-#define be_party() setreuid(real_id,eff_id)
-#else
-#define be_user()
-#define be_party()
-#endif /*!HAVE_SETREUID*/
-#endif /*_POSIX_SAVED_IDS*/
 #endif /*SUID*/
 
 #ifdef SGID
@@ -271,18 +207,8 @@ extern struct termios cooked, cbreak;
 #define USR_MODE 0664
 #define DEP_MODE 0660
 
-#ifdef _POSIX_SAVED_IDS
 #define be_user()  setegid(real_id)
 #define be_party() setegid(eff_id)
-#else
-#ifdef HAVE_SETREGID
-#define be_user()  setregid(eff_id,real_id)
-#define be_party() setregid(real_id,eff_id)
-#else
-#define be_user()
-#define be_party()
-#endif /*!HAVE_SETREGID*/
-#endif /*_POSIX_SAVED_IDS*/
 #endif /*SGID*/
 
 #include <stdio.h>
@@ -292,17 +218,7 @@ extern struct termios cooked, cbreak;
 #include <pwd.h>
 #include <ctype.h>
 #include <string.h>
-
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
 #include <time.h>
-#else
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif
-#endif
 
 #ifndef UT_NAMESIZE
 #define UT_NAMESIZE 32
@@ -415,12 +331,7 @@ void setmailfile(void);
 char *leafname(char *);
 int badname(char *);
 int convert(char *);
-#ifdef LOCK_LOCKING
-void chk_lock(FILE *, int);
-#endif
-#ifdef LOCK_FCNTL
 void setlock(int, int);
-#endif
 off_t backup(int);
 void done(int);
 RETSIGTYPE alrm(void);
@@ -517,9 +428,6 @@ int printopts(FILE *, int, char, char *);
 int inlist(char *, char *);
 char *firstin(char *, char *);
 char *firstout(char *, char *);
-#ifndef HAVE_STRSTR
-char *strstr(char *, char *);
-#endif
 int listchn(void);
 struct chnname *addchn(struct chnname *, char *, int);
 FILE *openchn(void);

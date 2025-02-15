@@ -149,12 +149,8 @@ main(int argc, char **argv)
 #ifdef NOSELECT
     signal(SIGALRM,(RETSIGTYPE (*)())alrm);
 #endif /*NOSELECT*/
-#ifdef SIGTSTP
     signal(SIGTSTP,(RETSIGTYPE (*)())susp);
-#endif /*SIGTSTP*/
-#ifdef WINDOWS
     signal(SIGWINCH,(RETSIGTYPE (*)())setcols);
-#endif /*WINDOWS*/
 
     if (join_party(opt[OPT_START].str)) exit(1);
 
@@ -686,7 +682,6 @@ int convert(char *c)
     return(n);
 }
 
-#ifdef LOCK_FCNTL
 /* Helper function to do fcntl locks.
  */
 
@@ -700,22 +695,6 @@ void setlock(int fd, int type)
     lk.l_len= 0L;
     fcntl(fd,F_SETLKW,&lk);
 }
-#endif /*LOCK_FCNTL*/
-
-#ifdef LOCK_LOCKING
-/* Keep calling locking() until it works or until we get sick and tired of
- * calling it.  This apparantly needs to be done because it doesn't block
- * properly. There may be problems with this.
- */
-
-void chk_lock(int fd, int request)
-{
-    register int i= 5;
-
-    while (locking(fd, request, -1L) && i--)
-	sleep(1);
-}
-#endif /*LOCK_LOCKING*/
 
 
 /* BACKUP:  This seeks backwards by the given number of lines.
@@ -859,15 +838,9 @@ RETSIGTYPE hup()
 /* SUSP: Suspend execution temporarily.
  */
 
-#ifdef SIGTSTP
 RETSIGTYPE susp()
 {
-#ifdef F_TERMIOS
     struct termios old;
-#endif
-#ifdef F_STTY
-    struct sgttyb old;
-#endif
     int mask;
     int was_shelled;
 
@@ -897,7 +870,6 @@ RETSIGTYPE susp()
 
     if (debug) db("restarted\n");
 }
-#endif /*SIGTSTP*/
 
 void db(char *msg, ...)
 {
