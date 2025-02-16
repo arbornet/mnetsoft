@@ -67,7 +67,8 @@ char *progname;			/* Program name */
 char mailfile[80];		/* Name of mail file */
 int  mailfuse;			/* counter for deciding when to check mail */
 long mailsize;			/* old size of mail file */
-uid_t real_id, eff_id;		/* My real and effective group or user id */
+uid_t real_uid, eff_uid;	/* My real and effective group and user ids */
+gid_t real_gid, eff_gid;
 char inbuf[BFSZ+INDENT+2];      /* Text buffer - first 10 for "name:   " */
 char *txbuf= inbuf + INDENT;    /* Text buffer - pointer to respose portion */
 				/*               of inbuf */
@@ -79,12 +80,11 @@ jump_buf jenv;
 int
 main(int argc, char **argv)
 {
-    register int n;
+    int n;
     char ch, *pnl;
     time_t lastaction;
-#ifndef NOSELECT
     fd_set input_set, iset;
-#endif
+    struct timeval tv;
 
     progname= leafname(argv[0]);	/* Get the program name */
 
@@ -126,12 +126,8 @@ main(int argc, char **argv)
 	for (n= 1; n < argc; n++)
 	    parseopts(argv[n],2);
 
-#ifdef SUID
-    real_id= getuid(); eff_id= geteuid();
-#endif
-#ifdef SGID
-    real_id= getgid(); eff_id= getegid();
-#endif
+    real_uid= getuid(); eff_uid= geteuid();
+    real_gid= getgid(); eff_gid= getegid();
 
     initmodes();
     setmailfile();
@@ -146,9 +142,6 @@ main(int argc, char **argv)
     signal(SIGINT,(RETSIGTYPE (*)())intr);
     signal(SIGTERM,(RETSIGTYPE (*)())term);
     oldsigpipe= signal(SIGPIPE,SIG_IGN);
-#ifdef NOSELECT
-    signal(SIGALRM,(RETSIGTYPE (*)())alrm);
-#endif /*NOSELECT*/
     signal(SIGTSTP,(RETSIGTYPE (*)())susp);
     signal(SIGWINCH,(RETSIGTYPE (*)())setcols);
 
@@ -157,49 +150,30 @@ main(int argc, char **argv)
     /* Get in cbreak/noecho mode */
     STTY(0,&cbreak);
 
-#ifndef NOSELECT
     /* Set up the input file set for the select call */
     FD_ZERO(&input_set);
     FD_SET(0,&input_set);
-    FD_SET(rst,&input_set);
-#endif
 
     /* Main loop */
     lastaction= time((time_t *)0);
     for(;;)
     {
-#ifdef NOSELECT
+	memset(&tv, 0, sizeof(tv));
+ 	tv.tv_usec = 100000;  // 10 Hz.
 	/* Copy text while I can -- otherwise go to input mode */
 	if (output())
-	{ /*}*/
-	    /* Wait four seconds for a command */
-	    alarm(4);
-	    if (!setjump(jenv,1))
+	{
+	    /* Wait up to 4 seconds for input in file or from user */
+	    iset= input_set;
+	    select(rst+1, &iset, NULL, NULL, &tv);
+
+	    /* process typed command from user */
+	    if (FD_ISSET(0,&iset))
 	    {
-		read(0,&ch,1);	/* Alarm busts us out of here */
-		alarm(0);
-		docmd(ch);
-		lastaction= time((time_t *)0);
+	        read(0,&ch,1);
+	        docmd(ch);
+	        lastaction= time((time_t *)0);
 	    }
-#else
-	/* Wait for input in file or from user */
-	iset= input_set;
-	select(rst+1, &iset, NULL, NULL, NULL);
-
-	/* process typed command from user */
-	if (FD_ISSET(0,&iset))
-	{
-	    read(0,&ch,1);
-	    docmd(ch);
-	    lastaction= time((time_t *)0);
-	}
-
-	/* process new text in file */
-	if (FD_ISSET(rst,&iset))
-	{
-	    while (!output())
-		;
-#endif /*NOSELECT*/
 
 	    /* Check for new mail or idleness */
 	    if (mailfuse-- == 0)
@@ -233,15 +207,6 @@ main(int argc, char **argv)
 }
 
 
-#ifdef NOSELECT
-RETSIGTYPE alrm()
-{
-    signal(SIGALRM,(RETSIGTYPE (*)())alrm);
-    longjump(jenv,1);
-}
-#endif /*NOSELECT*/
-
-
 /* HELP: Prints a file name to the screen.  An interrupt brings you back to
  * party.  If complain is false, it silently does nothing when the file
  * doesn't exist.
@@ -252,7 +217,7 @@ void help(char *filename, int complain)
     register int hf;
     register int n;
 
-    if ((hf= open(filename,0)) < 0)
+    if ((hf= open(filename,O_RDONLY)) < 0)
     {
 	if (complain) err("Cannot open file %s\n",filename);
     }
@@ -754,10 +719,6 @@ RETSIGTYPE intr()
 	return;
     }
 
-#ifdef NOSELECT
-    alarm(0);
-#endif /*NOSELECT*/
-
     signal(SIGINT,SIG_IGN);
     signal(SIGQUIT,SIG_IGN);
 
@@ -776,9 +737,6 @@ RETSIGTYPE term()
 {
     if (debug) db("killed\n");
 
-#ifdef NOSELECT
-    alarm(0);
-#endif /*NOSELECT*/
     signal(SIGINT,SIG_IGN);
     signal(SIGQUIT,SIG_IGN);
 
@@ -801,10 +759,6 @@ void done(int rc)
 {
     if (debug) db("exiting\n");
 
-#ifdef NOSELECT
-    alarm(0);
-#endif /*NOSELECT*/
-
     signal(SIGINT,SIG_IGN);
     signal(SIGQUIT,SIG_IGN);
 
@@ -822,9 +776,6 @@ RETSIGTYPE hup()
 {
     if (debug) db("hangup\n");
 
-#ifdef NOSELECT
-    alarm(0);
-#endif /*NOSELECT*/
     signal(SIGINT,SIG_IGN);
     signal(SIGQUIT,SIG_IGN);
 
@@ -847,9 +798,6 @@ RETSIGTYPE susp()
     if (debug) db("suspended\n");
 
     if (!(was_shelled= who_isout())) who_shout("^");
-#ifdef NOSELECT
-    alarm(0);
-#endif /*NOSELECT*/
     mask= sigblock(sigmask(SIGTSTP));
 
     GTTY(0,&old);

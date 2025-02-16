@@ -1,7 +1,0 @@
-party	readlim=25 keeplog idleout=5
-test	keeplog
-[A-Z]*	nomakenoise readlim=0
-*\? 	rename
-*!!	randname=/etc/passwd rename
-*!	rename askname
-*	mayclose

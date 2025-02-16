@@ -198,8 +198,8 @@ extern struct termios cooked, cbreak;
 #define DEP_MODE 0600
 #define USR_MODE 0600
 
-#define be_user()  seteuid(real_id)
-#define be_party() seteuid(eff_id)
+#define be_user()  seteuid(real_uid)
+#define be_party() seteuid(eff_uid)
 #endif /*SUID*/
 
 #ifdef SGID
@@ -207,8 +207,8 @@ extern struct termios cooked, cbreak;
 #define USR_MODE 0664
 #define DEP_MODE 0660
 
-#define be_user()  setegid(real_id)
-#define be_party() setegid(eff_id)
+#define be_group()  setegid(real_gid)
+#define be_partyg() setegid(eff_gid)
 #endif /*SGID*/
 
 #include <stdio.h>
@@ -288,7 +288,8 @@ extern char logtty[];		/* /dev/ttyXX that user logged into (utmp) */
 extern time_t logtime;		/* Time that the user logged in (utmp)*/
 
 extern FILE *debug;		/* Debug output file */
-extern uid_t real_id, eff_id;	/* Real and Effective uid */
+extern uid_t real_uid, eff_uid;	/* Real and Effective uid */
+extern gid_t real_gid, eff_gid;
 extern RETSIGTYPE (*oldsigpipe)();
 
 /* The following buffer gets used for all sorts of things in all sorts of

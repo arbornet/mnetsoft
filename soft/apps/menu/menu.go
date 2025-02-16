@@ -212,7 +212,7 @@ func cd(dir string) {
 }
 
 func goodbye() {
-	fmt.Println("\nLeaving Grex menu system.  Good bye!")
+	fmt.Println("\nLeaving M-Net menu system.  Good bye!")
 	os.Exit(0)
 }
 
