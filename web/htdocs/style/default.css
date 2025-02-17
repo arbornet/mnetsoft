@@ -1,0 +1,46 @@
+body {
+        background-color: white;
+        font-family: sans-serif;
+        font-size: 14px;
+        margin: 0px;
+}
+td {
+        font-family: sans-serif;
+        font-size: 14px;
+}
+td.nav {
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+}
+a {
+        font-weight: bold;
+        color: 0033ff;
+}
+a:hover {
+        font-weight: bold;
+        color: cc0033;
+}
+a.nav {
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+}
+a.nav:hover {
+        font-weight: bold;
+        color: ffff00;
+        text-decoration: none;
+}
+.spotlight {
+        border: 1px solid #330099;
+        padding: 5px;
+        background-color: #ffffcc;
+}
+
+.homepageText {
+        font-size: 15px;
+}
+.enhanced {
+        font-size: 18px;
+        font-weight: bold;
+}
