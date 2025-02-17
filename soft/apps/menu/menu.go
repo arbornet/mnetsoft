@@ -3,6 +3,9 @@
 package main
 
 import (
+	// #include "unistd.h"
+	"C"
+
 	"bufio"
 	"bytes"
 	"encoding/json"
@@ -25,8 +28,14 @@ const (
 )
 
 var (
-	in        *bufio.Reader
-	myHomeDir string
+	in         *bufio.Reader
+	myLogin    string
+	myTty      string
+	myHomeDir  string
+	myShell    string
+	myEditor   string
+	myTermType string
+	myHostName string
 )
 
 type Entry struct {
@@ -69,13 +78,60 @@ func (m *Menu) String() string {
 	return buffer.String()
 }
 
+func sysheader() {
+	fmt.Println("login   = ", myLogin)
+	fmt.Println("tty     = ", myTty)
+	fmt.Println("homedir = ", myHomeDir)
+	fmt.Println("editor  = ", myEditor)
+	fmt.Println("shell   = ", myShell)
+	fmt.Println("term    = ", myTermType)
+}
+
+func login() string {
+	user, err := user.Current()
+	if err != nil {
+		log.Fatal("Who are you?")
+	}
+	return user.Username
+}
+
+func hostname() string {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return "localhost"
+	}
+	return hostname
+}
+
+func tty() string {
+	cptr := C.ttyname(C.int(os.Stdin.Fd()))
+	if cptr == nil {
+		return "(none)"
+	}
+	return C.GoString(cptr)
+}
+
+func env_or(env string, def string) string {
+	value := os.Getenv(env)
+	if value == "" {
+		return def
+	}
+	return value
+}
+
 func init() {
 	signal.Ignore(syscall.SIGINT)
 	signal.Ignore(syscall.SIGQUIT)
 	signal.Ignore(syscall.SIGTSTP)
+	myLogin = login()
 	myHomeDir = homedir()
-	os.Setenv("MAIL", myHomeDir + "/Mailbox")
+	myHostName = hostname();
+	myTty = tty()
+	myTermType = env_or("TERM", "dumb")
+	myShell = env_or("SHELL", "sh")
+	myEditor = env_or("EDITOR", "nano")
 	in = bufio.NewReader(os.Stdin)
+	os.Setenv("MAIL", myHomeDir+"/Mailbox")
 }
 
 func homedir() string {
@@ -101,6 +157,7 @@ MENU:
 	for {
 		clear()
 		fmt.Println(m)
+		sysheader()
 		s := readcmd()
 		c := strings.ToLower(s)
 		switch c {
