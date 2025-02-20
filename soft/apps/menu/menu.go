@@ -3,7 +3,8 @@
 package main
 
 import (
-	// #include "unistd.h"
+	// #include <unistd.h>
+	// #include <utmpx.h>
 	"C"
 
 	"bufio"
@@ -17,14 +18,17 @@ import (
 	"os/exec"
 	"os/signal"
 	"os/user"
+	"path/filepath"
 	"strings"
 	"syscall"
+	"time"
 )
 
 const (
 	menuLibDir = "/c/r/cross/sys/m-net/soft/apps/menu/menus"
 	helpFile   = menuLibDir + "/help.txt"
 	colWidth   = 34
+	winWidth   = 80
 )
 
 var (
@@ -36,6 +40,7 @@ var (
 	myEditor   string
 	myTermType string
 	myHostName string
+	splashOnce bool
 )
 
 type Entry struct {
@@ -48,6 +53,7 @@ type Entry struct {
 
 type Menu struct {
 	Title    string  `json:"title"`
+	ShowSys  bool    `json:"showsys"`
 	Subtitle string  `json:"subtitle"`
 	Footer   string  `json:"footer"`
 	Entries  []Entry `json:"entries"`
@@ -56,9 +62,13 @@ type Menu struct {
 func (m *Menu) String() string {
 	var buffer bytes.Buffer
 
-	buffer.WriteString("\n" + m.Title)
+	buffer.WriteString("\n")
+	if m.ShowSys {
+		buffer.WriteString(sysheader())
+	}
+	buffer.WriteString(center(m.Title))
 	if m.Subtitle != "" {
-		buffer.WriteString("\n" + m.Subtitle)
+		buffer.WriteString("\n" + center(m.Subtitle))
 	}
 	buffer.WriteString("\n\n")
 	ps := []string{"  ", ""}
@@ -78,13 +88,54 @@ func (m *Menu) String() string {
 	return buffer.String()
 }
 
-func sysheader() {
-	fmt.Println("login   = ", myLogin)
-	fmt.Println("tty     = ", myTty)
-	fmt.Println("homedir = ", myHomeDir)
-	fmt.Println("editor  = ", myEditor)
-	fmt.Println("shell   = ", myShell)
-	fmt.Println("term    = ", myTermType)
+func center(s string) string {
+	return fmt.Sprintf("%*s", (winWidth+len(s))/2, s)
+}
+
+func splash() {
+	if !splashOnce {
+		return
+	}
+	splashOnce = false
+	fmt.Printf("")
+	fmt.Println(center("M-Net Menu 4.0"))
+	fmt.Println(center("Copyright 2025"))
+	fmt.Println(center("M-Net Staff"))
+}
+
+func sysheader() string {
+	var buffer bytes.Buffer
+	date := time.Now().Format("Mon   Jan 02, 2006")
+	nusers := fmt.Sprintf("Users: %d total", userCount())
+	port := "Port: " + strings.TrimPrefix(myTty, "/dev/")
+	login := "Login: " + myLogin
+	term := "Terminal: " + myTermType
+	shell := "Shell: " + filepath.Base(myShell)
+	editor := "Editor: " + filepath.Base(myEditor)
+	buffer.WriteString(fmt.Sprintf("%-28s %-32s %s\n", port, myHostName, login))
+	buffer.WriteString(fmt.Sprintf("%-28s %-32s %s\n", editor, date, nusers))
+	buffer.WriteString(fmt.Sprintf("%-28s %-32s %s\n", term, "", shell))
+	return buffer.String()
+}
+
+func userCount() int {
+	nusers := 0
+	C.setutxent()
+	for {
+		ut := C.getutxent()
+		if ut == nil {
+			break
+		}
+		if ut.ut_type != C.USER_PROCESS {
+			continue
+		}
+		if ut.ut_line[0] == 0 || ut.ut_user[0] == 0 {
+			continue
+		}
+		nusers++
+	}
+	C.endutxent()
+	return nusers
 }
 
 func login() string {
@@ -125,13 +176,14 @@ func init() {
 	signal.Ignore(syscall.SIGTSTP)
 	myLogin = login()
 	myHomeDir = homedir()
-	myHostName = hostname();
+	myHostName = hostname()
 	myTty = tty()
 	myTermType = env_or("TERM", "dumb")
 	myShell = env_or("SHELL", "sh")
 	myEditor = env_or("EDITOR", "nano")
 	in = bufio.NewReader(os.Stdin)
-	os.Setenv("MAIL", myHomeDir+"/Mailbox")
+	//os.Setenv("MAIL", myHomeDir+"/Mailbox")
+	splashOnce = true
 }
 
 func homedir() string {
@@ -156,8 +208,8 @@ func menu(file string) {
 MENU:
 	for {
 		clear()
+		splash()
 		fmt.Println(m)
-		sysheader()
 		s := readcmd()
 		c := strings.ToLower(s)
 		switch c {

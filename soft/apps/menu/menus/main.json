@@ -1,5 +1,6 @@
 {
-    "title": "*** M-NET MENU 4.0 ***",
+    "title": "*  M A I N    M E N U  *",
+    "showsys": true,
     "entries": [
         {"key":"B", "menu":"@/bbs.json", "desc":"Bulletin Board Systems"},
         {"key":"Z", "exec":"/cyberspace/bin/bbsguide", "desc":"View BBS introductory info"},
