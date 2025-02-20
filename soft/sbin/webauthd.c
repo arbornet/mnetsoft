@@ -80,6 +80,8 @@ chomp(char *line)
 		*s = '\0';
 	for (s = line; isspace(*s); s++)
 		;
+	if (*s == '\0')
+		return s;
 	for (e = s + strlen(s) - 1; e > s && isspace(*e); --e)
 		*e = '\0';
 
